@@ -1,19 +1,26 @@
 {
-  "name": "with-tailwind",
+  "name": "muroom-frontend-handel",
   "private": true,
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "dev:web": "turbo run dev --filter=web",
     "lint": "turbo run lint",
     "check-types": "turbo run check-types",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,css,md}": "prettier --write"
   },
   "devDependencies": {
+    "husky": "9.1.7",
+    "lint-staged": "16.2.6",
     "prettier": "^3.6.0",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "turbo": "^2.6.0"
   },
-  "packageManager": "pnpm@10.19.0",
+  "packageManager": "pnpm@10.19.0+sha512.c9fc7236e92adf5c8af42fd5bf1612df99c2ceb62f27047032f4720b33f8eacdde311865e91c411f2774f618d82f320808ecb51718bfa82c060c4ba7c76a32b8",
   "engines": {
     "node": ">=18"
   }
