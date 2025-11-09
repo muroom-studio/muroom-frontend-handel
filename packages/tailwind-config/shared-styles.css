@@ -4,6 +4,7 @@
 @import './styles/_radius.css';
 @import './styles/_spacing.css';
 @import './styles/_typography.css';
+@import './styles/_util.css';
 
 @source "../../apps/**/*.{ts,tsx,js,jsx}";
 @source "../ui/**/*.{ts,tsx,js,jsx}";

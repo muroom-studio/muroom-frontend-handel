@@ -7,12 +7,12 @@ interface Props {
 
 export default function DesktopLayout({ children }: Props) {
   return (
-    <>
+    <div>
       <DesktopHeader />
       <div className='grid h-screen w-full grid-cols-[80px_1fr] overflow-hidden'>
         <DesktopSnb />
         {children}
       </div>
-    </>
+    </div>
   );
 }

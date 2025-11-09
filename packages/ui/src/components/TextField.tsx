@@ -1,6 +1,6 @@
 'use client';
 
-import { InputHTMLAttributes, useId, useState, ChangeEvent, Ref } from 'react';
+import { InputHTMLAttributes, useState, ChangeEvent, Ref } from 'react';
 import clsx from 'clsx';
 
 import { CloseIcon } from '../icons-generated';
@@ -10,7 +10,7 @@ export interface Props extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   className?: string;
   ref?: Ref<HTMLInputElement>;
-  iconLeft?: React.ReactNode;
+  leftIcon?: React.ReactNode;
 }
 
 export default function TextField({
@@ -22,7 +22,7 @@ export default function TextField({
   onChange,
   type,
   ref,
-  iconLeft,
+  leftIcon,
   ...props
 }: Props) {
   const isControlled = value !== undefined;
@@ -30,11 +30,6 @@ export default function TextField({
   const displayValue = isControlled ? value : internalValue;
 
   const showClearIcon = !!displayValue && !props.disabled;
-
-  const uniqueId = useId();
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-
-  const isPasswordInput = type === 'password';
 
   const handleClear = () => {
     if (onClear) {
@@ -54,40 +49,26 @@ export default function TextField({
 
   return (
     <div className={clsx('w-full', className)}>
-      {label && (
-        <label
-          htmlFor={uniqueId}
-          className='text-body-s2 text-text1 mb-2 block'
-        >
-          {label}
-        </label>
-      )}
       <div className='relative'>
-        {iconLeft && (
-          <div className='absolute left-5 top-1/2 -translate-y-1/2'>
-            {iconLeft}
+        {leftIcon && (
+          <div className='absolute left-3 top-1/2 -translate-y-1/2'>
+            {leftIcon}
           </div>
         )}
         <input
           ref={ref}
-          id={uniqueId}
-          type={
-            isPasswordInput ? (isPasswordVisible ? 'text' : 'password') : type
-          }
           value={displayValue}
           onChange={handleChange}
           disabled={props.disabled}
           className={clsx(
-            'rounded-M border-text-box-var text-body-l1 text-text2 w-full border py-4 pl-5 transition-all',
-            { 'pl-[50]': !!iconLeft, 'pl-5': !iconLeft },
+            'rounded-4 text-base-l-16-1 w-full border border-gray-300 p-3 text-gray-800 transition-all',
             {
-              'pr-20': isPasswordInput && showClearIcon,
-              'pr-12': !isPasswordInput && showClearIcon,
+              'pr-12': showClearIcon,
               'pr-5': !showClearIcon,
+              'pl-12': leftIcon,
             },
-            'placeholder:text-text-line',
-            'hover:bg-surface2 hover:border-text-line hover:cursor-text',
-            'focus:bg-surface1 focus:border-text2 focus:outline-none',
+            'placeholder:text-gray-400',
+            'focus:border-primary-400 focus:outline-none',
             {
               'bg-surface2 border-text-box !text-text-line cursor-not-allowed':
                 props.disabled,
@@ -106,7 +87,7 @@ export default function TextField({
             })}
             disabled={!showClearIcon}
           >
-            <CloseIcon />
+            <CloseIcon className='size-full' />
           </button>
         </div>
       </div>
