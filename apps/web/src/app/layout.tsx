@@ -2,8 +2,7 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 
 import './globals.css';
-
-import HomeLayout from '@/layouts';
+import BaseLayout from '@/layouts';
 
 const pretendard = localFont({
   src: '../../../../packages/tailwind-config/fonts/PretendardVariable.woff2',
@@ -43,8 +42,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={pretendard.className}>
-        <HomeLayout />
-        {children}
+        <BaseLayout>{children}</BaseLayout>
       </body>
     </html>
   );

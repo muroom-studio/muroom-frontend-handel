@@ -7,11 +7,14 @@
   "exports": {
     "./style.css": "./src/globals.css",
     "./components": "./src/components/index.tsx",
+    "./icons": "./src/icons-generated/index.ts",
+    "./assets/*": "./src/assets/*",
     "./lib/*": "./src/lib/*.ts|tsx"
   },
   "license": "MIT",
   "scripts": {
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "generate:icons": "svgr --no-prettier --typescript --icon --out-dir src/icons-generated src/icons"
   },
   "peerDependencies": {
     "react": "^19"
@@ -20,10 +23,15 @@
     "@muroom/eslint-config": "workspace:*",
     "@muroom/tailwind-config": "workspace:*",
     "@muroom/typescript-config": "workspace:*",
+    "@svgr/cli": "8.1.0",
     "@tailwindcss/cli": "^4.1.5",
     "@types/react": "^19.1.0",
     "eslint": "^9.31.0",
     "tailwindcss": "^4.1.5",
     "typescript": "5.9.2"
+  },
+  "dependencies": {
+    "clsx": "2.1.1",
+    "tailwind-merge": "3.4.0"
   }
 }

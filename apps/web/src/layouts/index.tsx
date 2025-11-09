@@ -6,9 +6,15 @@ function isMobileDevice(userAgent: string): boolean {
   return /Mobi|Android|iPhone|iPod|iPad/i.test(userAgent);
 }
 
-export default async function HomeLayout() {
+interface Props {
+  children: React.ReactNode;
+}
+
+export default async function BaseLayout({ children }: Props) {
   const userAgent = (await headers()).get('user-agent') || '';
   const serverIsMobile = isMobileDevice(userAgent);
 
-  return <LayoutSwitcher serverIsMobile={serverIsMobile} />;
+  return (
+    <LayoutSwitcher serverIsMobile={serverIsMobile}>{children}</LayoutSwitcher>
+  );
 }
