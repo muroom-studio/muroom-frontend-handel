@@ -9,7 +9,7 @@
     "./components": "./src/components/index.tsx",
     "./icons": "./src/icons-generated/index.ts",
     "./assets/*": "./src/assets/*",
-    "./lib/*": "./src/lib/*.ts|tsx"
+    "./lib/*": "./src/lib/util.ts"
   },
   "license": "MIT",
   "scripts": {

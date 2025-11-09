@@ -1,9 +1,10 @@
 'use client';
 
 import { InputHTMLAttributes, useState, ChangeEvent, Ref } from 'react';
-import clsx from 'clsx';
 
 import { CloseIcon } from '../icons-generated';
+
+import { cn } from '../lib/utils';
 
 export interface Props extends InputHTMLAttributes<HTMLInputElement> {
   onClear?: () => void;
@@ -48,7 +49,7 @@ export default function TextField({
   };
 
   return (
-    <div className={clsx('w-full', className)}>
+    <div className={cn('w-full', className)}>
       <div className='relative'>
         {leftIcon && (
           <div className='absolute left-3 top-1/2 -translate-y-1/2'>
@@ -60,7 +61,7 @@ export default function TextField({
           value={displayValue}
           onChange={handleChange}
           disabled={props.disabled}
-          className={clsx(
+          className={cn(
             'rounded-4 text-base-l-16-1 w-full border border-gray-300 p-3 text-gray-800 transition-all',
             {
               'pr-12': showClearIcon,
@@ -82,12 +83,12 @@ export default function TextField({
             type='button'
             onClick={handleClear}
             aria-label={'입력 내용 지우기'}
-            className={clsx('size-6 transition-all', {
+            className={cn('size-6 transition-all', {
               hidden: !showClearIcon,
             })}
             disabled={!showClearIcon}
           >
-            <CloseIcon className='size-full' />
+            <CloseIcon className='size-full text-gray-400' />
           </button>
         </div>
       </div>
