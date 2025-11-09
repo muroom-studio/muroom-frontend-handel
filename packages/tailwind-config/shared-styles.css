@@ -1,7 +1,44 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+@import './styles/_color.css';
+@import './styles/_radius.css';
+@import './styles/_spacing.css';
+@import './styles/_typography.css';
+
+@source "../../apps/**/*.{ts,tsx,js,jsx}";
+@source "../ui/**/*.{ts,tsx,js,jsx}";
+
+@font-face {
+  font-family: 'Pretendard Variable';
+  font-weight: 45 920;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/PretendardVariable.woff2') format('woff2-variations');
+}
 
 @theme {
-  --color-blue-1000: #2a8af6;
-  --color-purple-1000: #a853ba;
-  --color-red-1000: #e92a67;
+  --font-pretendard: 'Pretendard Variable';
+  --shadow-level-2: 0 2px 6px 0 rgba(0, 0, 0, 0.4);
+  --shadow-level-1: 0 2px 6px 0 rgba(0, 0, 0, 0.2);
+  --shadow-level-0: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+}
+
+@layer base {
+  body {
+    @apply font-pretendard text-black;
+  }
+}
+
+@layer utilities {
+  .shadow-level-2 {
+    box-shadow: var(--shadow-level-2);
+  }
+
+  .shadow-level-1 {
+    box-shadow: var(--shadow-level-1);
+  }
+
+  .shadow-level-0 {
+    box-shadow: var(--shadow-level-0);
+  }
 }

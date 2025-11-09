@@ -1,0 +1,14 @@
+@theme {
+  --radius-4: 4px;
+  --radius-1000: 100px;
+}
+
+@layer utilities {
+  .radius-4 {
+    border-radius: var(--radius-4);
+  }
+
+  .radius-1000 {
+    border-radius: var(--radius-100);
+  }
+}
