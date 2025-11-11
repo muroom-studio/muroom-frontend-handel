@@ -1,20 +1,24 @@
-import { headers } from 'next/headers';
+'use client';
 
-import LayoutSwitcher from '@/layouts/layout-switcher';
+import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 
-function isMobileDevice(userAgent: string): boolean {
-  return /Mobi|Android|iPhone|iPod|iPad/i.test(userAgent);
-}
+import MobileBaseLayout from '@/layouts/mobile-layout/base';
+import DesktopBaseLayout from '@/layouts/desktop-layout/base';
 
 interface Props {
   children: React.ReactNode;
 }
 
-export default async function BaseLayout({ children }: Props) {
-  const userAgent = (await headers()).get('user-agent') || '';
-  const serverIsMobile = isMobileDevice(userAgent);
+export default function BaseLayout({ children }: Props) {
+  const { isMobile, isMounted } = useResponsiveLayout();
 
-  return (
-    <LayoutSwitcher serverIsMobile={serverIsMobile}>{children}</LayoutSwitcher>
+  if (!isMounted) {
+    return null;
+  }
+
+  return isMobile ? (
+    <MobileBaseLayout>{children}</MobileBaseLayout>
+  ) : (
+    <DesktopBaseLayout>{children}</DesktopBaseLayout>
   );
 }

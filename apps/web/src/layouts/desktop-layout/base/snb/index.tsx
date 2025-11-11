@@ -10,7 +10,7 @@ import {
   WorkroomIcon,
 } from '@muroom/icons';
 
-export default function DesktopSnb() {
+export default function DesktopBaseSnb() {
   const SnbList = [
     {
       id: 1,

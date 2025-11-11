@@ -6,7 +6,7 @@ import { Button, TextField } from '@muroom/ui/components';
 
 import { SearchIcon } from '@muroom/icons';
 
-export default function DesktopHeader() {
+export default function DesktopBaseHeader() {
   return (
     <header className='flex-between border-b-[0.5px] border-b-gray-300 p-5'>
       <div className='flex-center gap-x-4'>

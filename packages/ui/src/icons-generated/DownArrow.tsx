@@ -23,7 +23,7 @@ const SvgDownArrow = (props: SVGProps<SVGSVGElement>) => (
       <path fill='#D9D9D9' d='M24 0v24H0V0z' />
     </mask>
     <g mask='url(#down-arrow_svg__a)'>
-      <path fill='#364153' d='M12 12.6 16.6 8 18 9.4l-6 6-6-6L7.4 8z' />
+      <path fill='currentColor' d='M12 12.6 16.6 8 18 9.4l-6 6-6-6L7.4 8z' />
     </g>
   </svg>
 );

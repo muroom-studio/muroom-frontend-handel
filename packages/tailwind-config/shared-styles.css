@@ -26,7 +26,7 @@
 
 @layer base {
   body {
-    @apply font-pretendard text-black;
+    @apply font-pretendard text-gray-800;
   }
 }
 
@@ -42,4 +42,14 @@
   .shadow-level-0 {
     box-shadow: var(--shadow-level-0);
   }
+}
+
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
 }

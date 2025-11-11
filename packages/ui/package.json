@@ -17,7 +17,9 @@
     "generate:icons": "svgr --no-prettier --typescript --icon --out-dir src/icons-generated src/icons"
   },
   "peerDependencies": {
-    "react": "^19"
+    "react": "^19.2.0",
+    "react-dom": "^19.1.0",
+    "@types/react-dom": "^19.1.1"
   },
   "devDependencies": {
     "@muroom/eslint-config": "workspace:*",
