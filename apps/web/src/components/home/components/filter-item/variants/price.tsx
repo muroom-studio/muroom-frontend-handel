@@ -2,9 +2,9 @@
 
 import { useRangeInput } from '@/hooks/useRangeInput';
 
-import { Button, Slider } from '@muroom/components';
+import { Slider } from '@muroom/components';
 
-import { ResetIcon } from '@muroom/icons';
+import { FilterWrapper } from '../ui';
 
 export default function PriceFilter() {
   const { rangeValue, handleSliderChange, handleRangeChange, handleFocus } =
@@ -16,22 +16,13 @@ export default function PriceFilter() {
     });
 
   return (
-    <div className='w-full'>
-      <div className='flex-between'>
-        <p className='text-base-exl-18-2'>가격</p>
-        <Button variant='outline_icon' size='l' className='size-6'>
-          <ResetIcon className='size-4' />
-        </Button>
-      </div>
-
-      <div className='my-5'>
-        <Slider
-          id='price-range'
-          value={[rangeValue.minValue, rangeValue.maxValue]}
-          onValueChange={handleSliderChange}
-          className='w-full'
-        />
-      </div>
+    <FilterWrapper title='가격'>
+      <Slider
+        id='price-range'
+        value={[rangeValue.minValue, rangeValue.maxValue]}
+        onValueChange={handleSliderChange}
+        className='w-full'
+      />
 
       <div className='flex-between w-full gap-x-2'>
         <div className='flex-between rounded-4 min-w-0 flex-1 border border-gray-300 px-4 py-3'>
@@ -63,6 +54,6 @@ export default function PriceFilter() {
           <span className='text-base-l-16-1 ml-2 shrink-0'>만원</span>
         </div>
       </div>
-    </div>
+    </FilterWrapper>
   );
 }

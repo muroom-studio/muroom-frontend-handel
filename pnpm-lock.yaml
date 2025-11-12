@@ -84,6 +84,9 @@ importers:
       '@muroom/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@muroom/util':
+        specifier: workspace:*
+        version: link:../../packages/util
       next:
         specifier: ^15.3.0
         version: 15.5.6(react-dom@19.2.0)(react@19.2.0)
@@ -232,6 +235,27 @@ importers:
       typescript:
         specifier: 5.9.2
         version: 5.9.2
+
+  packages/util:
+    devDependencies:
+      '@muroom/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@muroom/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/react':
+        specifier: ^19.1.0
+        version: 19.2.2
+      eslint:
+        specifier: ^9.31.0
+        version: 9.39.1
+      react:
+        specifier: ^19.1.0
+        version: 19.2.0
+      typescript:
+        specifier: 5.8.2
+        version: 5.8.2
 
 packages:
 
@@ -3884,7 +3908,6 @@ packages:
   /react@19.2.0:
     resolution: {integrity: sha512-tmbWg6W31tQLeB5cdIBOicJDJRR2KzXsV7uSK9iNfLWQ5bIZfxuPEHp7M8wiHyHnn0DD1i7w3Zmin0FtkrwoCQ==}
     engines: {node: '>=0.10.0'}
-    dev: false
 
   /read-cache@1.0.0:
     resolution: {integrity: sha512-Owdv/Ft7IjOgm/i0xvNDZ1LrRANRfew4b2prF3OWMQLxLfu3bS8FVhCsrSCMK4lR56Y9ya+AThoTpDCTxCmpRA==}
@@ -4556,6 +4579,12 @@ packages:
       typescript: 5.9.2
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /typescript@5.8.2:
+    resolution: {integrity: sha512-aJn6wq13/afZp/jT9QZmwEjDqqvSGp1VT5GVg+f/t6/oVyrgXM6BY1h9BRh/O5p3PlUPAe+WuiEZOmb/49RqoQ==}
+    engines: {node: '>=14.17'}
+    hasBin: true
     dev: true
 
   /typescript@5.9.2:

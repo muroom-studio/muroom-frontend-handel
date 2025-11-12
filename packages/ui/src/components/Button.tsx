@@ -58,7 +58,7 @@ const Button = ({
     },
     outline: {
       base: `
-          !text-gray-800 bg-white border-gray-300
+          bg-white border-gray-300
           hover:bg-gray-100
           disabled:bg-gray-200 disabled:text-gray-400
         `,

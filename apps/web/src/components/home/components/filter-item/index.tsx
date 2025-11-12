@@ -7,11 +7,13 @@ import { cn } from '@muroom/lib';
 import { DownArrowIcon } from '@muroom/icons';
 import { Popover } from '@muroom/components';
 
-import PriceFilter from '@/components/home/components/filter-item/price';
-import SizeFilter from '@/components/home/components/filter-item/size';
-import OptionFilter from '@/components/home/components/filter-item/option';
-import BuildingTypeFilter from '@/components/home/components/filter-item/building-type';
-import InstrumentFilter from '@/components/home/components/filter-item/instrument';
+import {
+  BuildingTypeFilter,
+  InstrumentFilter,
+  OptionFilter,
+  PriceFilter,
+  SizeFilter,
+} from './variants';
 
 export type Variant = 'e1' | 'e2' | 'e3' | 'e4' | 'e5';
 
