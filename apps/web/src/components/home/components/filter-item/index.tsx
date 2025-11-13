@@ -64,7 +64,7 @@ export default function FilterItem({ variant }: Props) {
         </button>
       </Popover.Trigger>
       <Popover.Content align='start'>
-        <div className='rounded-4 shadow-level-0 w-[375px] border border-gray-300 p-5'>
+        <div className='rounded-4 shadow-level-0 w-[375px] border border-gray-300 bg-white p-5'>
           <ContentComponent />
         </div>
       </Popover.Content>

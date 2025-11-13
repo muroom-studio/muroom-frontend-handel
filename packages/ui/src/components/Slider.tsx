@@ -6,7 +6,7 @@ import { cn } from '../lib/utils';
 
 import { ColLineIcon, SlideCircleIcon } from '../icons-generated';
 
-interface Props extends React.HTMLAttributes<HTMLDivElement> {
+interface SliderProps extends React.HTMLAttributes<HTMLDivElement> {
   value: number[];
   min?: number;
   max?: number;
@@ -24,7 +24,7 @@ const Slider = ({
   onValueChange,
   ref,
   ...props
-}: Props) => {
+}: SliderProps) => {
   const [minVal, maxVal] = value; // 부모로부터 전달받은 number[] range를 현재 slider의 양측을 담당함
 
   const trackRef = useRef<HTMLDivElement>(null);

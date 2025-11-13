@@ -6,7 +6,7 @@ import { CloseIcon } from '../icons-generated';
 
 import { cn } from '../lib/utils';
 
-export interface Props extends InputHTMLAttributes<HTMLInputElement> {
+export interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   onClear?: () => void;
   label?: string;
   className?: string;
@@ -25,7 +25,7 @@ export default function TextField({
   ref,
   leftIcon,
   ...props
-}: Props) {
+}: TextFieldProps) {
   const isControlled = value !== undefined;
   const [internalValue, setInternalValue] = useState(defaultValue ?? '');
   const displayValue = isControlled ? value : internalValue;

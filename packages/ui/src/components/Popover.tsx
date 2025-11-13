@@ -242,7 +242,7 @@ const PopoverContent = ({
   return createPortal(
     <div
       ref={contentRef}
-      className={`absolute z-50 ${className} data-[state=open]:animate-in data-[state=closed]:animate-out`}
+      className={`z-9999 absolute ${className} data-[state=open]:animate-in data-[state=closed]:animate-out`}
       style={{ top: `${position.top}px`, left: `${position.left}px` }}
       data-state={isOpen ? 'open' : 'closed'}
       role='dialog'

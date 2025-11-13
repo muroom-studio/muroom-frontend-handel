@@ -14,7 +14,7 @@ type ButtonVariant =
   | 'text'
   | 'danger';
 
-type ButtonSize = 'xl' | 'l' | 'm' | 's';
+type ButtonSize = 'xl' | 'l' | 'm' | 's' | 'xs';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
@@ -41,6 +41,7 @@ const Button = ({
       base: `
           !text-white bg-primary-600 border-primary-line
           hover:bg-primary-700
+          active:bg-primary-800
           disabled:bg-gray-200 disabled:text-gray-400
         `,
       xl: 'px-4 py-[18px] text-base-l-16-2',
@@ -50,7 +51,8 @@ const Button = ({
     secondary: {
       base: `
           !text-white bg-gray-700
-          hover:bg-gray-600
+          hover:bg-gray-800
+          active:bg-gray-900
           disabled:bg-gray-200 disabled:text-gray-400
         `,
       m: 'px-3 py-[9px] text-base-m-14-2',
@@ -60,6 +62,7 @@ const Button = ({
       base: `
           bg-white border-gray-300
           hover:bg-gray-100
+          active:bg-gray-200
           disabled:bg-gray-200 disabled:text-gray-400
         `,
       xl: 'px-4 py-[18px] text-base-l-16-2',
@@ -71,6 +74,7 @@ const Button = ({
       base: `
           bg-primary-500 border-gray-300 w-14 h-14
           hover:bg-primary-600
+          active:bg-primary-700
           disabled:bg-gray-300 disabled:border-gray-300
         `,
     },
@@ -78,10 +82,12 @@ const Button = ({
       base: `
           bg-white border-gray-300
           hover:bg-gray-100
+          active:bg-gray-200
           disabled:bg-gray-100
         `,
       xl: 'w-14 h-14',
       l: 'w-11 h-11',
+      xs: 'w-6 h-6',
     },
     text: {
       base: `
@@ -92,6 +98,7 @@ const Button = ({
       base: `
         bg-red-400 text-base-l-16-2 !text-white px-4 py-[18px]
         hover:bg-red-500
+        active:bg-red-600
         disabled:bg-gray-200 text-gray-400
       `,
     },

@@ -42,12 +42,14 @@ function Dropdown({
   onValueChange,
   defaultValue,
   placeholder,
+  className,
   children,
 }: {
   value?: string;
   onValueChange?: (value: string) => void;
   defaultValue?: string;
   placeholder?: string;
+  className?: string;
   children: React.ReactNode;
 }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -61,7 +63,7 @@ function Dropdown({
   const contentRef = useRef<HTMLDivElement>(null);
 
   const setSelected = useCallback(
-    (newValue: string, newLabel: React.ReactNode) => {
+    (newValue: string) => {
       if (!isControlled) {
         setInternalValue(newValue);
       }
@@ -101,19 +103,29 @@ function Dropdown({
 
   return (
     <DropdownContext.Provider value={contextValue}>
-      <div ref={containerRef} className='relative w-full'>
+      <div ref={containerRef} className={cn('relative w-full', className)}>
         {children}
       </div>
     </DropdownContext.Provider>
   );
 }
 
+type DropdownVariant = 'primary' | 'neutral' | 'text';
+
+type DropdownSize = 'l' | 'm' | 's';
+
+interface DropdownTriggerProps extends React.ComponentPropsWithRef<'button'> {
+  variant?: DropdownVariant;
+  size?: DropdownSize;
+}
+
 function DropdownTrigger({
-  className,
-  children,
+  variant = 'primary',
+  size = 's',
+  className: propsClassName,
   ref,
   ...props
-}: React.ComponentPropsWithRef<'button'>) {
+}: DropdownTriggerProps) {
   const { isOpen, setIsOpen, selectedValue, placeholder, triggerRef } =
     useDropdown();
 
@@ -127,6 +139,46 @@ function DropdownTrigger({
     }
   };
 
+  const baseStyle =
+    'group flex-center gap-x-1 w-full cursor-pointer transition-all rounded-4 max-w-[202px] truncate';
+
+  const styles: Record<
+    DropdownVariant,
+    Partial<Record<DropdownSize | 'base', string>>
+  > = {
+    primary: {
+      base: `
+        border border-gray-300 bg-white
+        hover:bg-gray-50
+        ${isOpen && 'bg-white border-primary-400 !text-primary-600'}
+        ${selectedValue && `bg-primary-50 border-primary-400 hover:bg-primary-100 !text-primary-600 ${isOpen && 'bg-primary-100'}`}
+      `,
+      l: `px-4 py-3 text-base-l-16-1 ${selectedValue && 'text-base-l-16-2'}`,
+      m: `px-3 py-[9px] text-base-m-14-1 ${selectedValue && 'text-base-m-14-2'}`,
+      s: 'px-[6px] py-[5px] text-base-m-14-1',
+    },
+    neutral: {
+      base: `
+        border border-gray-300 bg-white text-base-m-14-1 px-[6px] py-[5px]
+        hover:bg-gray-100
+        ${isOpen && 'bg-gray-100 !border-gray-500'}
+        ${selectedValue && '!border-gray-500 text-base-m-14-2'}
+      `,
+    },
+    text: {
+      base: `
+        text-base-l-16-1 p-1
+        ${isOpen && 'bg-gray-100'}
+        ${selectedValue && 'text-base-l-16-2'}
+      `,
+    },
+  };
+
+  const variantStyle = styles[variant]?.base || '';
+  const sizeStyle = styles[variant]?.[size] || '';
+
+  const finalClassName = cn(baseStyle, variantStyle, sizeStyle, propsClassName);
+
   return (
     <button
       type='button'
@@ -135,17 +187,11 @@ function DropdownTrigger({
       aria-haspopup='listbox'
       aria-expanded={isOpen}
       onClick={() => setIsOpen((prev) => !prev)}
-      className={cn(
-        'group',
-        'rounded-M border-text-box-var text-body-l1 flex w-full cursor-pointer items-center justify-between border bg-white px-5 py-4',
-        'focus:shadow-modal-l',
-        'data-[state=open]:rounded-b-none',
-        className,
-      )}
+      className={finalClassName}
       {...props}
     >
       {selectedValue ? selectedValue : placeholder || '선택...'}
-      <DownArrowIcon className='group-data-[state=open]:rotate-270 rotate-90 transition-transform duration-200' />
+      <DownArrowIcon className='rotate size-5 transition-transform duration-200 group-data-[state=open]:rotate-180' />
     </button>
   );
 }
@@ -176,7 +222,7 @@ function DropdownContent({
       ref={composedRef}
       role='listbox'
       className={cn(
-        'rounded-M text-body-l1 shadow-modal-l border-text-box-var absolute z-50 flex w-full min-w-[var(--radix-select-trigger-width)] flex-col gap-y-2 rounded-t-none border border-t-0 bg-white p-2',
+        'rounded-4 shadow-level-0 absolute top-full z-50 mt-2 w-full border border-gray-300 bg-white',
         'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
         'data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
         className,
@@ -201,8 +247,6 @@ function DropdownItem({
   const { selectedValue, setSelected } = useDropdown();
   const isSelected = selectedValue === value;
 
-  console.log(isSelected, 'isSelected');
-
   return (
     <button
       type='button'
@@ -212,9 +256,13 @@ function DropdownItem({
       data-selected={isSelected ? 'true' : undefined}
       onClick={() => setSelected(value, children)}
       className={cn(
-        'text-body-l1 rounded-S relative flex w-full cursor-pointer select-none items-center p-4 outline-none',
-        'hover:bg-surface2',
-        'data-[selected=true]:bg-text2 data-[selected=true]:text-white',
+        'text-base-m-14-1 relative flex w-full cursor-pointer select-none items-center border-y border-gray-200 px-3 py-[9px] outline-none transition-all',
+        'hover:!text-primary-600 hover:text-base-m-14-2',
+        {
+          '!text-primary-600 text-base-m-14-2': isSelected,
+        },
+        'first:border-t-0',
+        'last:border-b-0',
         className,
       )}
       {...props}
