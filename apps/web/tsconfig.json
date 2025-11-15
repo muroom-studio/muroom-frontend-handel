@@ -9,9 +9,11 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@repo/ui/components": ["../../packages/ui/src/components/index.tsx"],
-      "@repo/ui/*": ["../../packages/ui/src/*"]
-    }
+      "@muroom/components": ["../../packages/ui/src/components/index.tsx"],
+      "@muroom/lib": ["../../packages/ui/src/lib/utils.ts"],
+      "@muroom/icons": ["../../packages/ui/src/icons-generated/index.ts"]
+    },
+    "ignoreDeprecations": "6.0"
   },
   "include": [
     "**/*.ts",

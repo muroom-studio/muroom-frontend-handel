@@ -4,6 +4,7 @@
 @import './styles/_radius.css';
 @import './styles/_spacing.css';
 @import './styles/_typography.css';
+@import './styles/_util.css';
 
 @source "../../apps/**/*.{ts,tsx,js,jsx}";
 @source "../ui/**/*.{ts,tsx,js,jsx}";
@@ -16,16 +17,29 @@
   src: url('/fonts/PretendardVariable.woff2') format('woff2-variations');
 }
 
+@font-face {
+  font-family: 'Roboto Flex';
+  font-weight: 100 1000;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/RobotoFlexVariable.woff2') format('woff2-variations');
+}
+
 @theme {
   --font-pretendard: 'Pretendard Variable';
+  --font-roboto-flex: 'Roboto Flex';
+
   --shadow-level-2: 0 2px 6px 0 rgba(0, 0, 0, 0.4);
   --shadow-level-1: 0 2px 6px 0 rgba(0, 0, 0, 0.2);
   --shadow-level-0: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+
+  --animate-in: fade-in 200ms ease-out;
+  --animate-out: fade-out 150ms ease-in;
 }
 
 @layer base {
   body {
-    @apply font-pretendard text-black;
+    @apply font-pretendard text-gray-800;
   }
 }
 
@@ -41,4 +55,14 @@
   .shadow-level-0 {
     box-shadow: var(--shadow-level-0);
   }
+}
+
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
 }
