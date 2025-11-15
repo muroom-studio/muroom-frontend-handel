@@ -34,11 +34,11 @@ const Tag = ({
   > = {
     primary: {
       base: 'bg-primary-400 text-white',
-      s: 'text-base-exs-10 px-1 py-[6px]',
+      s: 'text-base-exs-10 px-1 py-[6px] text-white!',
     },
     secondary: {
       base: 'bg-gray-700 text-white',
-      s: 'text-base-exs-10 px-1 py-[6px]',
+      s: 'text-base-exs-10 px-1 py-[6px] text-white!',
     },
     blue: {
       base: 'bg-blue-100 text-blue-500',
@@ -60,7 +60,7 @@ const Tag = ({
   const finalClassName = cn(baseStyle, variantStyle, sizeStyle, propsClassName);
 
   return (
-    <label className={finalClassName.trim()} {...props}>
+    <label className={finalClassName.trim() + ' text-base-s-12-2'} {...props}>
       {children}
     </label>
   );

@@ -4,7 +4,7 @@ import { Button } from '@muroom/components';
 
 import { toggleItemInArray } from '@muroom/util';
 
-import { FilterWrapper, OptionItem } from '../ui';
+import { FilterWrapper, OptionItem } from '../components';
 
 const PUBLIC_OPTIONS = [
   '전체',

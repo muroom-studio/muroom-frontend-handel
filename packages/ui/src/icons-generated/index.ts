@@ -7,5 +7,6 @@ export { default as HeartIcon } from './Heart';
 export { default as ResetIcon } from './Reset';
 export { default as SearchIcon } from './Search';
 export { default as SlideCircleIcon } from './SlideCircle';
+export { default as StarIcon } from './Star';
 export { default as VisitListIcon } from './VisitList';
 export { default as WorkroomIcon } from './Workroom';

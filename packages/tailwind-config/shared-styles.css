@@ -18,11 +18,12 @@
 }
 
 @font-face {
-  font-family: 'Roboto Flex';
+  font-family: 'Roboto Flex Variable';
   font-weight: 100 1000;
   font-style: normal;
   font-display: swap;
-  src: url('/fonts/RobotoFlexVariable.woff2') format('woff2-variations');
+  src: url(https://cdn.jsdelivr.net/fontsource/fonts/roboto-flex:vf@latest/latin-wght-normal.woff2)
+    format('woff2-variations');
 }
 
 @theme {

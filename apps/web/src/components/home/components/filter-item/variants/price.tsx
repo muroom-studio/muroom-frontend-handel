@@ -4,7 +4,7 @@ import { useRangeInput } from '@/hooks/useRangeInput';
 
 import { Slider } from '@muroom/components';
 
-import { FilterWrapper } from '../ui';
+import { FilterWrapper } from '../components';
 
 export default function PriceFilter() {
   const { rangeValue, handleSliderChange, handleRangeChange, handleFocus } =
