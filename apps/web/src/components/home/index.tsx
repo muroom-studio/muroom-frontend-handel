@@ -10,5 +10,5 @@ export default function HomePage({ isMobile }: Props) {
 
   content = isMobile ? <MobileHomePage /> : <DesktopHomePage />;
 
-  return <main>{content}</main>;
+  return <main className='h-full'>{content}</main>;
 }

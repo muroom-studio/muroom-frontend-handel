@@ -2,7 +2,9 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 
 import './globals.css';
+
 import BaseLayout from '@/layouts';
+import Script from 'next/script';
 
 const pretendard = localFont({
   src: '../../../../packages/tailwind-config/fonts/PretendardVariable.woff2',
@@ -43,6 +45,10 @@ export default function RootLayout({
     <html lang='en'>
       <body className={pretendard.className}>
         <BaseLayout>{children}</BaseLayout>
+        <Script
+          strategy='afterInteractive'
+          src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${process.env.NEXT_PUBLIC_NCP_CLIENT_ID}`}
+        />
       </body>
     </html>
   );

@@ -17,8 +17,18 @@
   src: url('/fonts/PretendardVariable.woff2') format('woff2-variations');
 }
 
+@font-face {
+  font-family: 'Roboto Flex';
+  font-weight: 100 1000;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/RobotoFlexVariable.woff2') format('woff2-variations');
+}
+
 @theme {
   --font-pretendard: 'Pretendard Variable';
+  --font-roboto-flex: 'Roboto Flex';
+
   --shadow-level-2: 0 2px 6px 0 rgba(0, 0, 0, 0.4);
   --shadow-level-1: 0 2px 6px 0 rgba(0, 0, 0, 0.2);
   --shadow-level-0: 0 2px 4px 0 rgba(0, 0, 0, 0.1);

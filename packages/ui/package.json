@@ -17,9 +17,9 @@
     "generate:icons": "svgr --no-prettier --typescript --icon --out-dir src/icons-generated src/icons"
   },
   "peerDependencies": {
-    "@types/react-dom": "^19.1.1",
-    "react": "^19.2.0",
-    "react-dom": "^19.1.0"
+    "@types/react-dom": "^19",
+    "react": "^19",
+    "react-dom": "^19"
   },
   "devDependencies": {
     "@muroom/eslint-config": "workspace:*",
@@ -35,6 +35,7 @@
   "dependencies": {
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
+    "lottie-react": "2.4.1",
     "tailwind-merge": "3.4.0"
   }
 }
