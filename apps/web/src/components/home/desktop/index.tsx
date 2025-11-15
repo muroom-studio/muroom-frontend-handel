@@ -54,11 +54,11 @@ export default function DesktopHomePage() {
 
         <div className='mb-[92px] grid min-h-0 flex-1 grid-cols-[375px_1fr]'>
           <div className='flex h-full min-h-0 flex-col border-r border-r-gray-300 bg-white'>
-            {/* list-filter는 서버로부터 받은 데이터를 필터링하는 용도 */}
+            {/* list-filter는 서버로부터 받은 데이터 필터링하는 용도 */}
             <ListFilter />
 
             <div className='min-h-0 flex-1 overflow-y-scroll'>
-              {/* list-view는 서버로부터 받은 데이터를 표출하는 용도 */}
+              {/* list-view는 서버로부터 받은 데이터 표출하는 용도 */}
               <ListView />
             </div>
           </div>
