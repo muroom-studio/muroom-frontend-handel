@@ -7,12 +7,19 @@ import { Studio } from '@/app/types/studio';
 import { Badge, Tag, ToggleButton } from '@muroom/components';
 
 import { HeartIcon, StarIcon } from '@muroom/icons';
+import { cn } from '@muroom/lib';
 
 interface Props {
   data: Studio;
+  studioId: string;
+  setStudioId: (id: string) => void;
 }
 
-export default function CommonStudioCard({ data }: Props) {
+export default function CommonStudioCard({
+  data,
+  studioId,
+  setStudioId,
+}: Props) {
   const {
     id,
     name,
@@ -33,7 +40,15 @@ export default function CommonStudioCard({ data }: Props) {
   } = data as Studio;
 
   return (
-    <div className='flex cursor-pointer gap-x-3 border-b border-b-gray-300 px-4 py-6 transition-colors hover:bg-gray-100'>
+    <div
+      className={cn(
+        'flex cursor-pointer gap-x-3 border-b border-b-gray-300 px-4 py-6 transition-colors hover:bg-gray-100',
+        {
+          'bg-primary-50': studioId === id,
+        },
+      )}
+      onClick={() => setStudioId(id)}
+    >
       <StudioImg
         imageUrl={imageUrl}
         alt={`${id} 스튜디오 이미지`}

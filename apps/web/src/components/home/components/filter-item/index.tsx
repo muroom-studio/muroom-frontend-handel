@@ -35,7 +35,8 @@ const COMPONENT_MAP: Record<Variant, React.ComponentType> = {
 
 interface Props {
   variant: Variant;
-  value: string; // 일단 임시로 string
+  value: string;
+  onValueChange: (newValue: string) => void;
 }
 
 export default function FilterItem({ variant }: Props) {

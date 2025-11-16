@@ -8,8 +8,7 @@ import { useGeolocation } from '@/hooks/map/useGeolocation';
 
 import CurrentLocationBtn from './ui/current-location-btn';
 import ZoomControls from './ui/zoom-control-btn';
-
-import { MapState } from '@/components/home/desktop';
+import { MapState } from '@/hooks/nuqs/home/useMapState';
 
 type MarkerData = {
   id: string;
@@ -20,7 +19,7 @@ type MarkerData = {
 
 interface Props {
   mapValue: MapState;
-  setMapValue: React.Dispatch<React.SetStateAction<MapState>>;
+  setMapValue: (newState: MapState | ((prev: MapState) => MapState)) => void;
   markers?: MarkerData[];
 }
 
@@ -31,7 +30,7 @@ export default function CommonMap({ mapValue, setMapValue, markers }: Props) {
     (id: string) => {
       setMapValue((prev) => ({
         ...prev,
-        selectedId: prev.selectedId === id ? null : id,
+        studioId: prev.studioId === id ? null : id,
       }));
     },
     [setMapValue],
@@ -39,14 +38,12 @@ export default function CommonMap({ mapValue, setMapValue, markers }: Props) {
 
   const { mapInstance, infoWindowInstance } = useNaverMap({
     mapRef,
-    center: mapValue.center, // ⬅️ mapValue에서 값 사용
-    zoom: mapValue.zoom, // ⬅️ mapValue에서 값 사용
+    center: mapValue.center,
+    zoom: mapValue.zoom,
 
-    // ⬇️ setZoom과 onCenterChange를 setMapValue를 사용하는 인라인 콜백으로 변경
     setZoom: (newZoomUpdater) => {
       setMapValue((prev) => ({
         ...prev,
-        // newZoomUpdater가 (prev) => prev + 1 같은 함수일 수 있으므로 처리
         zoom:
           typeof newZoomUpdater === 'function'
             ? newZoomUpdater(prev.zoom)
@@ -66,7 +63,7 @@ export default function CommonMap({ mapValue, setMapValue, markers }: Props) {
     infoWindowInstance,
     markers,
     onMarkerClick: handleMarkerClick,
-    selectedId: mapValue.selectedId,
+    selectedId: mapValue.studioId,
   });
 
   const handleZoomIn = useCallback(() => {

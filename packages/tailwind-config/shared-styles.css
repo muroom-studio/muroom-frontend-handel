@@ -33,6 +33,7 @@
   --shadow-level-2: 0 2px 6px 0 rgba(0, 0, 0, 0.4);
   --shadow-level-1: 0 2px 6px 0 rgba(0, 0, 0, 0.2);
   --shadow-level-0: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  --shadow-detail: 2px 2px 6px 0px rgba(0, 0, 0, 0.2);
 
   --animate-in: fade-in 200ms ease-out;
   --animate-out: fade-out 150ms ease-in;
@@ -55,6 +56,9 @@
 
   .shadow-level-0 {
     box-shadow: var(--shadow-level-0);
+  }
+  .shadow-detail {
+    box-shadow: var(--shadow-detail);
   }
 }
 

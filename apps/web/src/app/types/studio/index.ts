@@ -17,6 +17,7 @@ export interface Studio {
   id: string;
   name: string; // 매물 이름 (예: "야마하 스튜디오")
   imageUrl: string; // 대표 사진
+  address: string; // [!] 추가된 주소값
   priceMin: number; // 매물의 최저 가격 (예: 19)
   priceMax: number; // 매물의 최대 가격 (예: 32)
   nearestStation: string; // 가장 가까운 역 (예: "한양대역")
@@ -32,13 +33,14 @@ export interface Studio {
   lat: number;
   lng: number;
 }
-
+// 🌟 요청하신 더미 데이터 배열입니다.
 // 🌟 요청하신 더미 데이터 배열입니다.
 export const DUMMY_STUDIO: Studio[] = [
   {
     id: 'A1',
     name: '야마하 스튜디오',
     imageUrl: 'https://placehold.co/144x144/333/fff?text=Studio+A',
+    address: '성동구 행당동 19-1 1층',
     priceMin: 19,
     priceMax: 32,
     nearestStation: '한양대역',
@@ -57,6 +59,7 @@ export const DUMMY_STUDIO: Studio[] = [
     id: 'B2',
     name: '클래식 연습실',
     imageUrl: 'https://placehold.co/144x144/555/fff?text=Studio+B',
+    address: '성동구 도선동 40 지하 1층',
     priceMin: 15,
     priceMax: 40,
     nearestStation: '왕십리역',
@@ -75,6 +78,7 @@ export const DUMMY_STUDIO: Studio[] = [
     id: 'C3',
     name: '사운드 팩토리',
     imageUrl: 'https://placehold.co/144x144/777/fff?text=Studio+C',
+    address: '성동구 성수동2가 315-61 3층',
     priceMin: 25,
     priceMax: 25,
     nearestStation: '성수역',
@@ -93,6 +97,7 @@ export const DUMMY_STUDIO: Studio[] = [
     id: 'D4',
     name: '방음부스 스튜디오',
     imageUrl: 'https://placehold.co/144x144/999/fff?text=Studio+D',
+    address: '영등포구 당산동3가 558-1 2층',
     priceMin: 30,
     priceMax: 50,
     nearestStation: '영등포구청역',
