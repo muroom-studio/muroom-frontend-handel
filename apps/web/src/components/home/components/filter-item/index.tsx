@@ -55,7 +55,7 @@ export default function FilterItem({ variant }: Props) {
           onClick={() => setIsOpen((prev) => !prev)}
           className={cn(
             'group',
-            'rounded-4 text-base-l-16-1 flex-center gap-x-micro-2 w-full cursor-pointer border border-gray-300 bg-white px-4 py-3',
+            'rounded-4 text-base-l-16-1 flex-center gap-x-micro-2 h-11 w-full cursor-pointer border border-gray-300 bg-white px-4 py-[10px]',
             'hover:bg-gray-50',
             'data-[state=open]:border-primary-400 data-[state=open]:text-primary-600',
           )}

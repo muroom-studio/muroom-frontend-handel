@@ -88,7 +88,7 @@ export default function TextField({
             })}
             disabled={!showClearIcon}
           >
-            <CloseIcon className='size-full text-gray-400' />
+            <CloseIcon className='size-full cursor-pointer text-gray-400' />
           </button>
         </div>
       </div>

@@ -15,19 +15,19 @@ interface AlertBadgeProps extends BadgeBaseProps {
 type BadgeProps = SubwayBadgeProps | AlertBadgeProps;
 
 const subwayLineColors: Record<string, string> = {
-  '1': 'bg-[#0051A3] font-roboto-flex pt-[3px] pb-[2.5px]',
-  '2': 'bg-[#00A74C] font-roboto-flex pt-[3px] pb-[2.5px]',
-  '3': 'bg-[#EC6A00] font-roboto-flex pt-[3px] pb-[2.5px]',
-  '4': 'bg-[#0797CB] font-roboto-flex pt-[3px] pb-[2.5px]',
-  '5': 'bg-[#774898] font-roboto-flex pt-[3px] pb-[2.5px]',
-  '6': 'bg-[#733819] font-roboto-flex pt-[3px] pb-[2.5px]',
-  '7': 'bg-[#686E32] font-roboto-flex pt-[3px] pb-[2.5px]',
-  '8': 'bg-[#D72171] font-roboto-flex pt-[3px] pb-[2.5px]',
-  '9': 'bg-[#A49D89] font-roboto-flex pt-[3px] pb-[2.5px]',
-  경의: 'bg-[#60C3AD]',
-  수인: 'bg-[#E2A40E]',
-  공항: 'bg-[#0090D2]',
-  인천1: 'bg-[#86B0E1]',
+  '1': 'bg-[#0051A3] py-[1px]',
+  '2': 'bg-[#00A74C] py-[1px]',
+  '3': 'bg-[#EC6A00] py-[1px]',
+  '4': 'bg-[#0797CB] py-[1px]',
+  '5': 'bg-[#774898] py-[1px]',
+  '6': 'bg-[#733819] py-[1px]',
+  '7': 'bg-[#686E32] py-[1px]',
+  '8': 'bg-[#D72171] py-[1px]',
+  '9': 'bg-[#A49D89] py-[1px]',
+  경의: 'bg-[#60C3AD] py-[2px]',
+  수인: 'bg-[#E2A40E] py-[2px]',
+  공항: 'bg-[#0090D2] py-[2px]',
+  인천1: 'bg-[#86B0E1] py-[2px]',
 };
 
 const Badge = (props: BadgeProps) => {
@@ -40,7 +40,7 @@ const Badge = (props: BadgeProps) => {
 
     return (
       <p
-        className={`${baseStyles} text-base-exs-10-2 px-1.5 py-[2.5px] text-white ${colorClass} ${className}`}
+        className={`${baseStyles} text-base-exs-10-2 px-1 text-white ${colorClass} ${className}`}
       >
         {line}
       </p>
@@ -57,7 +57,7 @@ const Badge = (props: BadgeProps) => {
 
     return (
       <span
-        className={`${baseStyles} rounded-4 text-base-s-12-2 h-4 px-1 ${variantStyles} ${className}`}
+        className={`${baseStyles} rounded-4 text-base-s-12-2 h-4 ${variantStyles} ${className}`}
       >
         {count}
       </span>

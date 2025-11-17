@@ -68,23 +68,19 @@ const SnbItem = ({
   return (
     <div
       className={cn(
-        'flex-center-col rounded-4 hover:bg-primary-600 group size-16 cursor-pointer gap-y-[2px] transition-all',
+        'flex-center-col rounded-4 group size-16 cursor-pointer gap-y-[2px] transition-all hover:bg-gray-200',
         {
           'bg-primary-600': isActive,
         },
       )}
     >
       {React.cloneElement(icon, {
-        className: cn(
-          'size-6 text-gray-400 group-hover:text-white',
-          icon.props.className,
-          {
-            '!text-white': isActive,
-          },
-        ),
+        className: cn('size-6 text-gray-400', icon.props.className, {
+          '!text-white': isActive,
+        }),
       })}
       <span
-        className={`text-base-s-12-2 text-gray-400 group-hover:text-white ${isActive && 'text-white'}`}
+        className={`text-base-s-12-2 text-gray-400 ${isActive && 'text-white'}`}
       >
         {label}
       </span>

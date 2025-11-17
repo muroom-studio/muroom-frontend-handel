@@ -1,3 +1,4 @@
+export { default as BottomDotIcon } from './BottomDot';
 export { default as ChatIcon } from './Chat';
 export { default as CloseIcon } from './Close';
 export { default as ColLineIcon } from './ColLine';
