@@ -60,9 +60,23 @@ export default function CommonStudioCard({
         <div className='flex flex-col gap-y-3'>
           <span className='text-title-s-22-1'>{`${priceMin}~${priceMax}만원`}</span>
 
-          <div className='flex items-center gap-x-1'>
-            <Badge variant='subway' line={lineInfo as string} />
-            <span className='text-base-m-14-1'>{`${nearestStation} 도보 ${walkingTime}분`}</span>
+          <div
+            className={cn('flex', {
+              'flex-col items-start gap-y-1':
+                (lineInfo as string[]).length >= 4,
+              'items-center gap-x-1': (lineInfo as string[]).length < 4,
+            })}
+          >
+            <div className='flex items-center gap-x-1'>
+              {Array.isArray(lineInfo) &&
+                lineInfo.map((line) => (
+                  <Badge key={line} variant='subway' line={line} />
+                ))}
+            </div>
+
+            <span className='text-base-m-14-1'>
+              {`${nearestStation} 도보 ${walkingTime}분`}
+            </span>
           </div>
 
           <div className='flex items-center'>

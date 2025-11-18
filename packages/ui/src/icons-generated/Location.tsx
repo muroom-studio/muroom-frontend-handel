@@ -4,6 +4,7 @@ const SvgLocation = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
     fill='none'
+    className='location_svg__w-5 location_svg__h-5'
     viewBox='0 0 20 20'
     width='1em'
     height='1em'

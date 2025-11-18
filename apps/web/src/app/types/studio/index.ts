@@ -21,7 +21,7 @@ export interface Studio {
   priceMin: number; // 매물의 최저 가격 (예: 19)
   priceMax: number; // 매물의 최대 가격 (예: 32)
   nearestStation: string; // 가장 가까운 역 (예: "한양대역")
-  lineInfo: SubwayLine | null; // 지하철 호선 정보 (없는 경우 null)
+  lineInfo: SubwayLine[] | null; // 지하철 호선 정보 (없는 경우 null)
   walkingTime: number; // 도보 시간 (분) (예: 5)
   rating: number; // 별점 (예: 4.2)
   reviewCount: number; // 리뷰 수 (예: 32)
@@ -44,7 +44,7 @@ export const DUMMY_STUDIO: Studio[] = [
     priceMin: 19,
     priceMax: 32,
     nearestStation: '한양대역',
-    lineInfo: '2',
+    lineInfo: ['6', '경의', '수인', '인천1', '공항'],
     walkingTime: 5,
     rating: 4.2,
     reviewCount: 32,
@@ -63,7 +63,7 @@ export const DUMMY_STUDIO: Studio[] = [
     priceMin: 15,
     priceMax: 40,
     nearestStation: '왕십리역',
-    lineInfo: '5',
+    lineInfo: ['5'],
     walkingTime: 8,
     rating: 4.8,
     reviewCount: 102,
@@ -82,7 +82,7 @@ export const DUMMY_STUDIO: Studio[] = [
     priceMin: 25,
     priceMax: 25,
     nearestStation: '성수역',
-    lineInfo: '2',
+    lineInfo: ['2'],
     walkingTime: 3,
     rating: 4.5,
     reviewCount: 55,
@@ -101,7 +101,7 @@ export const DUMMY_STUDIO: Studio[] = [
     priceMin: 30,
     priceMax: 50,
     nearestStation: '영등포구청역',
-    lineInfo: '2',
+    lineInfo: ['2'],
     walkingTime: 1,
     rating: 4.0,
     reviewCount: 12,
