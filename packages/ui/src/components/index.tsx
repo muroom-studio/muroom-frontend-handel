@@ -6,6 +6,9 @@ export { default as Tag } from './Tag';
 export { default as ToggleButton } from './ToggleButton';
 export { default as Badge } from './Badge';
 export { default as Spinner } from './Spinner';
+export { default as Header } from './Header';
+export { default as TabBar } from './TabBar';
+export { default as ToggleSlider } from './ToggleSlider';
 
 export {
   Dropdown,

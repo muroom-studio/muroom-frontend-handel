@@ -1,5 +1,5 @@
-import DesktopHeader from '@/layouts/desktop-layout/header';
-import DesktopSnb from '@/layouts/desktop-layout/snb';
+import DesktopBaseHeader from './base/header';
+import DesktopBaseSnb from './base/snb';
 
 interface Props {
   children: React.ReactNode;
@@ -8,9 +8,9 @@ interface Props {
 export default function DesktopLayout({ children }: Props) {
   return (
     <div>
-      <DesktopHeader />
+      <DesktopBaseHeader />
       <div className='grid h-screen w-full grid-cols-[80px_1fr] overflow-hidden'>
-        <DesktopSnb />
+        <DesktopBaseSnb />
         {children}
       </div>
     </div>

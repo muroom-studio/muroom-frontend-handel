@@ -11,7 +11,7 @@ import React, {
 } from 'react';
 
 import { cn } from '../lib/utils';
-import { DownArrowIcon } from '../icons-generated';
+import { BottomDotIcon } from '../icons-generated';
 
 type DropdownItemProps = React.ComponentPropsWithRef<'button'> & {
   value: string;
@@ -191,7 +191,7 @@ function DropdownTrigger({
       {...props}
     >
       {selectedValue ? selectedValue : placeholder || '선택...'}
-      <DownArrowIcon className='rotate size-5 transition-transform duration-200 group-data-[state=open]:rotate-180' />
+      <BottomDotIcon className='rotate size-5 transition-transform duration-200 group-data-[state=open]:rotate-180' />
     </button>
   );
 }
@@ -256,12 +256,11 @@ function DropdownItem({
       data-selected={isSelected ? 'true' : undefined}
       onClick={() => setSelected(value, children)}
       className={cn(
-        'text-base-m-14-1 relative flex w-full cursor-pointer select-none items-center border-y border-gray-200 px-3 py-[9px] outline-none transition-all',
-        'hover:!text-primary-600 hover:text-base-m-14-2',
+        'text-base-m-14-1 relative flex w-full cursor-pointer select-none items-center border-b border-gray-200 bg-white px-3 py-[9px] outline-none transition-all',
+        'hover:bg-gray-100 disabled:cursor-default disabled:text-gray-300',
         {
-          '!text-primary-600 text-base-m-14-2': isSelected,
+          '!text-primary-600 text-base-m-14-2 hover:bg-gray-50': isSelected,
         },
-        'first:border-t-0',
         'last:border-b-0',
         className,
       )}

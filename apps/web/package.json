@@ -14,8 +14,10 @@
     "@muroom/ui": "workspace:*",
     "@muroom/util": "workspace:*",
     "next": "^15.3.0",
+    "nuqs": "2.7.3",
     "react": "^19",
-    "react-dom": "^19"
+    "react-dom": "^19",
+    "react-scroll": "1.9.3"
   },
   "devDependencies": {
     "@muroom/eslint-config": "workspace:*",
@@ -27,6 +29,7 @@
     "@types/node": "^22.15.30",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.1",
+    "@types/react-scroll": "1.8.10",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.38.0",
     "postcss": "^8.5.3",

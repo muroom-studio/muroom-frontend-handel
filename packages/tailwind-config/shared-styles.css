@@ -19,19 +19,30 @@
 
 @font-face {
   font-family: 'Roboto Flex';
+  font-weight: 45 920;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/AnyConv.com__RobotoFlex-VariableFont_GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght.woff2')
+    format('woff2-variations');
+}
+
+@font-face {
+  font-family: 'Roboto Flex';
   font-weight: 100 1000;
   font-style: normal;
   font-display: swap;
-  src: url('/fonts/RobotoFlexVariable.woff2') format('woff2-variations');
+  src: url(https://cdn.jsdelivr.net/fontsource/fonts/roboto-flex:vf@latest/latin-wght-normal.woff2)
+    format('woff2-variations');
 }
 
 @theme {
   --font-pretendard: 'Pretendard Variable';
-  --font-roboto-flex: 'Roboto Flex';
+  --font-roboto: 'Roboto Flex';
 
   --shadow-level-2: 0 2px 6px 0 rgba(0, 0, 0, 0.4);
   --shadow-level-1: 0 2px 6px 0 rgba(0, 0, 0, 0.2);
   --shadow-level-0: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  --shadow-detail: 2px 2px 6px 0px rgba(0, 0, 0, 0.2);
 
   --animate-in: fade-in 200ms ease-out;
   --animate-out: fade-out 150ms ease-in;
@@ -54,6 +65,9 @@
 
   .shadow-level-0 {
     box-shadow: var(--shadow-level-0);
+  }
+  .shadow-detail {
+    box-shadow: var(--shadow-detail);
   }
 }
 

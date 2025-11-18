@@ -6,7 +6,7 @@ import { cn } from '@muroom/lib';
 
 import { ResetIcon } from '@muroom/icons';
 
-import { FilterWrapper, OptionItem } from '../ui';
+import { FilterWrapper, OptionItem } from '../components';
 
 const SIZE_OPTIONS = [
   '전체',

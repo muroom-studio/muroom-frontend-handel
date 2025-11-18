@@ -15,23 +15,23 @@ interface AlertBadgeProps extends BadgeBaseProps {
 type BadgeProps = SubwayBadgeProps | AlertBadgeProps;
 
 const subwayLineColors: Record<string, string> = {
-  '1': 'bg-[#0051A3] font-roboto-flex',
-  '2': 'bg-[#00A74C] font-roboto-flex',
-  '3': 'bg-[#EC6A00] font-roboto-flex',
-  '4': 'bg-[#0797CB] font-roboto-flex',
-  '5': 'bg-[#774898] font-roboto-flex',
-  '6': 'bg-[#733819] font-roboto-flex',
-  '7': 'bg-[#686E32] font-roboto-flex',
-  '8': 'bg-[#D72171] font-roboto-flex',
-  '9': 'bg-[#A49D89] font-roboto-flex',
-  경의: 'bg-[#60C3AD]',
-  수인: 'bg-[#E2A40E]',
-  공항: 'bg-[#0090D2]',
-  인천1: 'bg-[#86B0E1]',
+  '1': 'bg-[#0051A3] py-[1px] w-[18px]',
+  '2': 'bg-[#00A74C] py-[1px] w-[18px]',
+  '3': 'bg-[#EC6A00] py-[1px] w-[18px]',
+  '4': 'bg-[#0797CB] py-[1px] w-[18px]',
+  '5': 'bg-[#774898] py-[1px] w-[18px]',
+  '6': 'bg-[#733819] py-[1px] w-[18px]',
+  '7': 'bg-[#686E32] py-[1px] w-[18px]',
+  '8': 'bg-[#D72171] py-[1px] w-[18px]',
+  '9': 'bg-[#A49D89] py-[1px] w-[18px]',
+  경의: 'bg-[#60C3AD] py-[2px]',
+  수인: 'bg-[#E2A40E] py-[2px]',
+  공항: 'bg-[#0090D2] py-[2px]',
+  인천1: 'bg-[#86B0E1] py-[2px]',
 };
 
 const Badge = (props: BadgeProps) => {
-  const baseStyles = 'inline-flex items-center justify-center';
+  const baseStyles = 'flex-center';
 
   if (props.variant === 'subway') {
     const { line, className = '' } = props;
@@ -39,11 +39,11 @@ const Badge = (props: BadgeProps) => {
     const colorClass = subwayLineColors[line] || 'bg-gray-400';
 
     return (
-      <span
-        className={`${baseStyles} rounded-100 text-base-exs-10-2 h-[14px] text-white ${colorClass} ${className}`}
+      <p
+        className={`${baseStyles} rounded-1000 text-base-exs-10-2 h-[18px] px-1 text-white ${colorClass} ${className}`}
       >
         {line}
-      </span>
+      </p>
     );
   }
 
@@ -57,7 +57,7 @@ const Badge = (props: BadgeProps) => {
 
     return (
       <span
-        className={`${baseStyles} rounded-4 text-base-s-12-2 h-4 px-1 ${variantStyles} ${className}`}
+        className={`${baseStyles} rounded-4 text-base-s-12-2 px-1.5 py-[2px] ${variantStyles} ${className}`}
       >
         {count}
       </span>

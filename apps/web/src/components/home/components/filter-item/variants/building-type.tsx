@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { toggleItemInArray } from '@muroom/util';
 
-import { FilterWrapper, OptionItem } from '../ui';
+import { FilterWrapper, OptionItem } from '../components';
 
 const FLOOR_OPTIONS = ['전체', '지상', '지하'];
 const ACCOMMODATION_OPTIONS = ['전체', '가능', '불가능'];

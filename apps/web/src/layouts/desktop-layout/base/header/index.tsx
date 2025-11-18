@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Image from 'next/image';
 
 import BaseLogo from '@muroom/ui/assets/base-logo.svg';
@@ -10,7 +11,9 @@ export default function DesktopBaseHeader() {
   return (
     <header className='flex-between border-b-[0.5px] border-b-gray-300 p-5'>
       <div className='flex-center gap-x-4'>
-        <Image src={BaseLogo} alt='로고' width={133} height={32} priority />
+        <Link href={'/home'} className='cursor-pointer'>
+          <Image src={BaseLogo} alt='로고' width={133} height={32} priority />
+        </Link>
         <div className='w-[404px]'>
           <TextField
             id='keyword'
