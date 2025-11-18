@@ -7,7 +7,9 @@ type TagVariant =
   | 'blue'
   | 'neutral'
   | 'red'
-  | 'outline';
+  | 'outline'
+  | 'musician'
+  | 'owner';
 
 type TagSize = 'm' | 's';
 
@@ -51,6 +53,12 @@ const Tag = ({
     },
     outline: {
       base: 'bg-white border-gray-300',
+    },
+    musician: {
+      base: 'bg-primary-500 !text-white text-base-s-12-2 px-[6px] py-1',
+    },
+    owner: {
+      base: 'bg-gray-800 !text-white text-base-s-12-2 px-2 py-1',
     },
   };
 

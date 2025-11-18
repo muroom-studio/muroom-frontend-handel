@@ -1,5 +1,5 @@
-import GridRowItem from '../components/grid-row-item';
-import SectionWrapper from '../components/section-wrapper';
+import GridRowItem from '../../components/grid-row-item';
+import SectionWrapper from '../../components/section-wrapper';
 
 import { Tag } from '@muroom/components';
 
@@ -20,6 +20,7 @@ export default function RoomInfoSection({ title }: Props) {
             </div>
           }
         />
+        <div className='h-px bg-gray-200' />
       </>
     </SectionWrapper>
   );
