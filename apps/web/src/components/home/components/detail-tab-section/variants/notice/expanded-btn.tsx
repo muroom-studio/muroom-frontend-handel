@@ -27,14 +27,14 @@ export default function ExpandableText({ message }: Props) {
         {isExpanded ? message : initialText}
       </p>
 
-      {!isShortText && (
+      {!isShortText && !isExpanded && (
         <div className='flex-center'>
           <Button
             variant='outline'
             size='l'
             onClick={() => setIsExpanded(!isExpanded)}
           >
-            {isExpanded ? '접기' : '더보기'}
+            {'더보기'}
           </Button>
         </div>
       )}

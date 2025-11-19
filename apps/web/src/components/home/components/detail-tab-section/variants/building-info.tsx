@@ -1,15 +1,20 @@
 'use client';
 
+import { useState } from 'react';
+
 import GridRowItem from '../components/grid-row-item';
 import SectionWrapper from '../components/section-wrapper';
 
-import { Button, Tag } from '@muroom/components';
+import { Button, Modal, Tag } from '@muroom/components';
+import StaticMap from '@/components/common/static-map';
 
 interface Props {
   title: string;
 }
 
 export default function BuildingInfoSection({ title }: Props) {
+  const [showParkingModal, setShowParkingModal] = useState(false);
+
   return (
     <SectionWrapper title={title}>
       <>
@@ -24,7 +29,11 @@ export default function BuildingInfoSection({ title }: Props) {
                 <Tag variant='red'>유료</Tag>
                 <Tag variant='blue'>3개 남음</Tag>
               </div>
-              <Button variant='outline' size='s'>
+              <Button
+                variant='outline'
+                size='s'
+                onClick={() => setShowParkingModal(true)}
+              >
                 위치
               </Button>
             </div>
@@ -47,6 +56,37 @@ export default function BuildingInfoSection({ title }: Props) {
           }
         />
       </>
+
+      <Modal
+        isOpen={showParkingModal}
+        onClose={() => setShowParkingModal(false)}
+      >
+        <Modal.Wrapper className='px-0'>
+          <Modal.Header title='주차장 위치' className='border-b-0 px-5' />
+          <Modal.Body className='border-t border-t-gray-200 pt-0'>
+            <div className='flex flex-col pb-5'>
+              <StaticMap
+                centerLat={37.3595704}
+                centerLng={127.105399}
+                height={195}
+              />
+              <div className='flex flex-col gap-y-1 border-t border-t-gray-200 px-5 pt-5'>
+                <p className='text-base-l-16-2'>잠원수영장옆공영주차장</p>
+                <p className='text-base-l-16-1'>서울 서초구 잠원동 86</p>
+              </div>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant='outline'
+              size='xl'
+              onClick={() => setShowParkingModal(false)}
+            >
+              확인
+            </Button>
+          </Modal.Footer>
+        </Modal.Wrapper>
+      </Modal>
     </SectionWrapper>
   );
 }

@@ -19,7 +19,8 @@
   "peerDependencies": {
     "@types/react-dom": "^19",
     "react": "^19",
-    "react-dom": "^19"
+    "react-dom": "^19",
+    "framer-motion": "12.23.24"
   },
   "devDependencies": {
     "@muroom/eslint-config": "workspace:*",

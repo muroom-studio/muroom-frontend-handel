@@ -9,6 +9,7 @@ export { default as Spinner } from './Spinner';
 export { default as Header } from './Header';
 export { default as TabBar } from './TabBar';
 export { default as ToggleSlider } from './ToggleSlider';
+export { default as Modal } from './Modal';
 
 export {
   Dropdown,
@@ -16,3 +17,10 @@ export {
   DropdownContent,
   DropdownItem,
 } from './Dropdown';
+
+export {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+} from './Tooltip';
