@@ -2,11 +2,12 @@ import { cn } from '@muroom/lib';
 
 interface Props {
   title: string;
+  description?: string;
   className?: string;
   children: React.ReactNode;
 }
 
-const SectionWrapper = ({ className, title, children }: Props) => {
+const SectionWrapper = ({ className, title, description, children }: Props) => {
   return (
     <section
       className={cn(
@@ -14,7 +15,13 @@ const SectionWrapper = ({ className, title, children }: Props) => {
         className,
       )}
     >
-      <h2 className='text-base-exl-18-2 text-black'>{title}</h2>
+      <div
+        aria-label={`${description ? '제목, 설명' : '제목'}`}
+        className={`${description ? 'flex items-center gap-x-2' : ''}`}
+      >
+        <h2 className='text-base-exl-18-2 text-black'>{title}</h2>
+        <h3 className='text-base-m-14-1 text-gray-600'>{description}</h3>
+      </div>
       {children}
     </section>
   );

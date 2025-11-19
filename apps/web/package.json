@@ -13,10 +13,12 @@
   "dependencies": {
     "@muroom/ui": "workspace:*",
     "@muroom/util": "workspace:*",
+    "framer-motion": "12.23.24",
     "next": "^15.3.0",
     "nuqs": "2.7.3",
     "react": "^19",
     "react-dom": "^19",
+    "react-naver-maps": "0.1.4",
     "react-scroll": "1.9.3"
   },
   "devDependencies": {

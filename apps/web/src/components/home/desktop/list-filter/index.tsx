@@ -2,15 +2,9 @@
 
 import { useState } from 'react';
 
-import {
-  Dropdown,
-  DropdownContent,
-  DropdownItem,
-  DropdownTrigger,
-  Popover,
-} from '@muroom/components';
+import { Popover } from '@muroom/components';
 import { cn } from '@muroom/lib';
-import { BottomDotIcon, DownArrowIcon } from '@muroom/icons';
+import { BottomDotIcon } from '@muroom/icons';
 
 const SORT_OPTIONS = [
   '선택',

@@ -1,8 +1,15 @@
 'use client';
 
-import { useEffect } from 'react';
-import { scroller, Element, Events, scrollSpy } from 'react-scroll';
-import { Badge, TabBar } from '@muroom/components';
+import { useState, useEffect, useRef } from 'react';
+import { scroller } from 'react-scroll';
+import { Badge, Header, TabBar } from '@muroom/components';
+import {
+  HeartOutlineIcon,
+  LocationIcon,
+  ShareIcon,
+  VisitListOutlineIcon,
+} from '@muroom/icons';
+import { Studio } from '@/app/types/studio';
 
 import {
   BuildingInfoSection,
@@ -10,14 +17,41 @@ import {
   RoomInfoSection,
   OptionSection,
   NearFacilitySection,
-  ReviewSection,
 } from './variants';
 
+const HEADER_TABS_DATA = [
+  { id: 'detail', label: '상세 정보' },
+  { id: 'check', label: '방문확인' },
+];
+
 interface Props {
-  vacancy: number;
+  detailStudio: Studio;
 }
 
-export default function DetailTabSection({ vacancy }: Props) {
+export default function DetailTabSection({ detailStudio }: Props) {
+  const {
+    name,
+    priceMin,
+    priceMax,
+    nearestStation,
+    lineInfo,
+    walkingTime,
+    address,
+    vacancy,
+  } = detailStudio;
+
+  const [activeTab, setActiveTab] = useState('building-info');
+  const [isClickScrolling, setIsClickScrolling] = useState(false);
+
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const tabBarScrollRef = useRef<HTMLDivElement>(null);
+
+  const TOP_HEADER_HEIGHT = 100;
+  const TAB_HEIGHT = 46;
+  const TOTAL_STICKY_HEIGHT = TOP_HEADER_HEIGHT + TAB_HEIGHT;
+
+  const SCROLL_OFFSET = -TOTAL_STICKY_HEIGHT;
+
   const DETAIL_TABS_DATA = [
     { id: 'building-info', label: '건물정보' },
     { id: 'notice', label: '안내사항' },
@@ -26,80 +60,197 @@ export default function DetailTabSection({ vacancy }: Props) {
       label: (
         <div className='flex gap-x-1'>
           방정보
-          <Badge variant='alert' count={vacancy} />
+          <Badge variant='alert' count={vacancy || 0} />
         </div>
       ),
     },
     { id: 'option', label: '옵션' },
     { id: 'near-facility', label: '주변시설' },
-    { id: 'review', label: '후기' },
   ];
 
-  // 스크롤 이벤트 등록 (필수)
   useEffect(() => {
-    Events.scrollEvent.register('begin', () => {});
-    Events.scrollEvent.register('end', () => {});
-    scrollSpy.update();
+    if (!tabBarScrollRef.current) return;
+    const activeIndex = DETAIL_TABS_DATA.findIndex(
+      (tab) => tab.id === activeTab,
+    );
+    if (activeIndex === -1) return;
 
-    return () => {
-      Events.scrollEvent.remove('begin');
-      Events.scrollEvent.remove('end');
-    };
-  }, []);
+    const tabButtons = tabBarScrollRef.current.querySelectorAll('button');
+    const targetButton = tabButtons[activeIndex] as HTMLElement;
 
-  const handleTabChange = (selectedTabId: string) => {
+    if (targetButton) {
+      tabBarScrollRef.current.scrollTo({
+        left: targetButton.offsetLeft,
+        behavior: 'smooth',
+      });
+    }
+  }, [activeTab]);
+
+  const handleHeaderTabChange = (selectedTabId: string) => {
+    console.log('상단 탭 변경:', selectedTabId);
+  };
+
+  const handleDetailTabChange = (selectedTabId: string) => {
+    setActiveTab(selectedTabId);
+    setIsClickScrolling(true);
+
     scroller.scrollTo(selectedTabId, {
       duration: 500,
       smooth: true,
-      containerId: 'detail-scroll-container', // 아래 div ID와 일치 필수
-      offset: 0,
+      containerId: 'detail-scroll-container',
+      offset: SCROLL_OFFSET + 2,
     });
+
+    setTimeout(() => setIsClickScrolling(false), 600);
   };
 
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    if (isClickScrolling) return;
+
+    const container = e.currentTarget;
+    const scrollTop = container.scrollTop;
+
+    // gap-y-4(16px) 등을 고려한 여유 값
+    // 이 값이 클수록 탭이 "미리" 바뀝니다.
+    // 싱크가 너무 늦게 맞으면 이 값을 5~10 정도 키우세요.
+    const BUFFER = 20;
+
+    // 기준선: 현재 스크롤 위치 + 눈에 보이는 헤더 총 높이 + 버퍼
+    const scrollCheckLine = scrollTop + TOTAL_STICKY_HEIGHT + BUFFER;
+
+    const isBottom =
+      container.scrollHeight - container.scrollTop <=
+      container.clientHeight + 10;
+
+    if (isBottom) {
+      const lastTabId = DETAIL_TABS_DATA[DETAIL_TABS_DATA.length - 1]?.id;
+      if (activeTab !== lastTabId) setActiveTab(lastTabId as string);
+      return;
+    }
+
+    let currentId = DETAIL_TABS_DATA[0]?.id;
+
+    for (const tab of DETAIL_TABS_DATA) {
+      const element = document.getElementById(tab.id);
+      if (element) {
+        if (element.offsetTop <= scrollCheckLine) {
+          currentId = tab.id;
+        }
+      }
+    }
+
+    if (currentId && currentId !== activeTab) {
+      setActiveTab(currentId as string);
+    }
+  };
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      container.addEventListener('scroll', handleScroll as any);
+    }
+    return () => {
+      if (container) {
+        container.removeEventListener('scroll', handleScroll as any);
+      }
+    };
+  }, [isClickScrolling, activeTab]);
+
   return (
-    <div className='flex h-full flex-col'>
-      <div className='flex-none bg-white'>
-        <div className='flex overflow-x-auto [&::-webkit-scrollbar]:hidden'>
+    <div
+      id='detail-scroll-container'
+      ref={scrollContainerRef}
+      className='relative flex h-full flex-col overflow-y-auto bg-gray-100'
+    >
+      <div
+        className='sticky top-0 z-50 border-b border-gray-300 bg-white'
+        style={{ height: TOP_HEADER_HEIGHT }}
+      >
+        <Header
+          title={name}
+          onBackClick={() => {}}
+          rightSlot={
+            <>
+              <VisitListOutlineIcon className='size-6' />
+              <HeartOutlineIcon className='size-6' />
+            </>
+          }
+        />
+        <TabBar
+          level={2}
+          tabs={HEADER_TABS_DATA}
+          initialActiveTabId='detail'
+          onTabChange={handleHeaderTabChange}
+          className='border-y border-y-gray-300'
+        />
+      </div>
+
+      <div className='bg-white'>
+        <div className='h-[250px] w-full bg-red-600' />
+        <div className='px-5 py-6'>
+          <div className='flex flex-col gap-y-6'>
+            <div className='flex flex-col gap-y-2'>
+              <div className='flex-between'>
+                <span className='text-title-s-22-2'>{`${priceMin}만원 ~ ${priceMax}만원`}</span>
+                <ShareIcon className='size-6' />
+              </div>
+              <span className='text-base-m-14-1 text-gray-500'>{name}</span>
+            </div>
+            <div className='flex flex-col gap-y-3'>
+              <div className='flex items-center gap-x-1'>
+                {Array.isArray(lineInfo) &&
+                  lineInfo.map((line) => (
+                    <Badge key={line} variant='subway' line={line} />
+                  ))}
+                <span className='text-base-m-14-1'>{`${nearestStation} 도보 ${walkingTime}분`}</span>
+              </div>
+              <div className='flex -translate-x-1 items-center gap-x-1'>
+                <LocationIcon className='size-6 text-gray-400' />
+                <span className='text-base-m-14-1'>{address}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        className='sticky z-40 border-b border-gray-200 bg-white'
+        style={{ top: `${TOP_HEADER_HEIGHT}px` }}
+      >
+        <div
+          ref={tabBarScrollRef}
+          className='flex overflow-x-auto [&::-webkit-scrollbar]:hidden'
+        >
           <TabBar
             level={3}
             tabs={DETAIL_TABS_DATA}
-            initialActiveTabId='building-info'
-            onTabChange={handleTabChange}
+            initialActiveTabId={activeTab}
+            onTabChange={handleDetailTabChange}
             className='flex'
             btnClassName='px-[22px]'
           />
         </div>
       </div>
 
-      <div
-        id='detail-scroll-container'
-        className='relative min-h-0 flex-1 overflow-y-auto bg-gray-100'
-      >
-        <div className='flex flex-col gap-y-4 pb-10'>
-          <Element name='building-info'>
-            <BuildingInfoSection title='건물정보' />
-          </Element>
-
-          <Element name='notice'>
-            <NoticeSection title='안내사항' />
-          </Element>
-
-          <Element name='room-info'>
-            <RoomInfoSection title='방 정보' />
-          </Element>
-
-          <Element name='option'>
-            <OptionSection title='옵션' />
-          </Element>
-
-          <Element name='near-facility'>
-            <NearFacilitySection title='주변 시설' />
-          </Element>
-
-          <Element name='review'>
-            <ReviewSection title='후기' />
-          </Element>
-        </div>
+      <div className='flex flex-col gap-y-4'>
+        <section id='building-info'>
+          <BuildingInfoSection title='건물정보' />
+        </section>
+        <section id='notice'>
+          <NoticeSection title='안내사항' />
+        </section>
+        <section id='room-info'>
+          <RoomInfoSection title='방 정보' />
+        </section>
+        <section id='option'>
+          <OptionSection title='옵션' />
+        </section>
+        <section id='near-facility'>
+          <NearFacilitySection
+            title='주변 시설'
+            description='네이버 도보 기준 5분 이내'
+          />
+        </section>
       </div>
     </div>
   );
