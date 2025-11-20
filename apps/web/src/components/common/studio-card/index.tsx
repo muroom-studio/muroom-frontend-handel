@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import Image from 'next/image';
 
-import { Studio } from '@/app/types/studio';
+import { Studio } from '@/types/studio';
 
 import { Badge, Tag, ToggleButton } from '@muroom/components';
 
@@ -96,7 +96,9 @@ export default function CommonStudioCard({
               방 없음
             </Tag>
           )}
-          <span className='text-base-m-14-1 text-gray-500'>{name}</span>
+          <p className='text-base-m-14-1 whitespace-pre-line text-gray-500'>
+            {name}
+          </p>
         </div>
       </div>
     </div>
@@ -115,7 +117,7 @@ const StudioImg = ({
   const [wish, setWish] = useState(isWished);
 
   return (
-    <div className='relative h-[140px] w-[140px]'>
+    <div className='relative h-[140px] w-[140px] shrink-0'>
       <div className='flex-between absolute top-2 w-full px-2'>
         <div className='flex items-center gap-x-1'>
           {isNew && (

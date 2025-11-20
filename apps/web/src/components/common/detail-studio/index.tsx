@@ -1,7 +1,7 @@
 'use client';
 
 import DetailTabSection from '@/components/home/components/detail-tab-section';
-import { Studio } from '@/app/types/studio';
+import { Studio } from '@/types/studio';
 
 interface Props {
   detailStudio: Studio;

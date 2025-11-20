@@ -9,7 +9,7 @@ import {
   ShareIcon,
   VisitListOutlineIcon,
 } from '@muroom/icons';
-import { Studio } from '@/app/types/studio';
+import { Studio } from '@/types/studio';
 
 import {
   BuildingInfoSection,

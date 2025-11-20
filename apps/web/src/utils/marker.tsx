@@ -1,15 +1,9 @@
+import { MarkerData } from '@/components/common/map';
 import { createRoot, type Root } from 'react-dom/client';
 
 type MarkerComponentProps = {
   label: string;
   onClick: () => void;
-};
-
-type MarkerData = {
-  id: string;
-  lat: number;
-  lng: number;
-  label: string;
 };
 
 export function createMarkerWithReactRoot(
@@ -23,7 +17,7 @@ export function createMarkerWithReactRoot(
 
   root.render(
     <CustomMarkerComponent
-      label={data.label}
+      label={`${data.priceMin}~${data.priceMax}만원`}
       onClick={() => {
         onMarkerClick(data.id);
       }}
