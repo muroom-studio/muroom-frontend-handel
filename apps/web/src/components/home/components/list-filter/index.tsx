@@ -6,6 +6,8 @@ import { Popover } from '@muroom/components';
 import { cn } from '@muroom/lib';
 import { BottomDotIcon } from '@muroom/icons';
 
+import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
+
 const SORT_OPTIONS = [
   '선택',
   '추천순',
@@ -17,11 +19,17 @@ const SORT_OPTIONS = [
 ];
 
 export default function ListFilter() {
+  const { isMobile } = useResponsiveLayout();
+
   const [selectedOption, setSelectedOption] = useState('');
 
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <div className='flex-between h-14 border-b border-b-gray-300 p-4'>
+    <div
+      className={cn('flex-between h-14 border-b border-b-gray-300 p-4', {
+        'px-0 py-4': isMobile,
+      })}
+    >
       <span className='text-base-exl-18-2 text-black'>75개</span>
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <Popover.Trigger>

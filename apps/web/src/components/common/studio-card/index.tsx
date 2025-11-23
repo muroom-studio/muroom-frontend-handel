@@ -8,18 +8,21 @@ import { Badge, Tag, ToggleButton } from '@muroom/components';
 
 import { HeartIcon, StarIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
+import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
+import { MapState } from '@/hooks/nuqs/home/useMapState';
 
 interface Props {
   data: Studio;
-  studioId: string;
-  setStudioId: (id: string) => void;
+  currentStudioId: string;
+  setMapValue: (newState: MapState | ((prev: MapState) => MapState)) => void;
 }
 
 export default function CommonStudioCard({
   data,
-  studioId,
-  setStudioId,
+  currentStudioId,
+  setMapValue,
 }: Props) {
+  const { isMobile } = useResponsiveLayout();
   const {
     id,
     name,
@@ -44,10 +47,19 @@ export default function CommonStudioCard({
       className={cn(
         'flex cursor-pointer gap-x-3 border-b border-b-gray-300 px-4 py-6 transition-colors hover:bg-gray-100',
         {
-          'bg-primary-50': studioId === id,
+          'bg-primary-50': currentStudioId === id,
+        },
+        {
+          'px-0': isMobile,
         },
       )}
-      onClick={() => setStudioId(id)}
+      onClick={() =>
+        setMapValue((prev) => ({
+          ...prev,
+          center: { lat, lng },
+          studioId: prev.studioId === id ? null : id,
+        }))
+      }
     >
       <StudioImg
         imageUrl={imageUrl}

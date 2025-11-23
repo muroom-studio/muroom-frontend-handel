@@ -6,6 +6,7 @@ import type { Root } from 'react-dom/client';
 import { cleanupMarkers, createMarkerWithReactRoot } from '@/utils/map/marker';
 import { MarkerData, MarkerSize } from '@/types/map/markers';
 import CustomMarker from '@/components/common/map/ui/custom-marker';
+import { useResponsiveLayout } from '../useResponsiveLayout';
 
 function getMarkerSize(zoom: number): MarkerSize {
   if (zoom < 15) return 'S';
@@ -26,6 +27,8 @@ export function useMapOverlays({
   onMarkerClick,
   selectedId,
 }: Props) {
+  const { isMobile } = useResponsiveLayout();
+
   const markerInstancesRef = useRef<naver.maps.Marker[]>([]);
   const rootInstancesRef = useRef<Root[]>([]);
 
@@ -82,6 +85,7 @@ export function useMapOverlays({
         CustomMarker,
         size,
         isSelected,
+        isMobile,
       );
 
       newMarkers.push(marker);

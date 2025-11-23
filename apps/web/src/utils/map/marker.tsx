@@ -11,6 +11,7 @@ export function createMarkerWithReactRoot(
   CustomMarkerComponent: React.ComponentType<CustomMarkerProps>,
   size: MarkerSize,
   isSelected: boolean,
+  isMobile: boolean,
 ): { marker: naver.maps.Marker; root: Root } {
   const container = document.createElement('div');
 
@@ -18,6 +19,7 @@ export function createMarkerWithReactRoot(
 
   root.render(
     <CustomMarkerComponent
+      isMobile={isMobile}
       priceMin={data.priceMin}
       priceMax={data.priceMax}
       name={data.name}
