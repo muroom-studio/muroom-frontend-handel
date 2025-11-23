@@ -9,7 +9,7 @@ const filterKeys = {
   e2: parseAsString.withDefault(''),
   e3: parseAsString.withDefault(''),
   e4: parseAsString.withDefault(''),
-  e5: parseAsString.withDefault(''),
+  // e5: parseAsString.withDefault(''),
 };
 
 /**
@@ -39,16 +39,13 @@ export function useFilters() {
       e2: '',
       e3: '',
       e4: '',
-      e5: '',
+      // e5: '',
     });
   };
 
   return {
-    /** 현재 필터 값 객체 (e.g., { e1: '', e2: '...' }) */
     filteredValue,
-    /** 특정 필터 값을 설정하는 함수 */
     setFilter,
-    /** 모든 필터를 초기화하는 함수 */
     clearFilters,
   };
 }

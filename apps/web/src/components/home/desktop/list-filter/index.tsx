@@ -51,6 +51,7 @@ export default function ListFilter() {
                 key={option}
                 onClick={() => {
                   setSelectedOption(option);
+                  setIsOpen(false);
                 }}
                 className={cn(
                   'text-base-m-14-1 relative flex w-full cursor-pointer select-none items-center border-b border-gray-200 bg-white px-3 py-[9px] outline-none transition-all',

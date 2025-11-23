@@ -7,7 +7,8 @@ import BaseLayout from '@/layouts';
 import Script from 'next/script';
 
 import { NuqsAdapter } from 'nuqs/adapters/next';
-import MapProvider from '@/components/providers/map';
+import MapProvider from '@/components/providers/map-provider';
+import RQProvider from '@/components/providers/rq-provider';
 
 const pretendard = localFont({
   src: '../../../../packages/tailwind-config/fonts/PretendardVariable.woff2',
@@ -47,11 +48,13 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={pretendard.className}>
-        <MapProvider>
-          <NuqsAdapter>
-            <BaseLayout>{children}</BaseLayout>
-          </NuqsAdapter>
-        </MapProvider>
+        <RQProvider>
+          <MapProvider>
+            <NuqsAdapter>
+              <BaseLayout>{children}</BaseLayout>
+            </NuqsAdapter>
+          </MapProvider>
+        </RQProvider>
         <Script
           strategy='afterInteractive'
           src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${process.env.NEXT_PUBLIC_NCP_CLIENT_ID}`}

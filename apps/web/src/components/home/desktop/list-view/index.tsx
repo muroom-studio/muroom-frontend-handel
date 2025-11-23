@@ -1,6 +1,6 @@
 import CommonStudioCard from '@/components/common/studio-card';
 
-import { Studio } from '@/app/types/studio';
+import { Studio } from '@/types/studio';
 
 interface Props {
   studios: Studio[];

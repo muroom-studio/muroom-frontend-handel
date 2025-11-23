@@ -40,6 +40,8 @@ const ToggleButton = ({
   const isSelected = isControlled ? controlledSelected : uncontrolledSelected;
 
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    e.preventDefault();
     onClick?.(e);
 
     if (!isControlled) {

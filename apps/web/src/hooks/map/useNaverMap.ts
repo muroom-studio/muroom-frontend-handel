@@ -1,127 +1,96 @@
-import { useRef, useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 type Props = {
   mapRef: React.RefObject<HTMLDivElement | null>;
   center: { lat: number; lng: number };
   zoom: number;
   setZoom: React.Dispatch<React.SetStateAction<number>>;
-  // ⭐️ [추가] 1. onCenterChange prop 추가
   onCenterChange: (coords: { lat: number; lng: number }) => void;
+  minZoom?: number;
+  maxZoom?: number;
 };
 
-// 1. ⭐️ 지도 생성과 업데이트 로직을 통합한 훅
 export function useNaverMap({
   mapRef,
   center,
   zoom,
   setZoom,
   onCenterChange,
+  minZoom,
+  maxZoom,
 }: Props) {
-  const mapInstanceRef = useRef<naver.maps.Map | null>(null);
-  const infoWindowRef = useRef<naver.maps.InfoWindow | null>(null);
+  const [mapInstance, setMapInstance] = useState<naver.maps.Map | null>(null);
 
-  // 2. [지도 초기화 훅] (변경 없음)
-  useEffect(() => {
-    if (mapRef.current && !mapInstanceRef.current) {
-      const initialCenter = new naver.maps.LatLng(center.lat, center.lng);
-      const map = new naver.maps.Map(mapRef.current, {
-        center: initialCenter,
-        zoom: zoom,
-      });
-      mapInstanceRef.current = map;
-
-      infoWindowRef.current = new naver.maps.InfoWindow({
-        content: '<div style="padding:10px;"></div>',
-        borderWidth: 1,
-        borderColor: '#ccc',
-        backgroundColor: '#fff',
-        pixelOffset: new naver.maps.Point(0, -10),
-      });
-    }
-  }, [mapRef, center, zoom]);
+  const isInitializedRef = useRef(false);
+  const isMapMovingRef = useRef(false);
 
   useEffect(() => {
-    if (mapRef.current && !mapInstanceRef.current) {
-      const initialCenter = new naver.maps.LatLng(center.lat, center.lng);
-      const map = new naver.maps.Map(mapRef.current, {
-        center: initialCenter,
-        zoom: zoom,
-      });
-      mapInstanceRef.current = map;
+    if (!mapRef.current || isInitializedRef.current) return;
 
-      infoWindowRef.current = new naver.maps.InfoWindow({
-        content: '<div style="padding:10px;"></div>',
-        borderWidth: 1,
-        borderColor: '#ccc',
-        backgroundColor: '#fff',
-        pixelOffset: new naver.maps.Point(0, -10),
-      });
-
-      // ⭐️ [Cleanup] 컴포넌트가 Unmount될 때 지도 파괴
-      return () => {
-        // ⭐️ InfoWindow 닫기
-        infoWindowRef.current?.close();
-        // ⭐️ 지도 인스턴스 파괴 (메모리 해제)
-        map.destroy();
-        mapInstanceRef.current = null; // Ref 초기화
-      };
-    }
-
-    // 만약 초기화 조건이 충족되지 않으면 정리할 것이 없음을 반환
-    return () => {};
-  }, [mapRef, center, zoom]);
-
-  // 3. [지도 이동 훅] (변경 없음)
-  useEffect(() => {
-    if (!mapInstanceRef.current) return;
-    mapInstanceRef.current.setCenter(
-      new naver.maps.LatLng(center.lat, center.lng),
-    );
-  }, [center]);
-
-  // 4. [지도 확대/축소 훅] (변경 없음)
-  useEffect(() => {
-    if (!mapInstanceRef.current) return;
-    mapInstanceRef.current.setZoom(zoom);
-  }, [zoom]);
-
-  // 5. [줌 이벤트 훅] (변경 없음 - Map -> React Zoom 동기화)
-  useEffect(() => {
-    const map = mapInstanceRef.current;
-    if (!map) return;
-
-    const listener = naver.maps.Event.addListener(map, 'zoom_changed', () => {
-      const newZoom = map.getZoom();
-      setZoom(newZoom);
+    const map = new naver.maps.Map(mapRef.current, {
+      center: new naver.maps.LatLng(center.lat, center.lng),
+      zoom: zoom,
+      minZoom: minZoom,
+      maxZoom: maxZoom,
     });
 
+    setMapInstance(map);
+    isInitializedRef.current = true;
+
     return () => {
-      naver.maps.Event.removeListener(listener);
+      map.destroy();
+      isInitializedRef.current = false;
     };
-  }, [mapInstanceRef.current, setZoom]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mapRef]);
 
-  // 6. ⭐️ [새 훅] 중심 좌표 동기화 (Map -> React Center 동기화)
   useEffect(() => {
-    const map = mapInstanceRef.current;
-    if (!map) return;
+    if (!mapInstance) return;
 
-    // 'idle' 이벤트는 드래그나 줌이 끝나고 지도가 멈췄을 때 호출됩니다.
-    // 무한 루프를 방지하면서 중심 좌표를 동기화하는 가장 안정적인 방법입니다.
-    const listener = naver.maps.Event.addListener(map, 'idle', () => {
-      const newCenter = map.getCenter() as naver.maps.LatLng;
-      // 2. 이제 .lat()과 .lng() 메서드를 안전하게 호출합니다.
+    const currentCenter = mapInstance.getCenter() as naver.maps.LatLng;
+    const newCenter = new naver.maps.LatLng(center.lat, center.lng);
+
+    const dist =
+      Math.abs(currentCenter.lat() - newCenter.lat()) +
+      Math.abs(currentCenter.lng() - newCenter.lng());
+
+    if (dist > 0.0001) {
+      isMapMovingRef.current = true;
+      mapInstance.panTo(newCenter, { duration: 300 });
+    }
+  }, [mapInstance, center.lat, center.lng]);
+
+  useEffect(() => {
+    if (!mapInstance) return;
+
+    if (mapInstance.getZoom() !== zoom) {
+      isMapMovingRef.current = true;
+      mapInstance.setZoom(zoom, true);
+    }
+  }, [mapInstance, zoom]);
+
+  useEffect(() => {
+    if (!mapInstance) return;
+
+    const listener = naver.maps.Event.addListener(mapInstance, 'idle', () => {
+      const newCenter = mapInstance.getCenter() as naver.maps.LatLng;
+      const newZoom = mapInstance.getZoom();
+
       onCenterChange({ lat: newCenter.lat(), lng: newCenter.lng() });
+
+      if (newZoom !== zoom) {
+        setZoom(newZoom);
+      }
+
+      isMapMovingRef.current = false;
     });
 
-    // Cleanup
     return () => {
       naver.maps.Event.removeListener(listener);
     };
-  }, [mapInstanceRef.current, onCenterChange]); // ⭐️ onCenterChange를 의존성에 포함
+  }, [mapInstance, onCenterChange, setZoom, zoom]);
 
-  // 7. 생성된 인스턴스들을 반환
   return {
-    mapInstance: mapInstanceRef.current,
-    infoWindowInstance: infoWindowRef.current,
+    mapInstance,
   };
 }

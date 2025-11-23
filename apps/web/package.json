@@ -13,6 +13,8 @@
   "dependencies": {
     "@muroom/ui": "workspace:*",
     "@muroom/util": "workspace:*",
+    "@tanstack/react-query": "5.90.10",
+    "@tanstack/react-query-devtools": "5.90.2",
     "framer-motion": "12.23.24",
     "next": "^15.3.0",
     "nuqs": "2.7.3",

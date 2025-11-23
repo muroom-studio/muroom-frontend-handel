@@ -28,7 +28,7 @@ const Tag = ({
   ...props
 }: TagProps) => {
   const baseStyle =
-    'inline-flex items-center justify-center rounded-4 px-2 py-[6px] text-base-s-12-2';
+    'inline-flex shrink-0 items-center justify-center rounded-4 px-2 py-[6px] text-base-s-12-2';
 
   const styles: Record<
     TagVariant,

@@ -2,33 +2,34 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { scroller } from 'react-scroll';
-import { Badge, Header, TabBar } from '@muroom/components';
-import {
-  HeartOutlineIcon,
-  LocationIcon,
-  ShareIcon,
-  VisitListOutlineIcon,
-} from '@muroom/icons';
-import { Studio } from '@/app/types/studio';
-
+import { Badge, TabBar } from '@muroom/components';
+import { LocationIcon, ShareIcon } from '@muroom/icons';
+import { Studio } from '@/types/studio';
 import {
   BuildingInfoSection,
-  NoticeSection,
-  RoomInfoSection,
-  OptionSection,
   NearFacilitySection,
+  NoticeSection,
+  OptionSection,
+  RoomInfoSection,
 } from './variants';
-
-const HEADER_TABS_DATA = [
-  { id: 'detail', label: '상세 정보' },
-  { id: 'check', label: '방문확인' },
-];
 
 interface Props {
   detailStudio: Studio;
+  setStudioId: (id: string) => void;
+  containerRef: React.RefObject<HTMLDivElement | null>;
 }
 
-export default function DetailTabSection({ detailStudio }: Props) {
+const TOP_HEADER_HEIGHT = 100;
+const TAB_HEIGHT = 46;
+const TOTAL_STICKY_HEIGHT = TOP_HEADER_HEIGHT + TAB_HEIGHT;
+
+const SCROLL_OFFSET = -TOTAL_STICKY_HEIGHT;
+
+export default function DetailTabSection({
+  detailStudio,
+  setStudioId,
+  containerRef,
+}: Props) {
   const {
     name,
     priceMin,
@@ -43,14 +44,7 @@ export default function DetailTabSection({ detailStudio }: Props) {
   const [activeTab, setActiveTab] = useState('building-info');
   const [isClickScrolling, setIsClickScrolling] = useState(false);
 
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const tabBarScrollRef = useRef<HTMLDivElement>(null);
-
-  const TOP_HEADER_HEIGHT = 100;
-  const TAB_HEIGHT = 46;
-  const TOTAL_STICKY_HEIGHT = TOP_HEADER_HEIGHT + TAB_HEIGHT;
-
-  const SCROLL_OFFSET = -TOTAL_STICKY_HEIGHT;
 
   const DETAIL_TABS_DATA = [
     { id: 'building-info', label: '건물정보' },
@@ -86,17 +80,13 @@ export default function DetailTabSection({ detailStudio }: Props) {
     }
   }, [activeTab]);
 
-  const handleHeaderTabChange = (selectedTabId: string) => {
-    console.log('상단 탭 변경:', selectedTabId);
-  };
-
   const handleDetailTabChange = (selectedTabId: string) => {
     setActiveTab(selectedTabId);
     setIsClickScrolling(true);
 
     scroller.scrollTo(selectedTabId, {
-      duration: 500,
-      smooth: true,
+      duration: 0,
+      smooth: false,
       containerId: 'detail-scroll-container',
       offset: SCROLL_OFFSET + 2,
     });
@@ -104,18 +94,14 @@ export default function DetailTabSection({ detailStudio }: Props) {
     setTimeout(() => setIsClickScrolling(false), 600);
   };
 
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+  const handleScroll = () => {
     if (isClickScrolling) return;
 
-    const container = e.currentTarget;
+    const container = containerRef.current;
+    if (!container) return;
+
     const scrollTop = container.scrollTop;
-
-    // gap-y-4(16px) 등을 고려한 여유 값
-    // 이 값이 클수록 탭이 "미리" 바뀝니다.
-    // 싱크가 너무 늦게 맞으면 이 값을 5~10 정도 키우세요.
     const BUFFER = 20;
-
-    // 기준선: 현재 스크롤 위치 + 눈에 보이는 헤더 총 높이 + 버퍼
     const scrollCheckLine = scrollTop + TOTAL_STICKY_HEIGHT + BUFFER;
 
     const isBottom =
@@ -145,46 +131,19 @@ export default function DetailTabSection({ detailStudio }: Props) {
   };
 
   useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (container) {
-      container.addEventListener('scroll', handleScroll as any);
-    }
+    const container = containerRef.current;
+
+    if (!container) return;
+
+    container.addEventListener('scroll', handleScroll);
+
     return () => {
-      if (container) {
-        container.removeEventListener('scroll', handleScroll as any);
-      }
+      container.removeEventListener('scroll', handleScroll);
     };
-  }, [isClickScrolling, activeTab]);
+  }, [isClickScrolling, activeTab, containerRef]);
 
   return (
-    <div
-      id='detail-scroll-container'
-      ref={scrollContainerRef}
-      className='relative flex h-full flex-col overflow-y-auto bg-gray-100'
-    >
-      <div
-        className='sticky top-0 z-50 border-b border-gray-300 bg-white'
-        style={{ height: TOP_HEADER_HEIGHT }}
-      >
-        <Header
-          title={name}
-          onBackClick={() => {}}
-          rightSlot={
-            <>
-              <VisitListOutlineIcon className='size-6' />
-              <HeartOutlineIcon className='size-6' />
-            </>
-          }
-        />
-        <TabBar
-          level={2}
-          tabs={HEADER_TABS_DATA}
-          initialActiveTabId='detail'
-          onTabChange={handleHeaderTabChange}
-          className='border-y border-y-gray-300'
-        />
-      </div>
-
+    <>
       <div className='bg-white'>
         <div className='h-[250px] w-full bg-red-600' />
         <div className='px-5 py-6'>
@@ -249,9 +208,10 @@ export default function DetailTabSection({ detailStudio }: Props) {
           <NearFacilitySection
             title='주변 시설'
             description='네이버 도보 기준 5분 이내'
+            studioLatLng={{ lat: detailStudio.lat, lng: detailStudio.lng }}
           />
         </section>
       </div>
-    </div>
+    </>
   );
 }

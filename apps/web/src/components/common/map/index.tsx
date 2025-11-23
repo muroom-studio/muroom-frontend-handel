@@ -4,18 +4,14 @@ import { useCallback, useRef } from 'react';
 
 import { useNaverMap } from '@/hooks/map/useNaverMap';
 import { useMapOverlays } from '@/hooks/map/useMapOverlay';
-import { useGeolocation } from '@/hooks/map/useGeolocation';
 
 import CurrentLocationBtn from './ui/current-location-btn';
 import ZoomControls from './ui/zoom-control-btn';
-import { MapState } from '@/hooks/nuqs/home/useMapState';
+import LocationTag from './ui/location-tag';
 
-type MarkerData = {
-  id: string;
-  lat: number;
-  lng: number;
-  label: string;
-};
+import { MapState, MIN_ZOOM, MAX_ZOOM } from '@/hooks/nuqs/home/useMapState';
+
+import { MarkerData } from '@/types/map/markers';
 
 interface Props {
   mapValue: MapState;
@@ -36,19 +32,25 @@ export default function CommonMap({ mapValue, setMapValue, markers }: Props) {
     [setMapValue],
   );
 
-  const { mapInstance, infoWindowInstance } = useNaverMap({
+  const { mapInstance } = useNaverMap({
     mapRef,
     center: mapValue.center,
     zoom: mapValue.zoom,
+    minZoom: MIN_ZOOM,
+    maxZoom: MAX_ZOOM,
 
     setZoom: (newZoomUpdater) => {
-      setMapValue((prev) => ({
-        ...prev,
-        zoom:
+      setMapValue((prev) => {
+        const nextZoom =
           typeof newZoomUpdater === 'function'
             ? newZoomUpdater(prev.zoom)
-            : newZoomUpdater,
-      }));
+            : newZoomUpdater;
+
+        return {
+          ...prev,
+          zoom: Math.min(Math.max(nextZoom, MIN_ZOOM), MAX_ZOOM),
+        };
+      });
     },
     onCenterChange: (newCenter) => {
       setMapValue((prev) => ({
@@ -60,7 +62,6 @@ export default function CommonMap({ mapValue, setMapValue, markers }: Props) {
 
   useMapOverlays({
     mapInstance,
-    infoWindowInstance,
     markers,
     onMarkerClick: handleMarkerClick,
     selectedId: mapValue.studioId,
@@ -69,39 +70,28 @@ export default function CommonMap({ mapValue, setMapValue, markers }: Props) {
   const handleZoomIn = useCallback(() => {
     setMapValue((prev) => ({
       ...prev,
-      zoom: Math.min(21, prev.zoom + 1),
+      zoom: Math.min(MAX_ZOOM, prev.zoom + 1),
     }));
   }, [setMapValue]);
 
   const handleZoomOut = useCallback(() => {
     setMapValue((prev) => ({
       ...prev,
-      zoom: Math.max(0, prev.zoom - 1),
+      zoom: Math.max(MIN_ZOOM, prev.zoom - 1),
     }));
   }, [setMapValue]);
 
-  const { getCurrentLocation } = useGeolocation({
-    onLocationFound: (coords) => {
-      setMapValue((prev) => ({
-        ...prev,
-        center: coords,
-      }));
-    },
-    onError: (error) => {
-      alert('위치 탐색 중 에러 발생: ' + error.message);
-    },
-  });
-
   return (
-    <div ref={mapRef} className='relative h-full w-full'>
-      <CurrentLocationBtn
-        className='absolute bottom-4 left-4 z-10'
-        onClick={getCurrentLocation}
-      />
-      <ZoomControls
-        onZoomIn={handleZoomIn}
-        onZoomOut={handleZoomOut}
-        className='absolute right-4 top-4 z-10'
+    <div className='relative h-full w-full'>
+      <div ref={mapRef} className='h-full w-full' />
+      <div className='absolute right-4 top-4 z-50 flex flex-col gap-y-4'>
+        <CurrentLocationBtn mapValue={mapValue} setMapValue={setMapValue} />
+        <ZoomControls onZoomIn={handleZoomIn} onZoomOut={handleZoomOut} />
+      </div>
+
+      <LocationTag
+        mapCenter={mapValue.center}
+        className='absolute bottom-10 left-1/2 z-50 -translate-x-1/2'
       />
     </div>
   );

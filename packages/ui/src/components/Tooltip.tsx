@@ -7,9 +7,10 @@ import React, {
   useMemo,
   createContext,
   useContext,
-  useEffect,
+  useLayoutEffect,
 } from 'react';
 import { createPortal } from 'react-dom';
+import { AnimatePresence, motion, Variants } from 'framer-motion';
 
 import { cn } from '../lib/utils';
 
@@ -56,79 +57,87 @@ function Tooltip({
   ...props
 }: TooltipProps) {
   const [isOpen, setIsOpen] = useState(false);
+
   const triggerRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+
   const [contentStyles, setContentStyles] = useState<React.CSSProperties>({});
 
-  const enterTimerRef = useRef<number | null>(null);
-  const leaveTimerRef = useRef<number | null>(null);
+  const enterTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const leaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const calculatePosition = useCallback(() => {
     if (!triggerRef.current || !contentRef.current) return;
 
     const triggerRect = triggerRef.current.getBoundingClientRect();
-    const contentRect = contentRef.current.getBoundingClientRect();
+    const contentHeight = contentRef.current.offsetHeight;
+    const contentWidth = contentRef.current.offsetWidth;
+
+    const scrollX = window.scrollX || window.pageXOffset;
+    const scrollY = window.scrollY || window.pageYOffset;
+
     let x = 0;
     let y = 0;
 
-    const centerX =
-      triggerRect.left + triggerRect.width / 2 - contentRect.width / 2;
-    const centerY =
-      triggerRect.top + triggerRect.height / 2 - contentRect.height / 2;
+    const triggerCenterX = triggerRect.left + triggerRect.width / 2 + scrollX;
+    const triggerCenterY = triggerRect.top + triggerRect.height / 2 + scrollY;
 
     switch (side) {
       case 'top':
-        x = centerX;
-        y = triggerRect.top - contentRect.height - sideOffset;
+        x = triggerCenterX;
+        y = triggerRect.top + scrollY - contentHeight - sideOffset;
         break;
       case 'bottom':
-        x = centerX;
-        y = triggerRect.bottom + sideOffset;
+        x = triggerCenterX;
+        y = triggerRect.bottom + scrollY + sideOffset;
         break;
       case 'left':
-        x = triggerRect.left - contentRect.width - sideOffset;
-        y = centerY;
+        x = triggerRect.left + scrollX - contentWidth - sideOffset;
+        y = triggerCenterY;
         break;
       case 'right':
-        x = triggerRect.right + sideOffset;
-        y = centerY;
+        x = triggerRect.right + scrollX + sideOffset;
+        y = triggerCenterY;
         break;
     }
 
     setContentStyles({
-      position: 'fixed',
-      left: x + window.scrollX,
-      top: y + window.scrollY,
-      zIndex: 50,
-      transformOrigin:
-        side === 'top' || side === 'bottom' ? 'center top' : 'left center',
+      position: 'absolute',
+      left: x,
+      top: y,
+      zIndex: 9999,
     });
   }, [side, sideOffset]);
 
-  useEffect(() => {
-    if (isOpen) {
-      const timeoutId = setTimeout(calculatePosition, 0);
+  useLayoutEffect(() => {
+    if (isOpen && contentRef.current && triggerRef.current) {
+      calculatePosition();
+
       window.addEventListener('scroll', calculatePosition);
       window.addEventListener('resize', calculatePosition);
+
+      const resizeObserver = new ResizeObserver(() => {
+        calculatePosition();
+      });
+      resizeObserver.observe(contentRef.current);
+      resizeObserver.observe(triggerRef.current);
+
       return () => {
-        clearTimeout(timeoutId);
         window.removeEventListener('scroll', calculatePosition);
         window.removeEventListener('resize', calculatePosition);
+        resizeObserver.disconnect();
       };
     }
   }, [isOpen, calculatePosition]);
 
   const handleMouseEnter = useCallback(() => {
     if (leaveTimerRef.current) clearTimeout(leaveTimerRef.current);
-    enterTimerRef.current = window.setTimeout(
-      () => setIsOpen(true),
-      delayDuration,
-    );
+    enterTimerRef.current = setTimeout(() => setIsOpen(true), delayDuration);
   }, [delayDuration]);
 
   const handleMouseLeave = useCallback(() => {
     if (enterTimerRef.current) clearTimeout(enterTimerRef.current);
-    leaveTimerRef.current = window.setTimeout(() => setIsOpen(false), 100);
+    leaveTimerRef.current = setTimeout(() => setIsOpen(false), 100);
   }, []);
 
   const value = useMemo(
@@ -243,10 +252,36 @@ function TooltipContent({
     [ref, contentRef],
   );
 
-  // 💡 Border Trick 화살표 클래스
+  const getAnimationVariants = (side: Side): Variants => {
+    const xCenter = side === 'top' || side === 'bottom' ? '-50%' : '0%';
+    const yCenter = side === 'left' || side === 'right' ? '-50%' : '0%';
+
+    return {
+      initial: {
+        opacity: 0,
+        scale: 0.9,
+        x: side === 'left' ? 5 : side === 'right' ? -5 : xCenter,
+        y: side === 'top' ? 5 : side === 'bottom' ? -5 : yCenter,
+      },
+      animate: {
+        opacity: 1,
+        scale: 1,
+        x: xCenter,
+        y: yCenter,
+        transition: { type: 'spring', duration: 0.3, bounce: 0 },
+      },
+      exit: {
+        opacity: 0,
+        scale: 0.95,
+        x: side === 'left' ? 5 : side === 'right' ? -5 : xCenter,
+        y: side === 'top' ? 5 : side === 'bottom' ? -5 : yCenter,
+        transition: { duration: 0.2 },
+      },
+    };
+  };
+
   const arrowClass = useMemo(() => {
     const baseClass = 'absolute w-0 h-0 border-[6px] border-transparent';
-
     switch (side) {
       case 'top':
         return `${baseClass} top-full left-1/2 -translate-x-1/2 border-t-gray-700`;
@@ -261,37 +296,41 @@ function TooltipContent({
     }
   }, [side]);
 
-  if (!isOpen) {
-    return null;
-  }
+  const transformOriginMap = {
+    top: 'bottom center',
+    bottom: 'top center',
+    left: 'right center',
+    right: 'left center',
+  };
 
-  const bgColorClass = 'bg-gray-700';
-
-  const content = (
-    <div
-      ref={mergedRef}
-      data-slot='tooltip-content'
-      data-side={side}
-      className={cn(
-        'text-base-m-14-1 rounded-4 z-50 w-fit whitespace-pre-wrap text-balance p-3 text-center text-white',
-        bgColorClass,
-        'opacity-0 transition-opacity duration-150 ease-in-out',
-        isOpen ? 'opacity-100' : 'opacity-0',
-        className,
+  return createPortal(
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          ref={mergedRef}
+          data-slot='tooltip-content'
+          data-side={side}
+          variants={getAnimationVariants(side)}
+          initial='initial'
+          animate='animate'
+          exit='exit'
+          className={cn(
+            'text-base-m-14-1 rounded-4 z-50 w-fit whitespace-pre-wrap text-balance bg-gray-700 p-3 text-center text-white',
+            className,
+          )}
+          style={{
+            ...contentStyles,
+            transformOrigin: transformOriginMap[side],
+          }}
+          {...(props as any)}
+        >
+          {children}
+          <div className={arrowClass} />
+        </motion.div>
       )}
-      style={{
-        ...contentStyles,
-      }}
-      {...props}
-    >
-      {children}
-
-      {/* Border Trick 화살표 */}
-      <div className={arrowClass} />
-    </div>
+    </AnimatePresence>,
+    document.body,
   );
-
-  return createPortal(content, document.body);
 }
 TooltipContent.displayName = 'TooltipContent';
 

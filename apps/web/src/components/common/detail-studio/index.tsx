@@ -1,16 +1,145 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
+
 import DetailTabSection from '@/components/home/components/detail-tab-section';
-import { Studio } from '@/app/types/studio';
+import CheckTabSection from '@/components/home/components/check-tab-section';
+
+import { Studio } from '@/types/studio';
+
+import { Button, Header, Snackbar, TabBar } from '@muroom/components';
+
+import {
+  HeartOutlineIcon,
+  VisitListOutlineIcon,
+  ChatIcon,
+  MailIcon,
+  CallIcon,
+} from '@muroom/icons';
 
 interface Props {
   detailStudio: Studio;
+  setStudioId: (id: string) => void;
 }
 
-export default function CommonDetailStudio({ detailStudio }: Props) {
+const TOP_HEADER_HEIGHT = 100;
+const BOTTOM_FOOTER_HEIGHT = 96;
+
+const HEADER_TABS_DATA = [
+  { id: 'detail', label: '상세 정보' },
+  { id: 'check', label: '방문확인' },
+];
+
+export default function CommonDetailStudio({
+  detailStudio,
+  setStudioId,
+}: Props) {
+  const [activeTab, setActiveTab] = useState('detail');
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    }
+  }, [detailStudio]);
+
+  const handleHeaderTabChange = (selectedTabId: string) => {
+    setActiveTab(selectedTabId);
+  };
+
+  const activeSection = () => {
+    return activeTab === 'detail' ? (
+      <DetailTabSection
+        detailStudio={detailStudio}
+        setStudioId={setStudioId}
+        containerRef={scrollContainerRef}
+      />
+    ) : (
+      <CheckTabSection />
+    );
+  };
+
   return (
-    <div className='shadow-detail flex h-full flex-col border-r border-r-gray-300'>
-      <DetailTabSection detailStudio={detailStudio} />
+    <div className='shadow-detail flex h-full flex-col border-r border-r-gray-300 bg-white'>
+      <div
+        id='detail-scroll-container'
+        ref={scrollContainerRef}
+        className='relative flex flex-1 flex-col overflow-y-auto bg-gray-100'
+      >
+        <div
+          className='sticky top-0 z-50 border-b border-gray-300 bg-white'
+          style={{ height: TOP_HEADER_HEIGHT }}
+        >
+          <Header
+            title={detailStudio.name}
+            onBackClick={() => setStudioId('')}
+            rightSlot={
+              <>
+                <VisitListOutlineIcon className='size-6' />
+                <HeartOutlineIcon className='size-6' />
+              </>
+            }
+          />
+          <TabBar
+            level={2}
+            tabs={HEADER_TABS_DATA}
+            initialActiveTabId={activeTab}
+            onTabChange={handleHeaderTabChange}
+            className='border-y border-y-gray-300'
+          />
+        </div>
+        {activeSection()}
+      </div>
+
+      <div
+        className='flex-none border-t border-t-gray-200 bg-white p-5'
+        style={{ height: BOTTOM_FOOTER_HEIGHT }}
+      >
+        <DetailFooter />
+      </div>
     </div>
   );
 }
+
+const DetailFooter = () => {
+  const [isSnackOpen, setIsSnackOpen] = useState<'mail' | 'call' | null>(null);
+
+  return (
+    <div className='relative flex items-center gap-x-1'>
+      <Button variant='primary_icon'>
+        <ChatIcon className='size-6 text-white' />
+      </Button>
+
+      <Button
+        variant='outline_icon'
+        size='xl'
+        onClick={() => setIsSnackOpen('mail')}
+      >
+        <MailIcon className='text-primary-400 size-6' />
+      </Button>
+
+      <Button
+        variant='outline_icon'
+        size='xl'
+        onClick={() => setIsSnackOpen('call')}
+      >
+        <CallIcon className='text-primary-400 size-6' />
+      </Button>
+
+      <Snackbar
+        isOpen={!!isSnackOpen}
+        onClose={() => setIsSnackOpen(null)}
+        showCloseButton
+      >
+        <span className='underline underline-offset-4'>010-1234-5678</span>
+      </Snackbar>
+
+      <Button variant='outline' size='xl' className='flex-1'>
+        비교함 담기
+      </Button>
+    </div>
+  );
+};

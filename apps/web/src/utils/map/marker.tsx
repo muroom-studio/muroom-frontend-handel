@@ -1,29 +1,29 @@
 import { createRoot, type Root } from 'react-dom/client';
 
-type MarkerComponentProps = {
-  label: string;
-  onClick: () => void;
-};
+import { CustomMarkerProps } from '@/components/common/map/ui/custom-marker';
 
-type MarkerData = {
-  id: string;
-  lat: number;
-  lng: number;
-  label: string;
-};
+import { MarkerData, MarkerSize } from '@/types/map/markers';
 
 export function createMarkerWithReactRoot(
   map: naver.maps.Map,
   data: MarkerData,
   onMarkerClick: (id: string) => void,
-  CustomMarkerComponent: React.ComponentType<MarkerComponentProps>,
+  CustomMarkerComponent: React.ComponentType<CustomMarkerProps>,
+  size: MarkerSize,
+  isSelected: boolean,
 ): { marker: naver.maps.Marker; root: Root } {
   const container = document.createElement('div');
+
   const root = createRoot(container);
 
   root.render(
     <CustomMarkerComponent
-      label={data.label}
+      priceMin={data.priceMin}
+      priceMax={data.priceMax}
+      name={data.name}
+      isAd={data.isAd}
+      size={size}
+      isSelected={isSelected}
       onClick={() => {
         onMarkerClick(data.id);
       }}
@@ -37,8 +37,9 @@ export function createMarkerWithReactRoot(
       content: container,
       anchor: new naver.maps.Point(0, 0),
     },
-    title: String(data.id),
+    title: data.name,
     clickable: false,
+    zIndex: isSelected ? 100 : 10,
   });
 
   return { marker, root };

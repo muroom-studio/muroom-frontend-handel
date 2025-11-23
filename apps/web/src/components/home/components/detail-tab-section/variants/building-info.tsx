@@ -69,6 +69,7 @@ export default function BuildingInfoSection({ title }: Props) {
                 centerLat={37.3595704}
                 centerLng={127.105399}
                 height={195}
+                targetedCenter='parking'
               />
               <div className='flex flex-col gap-y-1 border-t border-t-gray-200 px-5 pt-5'>
                 <p className='text-base-l-16-2'>잠원수영장옆공영주차장</p>

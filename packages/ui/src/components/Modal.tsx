@@ -72,7 +72,7 @@ const ModalWrapper = ({ className, children, ...props }: ModalWrapperProps) => {
   return (
     <motion.div
       className={cn(
-        'rounded-4 fixed left-1/2 top-1/2 z-50 w-[420px] -translate-x-1/2 -translate-y-1/2 bg-white p-5 pt-4',
+        'rounded-4 z-9999 fixed left-1/2 top-1/2 w-[420px] -translate-x-1/2 -translate-y-1/2 bg-white p-5 pt-4',
         className,
       )}
       initial={{ opacity: 0, y: 20, scale: 0.98 }}
