@@ -31,7 +31,7 @@ const subwayLineColors: Record<string, string> = {
 };
 
 const Badge = (props: BadgeProps) => {
-  const baseStyles = 'flex-center';
+  const baseStyles = 'flex-center shrink-0';
 
   if (props.variant === 'subway') {
     const { line, className = '' } = props;

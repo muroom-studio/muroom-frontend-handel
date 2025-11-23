@@ -85,7 +85,15 @@ export default function DesktopHomePage() {
 
           {DETAIL_DUMMY_DATA && (
             <div className='shadow-detail flex h-full min-h-0 flex-col border-r-[0.5px] border-gray-300 bg-white'>
-              <CommonDetailStudio detailStudio={DETAIL_DUMMY_DATA} />
+              <CommonDetailStudio
+                detailStudio={DETAIL_DUMMY_DATA}
+                setStudioId={(id: string) =>
+                  setMapValue((prev) => ({
+                    ...prev,
+                    studioId: prev.studioId === id ? null : id,
+                  }))
+                }
+              />
             </div>
           )}
 

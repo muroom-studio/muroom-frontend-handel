@@ -3,13 +3,13 @@
 import { useState } from 'react';
 
 import {
-  Button,
   Dropdown,
   DropdownContent,
   DropdownItem,
   DropdownTrigger,
 } from '@muroom/components';
 import Image from 'next/image';
+import { OptionItem } from '../../../filter-item/components';
 
 export default function RoomImage() {
   const [showRoom, setShowRoom] = useState(''); // 드롭다운용 더미 room
@@ -17,19 +17,17 @@ export default function RoomImage() {
   return (
     <div className='flex flex-col gap-y-6'>
       <div className='flex items-center gap-x-2'>
-        <Button variant='outline' size='m'>
-          Room1
-        </Button>
-        <Button variant='outline' size='m'>
-          Room2
-        </Button>
+        <OptionItem item={'Room1'} selected={false} onClick={() => {}} />
+
+        <OptionItem item={'Room2'} selected={false} onClick={() => {}} />
+
         <Dropdown
           value={showRoom}
           onValueChange={setShowRoom}
           placeholder='이미 계약됨'
           className='w-fit'
         >
-          <DropdownTrigger variant='primary' size='m' />
+          <DropdownTrigger variant='primary' size='m' className='h-9' />
           <DropdownContent className='max-h-[295px] overflow-y-auto'>
             {dummy_rooms.map((room) => (
               <DropdownItem key={room} value={room}>

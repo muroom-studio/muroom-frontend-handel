@@ -74,9 +74,9 @@ export default function CommonStudioCard({
                 ))}
             </div>
 
-            <span className='text-base-m-14-1'>
+            <p className='text-base-m-14-1 max-w-[105px] truncate'>
               {`${nearestStation} 도보 ${walkingTime}분`}
-            </span>
+            </p>
           </div>
 
           <div className='flex items-center'>
@@ -96,7 +96,7 @@ export default function CommonStudioCard({
               방 없음
             </Tag>
           )}
-          <p className='text-base-m-14-1 whitespace-pre-line text-gray-500'>
+          <p className='text-base-m-14-1 max-w-[130px] truncate text-gray-500'>
             {name}
           </p>
         </div>

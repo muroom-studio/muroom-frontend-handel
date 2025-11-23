@@ -1,24 +1,61 @@
 'use client';
 
+import { useState } from 'react';
+
+import { useGeolocation } from '@/hooks/map/useGeolocation';
+import { MapState } from '@/hooks/nuqs/home/useMapState';
+
 import { TargetIcon } from '@muroom/icons';
+
 import { cn } from '@muroom/lib';
+import { compareCoords } from '@/utils/map/compare-coords';
 
-type Props = {
-  onClick: () => void;
+interface Props {
+  mapValue: MapState;
+  setMapValue: (newState: MapState | ((prev: MapState) => MapState)) => void;
   className?: string;
-};
+}
 
-export default function CurrentLocationBtn({ onClick, className }: Props) {
+export default function CurrentLocationBtn({
+  mapValue,
+  setMapValue,
+  className,
+}: Props) {
+  const [localCenter, setLocalCenter] = useState({
+    lat: 0,
+    lng: 0,
+  });
+
+  const { getCurrentLocation } = useGeolocation({
+    onLocationFound: (coords) => {
+      setMapValue((prev) => ({
+        ...prev,
+        center: coords,
+      }));
+      setLocalCenter({
+        lat: coords.lat,
+        lng: coords.lng,
+      });
+    },
+    onError: (error) => {
+      alert('위치 탐색 중 에러 발생: ' + error.message);
+    },
+  });
+
+  const isSameLocation = compareCoords(localCenter, mapValue.center);
+
   return (
     <button
-      onClick={onClick}
+      onClick={getCurrentLocation}
       className={cn(
         'flex-center rounded-4 shadow-level-1 cursor-pointer border border-gray-300 bg-white p-[10px]',
         className,
       )}
       aria-label='현재 위치로 이동'
     >
-      <TargetIcon className='size-6 text-gray-700' />
+      <TargetIcon
+        className={`size-6 ${isSameLocation ? 'text-primary-400' : 'text-gray-700'}`}
+      />
     </button>
   );
 }

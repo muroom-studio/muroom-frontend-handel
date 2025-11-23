@@ -9,20 +9,21 @@ import { Popover } from '@muroom/components';
 
 import {
   BuildingTypeFilter,
-  InstrumentFilter,
+  // InstrumentFilter,
   OptionFilter,
   PriceFilter,
   SizeFilter,
 } from './variants';
 
-export type Variant = 'e1' | 'e2' | 'e3' | 'e4' | 'e5';
+// export type Variant = 'e1' | 'e2' | 'e3' | 'e4' | 'e5';
+export type Variant = 'e1' | 'e2' | 'e3' | 'e4';
 
 const VARIANT_MAP: Record<Variant, string> = {
   e1: '가격',
   e2: '사이즈',
   e3: '옵션',
   e4: '건물 유형',
-  e5: '악기',
+  // e5: '악기',
 };
 
 const COMPONENT_MAP: Record<Variant, React.ComponentType> = {
@@ -30,7 +31,7 @@ const COMPONENT_MAP: Record<Variant, React.ComponentType> = {
   e2: SizeFilter,
   e3: OptionFilter,
   e4: BuildingTypeFilter,
-  e5: InstrumentFilter,
+  // e5: InstrumentFilter,
 };
 
 interface Props {

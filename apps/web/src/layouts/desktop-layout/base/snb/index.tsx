@@ -68,9 +68,9 @@ const SnbItem = ({
   return (
     <div
       className={cn(
-        'flex-center-col rounded-4 group size-16 cursor-pointer gap-y-[2px] transition-all hover:bg-gray-200',
+        'flex-center-col rounded-4 group size-16 cursor-pointer gap-y-[2px] transition-all hover:bg-gray-50',
         {
-          'bg-primary-600': isActive,
+          'bg-primary-600 hover:bg-primary-600': isActive,
         },
       )}
     >

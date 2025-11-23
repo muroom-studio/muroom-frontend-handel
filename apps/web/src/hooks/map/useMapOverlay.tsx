@@ -1,12 +1,17 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
-
-import CustomMarkerLabel from '@/components/common/map/ui/custom-marker';
-
+import { useRef, useEffect, useState } from 'react';
 import type { Root } from 'react-dom/client';
-import { cleanupMarkers, createMarkerWithReactRoot } from '@/utils/marker';
-import { MarkerData } from '@/components/common/map';
+
+import { cleanupMarkers, createMarkerWithReactRoot } from '@/utils/map/marker';
+import { MarkerData, MarkerSize } from '@/types/map/markers';
+import CustomMarker from '@/components/common/map/ui/custom-marker';
+
+function getMarkerSize(zoom: number): MarkerSize {
+  if (zoom < 15) return 'S';
+  if (zoom < 17) return 'M';
+  return 'L';
+}
 
 type Props = {
   mapInstance: naver.maps.Map | null;
@@ -24,7 +29,26 @@ export function useMapOverlays({
   const markerInstancesRef = useRef<naver.maps.Marker[]>([]);
   const rootInstancesRef = useRef<Root[]>([]);
 
-  // 3. [마커 훅] (로직 추상화)
+  const [currentZoom, setCurrentZoom] = useState<number>(14);
+
+  useEffect(() => {
+    if (!mapInstance) return;
+
+    setCurrentZoom(mapInstance.getZoom());
+
+    const listener = naver.maps.Event.addListener(
+      mapInstance,
+      'zoom_changed',
+      () => {
+        setCurrentZoom(mapInstance.getZoom());
+      },
+    );
+
+    return () => {
+      naver.maps.Event.removeListener(listener);
+    };
+  }, [mapInstance]);
+
   useEffect(() => {
     const map = mapInstance;
 
@@ -35,15 +59,23 @@ export function useMapOverlays({
       return;
     }
 
+    cleanupMarkers(markerInstancesRef.current, rootInstancesRef.current);
+
     const newMarkers: naver.maps.Marker[] = [];
     const newRoots: Root[] = [];
 
+    const size = getMarkerSize(currentZoom);
+
     markers.forEach((markerData) => {
+      const isSelected = markerData.id === selectedId;
+
       const { marker, root } = createMarkerWithReactRoot(
         map,
         markerData,
         onMarkerClick || (() => {}),
-        CustomMarkerLabel,
+        CustomMarker,
+        size,
+        isSelected,
       );
 
       newMarkers.push(marker);
@@ -56,5 +88,5 @@ export function useMapOverlays({
     return () => {
       cleanupMarkers(newMarkers, newRoots);
     };
-  }, [mapInstance, markers, onMarkerClick]);
+  }, [mapInstance, markers, onMarkerClick, currentZoom, selectedId]); // 의존성에 zoom, selectedId 추가
 }

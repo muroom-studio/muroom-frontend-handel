@@ -10,15 +10,28 @@ import { ToggleButton } from '@muroom/components';
 
 import { cn } from '@muroom/lib';
 
+import { useNearbyFetch } from '@/hooks/api/kakao/useNearByFetch';
+
 interface Props {
   title: string;
   description?: string;
+  studioLatLng: { lat: number; lng: number };
 }
 
-type targetPlace = '편의점' | '카페' | '식당' | '빨래방';
+export type TargetPlace = '편의점' | '카페' | '식당' | '빨래방';
 
-export default function NearFacilitySection({ title, description }: Props) {
-  const [nearItem, setNearItem] = useState<targetPlace>('편의점');
+export default function NearFacilitySection({
+  title,
+  description,
+  studioLatLng,
+}: Props) {
+  const [nearItem, setNearItem] = useState<TargetPlace>('편의점');
+
+  const { places } = useNearbyFetch({
+    lat: studioLatLng.lat,
+    lng: studioLatLng.lng,
+    category: nearItem,
+  });
 
   return (
     <SectionWrapper title={title} description={description}>
@@ -33,7 +46,7 @@ export default function NearFacilitySection({ title, description }: Props) {
                 selected={nearItem === place}
                 onSelectedChange={(isSelected) => {
                   if (isSelected) {
-                    setNearItem(place as targetPlace);
+                    setNearItem(place as TargetPlace);
                   }
                 }}
               >
@@ -42,21 +55,18 @@ export default function NearFacilitySection({ title, description }: Props) {
             ))}
           </div>
           <StaticMap
-            centerLat={37.3595704}
-            centerLng={127.105399}
+            centerLat={studioLatLng.lat}
+            centerLng={studioLatLng.lng}
             height={195}
-            nearbyPlaces={[
-              { id: '1', lat: 37.3635, lng: 127.1095 },
-              { id: '2', lat: 37.3565, lng: 127.1015 },
-              { id: '3', lat: 37.361, lng: 127.0995 },
-            ]}
+            placeCategory={nearItem}
+            nearbyPlaces={places}
           />
         </div>
 
         <div>
-          {dummy_place.map((place) => (
+          {places.map((place) => (
             <PlcaeRow
-              key={place.name}
+              key={place.id}
               name={place.name}
               distance={place.distance}
               className={cn(
@@ -82,12 +92,9 @@ const PlcaeRow = ({
   className?: string;
 }) => {
   return (
-    <div className={cn('flex items-center gap-x-4', className)}>
-      <div className='size-[50px] bg-green-200' />
-      <div className='flex flex-col justify-between'>
-        <p className='text-base-exl-18-2'>{name}</p>
-        <p className='text-base-m-14-1 text-gray-600'>{`연습실에서 ${distance}m`}</p>
-      </div>
+    <div className={cn('flex flex-col gap-y-2', className)}>
+      <p className='text-base-exl-18-2'>{name}</p>
+      <p className='text-base-m-14-1 text-gray-600'>{`연습실에서 ${distance}m`}</p>
     </div>
   );
 };

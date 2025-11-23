@@ -26,10 +26,6 @@ export function useGeolocation({ onLocationFound, onError }: GeolocationProps) {
 
           // ⭐️ 성공 시, 부모 컴포넌트가 넘겨준 콜백 함수를 실행합니다.
           onLocationFound(newCenter);
-
-          // (디버깅/확인용)
-          console.log('현재 위치:', newCenter);
-          alert(`현재 위치: ${latitude}, ${longitude}`);
         },
         (error) => {
           console.error('Geolocation error:', error);
