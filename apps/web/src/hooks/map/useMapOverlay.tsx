@@ -16,7 +16,7 @@ function getMarkerSize(zoom: number): MarkerSize {
 type Props = {
   mapInstance: naver.maps.Map | null;
   markers?: MarkerData[];
-  onMarkerClick?: (id: string) => void;
+  onMarkerClick?: (id: string, lat: number, lng: number) => void;
   selectedId?: string | null;
 };
 
@@ -69,10 +69,16 @@ export function useMapOverlays({
     markers.forEach((markerData) => {
       const isSelected = markerData.id === selectedId;
 
+      const handleInternalClick = (clickedId: string) => {
+        if (onMarkerClick) {
+          onMarkerClick(clickedId, markerData.lat, markerData.lng);
+        }
+      };
+
       const { marker, root } = createMarkerWithReactRoot(
         map,
         markerData,
-        onMarkerClick || (() => {}),
+        handleInternalClick || (() => {}),
         CustomMarker,
         size,
         isSelected,
