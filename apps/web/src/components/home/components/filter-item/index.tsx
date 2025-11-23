@@ -14,6 +14,7 @@ import {
   PriceFilter,
   SizeFilter,
 } from './variants';
+import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 
 // export type Variant = 'e1' | 'e2' | 'e3' | 'e4' | 'e5';
 export type Variant = 'e1' | 'e2' | 'e3' | 'e4';
@@ -41,6 +42,8 @@ interface Props {
 }
 
 export default function FilterItem({ variant }: Props) {
+  const { isMobile } = useResponsiveLayout();
+
   const [isOpen, setIsOpen] = useState(false);
 
   const ContentComponent = COMPONENT_MAP[variant];
@@ -56,7 +59,10 @@ export default function FilterItem({ variant }: Props) {
           onClick={() => setIsOpen((prev) => !prev)}
           className={cn(
             'group',
-            'rounded-4 text-base-l-16-1 flex-center gap-x-micro-2 h-11 w-full cursor-pointer border border-gray-300 bg-white px-4 py-[10px]',
+            'rounded-4 text-base-l-16-1 flex-center gap-x-micro-2 h-11 w-full cursor-pointer border border-gray-300 bg-white px-4 py-2.5',
+            {
+              'text-base-m-14-1 h-9 px-3 py-[9px]': isMobile,
+            },
             'hover:bg-gray-50',
             'data-[state=open]:border-primary-400 data-[state=open]:text-primary-600',
           )}

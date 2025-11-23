@@ -11,6 +11,7 @@ export { default as TabBar } from './TabBar';
 export { default as ToggleSlider } from './ToggleSlider';
 export { default as Modal } from './Modal';
 export { default as Snackbar } from './Snackbar';
+export { default as BottomSheet } from './BottomSheet';
 
 export {
   Dropdown,
