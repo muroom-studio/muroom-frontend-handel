@@ -22,10 +22,20 @@ interface Props {
 export default function CommonMap({ mapValue, setMapValue, markers }: Props) {
   const mapRef = useRef<HTMLDivElement | null>(null);
 
+  // const handleMarkerClick = useCallback(
+  //   (id: string) => {
+  //     setMapValue((prev) => ({
+  //       ...prev,
+  //       studioId: prev.studioId === id ? null : id,
+  //     }));
+  //   },
+  //   [setMapValue],
+  // );
   const handleMarkerClick = useCallback(
-    (id: string) => {
+    (id: string, lat: number, lng: number) => {
       setMapValue((prev) => ({
         ...prev,
+        center: { lat, lng },
         studioId: prev.studioId === id ? null : id,
       }));
     },
