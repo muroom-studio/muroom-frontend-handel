@@ -8,6 +8,8 @@ import { cn } from '@muroom/lib';
 
 import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 
+import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
+
 const SORT_OPTIONS = [
   '선택',
   '추천순',

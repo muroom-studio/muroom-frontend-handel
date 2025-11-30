@@ -1,5 +1,6 @@
 'use client';
 
+<<<<<<< HEAD
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
 
 // 상세 컴포넌트
@@ -9,13 +10,26 @@ import CommonDetailStudio from '@/components/common/detail-studio';
 // ✨ import 추가
 
 import CommonMap from '@/components/common/map';
+=======
+import { useMotionValue, AnimatePresence, motion } from 'framer-motion'; // ✨ import 추가
+
+import CommonMap from '@/components/common/map';
+import CommonDetailStudio from '@/components/common/detail-studio'; // 상세 컴포넌트
+import { BottomSheet } from '@muroom/components';
+import ListFilter from '../components/list-filter';
+import ListView from '../components/list-view';
+
+>>>>>>> upstream/main
 import { MapState } from '@/hooks/nuqs/home/useMapState';
 import { MarkerData } from '@/types/map/markers';
 import { Studio } from '@/types/studio';
 
+<<<<<<< HEAD
 import ListFilter from '../components/list-filter';
 import ListView from '../components/list-view';
 
+=======
+>>>>>>> upstream/main
 interface Props {
   mapValue: MapState;
   setMapValue: (newState: MapState | ((prev: MapState) => MapState)) => void;
