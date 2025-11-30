@@ -15,7 +15,6 @@ import {
   PriceFilter,
   SizeFilter,
 } from './variants';
-import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 
 // export type Variant = 'e1' | 'e2' | 'e3' | 'e4' | 'e5';
 export type Variant = 'e1' | 'e2' | 'e3' | 'e4';
