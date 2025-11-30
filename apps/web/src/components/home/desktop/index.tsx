@@ -1,7 +1,6 @@
 'use client';
 
 import CommonDetailStudio from '@/components/common/detail-studio';
-<<<<<<< HEAD
 import CommonMap from '@/components/common/map';
 import FilterItem, { Variant } from '@/components/home/components/filter-item';
 import { useFilters } from '@/hooks/nuqs/home/useFilters';
@@ -11,17 +10,6 @@ import { Studio } from '@/types/studio';
 
 import ListFilter from '../components/list-filter';
 import ListView from '../components/list-view';
-=======
-
-import ListView from '../components/list-view';
-import ListFilter from '../components/list-filter';
-
-import { useFilters } from '@/hooks/nuqs/home/useFilters';
-import { MapState } from '@/hooks/nuqs/home/useMapState';
-
-import { Studio } from '@/types/studio';
-import { MarkerData } from '@/types/map/markers';
->>>>>>> upstream/main
 
 interface Props {
   mapValue: MapState;
