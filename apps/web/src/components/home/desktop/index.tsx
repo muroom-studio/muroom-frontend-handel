@@ -28,6 +28,8 @@ export default function DesktopHomePage({
 }: Props) {
   const { filteredValue, setFilter } = useFilters();
 
+  console.log(filteredValue, 'filteredValue');
+
   const gridTemplateColumns = mapValue.studioId
     ? '375px 375px 1fr'
     : '375px 1fr';

@@ -1,19 +1,40 @@
 'use client';
 
+import { useEffect } from 'react';
+
+// useEffect 추가
+
 import { Slider } from '@muroom/components';
 
 import { useRangeInput } from '@/hooks/useRangeInput';
 
 import { FilterWrapper } from '../components';
 
-export default function PriceFilter() {
+interface Props {
+  value: string;
+  onValueChange: (newValue: string) => void;
+}
+
+export default function PriceFilter({ value, onValueChange }: Props) {
+  const [initialMin, initialMax] = value
+    ? value.split(',').map(Number)
+    : [40, 60];
+
   const { rangeValue, handleSliderChange, handleRangeChange, handleFocus } =
     useRangeInput({
-      initialMin: 40,
-      initialMax: 60,
+      initialMin: initialMin || 40,
+      initialMax: initialMax || 60,
       minBoundary: 0,
       maxBoundary: 100,
     });
+
+  useEffect(() => {
+    const newValue = `${rangeValue.minValue},${rangeValue.maxValue}`;
+
+    if (value !== newValue) {
+      onValueChange(newValue);
+    }
+  }, [rangeValue, onValueChange, value]);
 
   return (
     <FilterWrapper title='가격'>

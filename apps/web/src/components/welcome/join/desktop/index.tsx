@@ -62,9 +62,7 @@ export default function DesktopJoinPage({ step, setStep }: Props) {
     switch (step) {
       case 0:
         return (
-          <JoinFirstStep
-            onValidChange={(isValid) => setIsNextValid(!isValid)}
-          />
+          <JoinFirstStep onValidChange={(isValid) => setIsNextValid(isValid)} />
         );
       case 1:
         return (

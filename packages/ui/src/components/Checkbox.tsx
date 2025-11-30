@@ -11,6 +11,8 @@ export interface CheckboxProps
 }
 
 const Checkbox = ({ label, className, checked, ...props }: CheckboxProps) => {
+  const isTextLabel = typeof label === 'string' || typeof label === 'number';
+
   return (
     <label
       className={cn(
@@ -39,17 +41,21 @@ const Checkbox = ({ label, className, checked, ...props }: CheckboxProps) => {
         />
       </div>
 
-      {/* --- 라벨 텍스트 영역 (label이 있을 때만 렌더링) --- */}
       {label && (
-        <span
-          className={cn(
-            'text-body-s2 select-none transition-colors',
-            // 선택되었을 때 텍스트 색상도 보라색으로 변경 (이미지 반영)
-            checked ? 'text-primary-box font-medium' : 'text-text1',
+        <>
+          {isTextLabel ? (
+            <span
+              className={cn(
+                'text-body-s2 select-none transition-colors',
+                checked ? 'text-primary-box font-medium' : 'text-text1',
+              )}
+            >
+              {label}
+            </span>
+          ) : (
+            label
           )}
-        >
-          {label}
-        </span>
+        </>
       )}
     </label>
   );

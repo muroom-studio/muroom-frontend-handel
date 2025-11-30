@@ -1,64 +1,92 @@
-import { useState } from 'react';
+'use client';
+
+import { useEffect, useState } from 'react';
 
 import { Button } from '@muroom/components';
 import { toggleItemInArray } from '@muroom/util';
 
+import { FilterOptionItem } from '@/types/studios';
+
 import { FilterWrapper, OptionItem } from '../components';
 
-const PUBLIC_OPTIONS = [
-  '전체',
-  '정수기',
-  '전자레인지',
-  '세탁기',
-  '건조기',
-  '냉장고',
-  '샤워실',
-  'CCTV',
-  'WIFI',
-  '간식',
-  '신발장',
-  '환기시설',
-  '프린트',
-  '커피머신',
-];
+interface Props {
+  value: string;
+  onValueChange: (newValue: string) => void;
+  publicOptions?: FilterOptionItem[];
+  privateOptions?: FilterOptionItem[];
+}
 
-const PRIVATE_OPTIONS = [
-  '전체',
-  '개인도어락',
-  '창문',
-  '공기청정기',
-  '에어컨',
-  '제습기',
-  '조명시설',
-  '바닥난방',
-  '라디에이터',
-  '전신거울',
-  '앰프',
-  '키보드',
-  '드럼',
-  '개인보관함',
-  'LAN포트',
-];
+export default function OptionFilter({
+  value,
+  onValueChange,
+  publicOptions = [],
+  privateOptions = [],
+}: Props) {
+  const parseInitialValue = () => {
+    try {
+      if (!value) return { public: [], private: [] };
+      return JSON.parse(value);
+    } catch (e) {
+      return { public: [], private: [] };
+    }
+  };
 
-export default function OptionFilter() {
-  const [publicOption, setPublicOption] = useState(['전체']);
-  const [privateOption, setPrivateOption] = useState(['전체']);
+  const initialValues = parseInitialValue();
+
+  const [publicCodes, setPublicCodes] = useState<string[]>(
+    initialValues.public || [],
+  );
+  const [privateCodes, setPrivateCodes] = useState<string[]>(
+    initialValues.private || [],
+  );
+
+  useEffect(() => {
+    const newValue = JSON.stringify({
+      public: publicCodes,
+      private: privateCodes,
+    });
+
+    if (value !== newValue) {
+      onValueChange(newValue);
+    }
+  }, [publicCodes, privateCodes, onValueChange, value]);
+
+  const handleToggle = (type: 'public' | 'private', code: string | 'ALL') => {
+    const setCodes = type === 'public' ? setPublicCodes : setPrivateCodes;
+
+    if (code === 'ALL') {
+      setCodes([]);
+    } else {
+      setCodes((prev) => toggleItemInArray(prev, code));
+    }
+  };
+
+  const isSelected = (type: 'public' | 'private', code: string | 'ALL') => {
+    const targetCodes = type === 'public' ? publicCodes : privateCodes;
+    if (code === 'ALL') return targetCodes.length === 0;
+    return targetCodes.includes(code);
+  };
 
   return (
     <FilterWrapper title='옵션'>
       <div className='flex flex-col gap-y-5'>
+        {/* --- 공용 옵션 섹션 --- */}
         <div className='flex flex-col'>
           <span className='text-base-l-16-2'>공용</span>
 
           <div className='mb-5 mt-4 flex flex-wrap gap-2'>
-            {PUBLIC_OPTIONS.map((item) => (
+            <OptionItem
+              item='전체'
+              selected={isSelected('public', 'ALL')}
+              onClick={() => handleToggle('public', 'ALL')}
+            />
+
+            {publicOptions.map((opt) => (
               <OptionItem
-                key={item}
-                item={item}
-                selected={publicOption.includes(item)}
-                onClick={() =>
-                  setPublicOption((prev) => toggleItemInArray(prev, item))
-                }
+                key={opt.code}
+                item={opt.description}
+                selected={isSelected('public', opt.code)}
+                onClick={() => handleToggle('public', opt.code)}
               />
             ))}
           </div>
@@ -74,14 +102,18 @@ export default function OptionFilter() {
           <span className='text-base-l-16-2'>개인</span>
 
           <div className='mb-5 mr-2 mt-4 flex flex-wrap gap-2'>
-            {PRIVATE_OPTIONS.map((item) => (
+            <OptionItem
+              item='전체'
+              selected={isSelected('private', 'ALL')}
+              onClick={() => handleToggle('private', 'ALL')}
+            />
+
+            {privateOptions.map((opt) => (
               <OptionItem
-                key={item}
-                item={item}
-                selected={privateOption.includes(item)}
-                onClick={() =>
-                  setPrivateOption((prev) => toggleItemInArray(prev, item))
-                }
+                key={opt.code}
+                item={opt.description}
+                selected={isSelected('private', opt.code)}
+                onClick={() => handleToggle('private', opt.code)}
               />
             ))}
           </div>
