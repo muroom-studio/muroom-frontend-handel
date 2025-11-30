@@ -1,10 +1,14 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { scroller } from 'react-scroll';
+
 import { Badge, TabBar } from '@muroom/components';
-import { LocationIcon, ShareIcon } from '@muroom/icons';
+import { LocationIcon } from '@muroom/icons';
+
 import { Studio } from '@/types/studio';
+
+import ShareBtn from './components/share-btn';
 import {
   BuildingInfoSection,
   NearFacilitySection,
@@ -15,7 +19,6 @@ import {
 
 interface Props {
   detailStudio: Studio;
-  setStudioId: (id: string) => void;
   containerRef: React.RefObject<HTMLDivElement | null>;
 }
 
@@ -27,7 +30,6 @@ const SCROLL_OFFSET = -TOTAL_STICKY_HEIGHT;
 
 export default function DetailTabSection({
   detailStudio,
-  setStudioId,
   containerRef,
 }: Props) {
   const {
@@ -151,7 +153,7 @@ export default function DetailTabSection({
             <div className='flex flex-col gap-y-2'>
               <div className='flex-between'>
                 <span className='text-title-s-22-2'>{`${priceMin}만원 ~ ${priceMax}만원`}</span>
-                <ShareIcon className='size-6' />
+                <ShareBtn />
               </div>
               <span className='text-base-m-14-1 text-gray-500'>{name}</span>
             </div>

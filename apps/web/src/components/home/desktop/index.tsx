@@ -1,40 +1,32 @@
 'use client';
 
-import FilterItem, { Variant } from '@/components/home/components/filter-item';
-
-import CommonMap from '@/components/common/map';
 import CommonDetailStudio from '@/components/common/detail-studio';
-
-import ListView from './list-view';
-import ListFilter from './list-filter';
-
+import CommonMap from '@/components/common/map';
+import FilterItem, { Variant } from '@/components/home/components/filter-item';
 import { useFilters } from '@/hooks/nuqs/home/useFilters';
-import { useMapState } from '@/hooks/nuqs/home/useMapState';
+import { MapState } from '@/hooks/nuqs/home/useMapState';
+import { MarkerData } from '@/types/map/markers';
+import { Studio } from '@/types/studio';
 
-import { DUMMY_STUDIO } from '@/types/studio';
+import ListFilter from '../components/list-filter';
+import ListView from '../components/list-view';
 
-export default function DesktopHomePage() {
-  const dummyCenterLocation = { lat: 37.5559247, lng: 126.9250109 };
+interface Props {
+  mapValue: MapState;
+  setMapValue: (newState: MapState | ((prev: MapState) => MapState)) => void;
+  studios: Studio[];
+  detailStudio: Studio;
+  markersData: MarkerData[];
+}
 
+export default function DesktopHomePage({
+  mapValue,
+  setMapValue,
+  studios,
+  detailStudio,
+  markersData,
+}: Props) {
   const { filteredValue, setFilter } = useFilters();
-  const [mapValue, setMapValue] = useMapState({
-    center: dummyCenterLocation,
-    zoom: 16,
-  });
-
-  const DUMMY_DATA = DUMMY_STUDIO; // 더미 작업실 data
-
-  const DETAIL_DUMMY_DATA = DUMMY_DATA.find((d) => d.id === mapValue.studioId); // detail 더미 작업실 data
-
-  const DUMMY_MARKER_DATA = DUMMY_DATA.map((studio) => ({
-    id: studio.id,
-    lat: studio.lat,
-    lng: studio.lng,
-    isAd: studio.isAd,
-    name: studio.name,
-    priceMin: studio.priceMin,
-    priceMax: studio.priceMax,
-  }));
 
   const gridTemplateColumns = mapValue.studioId
     ? '375px 375px 1fr'
@@ -71,22 +63,17 @@ export default function DesktopHomePage() {
             <div className='min-h-0 flex-1 overflow-y-scroll'>
               {/* list-view는 서버로부터 받은 데이터 표출하는 용도 */}
               <ListView
-                studios={DUMMY_DATA}
-                studioId={mapValue.studioId || ''}
-                setStudioId={(id: string) =>
-                  setMapValue((prev) => ({
-                    ...prev,
-                    studioId: prev.studioId === id ? null : id,
-                  }))
-                }
+                studios={studios}
+                mapValue={mapValue}
+                setMapValue={setMapValue}
               />
             </div>
           </div>
 
-          {DETAIL_DUMMY_DATA && (
+          {detailStudio && (
             <div className='shadow-detail flex h-full min-h-0 flex-col border-r-[0.5px] border-gray-300 bg-white'>
               <CommonDetailStudio
-                detailStudio={DETAIL_DUMMY_DATA}
+                detailStudio={detailStudio}
                 setStudioId={(id: string) =>
                   setMapValue((prev) => ({
                     ...prev,
@@ -101,7 +88,7 @@ export default function DesktopHomePage() {
             <CommonMap
               mapValue={mapValue}
               setMapValue={setMapValue}
-              markers={DUMMY_MARKER_DATA}
+              markers={markersData}
             />
           </div>
         </div>

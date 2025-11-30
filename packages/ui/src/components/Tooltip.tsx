@@ -1,16 +1,17 @@
 'use client';
 
 import React, {
-  useState,
-  useRef,
-  useCallback,
-  useMemo,
   createContext,
+  useCallback,
   useContext,
   useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
 } from 'react';
 import { createPortal } from 'react-dom';
-import { AnimatePresence, motion, Variants } from 'framer-motion';
+
+import { AnimatePresence, Variants, motion } from 'framer-motion';
 
 import { cn } from '../lib/utils';
 

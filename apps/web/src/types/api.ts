@@ -5,14 +5,14 @@ export interface ApiError {
 }
 
 type SuccessResponse<T> = {
-  code: HttpSuccessStatusCode;
+  status: HttpSuccessStatusCode;
   data: T;
   message: string;
   error?: never;
 };
 
 type ErrorResponse = {
-  code: HttpErrorStatusCode;
+  status: HttpErrorStatusCode;
   data?: never;
   error: ApiError;
 };

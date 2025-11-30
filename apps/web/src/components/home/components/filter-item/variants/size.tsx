@@ -2,9 +2,8 @@
 
 import { useState } from 'react';
 
-import { cn } from '@muroom/lib';
-
 import { ResetIcon } from '@muroom/icons';
+import { cn } from '@muroom/lib';
 
 import { FilterWrapper, OptionItem } from '../components';
 

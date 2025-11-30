@@ -2,21 +2,22 @@
 
 import { useState } from 'react';
 
+import { TargetIcon } from '@muroom/icons';
+import { cn } from '@muroom/lib';
+
 import { useGeolocation } from '@/hooks/map/useGeolocation';
 import { MapState } from '@/hooks/nuqs/home/useMapState';
-
-import { TargetIcon } from '@muroom/icons';
-
-import { cn } from '@muroom/lib';
 import { compareCoords } from '@/utils/map/compare-coords';
 
 interface Props {
+  isMobile?: boolean;
   mapValue: MapState;
   setMapValue: (newState: MapState | ((prev: MapState) => MapState)) => void;
   className?: string;
 }
 
 export default function CurrentLocationBtn({
+  isMobile = false,
   mapValue,
   setMapValue,
   className,
@@ -48,13 +49,16 @@ export default function CurrentLocationBtn({
     <button
       onClick={getCurrentLocation}
       className={cn(
-        'flex-center rounded-4 shadow-level-1 cursor-pointer border border-gray-300 bg-white p-[10px]',
+        'flex-center rounded-4 shadow-level-1 cursor-pointer border border-gray-300 bg-white p-2.5',
+        {
+          'size-9 p-2': isMobile,
+        },
         className,
       )}
       aria-label='현재 위치로 이동'
     >
       <TargetIcon
-        className={`size-6 ${isSameLocation ? 'text-primary-400' : 'text-gray-700'}`}
+        className={`${isMobile ? 'size-5' : 'size-6'} ${isSameLocation ? 'text-primary-400' : 'text-gray-700'}`}
       />
     </button>
   );

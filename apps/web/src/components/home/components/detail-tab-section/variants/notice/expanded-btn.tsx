@@ -1,7 +1,8 @@
 'use state';
 
+import React, { useMemo, useState } from 'react';
+
 import { Button } from '@muroom/components';
-import React, { useState, useMemo } from 'react';
 
 const MAX_LINES = 3;
 

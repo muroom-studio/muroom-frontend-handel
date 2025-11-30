@@ -1,14 +1,15 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-
-import './globals.css';
-
-import BaseLayout from '@/layouts';
 import Script from 'next/script';
 
 import { NuqsAdapter } from 'nuqs/adapters/next';
+
 import MapProvider from '@/components/providers/map-provider';
 import RQProvider from '@/components/providers/rq-provider';
+import { NCP_CLIENT_ID } from '@/config/constants';
+import BaseLayout from '@/layouts/base';
+
+import './globals.css';
 
 const pretendard = localFont({
   src: '../../../../packages/tailwind-config/fonts/PretendardVariable.woff2',
@@ -42,8 +43,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  modal,
 }: {
   children: React.ReactNode;
+  modal: React.ReactNode;
 }) {
   return (
     <html lang='en'>
@@ -51,13 +54,16 @@ export default function RootLayout({
         <RQProvider>
           <MapProvider>
             <NuqsAdapter>
-              <BaseLayout>{children}</BaseLayout>
+              <BaseLayout>
+                {children}
+                {modal}
+              </BaseLayout>
             </NuqsAdapter>
           </MapProvider>
         </RQProvider>
         <Script
           strategy='afterInteractive'
-          src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${process.env.NEXT_PUBLIC_NCP_CLIENT_ID}`}
+          src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${NCP_CLIENT_ID}`}
         />
       </body>
     </html>

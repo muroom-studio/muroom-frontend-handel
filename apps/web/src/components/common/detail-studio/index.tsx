@@ -2,20 +2,18 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-import DetailTabSection from '@/components/home/components/detail-tab-section';
-import CheckTabSection from '@/components/home/components/check-tab-section';
-
-import { Studio } from '@/types/studio';
-
 import { Button, Header, Snackbar, TabBar } from '@muroom/components';
-
 import {
-  HeartOutlineIcon,
-  VisitListOutlineIcon,
-  ChatIcon,
-  MailIcon,
   CallIcon,
+  ChatIcon,
+  HeartOutlineIcon,
+  MailIcon,
+  VisitListOutlineIcon,
 } from '@muroom/icons';
+
+import CheckTabSection from '@/components/home/components/check-tab-section';
+import DetailTabSection from '@/components/home/components/detail-tab-section';
+import { Studio } from '@/types/studio';
 
 interface Props {
   detailStudio: Studio;
@@ -54,7 +52,6 @@ export default function CommonDetailStudio({
     return activeTab === 'detail' ? (
       <DetailTabSection
         detailStudio={detailStudio}
-        setStudioId={setStudioId}
         containerRef={scrollContainerRef}
       />
     ) : (

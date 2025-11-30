@@ -1,8 +1,8 @@
 'use client';
 
-import { useRangeInput } from '@/hooks/useRangeInput';
-
 import { Slider } from '@muroom/components';
+
+import { useRangeInput } from '@/hooks/useRangeInput';
 
 import { FilterWrapper } from '../components';
 

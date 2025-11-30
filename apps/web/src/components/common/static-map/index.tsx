@@ -1,6 +1,10 @@
 'use client';
 
-import { Container as MapDiv, NaverMap, Marker } from 'react-naver-maps';
+import { Container as MapDiv, Marker, NaverMap } from 'react-naver-maps';
+
+import { TargetPlace } from '@/components/home/components/detail-tab-section/variants/near-facility';
+import { PlaceData } from '@/hooks/api/kakao/useNearByFetch';
+
 import {
   CAFE_MARKER_HTML,
   CONVENIENCE_MARKER_HTML,
@@ -9,8 +13,6 @@ import {
   PARKING_MARKER_HTML,
   RESTRAUNT_MARKER_HTML,
 } from './ui/custom-marker';
-import { PlaceData } from '@/hooks/api/kakao/useNearByFetch';
-import { TargetPlace } from '@/components/home/components/detail-tab-section/variants/near-facility';
 
 interface StaticMapProps {
   centerLat: number;

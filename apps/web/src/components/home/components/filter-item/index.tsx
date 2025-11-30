@@ -2,10 +2,11 @@
 
 import { useState } from 'react';
 
+import { Button, ModalBottomSheet, Popover } from '@muroom/components';
+import { DownArrowIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 
-import { DownArrowIcon } from '@muroom/icons';
-import { Popover } from '@muroom/components';
+import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 
 import {
   BuildingTypeFilter,
@@ -41,9 +42,57 @@ interface Props {
 }
 
 export default function FilterItem({ variant }: Props) {
+  const { isMobile } = useResponsiveLayout();
+
   const [isOpen, setIsOpen] = useState(false);
 
   const ContentComponent = COMPONENT_MAP[variant];
+
+  if (isMobile) {
+    return (
+      <>
+        <button
+          type='button'
+          data-state={isOpen ? 'open' : 'closed'}
+          aria-haspopup='menu'
+          aria-expanded={isOpen}
+          onClick={() => setIsOpen((prev) => !prev)}
+          className={cn(
+            'group',
+            'rounded-4 text-base-l-16-1 flex-center gap-x-micro-2 h-11 w-full cursor-pointer border border-gray-300 bg-white px-4 py-2.5',
+            {
+              'text-base-m-14-1 h-9 px-3 py-[9px]': isMobile,
+            },
+            'hover:bg-gray-50',
+            'data-[state=open]:border-primary-400 data-[state=open]:text-primary-600',
+          )}
+        >
+          <span>{VARIANT_MAP[variant]}</span>
+          <DownArrowIcon className='rotate-0 transition-transform duration-200 group-data-[state=open]:rotate-180' />
+        </button>
+        <ModalBottomSheet
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          footerBtns={
+            <div className='grid grid-cols-2 gap-x-1'>
+              <Button variant='outline' size='xl'>
+                초기화
+              </Button>
+              <Button
+                variant='primary'
+                size='xl'
+                onClick={() => setIsOpen(false)}
+              >
+                적용하기
+              </Button>
+            </div>
+          }
+        >
+          <ContentComponent />
+        </ModalBottomSheet>
+      </>
+    );
+  }
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -56,7 +105,10 @@ export default function FilterItem({ variant }: Props) {
           onClick={() => setIsOpen((prev) => !prev)}
           className={cn(
             'group',
-            'rounded-4 text-base-l-16-1 flex-center gap-x-micro-2 h-11 w-full cursor-pointer border border-gray-300 bg-white px-4 py-[10px]',
+            'rounded-4 text-base-l-16-1 flex-center gap-x-micro-2 h-11 w-full cursor-pointer border border-gray-300 bg-white px-4 py-2.5',
+            {
+              'text-base-m-14-1 h-9 px-3 py-[9px]': isMobile,
+            },
             'hover:bg-gray-50',
             'data-[state=open]:border-primary-400 data-[state=open]:text-primary-600',
           )}

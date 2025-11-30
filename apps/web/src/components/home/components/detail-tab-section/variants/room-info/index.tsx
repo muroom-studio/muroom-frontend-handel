@@ -1,18 +1,16 @@
-import { InfoIcon, ResetIcon } from '@muroom/icons';
-
-import GridRowItem from '../../components/grid-row-item';
-import SectionWrapper from '../../components/section-wrapper';
-
-import RoomImage from './room-image';
-import RoomImageGroup from './room-image-group';
-
 import {
   Tag,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from '@muroom/components';
+import { InfoIcon, ResetIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
+
+import GridRowItem from '../../components/grid-row-item';
+import SectionWrapper from '../../components/section-wrapper';
+import RoomImage from './room-image';
+import RoomImageGroup from './room-image-group';
 
 interface Props {
   title: string;

@@ -2,16 +2,16 @@
 
 import React, {
   createContext,
+  useCallback,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
-  useCallback,
-  useMemo,
 } from 'react';
 
-import { cn } from '../lib/utils';
 import { BottomDotIcon } from '../icons-generated';
+import { cn } from '../lib/utils';
 
 type DropdownItemProps = React.ComponentPropsWithRef<'button'> & {
   value: string;

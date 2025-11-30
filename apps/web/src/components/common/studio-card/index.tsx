@@ -2,24 +2,26 @@ import { useState } from 'react';
 
 import Image from 'next/image';
 
-import { Studio } from '@/types/studio';
-
 import { Badge, Tag, ToggleButton } from '@muroom/components';
-
 import { HeartIcon, StarIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 
+import { MapState } from '@/hooks/nuqs/home/useMapState';
+import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
+import { Studio } from '@/types/studio';
+
 interface Props {
   data: Studio;
-  studioId: string;
-  setStudioId: (id: string) => void;
+  currentStudioId: string;
+  setMapValue: (newState: MapState | ((prev: MapState) => MapState)) => void;
 }
 
 export default function CommonStudioCard({
   data,
-  studioId,
-  setStudioId,
+  currentStudioId,
+  setMapValue,
 }: Props) {
+  const { isMobile } = useResponsiveLayout();
   const {
     id,
     name,
@@ -44,10 +46,19 @@ export default function CommonStudioCard({
       className={cn(
         'flex cursor-pointer gap-x-3 border-b border-b-gray-300 px-4 py-6 transition-colors hover:bg-gray-100',
         {
-          'bg-primary-50': studioId === id,
+          'bg-primary-50 hover:bg-primary-50': currentStudioId === id,
+        },
+        {
+          'px-0': isMobile,
         },
       )}
-      onClick={() => setStudioId(id)}
+      onClick={() =>
+        setMapValue((prev) => ({
+          ...prev,
+          center: { lat, lng },
+          studioId: prev.studioId === id ? null : id,
+        }))
+      }
     >
       <StudioImg
         imageUrl={imageUrl}
@@ -58,13 +69,22 @@ export default function CommonStudioCard({
       />
       <div className='flex flex-col justify-between'>
         <div className='flex flex-col gap-y-3'>
-          <span className='text-title-s-22-1'>{`${priceMin}~${priceMax}만원`}</span>
+          <div className='flex-between'>
+            <span className='text-title-s-22-1'>{`${priceMin}~${priceMax}만원`}</span>
+            <div className='flex items-center'>
+              <StarIcon />
+              <p className='text-base-m-14-1 flex items-center gap-x-px'>
+                <span>{rating}</span>
+                <span className='text-gray-400'>({reviewCount})</span>
+              </p>
+            </div>
+          </div>
 
           <div
             className={cn('flex', {
               'flex-col items-start gap-y-1':
-                (lineInfo as string[]).length >= 4,
-              'items-center gap-x-1': (lineInfo as string[]).length < 4,
+                (lineInfo as string[]).length >= 2,
+              'items-center gap-x-1': (lineInfo as string[]).length < 2,
             })}
           >
             <div className='flex items-center gap-x-1'>
@@ -74,16 +94,8 @@ export default function CommonStudioCard({
                 ))}
             </div>
 
-            <p className='text-base-m-14-1 max-w-[105px] truncate'>
+            <p className='text-base-m-14-1'>
               {`${nearestStation} 도보 ${walkingTime}분`}
-            </p>
-          </div>
-
-          <div className='flex items-center'>
-            <StarIcon />
-            <p className='text-base-m-14-1 flex items-center gap-x-px'>
-              <span>{rating}</span>
-              <span className='text-gray-400'>({reviewCount})</span>
             </p>
           </div>
         </div>

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 import { Button } from '@muroom/components';
-
 import { toggleItemInArray } from '@muroom/util';
 
 import { FilterWrapper, OptionItem } from '../components';

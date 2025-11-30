@@ -1,11 +1,13 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Root } from 'react-dom/client';
 
-import { cleanupMarkers, createMarkerWithReactRoot } from '@/utils/map/marker';
-import { MarkerData, MarkerSize } from '@/types/map/markers';
 import CustomMarker from '@/components/common/map/ui/custom-marker';
+import { MarkerData, MarkerSize } from '@/types/map/markers';
+import { cleanupMarkers, createMarkerWithReactRoot } from '@/utils/map/marker';
+
+import { useResponsiveLayout } from '../useResponsiveLayout';
 
 function getMarkerSize(zoom: number): MarkerSize {
   if (zoom < 15) return 'S';
@@ -16,7 +18,7 @@ function getMarkerSize(zoom: number): MarkerSize {
 type Props = {
   mapInstance: naver.maps.Map | null;
   markers?: MarkerData[];
-  onMarkerClick?: (id: string) => void;
+  onMarkerClick?: (id: string, lat: number, lng: number) => void;
   selectedId?: string | null;
 };
 
@@ -26,6 +28,8 @@ export function useMapOverlays({
   onMarkerClick,
   selectedId,
 }: Props) {
+  const { isMobile } = useResponsiveLayout();
+
   const markerInstancesRef = useRef<naver.maps.Marker[]>([]);
   const rootInstancesRef = useRef<Root[]>([]);
 
@@ -69,13 +73,20 @@ export function useMapOverlays({
     markers.forEach((markerData) => {
       const isSelected = markerData.id === selectedId;
 
+      const handleInternalClick = (clickedId: string) => {
+        if (onMarkerClick) {
+          onMarkerClick(clickedId, markerData.lat, markerData.lng);
+        }
+      };
+
       const { marker, root } = createMarkerWithReactRoot(
         map,
         markerData,
-        onMarkerClick || (() => {}),
+        handleInternalClick || (() => {}),
         CustomMarker,
         size,
         isSelected,
+        isMobile,
       );
 
       newMarkers.push(marker);

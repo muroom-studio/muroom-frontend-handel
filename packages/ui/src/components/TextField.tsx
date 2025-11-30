@@ -1,9 +1,8 @@
 'use client';
 
-import { InputHTMLAttributes, useState, ChangeEvent, Ref } from 'react';
+import { ChangeEvent, InputHTMLAttributes, Ref, useState } from 'react';
 
 import { CloseIcon } from '../icons-generated';
-
 import { cn } from '../lib/utils';
 
 export interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {

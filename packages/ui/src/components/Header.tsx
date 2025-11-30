@@ -1,7 +1,7 @@
 import { DownArrowIcon } from '../icons-generated';
 
 interface HeaderProps {
-  title: React.ReactNode;
+  title?: React.ReactNode;
   onBackClick: () => void;
   rightSlot?: React.ReactNode;
 }

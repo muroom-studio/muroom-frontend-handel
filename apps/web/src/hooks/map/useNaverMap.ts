@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type Props = {
   mapRef: React.RefObject<HTMLDivElement | null>;
