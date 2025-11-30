@@ -1,5 +1,5 @@
-import DesktopBaseHeader from '@/layouts/desktop-layout/base/header';
-import DesktopBaseSnb from '@/layouts/desktop-layout/base/snb';
+import DesktopBaseHeader from '../components/header';
+import DesktopBaseSnb from '../components/snb';
 
 interface Props {
   children: React.ReactNode;

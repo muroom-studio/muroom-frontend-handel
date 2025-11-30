@@ -2,9 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { cn } from '../lib/utils';
-
 import { ColLineIcon, SlideCircleIcon } from '../icons-generated';
+import { cn } from '../lib/utils';
 
 interface SliderProps extends React.HTMLAttributes<HTMLDivElement> {
   value: number[];
@@ -25,8 +24,7 @@ const Slider = ({
   ref,
   ...props
 }: SliderProps) => {
-  const [minVal, maxVal] = value; // 부모로부터 전달받은 number[] range를 현재 slider의 양측을 담당함
-
+  const [minVal, maxVal] = value;
   const trackRef = useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = useState<'min' | 'max' | null>(null);
 
@@ -40,10 +38,7 @@ const Slider = ({
 
   const updateValue = useCallback(
     (clientX: number) => {
-      if (typeof minVal !== 'number' || typeof maxVal !== 'number') {
-        return;
-      }
-
+      if (typeof minVal !== 'number' || typeof maxVal !== 'number') return;
       if (dragging === null || !trackRef.current) return;
 
       const { left, width } = trackRef.current.getBoundingClientRect();
@@ -53,18 +48,15 @@ const Slider = ({
       );
 
       let newValue = min + (percent / 100) * (max - min);
-
       newValue = Math.round(newValue / step) * step;
 
       if (dragging === 'min') {
-        newValue = Math.min(newValue, maxVal);
-        onValueChange([newValue, maxVal]);
+        onValueChange([Math.min(newValue, maxVal), maxVal]);
       } else if (dragging === 'max') {
-        newValue = Math.max(newValue, minVal);
-        onValueChange([minVal, newValue]);
+        onValueChange([minVal, Math.max(newValue, minVal)]);
       }
     },
-    [dragging, trackRef, step, min, max, minVal, maxVal, onValueChange],
+    [dragging, min, max, minVal, maxVal, step, onValueChange],
   );
 
   const handleMouseDown = (e: React.MouseEvent, thumb: 'min' | 'max') => {
@@ -79,12 +71,15 @@ const Slider = ({
 
   const handleTrackMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
+    if (!trackRef.current) return;
+
     if (
       !trackRef.current ||
       typeof minVal !== 'number' ||
       typeof maxVal !== 'number'
-    )
+    ) {
       return;
+    }
 
     const { left, width } = trackRef.current.getBoundingClientRect();
     const percent = Math.max(
@@ -98,12 +93,10 @@ const Slider = ({
     const distToMax = Math.abs(newValue - maxVal);
 
     if (distToMin < distToMax) {
-      const finalMinVal = Math.min(newValue, maxVal);
-      onValueChange([finalMinVal, maxVal]);
+      onValueChange([Math.min(newValue, maxVal), maxVal]);
       setDragging('min');
     } else {
-      const finalMaxVal = Math.max(newValue, minVal);
-      onValueChange([minVal, finalMaxVal]);
+      onValueChange([minVal, Math.max(newValue, minVal)]);
       setDragging('max');
     }
   };
@@ -111,16 +104,14 @@ const Slider = ({
   useEffect(() => {
     const handleMouseUp = () => setDragging(null);
     const handleTouchEnd = () => setDragging(null);
-
     const handleMouseMove = (e: MouseEvent) => {
-      if (dragging !== null) {
+      if (dragging) {
         e.preventDefault();
         updateValue(e.clientX);
       }
     };
-
     const handleTouchMove = (e: TouchEvent) => {
-      if (dragging !== null && e.touches[0]) {
+      if (dragging && e.touches[0]) {
         updateValue(e.touches[0].clientX);
       }
     };
@@ -131,7 +122,6 @@ const Slider = ({
       document.addEventListener('touchmove', handleTouchMove);
       document.addEventListener('touchend', handleTouchEnd);
     }
-
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
@@ -142,73 +132,60 @@ const Slider = ({
 
   return (
     <div ref={ref} className={cn('w-full', 'pb-5', className)}>
-      <div
-        className='relative flex w-full touch-none select-none items-center'
-        {...props}
-      >
-        <div
-          ref={trackRef}
-          className='relative h-1 w-full cursor-pointer overflow-hidden rounded-full bg-gray-200'
-          onMouseDown={handleTrackMouseDown}
-        >
+      {/* 1. 슬라이더 영역 (패딩 적용) */}
+      <div className='px-3.5' {...props}>
+        {/* ✨ 내부 relative 컨테이너: 여기가 0%~100%의 기준이 됩니다. */}
+        <div className='relative flex h-7 w-full touch-none select-none items-center'>
+          {/* 트랙 */}
           <div
-            className='bg-primary-400 absolute h-full'
+            ref={trackRef}
+            className='absolute left-0 top-1/2 h-1 w-full -translate-y-1/2 cursor-pointer overflow-hidden rounded-full bg-gray-200'
+            onMouseDown={handleTrackMouseDown}
+          >
+            <div
+              className='bg-primary-400 absolute h-full'
+              style={{
+                left: `${minPercent}%`,
+                width: `${maxPercent - minPercent}%`,
+              }}
+            />
+          </div>
+
+          <SlideCircleIcon
+            role='slider'
+            className='focus-visible:outline-hidden absolute z-10 size-7 cursor-pointer text-white'
             style={{
               left: `${minPercent}%`,
-              width: `${maxPercent - minPercent}%`,
+              transform: 'translateX(-50%)',
             }}
+            onMouseDown={(e) => handleMouseDown(e, 'min')}
+            onTouchStart={(e) => handleTouchStart(e, 'min')}
+          />
+
+          <SlideCircleIcon
+            role='slider'
+            className='focus-visible:outline-hidden absolute z-10 size-7 cursor-pointer text-white'
+            style={{
+              left: `${maxPercent}%`,
+              transform: 'translateX(-50%)',
+            }}
+            onMouseDown={(e) => handleMouseDown(e, 'max')}
+            onTouchStart={(e) => handleTouchStart(e, 'max')}
           />
         </div>
-
-        <SlideCircleIcon
-          role='slider'
-          aria-label='Minimum price'
-          aria-valuemin={min}
-          aria-valuemax={maxVal}
-          aria-valuenow={minVal}
-          data-slot='slider-thumb-min'
-          className={cn(
-            'focus-visible:outline-hidden',
-            'absolute size-7 shrink-0 cursor-pointer border-gray-300 text-white',
-            'transition-[color]',
-          )}
-          style={{
-            left: `${minPercent}%`,
-            transform: 'translateX(-50%)',
-            zIndex: 10,
-          }}
-          onMouseDown={(e) => handleMouseDown(e, 'min')}
-          onTouchStart={(e) => handleTouchStart(e, 'min')}
-        />
-
-        <SlideCircleIcon
-          role='slider'
-          aria-label='Maximum price'
-          aria-valuemin={minVal}
-          aria-valuemax={max}
-          aria-valuenow={maxVal}
-          data-slot='slider-thumb-max'
-          className={cn(
-            'focus-visible:outline-hidden',
-            'absolute size-7 shrink-0 cursor-pointer border-gray-300 text-white',
-            'transition-[color]',
-          )}
-          style={{
-            left: `${maxPercent}%`,
-            transform: 'translateX(-50%)',
-            zIndex: 10,
-          }}
-          onMouseDown={(e) => handleMouseDown(e, 'max')}
-          onTouchStart={(e) => handleTouchStart(e, 'max')}
-        />
       </div>
 
-      <div className='relative mt-4 w-full'>
-        {sliderLabels.map((label) => (
-          <div key={label.text} className={`absolute ${label.positionClass}`}>
-            <SliderLabel text={label.text} />
-          </div>
-        ))}
+      <div className='mt-4 px-3.5'>
+        <div className='relative w-full'>
+          {sliderLabels.map((label) => (
+            <div
+              key={label.text}
+              className={`absolute whitespace-nowrap ${label.positionClass}`}
+            >
+              <SliderLabel text={label.text} />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -217,10 +194,10 @@ const Slider = ({
 export default Slider;
 
 const sliderLabels = [
-  { text: '최소', positionClass: '-left-3' },
+  { text: '최소', positionClass: 'left-0 -translate-x-1/2' },
   { text: '40만원', positionClass: 'left-[40%] -translate-x-1/2' },
   { text: '60만원', positionClass: 'left-[60%] -translate-x-1/2' },
-  { text: '최대', positionClass: '-right-3' },
+  { text: '최대', positionClass: 'left-[100%] -translate-x-1/2' },
 ];
 
 const SliderLabel = ({ text }: { text: string }) => (

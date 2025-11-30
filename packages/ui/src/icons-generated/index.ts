@@ -1,6 +1,7 @@
 export { default as BottomDotIcon } from './BottomDot';
 export { default as CallIcon } from './Call';
 export { default as ChatIcon } from './Chat';
+export { default as CheckSmallIcon } from './CheckSmall';
 export { default as CloseIcon } from './Close';
 export { default as ColLineIcon } from './ColLine';
 export { default as DownArrowIcon } from './DownArrow';

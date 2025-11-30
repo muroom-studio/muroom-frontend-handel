@@ -2,12 +2,11 @@
 
 import { useState } from 'react';
 
+import { TargetIcon } from '@muroom/icons';
+import { cn } from '@muroom/lib';
+
 import { useGeolocation } from '@/hooks/map/useGeolocation';
 import { MapState } from '@/hooks/nuqs/home/useMapState';
-
-import { TargetIcon } from '@muroom/icons';
-
-import { cn } from '@muroom/lib';
 import { compareCoords } from '@/utils/map/compare-coords';
 
 interface Props {

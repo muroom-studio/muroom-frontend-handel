@@ -2,25 +2,32 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { MotionValue, useTransform, motion } from 'framer-motion';
+import { MotionValue, motion, useTransform } from 'framer-motion';
 
-import { useNaverMap } from '@/hooks/map/useNaverMap';
+import {
+  Button,
+  ModalBottomSheet,
+  TextField,
+  ToggleButton,
+} from '@muroom/components';
+import { FilterIcon, SearchIcon } from '@muroom/icons';
+
+import FilterItem, { Variant } from '@/components/home/components/filter-item';
+import {
+  BuildingTypeFilter,
+  OptionFilter,
+} from '@/components/home/components/filter-item/variants';
 import { useMapOverlays } from '@/hooks/map/useMapOverlay';
-
-import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
-import { MapState, MIN_ZOOM, MAX_ZOOM } from '@/hooks/nuqs/home/useMapState';
+import { useNaverMap } from '@/hooks/map/useNaverMap';
 import { useFilters } from '@/hooks/nuqs/home/useFilters';
-
-import CurrentLocationBtn from './ui/current-location-btn';
-import ZoomControls from './ui/zoom-control-btn';
-import LocationTag from './ui/location-tag';
-import CompareBtn from './ui/compare-btn';
-
+import { MAX_ZOOM, MIN_ZOOM, MapState } from '@/hooks/nuqs/home/useMapState';
+import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 import { MarkerData } from '@/types/map/markers';
 
-import { TextField, ToggleButton } from '@muroom/components';
-import { FilterIcon, SearchIcon } from '@muroom/icons';
-import FilterItem, { Variant } from '@/components/home/components/filter-item';
+import CompareBtn from './ui/compare-btn';
+import CurrentLocationBtn from './ui/current-location-btn';
+import LocationTag from './ui/location-tag';
+import ZoomControls from './ui/zoom-control-btn';
 
 interface Props {
   mapValue: MapState;
@@ -97,6 +104,57 @@ export default function CommonMap({
       }));
     },
   });
+
+  // ✅ [추가됨] 지도가 멈출 때(idle) minLat, maxLat 등을 계산하여 Bounds 업데이트
+  useEffect(() => {
+    if (!mapInstance) return;
+
+    const handleIdle = () => {
+      const bounds = mapInstance.getBounds() as any;
+      const sw = bounds.getSW(); // 남서쪽 (South-West)
+      const ne = bounds.getNE(); // 북동쪽 (North-East)
+
+      const newBounds = {
+        minLat: sw.lat(),
+        minLng: sw.lng(),
+        maxLat: ne.lat(),
+        maxLng: ne.lng(),
+      };
+
+      setMapValue((prev) => {
+        const prevBounds = prev.bounds;
+
+        // 기존 값과 완전히 같으면 업데이트 생략 (불필요한 렌더링 방지)
+        if (
+          prevBounds?.minLat === newBounds.minLat &&
+          prevBounds?.minLng === newBounds.minLng &&
+          prevBounds?.maxLat === newBounds.maxLat &&
+          prevBounds?.maxLng === newBounds.maxLng
+        ) {
+          return prev;
+        }
+
+        return {
+          ...prev,
+          bounds: newBounds,
+        };
+      });
+    };
+
+    // 1. 컴포넌트 마운트(지도 로드) 시 초기값 설정을 위해 1회 실행
+    handleIdle();
+
+    // 2. 지도 유휴 상태(드래그/줌 종료) 리스너 등록
+    const listener = naver.maps.Event.addListener(
+      mapInstance,
+      'idle',
+      handleIdle,
+    );
+
+    return () => {
+      naver.maps.Event.removeListener(listener);
+    };
+  }, [mapInstance, setMapValue]);
 
   useMapOverlays({
     mapInstance,
@@ -182,7 +240,8 @@ export default function CommonMap({
 
 const FilterBtns = () => {
   const { filteredValue, setFilter } = useFilters();
-  const [showFilter, setShowFilter] = useState(false);
+
+  const [isExtraOpen, setIsExtraOpen] = useState(false);
 
   const visibleKeys = ['e1', 'e2'] as const;
 
@@ -190,11 +249,35 @@ const FilterBtns = () => {
     <div className='flex items-center gap-x-3'>
       <ToggleButton
         variant='outline_icon'
-        selected={showFilter}
-        onSelectedChange={setShowFilter}
+        selected={isExtraOpen}
+        onClick={() => setIsExtraOpen(true)}
       >
         <FilterIcon className='size-5' />
       </ToggleButton>
+      <ModalBottomSheet
+        isOpen={isExtraOpen}
+        onClose={() => setIsExtraOpen(false)}
+        footerBtns={
+          <div className='grid grid-cols-2 gap-x-1'>
+            <Button variant='outline' size='xl'>
+              초기화
+            </Button>
+            <Button
+              variant='primary'
+              size='xl'
+              onClick={() => setIsExtraOpen(false)}
+            >
+              적용하기
+            </Button>
+          </div>
+        }
+      >
+        <div className='flex flex-col gap-y-2'>
+          <OptionFilter />
+          <BuildingTypeFilter />
+        </div>
+      </ModalBottomSheet>
+
       {visibleKeys.map((key) => (
         <div aria-label='필터 박스' key={key}>
           <FilterItem

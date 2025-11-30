@@ -2,15 +2,13 @@
 
 import { useState } from 'react';
 
-import StaticMap from '@/components/common/static-map';
-
-import SectionWrapper from '../../components/section-wrapper';
-
 import { ToggleButton } from '@muroom/components';
-
 import { cn } from '@muroom/lib';
 
+import StaticMap from '@/components/common/static-map';
 import { useNearbyFetch } from '@/hooks/api/kakao/useNearByFetch';
+
+import SectionWrapper from '../../components/section-wrapper';
 
 interface Props {
   title: string;
@@ -98,9 +96,3 @@ const PlcaeRow = ({
     </div>
   );
 };
-
-const dummy_place = [
-  { name: 'GS25 강남시티힐점', distance: 23 },
-  { name: '이마트24 R강남역삼점', distance: 36 },
-  { name: '세븐일레븐 뉴강남센터점', distance: 45 },
-];

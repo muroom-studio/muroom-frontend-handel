@@ -1,7 +1,6 @@
-import { createRoot, type Root } from 'react-dom/client';
+import { type Root, createRoot } from 'react-dom/client';
 
 import { CustomMarkerProps } from '@/components/common/map/ui/custom-marker';
-
 import { MarkerData, MarkerSize } from '@/types/map/markers';
 
 export function createMarkerWithReactRoot(

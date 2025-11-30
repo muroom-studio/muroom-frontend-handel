@@ -2,13 +2,15 @@
 
 import { useState } from 'react';
 
+import Image from 'next/image';
+
 import {
   Dropdown,
   DropdownContent,
   DropdownItem,
   DropdownTrigger,
 } from '@muroom/components';
-import Image from 'next/image';
+
 import { OptionItem } from '../../../filter-item/components';
 
 export default function RoomImage() {

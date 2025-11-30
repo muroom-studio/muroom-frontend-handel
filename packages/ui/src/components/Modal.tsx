@@ -5,9 +5,8 @@ import { createPortal } from 'react-dom';
 
 import { AnimatePresence, HTMLMotionProps, motion } from 'framer-motion';
 
-import { cn } from '../lib/utils';
-
 import { CloseIcon } from '../icons-generated';
+import { cn } from '../lib/utils';
 
 interface ModalContextProps {
   onClose: () => void;

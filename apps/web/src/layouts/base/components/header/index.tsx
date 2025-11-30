@@ -1,13 +1,16 @@
-import Link from 'next/link';
+'use client';
+
 import Image from 'next/image';
-
-import BaseLogo from '@muroom/ui/assets/base-logo.svg';
-
-import { Button, TextField } from '@muroom/ui/components';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 
 import { SearchIcon } from '@muroom/icons';
+import BaseLogo from '@muroom/ui/assets/base-logo.svg';
+import { Button, TextField } from '@muroom/ui/components';
 
 export default function DesktopBaseHeader() {
+  const searchParams = useSearchParams();
+
   return (
     <header className='flex-between border-b-[0.5px] border-b-gray-300 p-5'>
       <div className='flex-center gap-x-4'>
@@ -23,9 +26,11 @@ export default function DesktopBaseHeader() {
           />
         </div>
       </div>
-      <Button variant='outline' size='l'>
-        회원가입/로그인
-      </Button>
+      <Link href={`/welcome?${searchParams.toString()}`} scroll={false}>
+        <Button variant='outline' size='l'>
+          회원가입/로그인
+        </Button>
+      </Link>
     </header>
   );
 }

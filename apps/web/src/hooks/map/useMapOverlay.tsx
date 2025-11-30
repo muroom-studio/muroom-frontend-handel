@@ -1,11 +1,12 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Root } from 'react-dom/client';
 
-import { cleanupMarkers, createMarkerWithReactRoot } from '@/utils/map/marker';
-import { MarkerData, MarkerSize } from '@/types/map/markers';
 import CustomMarker from '@/components/common/map/ui/custom-marker';
+import { MarkerData, MarkerSize } from '@/types/map/markers';
+import { cleanupMarkers, createMarkerWithReactRoot } from '@/utils/map/marker';
+
 import { useResponsiveLayout } from '../useResponsiveLayout';
 
 function getMarkerSize(zoom: number): MarkerSize {

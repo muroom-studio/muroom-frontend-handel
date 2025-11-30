@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import { KAKAO_REST_API_KEY } from '@/config/constants';
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
 
@@ -16,9 +18,7 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const apiKey = process.env.KAKAO_REST_API_KEY;
-
-  if (!apiKey) {
+  if (!KAKAO_REST_API_KEY) {
     return NextResponse.json(
       { error: 'Server Configuration Error: API Key missing' },
       { status: 500 },
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
   try {
     const response = await fetch(apiUrl, {
       headers: {
-        Authorization: `KakaoAK ${apiKey}`,
+        Authorization: `KakaoAK ${KAKAO_REST_API_KEY}`,
       },
       cache: 'no-store',
     });

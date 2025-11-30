@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useEffect } from 'react';
+
 import { AnimatePresence, motion } from 'framer-motion';
+
 import { cn } from '../lib/utils';
 
 interface SnackbarProps {

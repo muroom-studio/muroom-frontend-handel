@@ -1,7 +1,8 @@
 'use client';
 
+import { parseAsString, useQueryStates } from 'nuqs';
+
 import { Variant as FilterVariant } from '@/components/home/components/filter-item';
-import { useQueryStates, parseAsString } from 'nuqs';
 
 // 관리할 필터 키와 기본값 정의
 const filterKeys = {

@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { cn } from '@muroom/lib';
-
 import {
   ChatIcon,
   FileIcon,
@@ -9,6 +7,7 @@ import {
   VisitListIcon,
   WorkroomIcon,
 } from '@muroom/icons';
+import { cn } from '@muroom/lib';
 
 export default function DesktopBaseSnb() {
   const SnbList = [

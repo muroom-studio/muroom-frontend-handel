@@ -2,8 +2,8 @@
 
 import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 
-import MobileBaseLayout from '@/layouts/mobile-layout/base';
-import DesktopBaseLayout from '@/layouts/desktop-layout/base';
+import DesktopBaseLayout from './desktop';
+import MobileBaseLayout from './mobile';
 
 interface Props {
   children: React.ReactNode;

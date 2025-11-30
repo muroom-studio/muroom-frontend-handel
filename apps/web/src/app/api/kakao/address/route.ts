@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import { KAKAO_REST_API_KEY } from '@/config/constants';
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const lat = searchParams.get('lat');
@@ -12,14 +14,12 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const apiKey = process.env.KAKAO_REST_API_KEY;
-
   try {
     const response = await fetch(
       `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${lng}&y=${lat}`,
       {
         headers: {
-          Authorization: `KakaoAK ${apiKey}`,
+          Authorization: `KakaoAK ${KAKAO_REST_API_KEY}`,
         },
         cache: 'force-cache',
       },

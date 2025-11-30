@@ -3,8 +3,10 @@
 import { useState } from 'react';
 
 import { Popover } from '@muroom/components';
-import { cn } from '@muroom/lib';
 import { BottomDotIcon } from '@muroom/icons';
+import { cn } from '@muroom/lib';
+
+import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 
 import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 

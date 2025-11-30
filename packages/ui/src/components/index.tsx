@@ -12,6 +12,9 @@ export { default as ToggleSlider } from './ToggleSlider';
 export { default as Modal } from './Modal';
 export { default as Snackbar } from './Snackbar';
 export { default as BottomSheet } from './BottomSheet';
+export { default as ModalBottomSheet } from './ModalBottomSheet';
+export { default as Progressbar } from './Progressbar';
+export { default as Checkbox } from './Checkbox';
 
 export {
   Dropdown,

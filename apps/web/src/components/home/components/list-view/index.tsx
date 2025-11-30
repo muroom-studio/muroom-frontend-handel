@@ -1,8 +1,16 @@
+<<<<<<< HEAD
+import { cn } from '@muroom/lib';
+
+import CommonStudioCard from '@/components/common/studio-card';
+import { MapState } from '@/hooks/nuqs/home/useMapState';
+import { Studio } from '@/types/studio';
+=======
 import CommonStudioCard from '@/components/common/studio-card';
 import { MapState } from '@/hooks/nuqs/home/useMapState';
 
 import { Studio } from '@/types/studio';
 import { cn } from '@muroom/lib';
+>>>>>>> upstream/main
 
 interface Props {
   studios: Studio[];

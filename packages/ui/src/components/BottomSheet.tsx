@@ -1,14 +1,16 @@
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+
 import {
+  MotionValue,
+  PanInfo,
   motion,
   useAnimation,
-  PanInfo,
-  useMotionValue,
   useDragControls,
-  MotionValue,
+  useMotionValue,
 } from 'framer-motion';
+
 import { cn } from '../lib/utils';
 
 interface BottomSheetProps {
