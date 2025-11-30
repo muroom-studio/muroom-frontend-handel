@@ -18,3 +18,17 @@ type ErrorResponse = {
 };
 
 export type ApiResponse<T> = SuccessResponse<T> | ErrorResponse;
+
+export interface PaginationInfo {
+  pageNumber: number;
+  pageSize: number;
+  totalPages: number;
+  totalElements: number;
+  isFirst: boolean;
+  isLast: boolean;
+}
+
+export interface PaginatedResponse<T> {
+  content: T[];
+  pagination: PaginationInfo;
+}
