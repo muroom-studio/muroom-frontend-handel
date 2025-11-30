@@ -16,11 +16,9 @@ export interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
 export default function TextField({
   className,
   onClear,
-  label,
   value,
   defaultValue,
   onChange,
-  type,
   ref,
   leftIcon,
   ...props

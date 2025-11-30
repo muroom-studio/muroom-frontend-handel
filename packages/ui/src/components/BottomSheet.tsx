@@ -21,7 +21,6 @@ interface BottomSheetProps {
   minHeight?: number;
   footerHeight?: number;
   className?: string;
-  showCloseButton?: boolean;
   externalY?: MotionValue<number>;
 }
 
@@ -33,7 +32,6 @@ export default function BottomSheet({
   minHeight = 80,
   footerHeight = 64,
   className,
-  showCloseButton,
   externalY,
 }: BottomSheetProps) {
   const controls = useAnimation();
