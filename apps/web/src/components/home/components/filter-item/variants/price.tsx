@@ -2,8 +2,6 @@
 
 import { useEffect } from 'react';
 
-// useEffect 추가
-
 import { Slider } from '@muroom/components';
 
 import { useRangeInput } from '@/hooks/useRangeInput';

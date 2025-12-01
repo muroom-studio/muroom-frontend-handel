@@ -1,7 +1,7 @@
-export interface FilterOptionItem {
+export type FilterOptionItem = {
   code: string;
   description: string;
-}
+};
 
 export interface StudioFilterOptionsResponseProps {
   floorOptions: FilterOptionItem[];

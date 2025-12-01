@@ -15,6 +15,9 @@ export { default as BottomSheet } from './BottomSheet';
 export { default as ModalBottomSheet } from './ModalBottomSheet';
 export { default as Progressbar } from './Progressbar';
 export { default as Checkbox } from './Checkbox';
+export { default as RequiredText } from './RequiredText';
+export { default as OtpGroup } from './OtpGroup';
+export { default as HelperMessage } from './HelperMessage';
 
 export {
   Dropdown,

@@ -3,11 +3,12 @@
 import { useEffect, useState } from 'react';
 
 import { Button } from '@muroom/components';
-import { toggleItemInArray } from '@muroom/util';
+import { updateArrayByToggle } from '@muroom/util';
 
+import OptionItem from '@/components/common/option-item';
 import { FilterOptionItem } from '@/types/studios';
 
-import { FilterWrapper, OptionItem } from '../components';
+import { FilterWrapper } from '../components';
 
 interface Props {
   value: string;
@@ -57,7 +58,7 @@ export default function OptionFilter({
     if (code === 'ALL') {
       setCodes([]);
     } else {
-      setCodes((prev) => toggleItemInArray(prev, code));
+      setCodes((prev) => updateArrayByToggle(prev, code));
     }
   };
 

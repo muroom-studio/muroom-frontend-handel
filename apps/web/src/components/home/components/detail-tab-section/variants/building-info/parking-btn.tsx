@@ -8,10 +8,6 @@ import { cn } from '@muroom/lib';
 import StaticMap from '@/components/common/static-map';
 import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 
-interface Props {
-  isMobile: boolean;
-}
-
 export default function ParkingBtn() {
   const { isMobile } = useResponsiveLayout();
 

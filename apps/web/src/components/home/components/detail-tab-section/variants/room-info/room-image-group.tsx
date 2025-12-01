@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { Button, Modal } from '@muroom/components';
+import { Modal } from '@muroom/components';
 import { DownArrowIcon } from '@muroom/icons';
 
 export default function RoomImageGroup() {
