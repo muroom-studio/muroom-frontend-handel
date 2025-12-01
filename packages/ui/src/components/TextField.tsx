@@ -1,33 +1,44 @@
 'use client';
 
-import { ChangeEvent, InputHTMLAttributes, Ref, useState } from 'react';
+import { ChangeEvent, InputHTMLAttributes, Ref, useId, useState } from 'react';
 
 import { CloseIcon } from '../icons-generated';
 import { cn } from '../lib/utils';
+import RequiredText from './RequiredText';
 
 export interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   onClear?: () => void;
   label?: string;
   className?: string;
+  inputClassName?: string;
+  hideClearButton?: boolean;
   ref?: Ref<HTMLInputElement>;
   leftIcon?: React.ReactNode;
 }
 
-export default function TextField({
+const TextField = ({
   className,
+  inputClassName,
+  hideClearButton = false,
   onClear,
   value,
   defaultValue,
   onChange,
   ref,
   leftIcon,
+  label,
+  id,
+  required,
   ...props
-}: TextFieldProps) {
+}: TextFieldProps) => {
+  const generatedId = useId();
+  const inputId = id || generatedId;
+
   const isControlled = value !== undefined;
   const [internalValue, setInternalValue] = useState(defaultValue ?? '');
   const displayValue = isControlled ? value : internalValue;
 
-  const showClearIcon = !!displayValue && !props.disabled;
+  const showClearIcon = !!displayValue && !props.disabled && !hideClearButton;
 
   const handleClear = () => {
     if (onClear) {
@@ -46,7 +57,15 @@ export default function TextField({
   };
 
   return (
-    <div className={cn('w-full', className)}>
+    <div
+      className={cn('w-full', label && 'flex flex-col gap-y-[9px]', className)}
+    >
+      {label && (
+        <RequiredText htmlFor={inputId} required={required}>
+          {label}
+        </RequiredText>
+      )}
+
       <div className='relative'>
         {leftIcon && (
           <div className='absolute left-3 top-1/2 -translate-y-1/2'>
@@ -55,22 +74,26 @@ export default function TextField({
         )}
         <input
           ref={ref}
+          id={inputId}
+          required={required}
           value={displayValue}
           onChange={handleChange}
           disabled={props.disabled}
           className={cn(
-            'rounded-4 text-base-l-16-1 w-full border border-gray-300 p-3 text-gray-800 transition-all',
+            'rounded-4 w-full border border-gray-300 p-3 transition-all',
+            'text-base-l-16-1',
             {
               'pr-12': showClearIcon,
               'pr-5': !showClearIcon,
               'pl-12': leftIcon,
             },
             'placeholder:text-gray-400',
-            'focus:border-primary-400 focus:outline-none',
+            'focus:border-gray-800 focus:outline-none',
             {
-              'bg-surface2 border-text-box !text-text-line cursor-not-allowed':
+              'cursor-not-allowed border-gray-300 bg-gray-50 !text-gray-400':
                 props.disabled,
             },
+            inputClassName,
           )}
           {...props}
         />
@@ -91,4 +114,6 @@ export default function TextField({
       </div>
     </div>
   );
-}
+};
+
+export default TextField;

@@ -11,7 +11,7 @@ import {
   DropdownTrigger,
 } from '@muroom/components';
 
-import { OptionItem } from '../../../filter-item/components';
+import OptionItem from '@/components/common/option-item';
 
 export default function RoomImage() {
   const [showRoom, setShowRoom] = useState(''); // 드롭다운용 더미 room

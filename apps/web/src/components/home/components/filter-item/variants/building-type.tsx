@@ -1,8 +1,10 @@
 import { useState } from 'react';
 
-import { toggleItemInArray } from '@muroom/util';
+import { updateArrayByToggle } from '@muroom/util';
 
-import { FilterWrapper, OptionItem } from '../components';
+import OptionItem from '@/components/common/option-item';
+
+import { FilterWrapper } from '../components';
 
 const FLOOR_OPTIONS = ['전체', '지상', '지하'];
 const ACCOMMODATION_OPTIONS = ['전체', '가능', '불가능'];
@@ -64,7 +66,7 @@ export default function BuildingTypeFilter() {
                 item={item}
                 selected={restroomOption.includes(item)}
                 onClick={() =>
-                  setRestroomOption((prev) => toggleItemInArray(prev, item))
+                  setRestroomOption((prev) => updateArrayByToggle(prev, item))
                 }
               />
             ))}

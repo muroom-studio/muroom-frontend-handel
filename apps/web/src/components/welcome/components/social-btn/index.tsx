@@ -22,7 +22,7 @@ const SOCIAL_CONFIG = {
   KAKAO: {
     Icon: KakaoLogo,
     label: '카카오로 시작하기',
-    url: `http://dev-api.muroom.kr/oauth2/authorization/kakao`,
+    url: `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`,
   },
   NAVER: {
     Icon: NaverLogo,

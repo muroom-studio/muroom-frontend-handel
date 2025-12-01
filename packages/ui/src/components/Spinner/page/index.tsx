@@ -2,13 +2,13 @@
 
 import Lottie from 'lottie-react';
 
-import spinnerAnimation from '../assets/spinner.json';
+import spinnerAnimation from '../../../assets/spinner.json';
 
-interface SpinnerProps {
+export interface Props {
   size?: number;
 }
 
-const Spinner = ({ size = 150 }: SpinnerProps) => {
+export default function PageSpinner({ size = 150 }: Props) {
   return (
     <Lottie
       animationData={spinnerAnimation}
@@ -16,6 +16,4 @@ const Spinner = ({ size = 150 }: SpinnerProps) => {
       style={{ width: size, height: size }}
     />
   );
-};
-
-export default Spinner;
+}

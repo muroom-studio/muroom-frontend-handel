@@ -2,7 +2,9 @@ import { useState } from 'react';
 
 import { Button } from '@muroom/components';
 
-import { FilterWrapper, OptionItem } from '../components';
+import OptionItem from '@/components/common/option-item';
+
+import { FilterWrapper } from '../components';
 
 const INSTRUMENT_OPTIONS = [
   '전체',

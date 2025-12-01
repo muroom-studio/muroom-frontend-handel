@@ -5,7 +5,9 @@ import { useEffect, useState } from 'react';
 import { ResetIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 
-import { FilterWrapper, OptionItem } from '../components';
+import OptionItem from '@/components/common/option-item';
+
+import { FilterWrapper } from '../components';
 
 interface Props {
   value: string;
