@@ -1,6 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { getStudioFilterOptions } from '@/lib/studios';
+import { getStudioFilterOptions, getStudiosMapSearch } from '@/lib/studios';
+import { StudiosMapSearchRequestProps } from '@/types/studios';
 
 export const useStudiosQueries = () => {
   const studioFilterOptionsQuery = useQuery({
@@ -10,7 +11,16 @@ export const useStudiosQueries = () => {
     gcTime: 1000 * 60 * 60,
   });
 
+  const useStudiosMapSearchQuery = (params?: StudiosMapSearchRequestProps) =>
+    useQuery({
+      queryKey: ['studios', 'map-search', params],
+      queryFn: () => getStudiosMapSearch(params!),
+      enabled: !!params,
+      placeholderData: keepPreviousData,
+    });
+
   return {
     studioFilterOptionsQuery,
+    useStudiosMapSearchQuery,
   };
 };

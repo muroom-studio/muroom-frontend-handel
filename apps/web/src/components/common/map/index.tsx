@@ -15,14 +15,16 @@ import { FilterIcon, SearchIcon } from '@muroom/icons';
 import FilterItem, { Variant } from '@/components/home/components/filter-item';
 import {
   BuildingTypeFilter,
+  InstrumentFilter,
   OptionFilter,
 } from '@/components/home/components/filter-item/variants';
+import { useStudiosQueries } from '@/hooks/api/studios/useQueries';
 import { useMapOverlays } from '@/hooks/map/useMapOverlay';
 import { useNaverMap } from '@/hooks/map/useNaverMap';
 import { useFilters } from '@/hooks/nuqs/home/useFilters';
 import { MAX_ZOOM, MIN_ZOOM, MapState } from '@/hooks/nuqs/home/useMapState';
 import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
-import { MarkerData } from '@/types/map/markers';
+import { StudiosMapSearchItem } from '@/types/studios';
 
 import CompareBtn from './ui/compare-btn';
 import CurrentLocationBtn from './ui/current-location-btn';
@@ -32,7 +34,7 @@ import ZoomControls from './ui/zoom-control-btn';
 interface Props {
   mapValue: MapState;
   setMapValue: (newState: MapState | ((prev: MapState) => MapState)) => void;
-  markers?: MarkerData[];
+  markers: StudiosMapSearchItem[];
   sheetY?: MotionValue<number>;
   middleRatio?: number;
 }
@@ -105,14 +107,13 @@ export default function CommonMap({
     },
   });
 
-  // ✅ [추가됨] 지도가 멈출 때(idle) minLat, maxLat 등을 계산하여 Bounds 업데이트
   useEffect(() => {
     if (!mapInstance) return;
 
     const handleIdle = () => {
       const bounds = mapInstance.getBounds() as any;
-      const sw = bounds.getSW(); // 남서쪽 (South-West)
-      const ne = bounds.getNE(); // 북동쪽 (North-East)
+      const sw = bounds.getSW();
+      const ne = bounds.getNE();
 
       const newBounds = {
         minLat: sw.lat(),
@@ -124,7 +125,6 @@ export default function CommonMap({
       setMapValue((prev) => {
         const prevBounds = prev.bounds;
 
-        // 기존 값과 완전히 같으면 업데이트 생략 (불필요한 렌더링 방지)
         if (
           prevBounds?.minLat === newBounds.minLat &&
           prevBounds?.minLng === newBounds.minLng &&
@@ -141,10 +141,8 @@ export default function CommonMap({
       });
     };
 
-    // 1. 컴포넌트 마운트(지도 로드) 시 초기값 설정을 위해 1회 실행
     handleIdle();
 
-    // 2. 지도 유휴 상태(드래그/줌 종료) 리스너 등록
     const listener = naver.maps.Event.addListener(
       mapInstance,
       'idle',
@@ -239,17 +237,29 @@ export default function CommonMap({
 }
 
 const FilterBtns = () => {
-  const { filteredValue, setFilter } = useFilters();
+  const { data } = useStudiosQueries().studioFilterOptionsQuery;
+
+  const { filters, setFilters } = useFilters();
 
   const [isExtraOpen, setIsExtraOpen] = useState(false);
 
   const visibleKeys = ['e1', 'e2'] as const;
 
+  const hasActiveFilter =
+    (filters.commonOptionCodes?.length ?? 0) > 0 ||
+    (filters.individualOptionCodes?.length ?? 0) > 0 ||
+    (filters.floorTypes?.length ?? 0) > 0 ||
+    (filters.restroomTypes?.length ?? 0) > 0 ||
+    filters.isParkingAvailable !== null ||
+    filters.isLodgingAvailable !== null ||
+    filters.hasFireInsurance !== null ||
+    (filters.forbiddenInstrumentCodes?.length ?? 0) > 0;
+
   return (
     <div className='flex items-center gap-x-3'>
       <ToggleButton
         variant='outline_icon'
-        selected={isExtraOpen}
+        selected={isExtraOpen || hasActiveFilter}
         onClick={() => setIsExtraOpen(true)}
       >
         <FilterIcon className='size-5' />
@@ -259,7 +269,24 @@ const FilterBtns = () => {
         onClose={() => setIsExtraOpen(false)}
         footerBtns={
           <div className='grid grid-cols-2 gap-x-1'>
-            <Button variant='outline' size='xl'>
+            <Button
+              variant='outline'
+              size='xl'
+              onClick={() =>
+                setFilters({
+                  commonOptionCodes: null,
+                  individualOptionCodes: null,
+
+                  floorTypes: null,
+                  restroomTypes: null,
+                  isParkingAvailable: null,
+                  isLodgingAvailable: null,
+                  hasFireInsurance: null,
+
+                  forbiddenInstrumentCodes: null,
+                })
+              }
+            >
               초기화
             </Button>
             <Button
@@ -273,8 +300,28 @@ const FilterBtns = () => {
         }
       >
         <div className='flex flex-col gap-y-2'>
-          <OptionFilter />
-          <BuildingTypeFilter />
+          <OptionFilter
+            commonOptionCodes={filters.commonOptionCodes}
+            individualOptionCodes={filters.individualOptionCodes}
+            onChange={(vals) => setFilters(vals)}
+            publicOptions={data?.studioCommonOptions}
+            privateOptions={data?.studioIndividualOptions}
+          />
+          <BuildingTypeFilter
+            floorTypes={filters.floorTypes}
+            restroomTypes={filters.restroomTypes}
+            isParkingAvailable={filters.isParkingAvailable}
+            isLodgingAvailable={filters.isLodgingAvailable}
+            hasFireInsurance={filters.hasFireInsurance}
+            onChange={(vals) => setFilters(vals)}
+            floorOptionsData={data?.floorOptions}
+            restroomOptionsData={data?.restroomOptions}
+          />
+          <InstrumentFilter
+            forbiddenInstrumentCodes={filters.forbiddenInstrumentCodes}
+            onChange={(vals) => setFilters(vals)}
+            instrumentOptions={data?.unavailableInstrumentOptions}
+          />
         </div>
       </ModalBottomSheet>
 
@@ -282,8 +329,8 @@ const FilterBtns = () => {
         <div aria-label='필터 박스' key={key}>
           <FilterItem
             variant={key as Variant}
-            value={filteredValue[key as keyof typeof filteredValue] ?? ''}
-            onValueChange={(newValue) => setFilter(key as Variant, newValue)}
+            filters={filters}
+            setFilters={setFilters}
           />
         </div>
       ))}

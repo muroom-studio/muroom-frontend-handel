@@ -10,7 +10,6 @@ interface Props {
 
 export default function JoinSecondStep({ onValidChange }: Props) {
   const handleVerified = (phone: string) => {
-    console.log('인증 완료된 번호:', phone);
     onValidChange(true);
   };
 

@@ -1,52 +1,64 @@
 'use client';
 
-import { parseAsString, useQueryStates } from 'nuqs';
+import {
+  parseAsArrayOf,
+  parseAsBoolean,
+  parseAsInteger,
+  parseAsString,
+  useQueryStates,
+} from 'nuqs';
 
-import { Variant as FilterVariant } from '@/components/home/components/filter-item';
-
-// 관리할 필터 키와 기본값 정의
 const filterKeys = {
-  e1: parseAsString.withDefault(''),
-  e2: parseAsString.withDefault(''),
-  e3: parseAsString.withDefault(''),
-  e4: parseAsString.withDefault(''),
-  // e5: parseAsString.withDefault(''),
+  // e1 필터
+  minPrice: parseAsInteger,
+  maxPrice: parseAsInteger,
+
+  // e2 필터
+  minRoomWidth: parseAsInteger,
+  maxRoomWidth: parseAsInteger,
+  minRoomHeight: parseAsInteger,
+  maxRoomHeight: parseAsInteger,
+
+  // e3 필터
+  commonOptionCodes: parseAsArrayOf(parseAsString), // 공용 옵션 (배열)
+  individualOptionCodes: parseAsArrayOf(parseAsString), // 개인 옵션 (배열)
+
+  // e4 필터
+  floorTypes: parseAsArrayOf(parseAsString), // 층수 (지상/지하)
+  restroomTypes: parseAsArrayOf(parseAsString), // 화장실
+  isParkingAvailable: parseAsBoolean, // 주차 가능 여부
+  isLodgingAvailable: parseAsBoolean, // 숙식 가능 여부
+  hasFireInsurance: parseAsBoolean, // 화재 보험 여부
+
+  // e5 필터
+  forbiddenInstrumentCodes: parseAsArrayOf(parseAsString), // 금지 악기 (배열)
 };
 
-/**
- * 홈 화면의 필터 상태(e1~e5)를 nuqs로 관리하는 훅
- */
 export function useFilters() {
-  const [filteredValue, setFilteredValue] = useQueryStates(filterKeys);
+  const [filters, setFilters] = useQueryStates(filterKeys);
 
-  /**
-   * 특정 필터 키(variant)의 값만 업데이트하는 세터 함수
-   */
-  const setFilter = (key: FilterVariant, value: string) => {
-    // 함수형 업데이트를 사용해 특정 키만 변경
-    setFilteredValue((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
-  };
-
-  /**
-   * 모든 필터를 초기화하는 함수
-   */
   const clearFilters = () => {
-    // 모든 값을 기본값(빈 문자열)으로 설정
-    setFilteredValue({
-      e1: '',
-      e2: '',
-      e3: '',
-      e4: '',
-      // e5: '',
+    setFilters({
+      minPrice: null,
+      maxPrice: null,
+      minRoomWidth: null,
+      maxRoomWidth: null,
+      minRoomHeight: null,
+      maxRoomHeight: null,
+      commonOptionCodes: null,
+      individualOptionCodes: null,
+      floorTypes: null,
+      restroomTypes: null,
+      isParkingAvailable: null,
+      isLodgingAvailable: null,
+      hasFireInsurance: null,
+      forbiddenInstrumentCodes: null,
     });
   };
 
   return {
-    filteredValue,
-    setFilter,
+    filters,
+    setFilters,
     clearFilters,
   };
 }

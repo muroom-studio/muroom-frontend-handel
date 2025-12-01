@@ -2,10 +2,13 @@ import React from 'react';
 
 import { cn } from '@muroom/lib';
 
-import { MarkerData, MarkerSize } from '@/types/map/markers';
+import { MarkerSize, StudiosMapSearchItem } from '@/types/studios';
 
 export interface CustomMarkerProps
-  extends Pick<MarkerData, 'priceMin' | 'priceMax' | 'name' | 'isAd'> {
+  extends Pick<
+    StudiosMapSearchItem,
+    'minPrice' | 'maxPrice' | 'name' | 'isAd'
+  > {
   isMobile?: boolean;
   size: MarkerSize;
   isSelected: boolean;
@@ -14,8 +17,8 @@ export interface CustomMarkerProps
 
 export default function CustomMarker({
   isMobile = false,
-  priceMin,
-  priceMax,
+  minPrice,
+  maxPrice,
   name,
   isAd,
   size,
@@ -26,7 +29,9 @@ export default function CustomMarker({
     'absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2';
 
   const priceText =
-    priceMin && priceMax ? `${priceMin}~${priceMax}만원` : '가격문의';
+    minPrice && maxPrice
+      ? `${minPrice / 10000}~${maxPrice / 10000}만원`
+      : '가격문의';
 
   if (isSelected) {
     return (

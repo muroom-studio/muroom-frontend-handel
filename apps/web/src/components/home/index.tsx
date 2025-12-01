@@ -2,54 +2,77 @@
 
 import DesktopHomePage from '@/components/home/desktop';
 import MobileHomePage from '@/components/home/mobile';
+import { useStudiosQueries } from '@/hooks/api/studios/useQueries';
+import { useFilters } from '@/hooks/nuqs/home/useFilters';
 import { useMapState } from '@/hooks/nuqs/home/useMapState';
 import { DUMMY_STUDIO } from '@/types/studio';
+import { StudiosMapSearchRequestProps } from '@/types/studios';
 
 interface Props {
   isMobile: boolean;
 }
 
 export default function HomePage({ isMobile }: Props) {
-  const dummyCenterLocation = { lat: 37.5559247, lng: 126.9250109 };
-
+  const initCenter = { lat: 37.553993, lng: 126.9243517 };
   const [mapValue, setMapValue] = useMapState({
-    center: dummyCenterLocation,
+    center: initCenter,
     zoom: 16,
   });
 
-  const DUMMY_DATA = DUMMY_STUDIO; // 더미 작업실 data
+  const { filters, setFilters, clearFilters } = useFilters();
 
-  const DETAIL_DUMMY_DATA = DUMMY_DATA.find((d) => d.id === mapValue.studioId); // detail 더미 작업실 data
+  const searchParams: StudiosMapSearchRequestProps | undefined = mapValue.bounds
+    ? {
+        minPrice: filters.minPrice ?? undefined,
+        maxPrice: filters.maxPrice ?? undefined,
+        minRoomWidth: filters.minRoomWidth ?? undefined,
+        maxRoomWidth: filters.maxRoomWidth ?? undefined,
+        minRoomHeight: filters.minRoomHeight ?? undefined,
+        maxRoomHeight: filters.maxRoomHeight ?? undefined,
 
-  const DUMMY_MARKER_DATA = DUMMY_DATA.map((studio) => ({
-    id: studio.id,
-    lat: studio.lat,
-    lng: studio.lng,
-    isAd: studio.isAd,
-    name: studio.name,
-    priceMin: studio.priceMin,
-    priceMax: studio.priceMax,
-  }));
+        commonOptionCodes: filters.commonOptionCodes ?? undefined,
+        individualOptionCodes: filters.individualOptionCodes ?? undefined,
 
-  let content;
+        floorTypes: filters.floorTypes ?? undefined,
+        restroomTypes: filters.restroomTypes ?? undefined,
 
-  content = isMobile ? (
-    <MobileHomePage
-      mapValue={mapValue}
-      setMapValue={setMapValue}
-      studios={DUMMY_DATA}
-      detailStudio={DETAIL_DUMMY_DATA!}
-      markersData={DUMMY_MARKER_DATA}
-    />
-  ) : (
-    <DesktopHomePage
-      mapValue={mapValue}
-      setMapValue={setMapValue}
-      studios={DUMMY_DATA}
-      detailStudio={DETAIL_DUMMY_DATA!}
-      markersData={DUMMY_MARKER_DATA}
-    />
+        isParkingAvailable: filters.isParkingAvailable ?? undefined,
+        isLodgingAvailable: filters.isLodgingAvailable ?? undefined,
+        hasFireInsurance: filters.hasFireInsurance ?? undefined,
+
+        forbiddenInstrumentCodes: filters.forbiddenInstrumentCodes ?? undefined,
+        minLatitude: mapValue.bounds.minLat,
+        maxLatitude: mapValue.bounds.maxLat,
+        minLongitude: mapValue.bounds.minLng,
+        maxLongitude: mapValue.bounds.maxLng,
+      }
+    : undefined;
+
+  const { data: markersData, isLoading: markersDataLoading } =
+    useStudiosQueries().useStudiosMapSearchQuery(searchParams);
+
+  const DUMMY_DATA = DUMMY_STUDIO;
+  const DETAIL_DUMMY_DATA = DUMMY_DATA.find((d) => d.id === mapValue.studioId);
+
+  const commonProps = {
+    mapValue,
+    setMapValue,
+    filters,
+    setFilters,
+    clearFilters,
+    studios: DUMMY_DATA,
+    detailStudio: DETAIL_DUMMY_DATA!,
+    markersData: markersData ?? [],
+    isLoading: markersDataLoading,
+  };
+
+  return (
+    <main className='h-full'>
+      {isMobile ? (
+        <MobileHomePage {...commonProps} />
+      ) : (
+        <DesktopHomePage {...commonProps} />
+      )}
+    </main>
   );
-
-  return <main className='h-full'>{content}</main>;
 }

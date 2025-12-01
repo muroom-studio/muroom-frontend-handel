@@ -14,9 +14,9 @@ const MutatingIndicator = () => {
   if (isMutating === 0) return null;
 
   return (
-    <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/20'>
-      <Spinner />
-    </div>
+    // <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/20'>
+    <Spinner variant='component' />
+    // </div>
   );
 };
 
@@ -26,9 +26,9 @@ const FetchingIndicator = () => {
   if (isFetching === 0) return null;
 
   return (
-    <div className='fixed left-0 top-0 z-50 h-1 w-full'>
-      <Spinner />
-    </div>
+    // <div className='fixed left-0 top-0 z-50 h-1 w-full'>
+    <Spinner variant='component' />
+    // </div>
   );
 };
 

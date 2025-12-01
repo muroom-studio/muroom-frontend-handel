@@ -10,12 +10,14 @@ const FilterWrapper = ({
   headerChildren,
   children,
   className,
+  onReset,
 }: {
   title: string;
   titleChildren?: React.ReactNode;
   headerChildren?: React.ReactNode;
   children: React.ReactNode;
   className?: string;
+  onReset?: () => void;
 }) => {
   const { isMobile } = useResponsiveLayout();
 
@@ -30,7 +32,12 @@ const FilterWrapper = ({
         {!isMobile && (
           <div className='flex items-stretch gap-x-2'>
             {headerChildren}
-            <Button variant='outline_icon' size='l' className='size-6'>
+            <Button
+              variant='outline_icon'
+              size='l'
+              className='size-6'
+              onClick={onReset}
+            >
               <ResetIcon className='size-4' />
             </Button>
           </div>

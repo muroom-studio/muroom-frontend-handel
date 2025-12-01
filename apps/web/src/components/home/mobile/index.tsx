@@ -4,11 +4,13 @@ import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
 
 import { BottomSheet } from '@muroom/components';
 
+import Loading from '@/app/loading';
 import CommonDetailStudio from '@/components/common/detail-studio';
 import CommonMap from '@/components/common/map';
+import { useFilters } from '@/hooks/nuqs/home/useFilters';
 import { MapState } from '@/hooks/nuqs/home/useMapState';
-import { MarkerData } from '@/types/map/markers';
 import { Studio } from '@/types/studio';
+import { StudiosMapSearchItem } from '@/types/studios';
 
 import ListFilter from '../components/list-filter';
 import ListView from '../components/list-view';
@@ -18,7 +20,8 @@ interface Props {
   setMapValue: (newState: MapState | ((prev: MapState) => MapState)) => void;
   studios: Studio[];
   detailStudio: Studio;
-  markersData: MarkerData[];
+  markersData: StudiosMapSearchItem[];
+  isLoading: boolean;
 }
 
 // 상수 설정
@@ -35,8 +38,13 @@ export default function MobileHomePage({
   studios,
   detailStudio,
   markersData,
+  isLoading,
 }: Props) {
   const sheetY = useMotionValue(0);
+
+  if (isLoading) {
+    <Loading />;
+  }
 
   return (
     <div className='relative flex h-screen flex-1 flex-col overflow-hidden'>

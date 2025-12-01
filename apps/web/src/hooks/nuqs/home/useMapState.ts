@@ -4,12 +4,12 @@ import { useEffect } from 'react';
 
 import {
   createParser,
+  parseAsFloat,
   parseAsInteger,
   parseAsString,
   useQueryState,
 } from 'nuqs';
 
-// 1. Bounds 인터페이스 정의
 export interface Bounds {
   minLat: number;
   minLng: number;
@@ -17,7 +17,6 @@ export interface Bounds {
   maxLng: number;
 }
 
-// 2. MapState 인터페이스 정의
 export interface MapState {
   center: { lat: number; lng: number };
   zoom: number;
@@ -35,7 +34,6 @@ const DEFAULT_CENTER = {
 
 const DEFAULT_ZOOM = 16;
 
-// Center 파서
 const parseAsCenter = createParser({
   parse: (value) => {
     const parts = (value || '').split(',');
@@ -48,41 +46,18 @@ const parseAsCenter = createParser({
   serialize: (value) => `${value.lat},${value.lng}`,
 });
 
-// Bounds 파서
-const parseAsBounds = createParser({
-  parse: (value) => {
-    const parts = (value || '').split(',');
-    if (parts.length !== 4) return null;
-
-    const nums = parts.map((p) => parseFloat(p));
-    if (nums.some((n) => isNaN(n))) return null;
-
-    return {
-      minLat: nums[0]!,
-      minLng: nums[1]!,
-      maxLat: nums[2]!,
-      maxLng: nums[3]!,
-    };
-  },
-  serialize: (value: Bounds) =>
-    `${value.minLat},${value.minLng},${value.maxLat},${value.maxLng}`,
-});
-
 function clampZoom(zoom: number) {
   return Math.min(Math.max(zoom, MIN_ZOOM), MAX_ZOOM);
 }
 
-// 훅 구현
 export function useMapState(
   initialState?: Partial<MapState>,
 ): [MapState, (newState: MapState | ((prev: MapState) => MapState)) => void] {
-  // 초기값 설정
   const initialCenter = initialState?.center ?? DEFAULT_CENTER;
   const initialZoom = clampZoom(initialState?.zoom ?? DEFAULT_ZOOM);
   const initialStudioId = initialState?.studioId ?? null;
   const initialBounds = initialState?.bounds ?? null;
 
-  // useQueryState 훅 사용
   const [center, setCenter] = useQueryState(
     'center',
     parseAsCenter
@@ -104,44 +79,68 @@ export function useMapState(
       .withOptions({ clearOnDefault: false, shallow: true }),
   );
 
-  // Bounds는 withDefault 없이 사용 (null 허용을 위해)
-  const [bounds, setBounds] = useQueryState(
-    'bounds',
-    parseAsBounds.withOptions({ shallow: true }),
+  const [minLat, setMinLat] = useQueryState(
+    'minLatitude',
+    parseAsFloat.withOptions({ shallow: true }),
+  );
+  const [maxLat, setMaxLat] = useQueryState(
+    'maxLatitude',
+    parseAsFloat.withOptions({ shallow: true }),
+  );
+  const [minLng, setMinLng] = useQueryState(
+    'minLongitude',
+    parseAsFloat.withOptions({ shallow: true }),
+  );
+  const [maxLng, setMaxLng] = useQueryState(
+    'maxLongitude',
+    parseAsFloat.withOptions({ shallow: true }),
   );
 
-  // 초기 로드 시 값 동기화 및 초기 Bounds 주입
   useEffect(() => {
-    // 1. URL이 없으면 초기값으로 설정 (Center, Zoom, StudioId는 withDefault가 처리해주지만 명시적 동기화)
     if (!center) setCenter(initialCenter);
     if (!zoom) setZoom(initialZoom);
     if (initialStudioId && !studioId) setStudioId(initialStudioId);
 
-    // 2. [중요] Bounds 초기값이 있고, 현재 URL에 Bounds가 없다면 초기값 주입
-    if (initialBounds && !bounds) {
-      setBounds(initialBounds);
+    if (initialBounds && (!minLat || !maxLat || !minLng || !maxLng)) {
+      setMinLat(initialBounds.minLat);
+      setMaxLat(initialBounds.maxLat);
+      setMinLng(initialBounds.minLng);
+      setMaxLng(initialBounds.maxLng);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // 마운트 시 1회 실행
+  }, []);
 
-  // 현재 상태 객체 생성
+  const currentBounds: Bounds | null =
+    minLat !== null && maxLat !== null && minLng !== null && maxLng !== null
+      ? { minLat, maxLat, minLng, maxLng }
+      : null;
+
   const mapValue: MapState = {
     center: center ?? initialCenter,
     zoom: clampZoom(zoom ?? initialZoom),
     studioId: studioId || null,
-    bounds: bounds ?? null,
+    bounds: currentBounds,
   };
 
-  // 상태 업데이트 함수
   const setMapValue = (newState: MapState | ((prev: MapState) => MapState)) => {
     const state =
       typeof newState === 'function' ? newState(mapValue) : newState;
 
-    // 변경된 값만 업데이트 (최적화)
     if (state.center !== mapValue.center) setCenter(state.center);
     if (state.zoom !== mapValue.zoom) setZoom(clampZoom(state.zoom));
     if (state.studioId !== mapValue.studioId) setStudioId(state.studioId);
-    if (state.bounds !== mapValue.bounds) setBounds(state.bounds);
+
+    if (state.bounds) {
+      if (state.bounds.minLat !== minLat) setMinLat(state.bounds.minLat);
+      if (state.bounds.maxLat !== maxLat) setMaxLat(state.bounds.maxLat);
+      if (state.bounds.minLng !== minLng) setMinLng(state.bounds.minLng);
+      if (state.bounds.maxLng !== maxLng) setMaxLng(state.bounds.maxLng);
+    } else if (mapValue.bounds) {
+      setMinLat(null);
+      setMaxLat(null);
+      setMinLng(null);
+      setMaxLng(null);
+    }
   };
 
   return [mapValue, setMapValue];

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { Root } from 'react-dom/client';
 
 import CustomMarker from '@/components/common/map/ui/custom-marker';
-import { MarkerData, MarkerSize } from '@/types/map/markers';
+import { MarkerSize, StudiosMapSearchItem } from '@/types/studios';
 import { cleanupMarkers, createMarkerWithReactRoot } from '@/utils/map/marker';
 
 import { useResponsiveLayout } from '../useResponsiveLayout';
@@ -17,7 +17,7 @@ function getMarkerSize(zoom: number): MarkerSize {
 
 type Props = {
   mapInstance: naver.maps.Map | null;
-  markers?: MarkerData[];
+  markers: StudiosMapSearchItem[];
   onMarkerClick?: (id: string, lat: number, lng: number) => void;
   selectedId?: string | null;
 };
@@ -75,7 +75,7 @@ export function useMapOverlays({
 
       const handleInternalClick = (clickedId: string) => {
         if (onMarkerClick) {
-          onMarkerClick(clickedId, markerData.lat, markerData.lng);
+          onMarkerClick(clickedId, markerData.latitude, markerData.longitude);
         }
       };
 

@@ -86,6 +86,7 @@ export const useRangeInput = ({
 
   return {
     rangeValue,
+    setRangeValue,
     handleSliderChange,
     handleRangeChange,
     handleFocus,

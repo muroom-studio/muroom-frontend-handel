@@ -1,27 +1,46 @@
-import { useState } from 'react';
+'use client';
 
 import { Button } from '@muroom/components';
+import { updateArrayByToggle } from '@muroom/util';
 
 import OptionItem from '@/components/common/option-item';
+import { FilterOptionItem } from '@/types/studios';
 
 import { FilterWrapper } from '../components';
 
-const INSTRUMENT_OPTIONS = [
-  '전체',
-  '보컬',
-  '기타',
-  '베이스',
-  '키보드',
-  '드럼',
-  '관악',
-  '목관',
-  '현악',
-  '성악',
-  '국악',
-];
+interface Props {
+  forbiddenInstrumentCodes: string[] | null;
+  onChange: (vals: { forbiddenInstrumentCodes: string[] | null }) => void;
+  instrumentOptions?: FilterOptionItem[];
+}
 
-export default function InstrumentFilter() {
-  const [instrumentOption, setInstrumentOption] = useState('전체');
+export default function InstrumentFilter({
+  forbiddenInstrumentCodes,
+  onChange,
+  instrumentOptions = [],
+}: Props) {
+  const isSelected = (code: string | 'ALL') => {
+    if (code === 'ALL') {
+      return !forbiddenInstrumentCodes || forbiddenInstrumentCodes.length === 0;
+    }
+    return forbiddenInstrumentCodes?.includes(code) ?? false;
+  };
+
+  const handleToggle = (code: string | 'ALL') => {
+    const currentList = forbiddenInstrumentCodes || [];
+    let newList: string[] | null;
+
+    if (code === 'ALL') {
+      newList = null;
+    } else {
+      newList = updateArrayByToggle(currentList, code);
+      if (newList.length === instrumentOptions.length || newList.length === 0) {
+        newList = null;
+      }
+    }
+
+    onChange({ forbiddenInstrumentCodes: newList });
+  };
 
   return (
     <FilterWrapper
@@ -29,14 +48,22 @@ export default function InstrumentFilter() {
       titleChildren={
         <span className='text-base-m-14-1 text-gray-500'>높은 이용빈도</span>
       }
+      onReset={() => onChange({ forbiddenInstrumentCodes: null })}
     >
       <div className='flex flex-wrap gap-2'>
-        {INSTRUMENT_OPTIONS.map((item) => (
+        <OptionItem
+          item='전체'
+          selected={isSelected('ALL')}
+          onClick={() => handleToggle('ALL')}
+        />
+
+        {/* 서버 데이터 매핑 */}
+        {instrumentOptions.map((opt) => (
           <OptionItem
-            key={item}
-            item={item}
-            selected={instrumentOption === item}
-            onClick={() => setInstrumentOption(item)}
+            key={opt.code}
+            item={opt.description} // 화면 표시 (예: 보컬)
+            selected={isSelected(opt.code)} // 코드 확인
+            onClick={() => handleToggle(opt.code)} // 코드 저장
           />
         ))}
       </div>
