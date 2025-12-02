@@ -51,7 +51,6 @@ export default function VerifyPhone({
 
   const handleSend = () => {
     if (!phoneNumber) return;
-    console.log(`Sending auth code to ${phoneNumber}`);
 
     setIsSent(true);
     setIsVerified(false);

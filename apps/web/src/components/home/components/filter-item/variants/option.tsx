@@ -1,7 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-
 import { Button } from '@muroom/components';
 import { updateArrayByToggle } from '@muroom/util';
 
@@ -11,83 +9,95 @@ import { FilterOptionItem } from '@/types/studios';
 import { FilterWrapper } from '../components';
 
 interface Props {
-  value: string;
-  onValueChange: (newValue: string) => void;
+  commonOptionCodes: string[] | null;
+  individualOptionCodes: string[] | null;
+  onChange: (vals: {
+    commonOptionCodes: string[] | null;
+    individualOptionCodes: string[] | null;
+  }) => void;
   publicOptions?: FilterOptionItem[];
   privateOptions?: FilterOptionItem[];
 }
 
 export default function OptionFilter({
-  value,
-  onValueChange,
+  commonOptionCodes,
+  individualOptionCodes,
+  onChange,
   publicOptions = [],
   privateOptions = [],
 }: Props) {
-  const parseInitialValue = () => {
-    try {
-      if (!value) return { public: [], private: [] };
-      return JSON.parse(value);
-    } catch (e) {
-      return { public: [], private: [] };
-    }
-  };
-
-  const initialValues = parseInitialValue();
-
-  const [publicCodes, setPublicCodes] = useState<string[]>(
-    initialValues.public || [],
-  );
-  const [privateCodes, setPrivateCodes] = useState<string[]>(
-    initialValues.private || [],
-  );
-
-  useEffect(() => {
-    const newValue = JSON.stringify({
-      public: publicCodes,
-      private: privateCodes,
-    });
-
-    if (value !== newValue) {
-      onValueChange(newValue);
-    }
-  }, [publicCodes, privateCodes, onValueChange, value]);
-
-  const handleToggle = (type: 'public' | 'private', code: string | 'ALL') => {
-    const setCodes = type === 'public' ? setPublicCodes : setPrivateCodes;
+  const isSelected = (type: 'common' | 'individual', code: string | 'ALL') => {
+    const targetList =
+      type === 'common' ? commonOptionCodes : individualOptionCodes;
 
     if (code === 'ALL') {
-      setCodes([]);
-    } else {
-      setCodes((prev) => updateArrayByToggle(prev, code));
+      return !targetList || targetList.length === 0;
     }
+    return targetList?.includes(code) ?? false;
   };
 
-  const isSelected = (type: 'public' | 'private', code: string | 'ALL') => {
-    const targetCodes = type === 'public' ? publicCodes : privateCodes;
-    if (code === 'ALL') return targetCodes.length === 0;
-    return targetCodes.includes(code);
+  const handleToggle = (
+    type: 'common' | 'individual',
+    code: string | 'ALL',
+  ) => {
+    const currentList =
+      type === 'common' ? commonOptionCodes || [] : individualOptionCodes || [];
+    const totalOptions = type === 'common' ? publicOptions : privateOptions;
+
+    let newList: string[] | null;
+
+    if (code === 'ALL') {
+      newList = null;
+    } else {
+      newList = updateArrayByToggle(currentList, code);
+
+      if (newList.length === totalOptions.length || newList.length === 0) {
+        newList = null;
+      }
+    }
+
+    if (type === 'common') {
+      onChange({
+        commonOptionCodes: newList,
+        individualOptionCodes,
+      });
+    } else {
+      onChange({
+        commonOptionCodes,
+        individualOptionCodes: newList,
+      });
+    }
   };
 
   return (
-    <FilterWrapper title='옵션'>
+    <FilterWrapper
+      title='옵션'
+      onReset={() =>
+        onChange({
+          commonOptionCodes: null,
+          individualOptionCodes: null,
+        })
+      }
+    >
       <div className='flex flex-col gap-y-5'>
-        {/* --- 공용 옵션 섹션 --- */}
         <div className='flex flex-col'>
           <span className='text-base-l-16-2'>공용</span>
 
           <div className='mb-5 mt-4 flex flex-wrap gap-2'>
+            {/* 전체 버튼 */}
             <OptionItem
               item='전체'
-              selected={isSelected('public', 'ALL')}
-              onClick={() => handleToggle('public', 'ALL')}
+              selected={isSelected('common', 'ALL')}
+              onClick={() => handleToggle('common', 'ALL')}
             />
 
+            {/* 서버 데이터 매핑 */}
             {publicOptions.map((opt) => (
               <OptionItem
                 key={opt.code}
-                item={opt.description}
-                selected={isSelected('public', opt.code)}
-                onClick={() => handleToggle('public', opt.code)}
+                item={opt.description} // 화면엔 description (예: 정수기)
+                selected={isSelected('common', opt.code)} // 확인은 code
+                onClick={() => handleToggle('common', opt.code)} // 저장도 code
               />
             ))}
           </div>
@@ -99,22 +109,25 @@ export default function OptionFilter({
 
         <div className='h-px bg-gray-300' />
 
+        {/* --- 개인 옵션 섹션 --- */}
         <div className='flex flex-col'>
           <span className='text-base-l-16-2'>개인</span>
 
           <div className='mb-5 mr-2 mt-4 flex flex-wrap gap-2'>
+            {/* 전체 버튼 */}
             <OptionItem
               item='전체'
-              selected={isSelected('private', 'ALL')}
-              onClick={() => handleToggle('private', 'ALL')}
+              selected={isSelected('individual', 'ALL')}
+              onClick={() => handleToggle('individual', 'ALL')}
             />
 
+            {/* 서버 데이터 매핑 */}
             {privateOptions.map((opt) => (
               <OptionItem
                 key={opt.code}
                 item={opt.description}
-                selected={isSelected('private', opt.code)}
-                onClick={() => handleToggle('private', opt.code)}
+                selected={isSelected('individual', opt.code)}
+                onClick={() => handleToggle('individual', opt.code)}
               />
             ))}
           </div>

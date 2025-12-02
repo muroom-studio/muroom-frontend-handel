@@ -1,11 +1,11 @@
 import { type Root, createRoot } from 'react-dom/client';
 
 import { CustomMarkerProps } from '@/components/common/map/ui/custom-marker';
-import { MarkerData, MarkerSize } from '@/types/map/markers';
+import { MarkerSize, StudiosMapSearchItem } from '@/types/studios';
 
 export function createMarkerWithReactRoot(
   map: naver.maps.Map,
-  data: MarkerData,
+  data: StudiosMapSearchItem,
   onMarkerClick: (id: string) => void,
   CustomMarkerComponent: React.ComponentType<CustomMarkerProps>,
   size: MarkerSize,
@@ -19,8 +19,8 @@ export function createMarkerWithReactRoot(
   root.render(
     <CustomMarkerComponent
       isMobile={isMobile}
-      priceMin={data.priceMin}
-      priceMax={data.priceMax}
+      minPrice={data.minPrice}
+      maxPrice={data.maxPrice}
       name={data.name}
       isAd={data.isAd}
       size={size}
@@ -32,7 +32,7 @@ export function createMarkerWithReactRoot(
   );
 
   const marker = new naver.maps.Marker({
-    position: new naver.maps.LatLng(data.lat, data.lng),
+    position: new naver.maps.LatLng(data.latitude, data.longitude),
     map: map,
     icon: {
       content: container,

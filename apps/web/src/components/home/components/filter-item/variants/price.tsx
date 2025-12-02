@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { Slider } from '@muroom/components';
 
@@ -9,40 +9,64 @@ import { useRangeInput } from '@/hooks/useRangeInput';
 import { FilterWrapper } from '../components';
 
 interface Props {
-  value: string;
-  onValueChange: (newValue: string) => void;
+  minPrice: number | null;
+  maxPrice: number | null;
+  onChange: (min: number, max: number) => void;
+  onReset: () => void;
 }
 
-export default function PriceFilter({ value, onValueChange }: Props) {
-  const [initialMin, initialMax] = value
-    ? value.split(',').map(Number)
-    : [40, 60];
+export default function PriceFilter({
+  minPrice,
+  maxPrice,
+  onChange,
+  onReset,
+}: Props) {
+  const targetMin = minPrice ?? 40;
+  const targetMax = maxPrice ?? 60;
 
-  const { rangeValue, handleSliderChange, handleRangeChange, handleFocus } =
-    useRangeInput({
-      initialMin: initialMin || 40,
-      initialMax: initialMax || 60,
-      minBoundary: 0,
-      maxBoundary: 100,
-    });
+  const {
+    rangeValue,
+    setRangeValue,
+    handleSliderChange,
+    handleRangeChange,
+    handleFocus,
+  } = useRangeInput({
+    initialMin: targetMin,
+    initialMax: targetMax,
+    minBoundary: 0,
+    maxBoundary: 100,
+  });
 
   useEffect(() => {
-    const newValue = `${rangeValue.minValue},${rangeValue.maxValue}`;
-
-    if (value !== newValue) {
-      onValueChange(newValue);
+    if (
+      rangeValue.minValue !== targetMin ||
+      rangeValue.maxValue !== targetMax
+    ) {
+      setRangeValue({ minValue: targetMin, maxValue: targetMax });
     }
-  }, [rangeValue, onValueChange, value]);
+  }, [targetMin, targetMax]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (
+        rangeValue.minValue !== targetMin ||
+        rangeValue.maxValue !== targetMax
+      ) {
+        onChange(rangeValue.minValue, rangeValue.maxValue);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [rangeValue, onChange]);
 
   return (
-    <FilterWrapper title='가격'>
+    <FilterWrapper title='가격' onReset={onReset}>
       <Slider
         id='price-range'
         value={[rangeValue.minValue, rangeValue.maxValue]}
         onValueChange={handleSliderChange}
         className='w-full'
       />
-
       <div className='flex-between w-full gap-x-2'>
         <div className='flex-between rounded-4 min-w-0 flex-1 border border-gray-300 px-4 py-3'>
           <input
