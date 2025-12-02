@@ -2,9 +2,14 @@
 
 import { useState } from 'react';
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {
+  MutationCache,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query';
 import { useIsFetching, useIsMutating } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { toast } from 'sonner';
 
 import { Spinner } from '@muroom/ui/components';
 
@@ -47,6 +52,24 @@ function RQProvider({ children }: Props) {
           retry: false,
         },
       },
+      mutationCache: new MutationCache({
+        onSuccess: (_data, _variables, _context, mutation) => {
+          const meta = mutation.options.meta as
+            | { successMessage?: string }
+            | undefined;
+
+          if (meta?.successMessage) {
+            toast.success(meta.successMessage);
+          }
+        },
+        onError: (error, _variables, _context, mutation) => {
+          const errorMessage =
+            error instanceof Error
+              ? error.message
+              : '알 수 없는 오류가 발생했습니다.';
+          toast.error(errorMessage);
+        },
+      }),
     }),
   );
 

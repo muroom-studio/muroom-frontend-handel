@@ -1,6 +1,10 @@
 'use client';
 
+import { useState } from 'react';
+
 import { TextField } from '@muroom/components';
+
+import { useMusicianStore } from '@/store/useMusicianStore';
 
 import VerifyPhone from './components/verify-phone';
 
@@ -9,7 +13,15 @@ interface Props {
 }
 
 export default function JoinSecondStep({ onValidChange }: Props) {
-  const handleVerified = (phone: string) => {
+  const { setRegisterDTO } = useMusicianStore();
+
+  const [name, setName] = useState('');
+
+  const handleVerified = (phoneNumber: string) => {
+    setRegisterDTO({
+      name: name,
+      phoneNumber: phoneNumber,
+    });
     onValidChange(true);
   };
 
@@ -23,6 +35,9 @@ export default function JoinSecondStep({ onValidChange }: Props) {
           name='name'
           placeholder='이름을 입력해주세요'
           required
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          onClear={() => setName('')}
         />
         <VerifyPhone
           id='phoneNumber'

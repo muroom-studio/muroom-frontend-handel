@@ -40,7 +40,7 @@ const SocialBtn = ({ social }: { social: SocialType }) => {
   const { Icon, label, url } = SOCIAL_CONFIG[social];
 
   return (
-    <Link href={url}>
+    <Link href={url} replace={true}>
       <button
         type='button'
         className={cn(

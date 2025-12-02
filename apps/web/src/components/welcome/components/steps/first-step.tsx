@@ -1,10 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Checkbox } from '@muroom/components';
 import { CheckSmallIcon, DownArrowIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
+
+import { useMusicianStore } from '@/store/useMusicianStore';
 
 interface Props {
   onValidChange: (isValid: boolean) => void;
@@ -12,34 +14,50 @@ interface Props {
 
 const TERMS = [
   {
-    id: 'TERMS_OF_USE',
+    id: 1,
+    label: '만 14세 이상입니다.',
+    required: true,
+  },
+  {
+    id: 2,
     label: '이용약관 동의',
     required: true,
   },
   {
-    id: 'PRIVACY_COLLECTION',
+    id: 3,
     label: '개인정보 수집 및 이용동의',
     required: true,
   },
   {
-    id: 'PRIVACY_PROCESSING',
-    label: '개인정보 처리 위탁 동의',
-    required: true,
-  },
-  {
-    id: 'MARKETING_RECEIVE',
+    id: 4,
     label: '마케팅 수신 동의',
     required: false,
     subText: '이벤트 / 혜택 알림',
   },
 ] as const;
 
+const arraysEqual = (a: number[], b: number[]) => {
+  if (a.length !== b.length) return false;
+
+  const sortedA = [...a].sort((n1, n2) => n1 - n2);
+  const sortedB = [...b].sort((n1, n2) => n1 - n2);
+
+  for (let i = 0; i < sortedA.length; i++) {
+    if (sortedA[i] !== sortedB[i]) return false;
+  }
+  return true;
+};
+
 export default function JoinFirstStep({ onValidChange }: Props) {
-  const [agreements, setAgreements] = useState<Record<string, boolean>>({
-    TERMS_OF_USE: false,
-    PRIVACY_COLLECTION: false,
-    PRIVACY_PROCESSING: false,
-    MARKETING_RECEIVE: false,
+  const { setRegisterDTO } = useMusicianStore();
+
+  const prevTermIdsRef = useRef<number[]>([]);
+
+  const [agreements, setAgreements] = useState<Record<number, boolean>>({
+    1: false,
+    2: false,
+    3: false,
+    4: false,
   });
 
   useEffect(() => {
@@ -49,10 +67,26 @@ export default function JoinFirstStep({ onValidChange }: Props) {
       (term) => agreements[term.id],
     );
 
+    const agreedTermIds = Object.keys(agreements)
+      .filter((id) => agreements[Number(id)])
+      .map(Number);
+
+    const prevTermIds = prevTermIdsRef.current;
+
+    if (!arraysEqual(prevTermIds, agreedTermIds)) {
+      setRegisterDTO({
+        termIds: agreedTermIds,
+      });
+
+      prevTermIdsRef.current = agreedTermIds;
+    }
+
     onValidChange(isAllRequiredChecked);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [agreements, onValidChange]);
 
-  const handleToggle = (id: string) => {
+  const handleToggle = (id: number) => {
     setAgreements((prev) => ({
       ...prev,
       [id]: !prev[id],
@@ -68,7 +102,7 @@ export default function JoinFirstStep({ onValidChange }: Props) {
         acc[term.id] = nextState;
         return acc;
       },
-      {} as Record<string, boolean>,
+      {} as Record<number, boolean>,
     );
 
     setAgreements(nextAgreements);

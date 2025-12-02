@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from 'react';
 
+import { useMusicianMutation } from '@/hooks/api/musician/useMutations';
 import { useWelcomeMode } from '@/hooks/nuqs/welcome/useWelcomeMode';
+import { useMusicianStore } from '@/store/useMusicianStore';
 
 import { JoinFirstStep, JoinSecondStep } from '../components/steps';
 import JoinThirdStep from '../components/steps/third-step';
@@ -15,6 +17,11 @@ interface Props {
 }
 
 export default function JoinPage({ isMobile }: Props) {
+  const { dto } = useMusicianStore();
+  const { mutateAsync: registerMutateAsync } =
+    useMusicianMutation().musicianRegisterMutation;
+  console.log(dto);
+
   const [step, setStep] = useState<0 | 1 | 2>(0);
   const [isNextValid, setIsNextValid] = useState(false);
   const { toLogin } = useWelcomeMode();
@@ -31,9 +38,13 @@ export default function JoinPage({ isMobile }: Props) {
     setStep((prev) => (prev - 1) as 0 | 1 | 2);
   };
 
-  const handleNextClick = () => {
+  const handleNextClick = async () => {
     if (step === 2) {
-      console.log('회원가입 완료 로직 호출');
+      // console.log('회원가입 완료 로직 호출');
+      const result = await registerMutateAsync(dto);
+
+      console.log(result);
+
       return;
     }
     setStep((prev) => (prev + 1) as 0 | 1 | 2);
