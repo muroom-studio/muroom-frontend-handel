@@ -8,6 +8,7 @@ import { Header } from '@muroom/components';
 import { CloseIcon } from '@muroom/icons';
 
 import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
+import { useAuthRedirectStore } from '@/store/useAuthRedirectStore';
 
 interface Props {
   backClickHandler?: () => void;
@@ -15,6 +16,7 @@ interface Props {
 
 const WelcomeHeader = ({ backClickHandler }: Props) => {
   const router = useRouter();
+  const { performRedirect } = useAuthRedirectStore();
   const { isMobile } = useResponsiveLayout();
 
   const [isJoin, setJoin] = useQueryState(
@@ -34,8 +36,12 @@ const WelcomeHeader = ({ backClickHandler }: Props) => {
   const onBackClick = backClickHandler || handleDefaultBack;
 
   const onCloseClick = () => {
-    router.back();
+    if (isJoin) {
+      performRedirect();
+      return;
+    }
     setJoin(false);
+    router.back();
   };
 
   if (isMobile) {

@@ -2,14 +2,7 @@ import { BE_BASE_URL } from '@/config/constants';
 import { type ApiResponse } from '@/types/api';
 import { HttpSuccessStatusCode } from '@/types/http';
 
-// async function getAccessToken() {
-//   if (typeof window === 'undefined') {
-//     const { cookies } = await import('next/headers');
-//     const cookieStore = await cookies();
-//     return cookieStore.get('accessToken')?.value;
-//   }
-//   return getCookie('accessToken');
-// }
+import { getToken } from './cookie';
 
 function isSuccessResponse<T>(
   response: ApiResponse<T>,
@@ -21,8 +14,7 @@ export const customFetch = async <T>(
   url: string,
   options: RequestInit = {},
 ): Promise<T> => {
-  //   const token = await getAccessToken();
-  const token = '';
+  const token = await getToken();
 
   const baseHeaders: Record<string, string> = {
     'Content-Type': 'application/json',

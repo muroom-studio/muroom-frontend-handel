@@ -3,18 +3,15 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-import { useRouter } from 'next/navigation';
-
 import { cn } from '@muroom/lib';
 
-import { useWelcomeMode } from '@/hooks/nuqs/welcome/useWelcomeMode';
 import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 import WelcomeLayout from '@/layouts/welcome';
+import { useAuthRedirectStore } from '@/store/useAuthRedirectStore';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
   const { isMobile } = useResponsiveLayout();
-  const { setJoin } = useWelcomeMode();
+  const { performRedirect } = useAuthRedirectStore();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => setMounted(true), []);
@@ -28,10 +25,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         isMobile && 'bg-white',
       )}
       onClick={() => {
-        if (!isMobile) {
-          router.back();
-          setJoin(false);
-        }
+        performRedirect();
       }}
     >
       <div

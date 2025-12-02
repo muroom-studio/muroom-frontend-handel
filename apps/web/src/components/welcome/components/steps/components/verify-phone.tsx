@@ -19,7 +19,7 @@ export default function VerifyPhone({
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isSent, setIsSent] = useState(false);
   const [timeLeft, setTimeLeft] = useState(180);
-  const [isVerified, setIsVerified] = useState(false); // 🔥 인증 완료 상태 추가
+  const [isVerified, setIsVerified] = useState(false);
 
   const [otp, setOtp] = useState<string[]>(Array(6).fill(''));
 

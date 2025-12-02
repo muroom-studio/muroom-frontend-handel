@@ -2,14 +2,26 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 import { SearchIcon } from '@muroom/icons';
 import BaseLogo from '@muroom/ui/assets/base-logo.svg';
 import { Button, TextField } from '@muroom/ui/components';
 
+import { useAuthRedirectStore } from '@/store/useAuthRedirectStore';
+
 export default function DesktopBaseHeader() {
+  const pathname = usePathname();
   const searchParams = useSearchParams();
+
+  const { setRedirectUrl } = useAuthRedirectStore();
+
+  const handleLoginClick = () => {
+    const queryString = searchParams.toString();
+    const currentUrl = queryString ? `${pathname}?${queryString}` : pathname;
+
+    setRedirectUrl(currentUrl);
+  };
 
   return (
     <header className='flex-between border-b-[0.5px] border-b-gray-300 p-5'>
@@ -26,7 +38,11 @@ export default function DesktopBaseHeader() {
           />
         </div>
       </div>
-      <Link href={`/welcome?${searchParams.toString()}`} scroll={false}>
+      <Link
+        href={`/welcome?${searchParams.toString()}`}
+        scroll={false}
+        onClick={handleLoginClick}
+      >
         <Button variant='outline' size='l'>
           회원가입/로그인
         </Button>

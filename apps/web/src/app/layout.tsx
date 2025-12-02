@@ -6,6 +6,7 @@ import { NuqsAdapter } from 'nuqs/adapters/next';
 
 import MapProvider from '@/components/providers/map-provider';
 import RQProvider from '@/components/providers/rq-provider';
+import SonnerProvider from '@/components/providers/sonner-provider';
 import { NCP_CLIENT_ID } from '@/config/constants';
 import BaseLayout from '@/layouts/base';
 
@@ -57,6 +58,7 @@ export default function RootLayout({
               <BaseLayout>
                 {children}
                 {modal}
+                <SonnerProvider />
               </BaseLayout>
             </NuqsAdapter>
           </MapProvider>

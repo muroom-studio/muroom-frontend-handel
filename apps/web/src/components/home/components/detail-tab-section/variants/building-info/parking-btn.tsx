@@ -8,7 +8,18 @@ import { cn } from '@muroom/lib';
 import StaticMap from '@/components/common/static-map';
 import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 
-export default function ParkingBtn() {
+interface ParkingLocationInfo {
+  parkingLocationName: string;
+  parkingLocationAddress: string;
+  parkingLocationLongitude: number;
+  parkingLocationLatitude: number;
+}
+
+interface Props {
+  parkingInfo: ParkingLocationInfo;
+}
+
+export default function ParkingBtn({ parkingInfo }: Props) {
   const { isMobile } = useResponsiveLayout();
 
   const [showParkingModal, setShowParkingModal] = useState(false);
@@ -32,7 +43,9 @@ export default function ParkingBtn() {
         >
           <div>
             <span className='text-base-exl-18-2 text-black'>주차장 위치</span>
-            <div className='pt-5'>{ModalContent({ isMobile })}</div>
+            <div className='pt-5'>
+              <ModalContent isMobile={isMobile} parkingInfo={parkingInfo} />
+            </div>
           </div>
         </ModalBottomSheet>
       );
@@ -45,7 +58,7 @@ export default function ParkingBtn() {
         <Modal.Wrapper className='px-0'>
           <Modal.Header title='주차장 위치' className='border-b-0 px-5' />
           <Modal.Body className='border-t border-t-gray-200 pt-0'>
-            {ModalContent({ isMobile })}
+            <ModalContent isMobile={isMobile} parkingInfo={parkingInfo} />
           </Modal.Body>
           <Modal.Footer>
             <Button
@@ -75,12 +88,17 @@ export default function ParkingBtn() {
   );
 }
 
-const ModalContent = ({ isMobile }: { isMobile: boolean }) => {
+interface ModalContentProps {
+  isMobile: boolean;
+  parkingInfo: ParkingLocationInfo;
+}
+
+const ModalContent = ({ isMobile, parkingInfo }: ModalContentProps) => {
   return (
     <div className='flex flex-col pb-5'>
       <StaticMap
-        centerLat={37.3595704}
-        centerLng={127.105399}
+        centerLat={parkingInfo.parkingLocationLatitude}
+        centerLng={parkingInfo.parkingLocationLongitude}
         height={195}
         targetedCenter='parking'
       />
@@ -89,8 +107,8 @@ const ModalContent = ({ isMobile }: { isMobile: boolean }) => {
           'px-5': !isMobile,
         })}
       >
-        <p className='text-base-l-16-2'>잠원수영장옆공영주차장</p>
-        <p className='text-base-l-16-1'>서울 서초구 잠원동 86</p>
+        <p className='text-base-l-16-2'>{parkingInfo.parkingLocationName}</p>
+        <p className='text-base-l-16-1'>{parkingInfo.parkingLocationAddress}</p>
       </div>
     </div>
   );

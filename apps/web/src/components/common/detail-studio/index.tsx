@@ -13,10 +13,10 @@ import {
 
 import CheckTabSection from '@/components/home/components/check-tab-section';
 import DetailTabSection from '@/components/home/components/detail-tab-section';
-import { Studio } from '@/types/studio';
+import { StudioDetailResponseProps } from '@/types/studio';
 
 interface Props {
-  detailStudio: Studio;
+  detailStudio: StudioDetailResponseProps;
   setStudioId: (id: string) => void;
 }
 
@@ -71,7 +71,7 @@ export default function CommonDetailStudio({
           style={{ height: TOP_HEADER_HEIGHT }}
         >
           <Header
-            title={detailStudio.name}
+            title={detailStudio.studioBaseInfo.studioName}
             onBackClick={() => setStudioId('')}
             rightSlot={
               <>

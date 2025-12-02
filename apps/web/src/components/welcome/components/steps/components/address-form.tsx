@@ -94,12 +94,14 @@ export default function AddressForm({
 
       <TextField
         placeholder='작업실 이름을 입력해주세요'
-        value={value.name}
+        value={value.studioName}
         onChange={(e) =>
-          setValue((prev) => updateObjectProperty(prev, 'name', e.target.value))
+          setValue((prev) =>
+            updateObjectProperty(prev, 'studioName', e.target.value),
+          )
         }
         onClear={() =>
-          setValue((prev) => updateObjectProperty(prev, 'name', ''))
+          setValue((prev) => updateObjectProperty(prev, 'studioName', ''))
         }
       />
 

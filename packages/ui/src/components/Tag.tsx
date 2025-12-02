@@ -53,7 +53,7 @@ const Tag = ({
       base: 'bg-red-100 text-red-400',
     },
     outline: {
-      base: 'bg-white border-gray-300',
+      base: 'bg-white border border-gray-300',
     },
     musician: {
       base: 'bg-primary-500 !text-white text-base-s-12-2 px-[6px] py-1',
