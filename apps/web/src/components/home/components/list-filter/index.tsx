@@ -18,7 +18,11 @@ const SORT_OPTIONS = [
   '낮은가격순',
 ];
 
-export default function ListFilter() {
+interface Props {
+  studioNum: number;
+}
+
+export default function ListFilter({ studioNum }: Props) {
   const { isMobile } = useResponsiveLayout();
 
   const [selectedOption, setSelectedOption] = useState('');
@@ -30,7 +34,7 @@ export default function ListFilter() {
         'px-0 py-4': isMobile,
       })}
     >
-      <span className='text-base-exl-18-2 text-black'>75개</span>
+      <span className='text-base-exl-18-2 text-black'>{studioNum}개</span>
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <Popover.Trigger>
           <button

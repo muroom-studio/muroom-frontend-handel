@@ -4,7 +4,9 @@ import { useEffect, useState } from 'react';
 
 import { useMusicianMutation } from '@/hooks/api/musician/useMutations';
 import { useWelcomeMode } from '@/hooks/nuqs/welcome/useWelcomeMode';
+import { useAuthRedirectStore } from '@/store/useAuthRedirectStore';
 import { useMusicianStore } from '@/store/useMusicianStore';
+import { setToken } from '@/utils/cookie';
 
 import { JoinFirstStep, JoinSecondStep } from '../components/steps';
 import JoinThirdStep from '../components/steps/third-step';
@@ -20,11 +22,11 @@ export default function JoinPage({ isMobile }: Props) {
   const { dto } = useMusicianStore();
   const { mutateAsync: registerMutateAsync } =
     useMusicianMutation().musicianRegisterMutation;
-  console.log(dto);
 
   const [step, setStep] = useState<0 | 1 | 2>(0);
   const [isNextValid, setIsNextValid] = useState(false);
   const { toLogin } = useWelcomeMode();
+  const { performRedirect } = useAuthRedirectStore();
 
   useEffect(() => {
     setIsNextValid(false);
@@ -40,10 +42,14 @@ export default function JoinPage({ isMobile }: Props) {
 
   const handleNextClick = async () => {
     if (step === 2) {
-      // console.log('회원가입 완료 로직 호출');
       const result = await registerMutateAsync(dto);
 
-      console.log(result);
+      const { accessToken } = result;
+
+      if (accessToken) {
+        await setToken(accessToken);
+        performRedirect();
+      }
 
       return;
     }

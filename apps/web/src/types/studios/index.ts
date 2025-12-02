@@ -1,3 +1,6 @@
+// 필터 옵션들 아이템 가져오기
+import { PageRequestProps, PaginationInfo } from '../api';
+
 export type FilterOptionItem = {
   code: string;
   description: string;
@@ -10,6 +13,10 @@ export interface StudioFilterOptionsResponseProps {
   studioIndividualOptions: FilterOptionItem[];
   unavailableInstrumentOptions: FilterOptionItem[];
 }
+
+// =======================================================
+// =======================================================
+// 지도 위 마커 띄우기
 
 export type MarkerSize = 'S' | 'M' | 'L';
 
@@ -45,3 +52,35 @@ export interface StudiosMapSearchItem {
 }
 
 export type StudiosMapSearchResponseProps = StudiosMapSearchItem[];
+
+// =======================================================
+// =======================================================
+// 작업실 목록 불러오기
+
+export interface StudiosMapListRequestProps
+  extends StudiosMapSearchRequestProps,
+    PageRequestProps {}
+
+export interface StudiosMapListItem {
+  latitude: number;
+  longitude: number;
+  studioId: number;
+  studioName: string;
+  minPrice: number;
+  maxPrice: number;
+  nearbySubwayStationInfo: {
+    stationName: string;
+    lines: {
+      lineName: string;
+      lineColor: string;
+    }[];
+  };
+  thumbnailImageUrl?: string;
+  walkingTimeMinutes: number;
+}
+
+// 3. 응답 타입
+export interface StudiosMapListResponseProps {
+  content: StudiosMapListItem[];
+  pagination: PaginationInfo;
+}

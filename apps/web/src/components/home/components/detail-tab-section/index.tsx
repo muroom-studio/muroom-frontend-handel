@@ -6,7 +6,7 @@ import { scroller } from 'react-scroll';
 import { Badge, TabBar } from '@muroom/components';
 import { LocationIcon } from '@muroom/icons';
 
-import { Studio } from '@/types/studio';
+import { StudioDetailResponseProps } from '@/types/studio';
 
 import ShareBtn from './components/share-btn';
 import {
@@ -18,7 +18,7 @@ import {
 } from './variants';
 
 interface Props {
-  detailStudio: Studio;
+  detailStudio: StudioDetailResponseProps;
   containerRef: React.RefObject<HTMLDivElement | null>;
 }
 
@@ -33,15 +33,15 @@ export default function DetailTabSection({
   containerRef,
 }: Props) {
   const {
-    name,
-    priceMin,
-    priceMax,
-    nearestStation,
-    lineInfo,
-    walkingTime,
+    studioName,
+    studioMinPrice,
+    studioMaxPrice,
     address,
-    vacancy,
-  } = detailStudio;
+    studioLongitude,
+    studioLatitude,
+    nearbySubwayStationInfo,
+    walkingTimeMinutesToSubwayStation,
+  } = detailStudio.studioBaseInfo;
 
   const [activeTab, setActiveTab] = useState('building-info');
   const [isClickScrolling, setIsClickScrolling] = useState(false);
@@ -56,7 +56,13 @@ export default function DetailTabSection({
       label: (
         <div className='flex gap-x-1'>
           방정보
-          <Badge variant='alert' count={vacancy || 0} />
+          <Badge
+            variant='alert'
+            count={
+              detailStudio.studioRooms.rooms.filter((room) => room.isAvailable)
+                .length || 0
+            }
+          />
         </div>
       ),
     },
@@ -152,18 +158,25 @@ export default function DetailTabSection({
           <div className='flex flex-col gap-y-6'>
             <div className='flex flex-col gap-y-2'>
               <div className='flex-between'>
-                <span className='text-title-s-22-2'>{`${priceMin}만원 ~ ${priceMax}만원`}</span>
+                <span className='text-title-s-22-2'>{`${studioMinPrice / 10000}만원 ~ ${studioMaxPrice / 10000}만원`}</span>
                 <ShareBtn />
               </div>
-              <span className='text-base-m-14-1 text-gray-500'>{name}</span>
+              <span className='text-base-m-14-1 text-gray-500'>
+                {studioName}
+              </span>
             </div>
             <div className='flex flex-col gap-y-3'>
               <div className='flex items-center gap-x-1'>
-                {Array.isArray(lineInfo) &&
-                  lineInfo.map((line) => (
-                    <Badge key={line} variant='subway' line={line} />
+                {Array.isArray(nearbySubwayStationInfo.lines) &&
+                  nearbySubwayStationInfo.lines.map((line, index) => (
+                    <Badge
+                      key={index}
+                      variant='subway'
+                      lineName={line.lineName}
+                      lineColor={line.lineColor}
+                    />
                   ))}
-                <span className='text-base-m-14-1'>{`${nearestStation} 도보 ${walkingTime}분`}</span>
+                <span className='text-base-m-14-1'>{`${nearbySubwayStationInfo.stationName}역 도보 ${walkingTimeMinutesToSubwayStation}분`}</span>
               </div>
               <div className='flex -translate-x-1 items-center gap-x-1'>
                 <LocationIcon className='size-6 text-gray-400' />
@@ -195,22 +208,25 @@ export default function DetailTabSection({
 
       <div className='flex flex-col gap-y-4'>
         <section id='building-info'>
-          <BuildingInfoSection title='건물정보' />
+          <BuildingInfoSection
+            title='건물정보'
+            data={detailStudio.studioBuildingInfo}
+          />
         </section>
         <section id='notice'>
-          <NoticeSection title='안내사항' />
+          <NoticeSection title='안내사항' data={detailStudio.studioNotice} />
         </section>
         <section id='room-info'>
-          <RoomInfoSection title='방 정보' />
+          <RoomInfoSection title='방 정보' data={detailStudio.studioRooms} />
         </section>
         <section id='option'>
-          <OptionSection title='옵션' />
+          <OptionSection title='옵션' data={detailStudio.studioOptions} />
         </section>
         <section id='near-facility'>
           <NearFacilitySection
             title='주변 시설'
             description='네이버 도보 기준 5분 이내'
-            studioLatLng={{ lat: detailStudio.lat, lng: detailStudio.lng }}
+            studioLatLng={{ lat: studioLatitude, lng: studioLongitude }}
           />
         </section>
       </div>

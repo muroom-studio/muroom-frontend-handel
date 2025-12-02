@@ -7,10 +7,9 @@ import { BottomSheet } from '@muroom/components';
 import Loading from '@/app/loading';
 import CommonDetailStudio from '@/components/common/detail-studio';
 import CommonMap from '@/components/common/map';
-import { useFilters } from '@/hooks/nuqs/home/useFilters';
 import { MapState } from '@/hooks/nuqs/home/useMapState';
 import { Studio } from '@/types/studio';
-import { StudiosMapSearchItem } from '@/types/studios';
+import { StudiosMapListItem, StudiosMapSearchItem } from '@/types/studios';
 
 import ListFilter from '../components/list-filter';
 import ListView from '../components/list-view';
@@ -18,10 +17,16 @@ import ListView from '../components/list-view';
 interface Props {
   mapValue: MapState;
   setMapValue: (newState: MapState | ((prev: MapState) => MapState)) => void;
-  studios: Studio[];
+  studios: StudiosMapListItem[];
   detailStudio: Studio;
   markersData: StudiosMapSearchItem[];
   isLoading: boolean;
+
+  infiniteScroll: {
+    hasNextPage: boolean;
+    isFetchingNextPage: boolean;
+    fetchNextPage: () => void;
+  };
 }
 
 // 상수 설정
@@ -39,11 +44,12 @@ export default function MobileHomePage({
   detailStudio,
   markersData,
   isLoading,
+  infiniteScroll, // destructuring
 }: Props) {
   const sheetY = useMotionValue(0);
 
   if (isLoading) {
-    <Loading />;
+    return <Loading />; // return 추가 (오타 수정)
   }
 
   return (
@@ -58,11 +64,20 @@ export default function MobileHomePage({
         />
       </div>
 
-      <BottomSheet {...SHEET_CONFIG} header={<ListFilter />} externalY={sheetY}>
+      <BottomSheet
+        {...SHEET_CONFIG}
+        header={<ListFilter studioNum={studios.length || 0} />}
+        externalY={sheetY}
+      >
         <ListView
           studios={studios}
           mapValue={mapValue}
           setMapValue={setMapValue}
+          // 모바일 전용 설정
+          isMobile={true}
+          hasNextPage={infiniteScroll.hasNextPage}
+          isFetchingNextPage={infiniteScroll.isFetchingNextPage}
+          fetchNextPage={infiniteScroll.fetchNextPage}
         />
       </BottomSheet>
 

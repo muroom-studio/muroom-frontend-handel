@@ -1,19 +1,37 @@
+import Image from 'next/image';
+
 import { WaterPurifyIcon } from '@muroom/icons';
+
+import { StudioOptionsInfo } from '@/types/studio';
 
 import SectionWrapper from '../components/section-wrapper';
 
 interface Props {
   title: string;
+  data: StudioOptionsInfo;
 }
 
-export default function OptionSection({ title }: Props) {
+export default function OptionSection({ title, data }: Props) {
+  console.log(data);
+
   return (
     <SectionWrapper title={title}>
       <>
         <p className='text-base-l-16-2 text-gray-900'>공용</p>
         <div className='grid grid-cols-4 gap-4'>
-          {Array.from({ length: 16 }).map((_, index) => (
-            <OptionItem key={index} icon={<WaterPurifyIcon />} name='정수기' />
+          {data.commonOptions.map((option) => (
+            <OptionItem
+              key={option.code}
+              icon={
+                <Image
+                  src={option.iconImageUrl}
+                  alt={`${option.code} 이미지`}
+                  fill
+                  style={{ objectFit: 'cover' }}
+                />
+              }
+              name={option.description}
+            />
           ))}
         </div>
 
@@ -21,8 +39,19 @@ export default function OptionSection({ title }: Props) {
 
         <p className='text-base-l-16-2 text-gray-900'>개인</p>
         <div className='grid grid-cols-4 gap-4'>
-          {Array.from({ length: 8 }).map((_, index) => (
-            <OptionItem key={index} icon={<WaterPurifyIcon />} name='정수기' />
+          {data.individualOptions.map((option) => (
+            <OptionItem
+              key={option.code}
+              icon={
+                <Image
+                  src={option.iconImageUrl}
+                  alt={`${option.code} 이미지`}
+                  fill
+                  style={{ objectFit: 'cover' }}
+                />
+              }
+              name={option.description}
+            />
           ))}
         </div>
       </>

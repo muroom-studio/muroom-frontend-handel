@@ -7,6 +7,8 @@ import {
 import { InfoIcon, ResetIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 
+import { StudioRoomsInfo } from '@/types/studio';
+
 import GridRowItem from '../../components/grid-row-item';
 import SectionWrapper from '../../components/section-wrapper';
 import RoomImage from './room-image';
@@ -14,9 +16,12 @@ import RoomImageGroup from './room-image-group';
 
 interface Props {
   title: string;
+  data: StudioRoomsInfo;
 }
 
-export default function RoomInfoSection({ title }: Props) {
+export default function RoomInfoSection({ title, data }: Props) {
+  console.log(data);
+
   return (
     <SectionWrapper title={title}>
       <>
@@ -24,11 +29,27 @@ export default function RoomInfoSection({ title }: Props) {
           title='방개수'
           sub1={
             <div className='flex items-center gap-x-1.5'>
-              <span>15개</span>
-              <Tag variant='blue'>3개 남음</Tag>
+              <span>{(data.rooms || []).length}개</span>
+              <Tag variant='blue'>
+                {data.rooms.filter((room) => room.isAvailable).length}개 남음
+              </Tag>
             </div>
           }
         />
+        <div className='h-px bg-gray-200' />
+
+        <div className='flex flex-col gap-y-6'>
+          <div className='text-base-l-16-2 w-[80px] flex-none whitespace-nowrap text-black'>
+            금지악기
+          </div>
+          <div className='flex items-center gap-x-2'>
+            {data.forbiddenInstruments.map((item) => (
+              <Tag key={item} variant='outline'>
+                {item}
+              </Tag>
+            ))}
+          </div>
+        </div>
         <div className='h-px bg-gray-200' />
 
         <RoomImageGroup />

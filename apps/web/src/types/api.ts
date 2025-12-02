@@ -19,6 +19,14 @@ type ErrorResponse = {
 
 export type ApiResponse<T> = SuccessResponse<T> | ErrorResponse;
 
+// ======================================================================
+// ======================================================================
+// 페이지네이션 관련 타입 정의
+export interface PageRequestProps {
+  page: number;
+  size: number;
+}
+
 export interface PaginationInfo {
   pageNumber: number;
   pageSize: number;

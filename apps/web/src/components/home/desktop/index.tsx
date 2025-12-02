@@ -9,8 +9,8 @@ import CommonMap from '@/components/common/map';
 import FilterItem, { Variant } from '@/components/home/components/filter-item';
 import { useFilters } from '@/hooks/nuqs/home/useFilters';
 import { MapState } from '@/hooks/nuqs/home/useMapState';
-import { Studio } from '@/types/studio';
-import { StudiosMapSearchItem } from '@/types/studios';
+import { StudioDetailResponseProps } from '@/types/studio';
+import { StudiosMapListItem, StudiosMapSearchItem } from '@/types/studios';
 
 import ListFilter from '../components/list-filter';
 import ListView from '../components/list-view';
@@ -21,10 +21,17 @@ interface Props {
   filters: ReturnType<typeof useFilters>['filters'];
   setFilters: ReturnType<typeof useFilters>['setFilters'];
   clearFilters: () => void;
-  studios: Studio[];
-  detailStudio: Studio;
+  studios: StudiosMapListItem[];
+  detailStudio?: StudioDetailResponseProps;
   markersData: StudiosMapSearchItem[];
   isLoading: boolean;
+  isListLoading: boolean;
+  // --- 추가된 Pagination & Infinite Scroll Props ---
+  pagination: {
+    currentPage: number;
+    totalPages: number;
+    onPageChange: (page: number) => void;
+  };
 }
 
 const FILTER_VARIANTS: Variant[] = ['e1', 'e2', 'e3', 'e4', 'e5'];
@@ -39,6 +46,8 @@ export default function DesktopHomePage({
   detailStudio,
   markersData,
   isLoading,
+  isListLoading,
+  pagination,
 }: Props) {
   const gridTemplateColumns = mapValue.studioId
     ? '375px 375px 1fr'
@@ -46,7 +55,7 @@ export default function DesktopHomePage({
 
   const hasActiveFilter = Object.values(filters).some(
     (value) => value !== null,
-  ); // filter중에 선택된게 하나라도 있는지
+  );
 
   if (isLoading) {
     return <Loading />;
@@ -85,12 +94,16 @@ export default function DesktopHomePage({
           }}
         >
           <div className='flex h-full min-h-0 flex-col border-r border-r-gray-300 bg-white'>
-            <ListFilter />
+            <ListFilter studioNum={studios.length || 0} />
             <div className='min-h-0 flex-1 overflow-y-scroll'>
               <ListView
                 studios={studios}
                 mapValue={mapValue}
                 setMapValue={setMapValue}
+                isLoading={isListLoading}
+                currentPage={pagination.currentPage}
+                totalPages={pagination.totalPages}
+                onPageChange={pagination.onPageChange}
               />
             </div>
           </div>
