@@ -4,7 +4,8 @@ interface BadgeBaseProps {
 
 interface SubwayBadgeProps extends BadgeBaseProps {
   variant: 'subway';
-  line: string;
+  lineName: string;
+  lineColor: string;
 }
 
 interface AlertBadgeProps extends BadgeBaseProps {
@@ -34,17 +35,29 @@ const Badge = (props: BadgeProps) => {
   const baseStyles = 'flex-center shrink-0';
 
   if (props.variant === 'subway') {
-    const { line, className = '' } = props;
+    const { lineName, lineColor, className = '' } = props;
 
-    const colorClass = subwayLineColors[line] || 'bg-gray-400';
+    const lineStyles = subwayLineColors[lineName];
 
-    return (
-      <p
-        className={`${baseStyles} rounded-1000 text-base-exs-10-2 h-[18px] px-1 text-white ${colorClass} ${className}`}
-      >
-        {line}
-      </p>
-    );
+    if (lineStyles) {
+      return (
+        <p
+          className={`${baseStyles} rounded-1000 text-base-exs-10-2 h-[18px] px-1 text-white ${lineStyles} ${className}`}
+        >
+          {lineName}
+        </p>
+      );
+    } else {
+      // lineStyles가 없으면 lineColor (fallback)를 사용하여 style 객체로 배경색을 적용
+      return (
+        <p
+          className={`${baseStyles} rounded-1000 text-base-exs-10-2 h-[18px] px-1 py-[2px] text-white ${className}`}
+          style={{ backgroundColor: lineColor }}
+        >
+          {lineName}
+        </p>
+      );
+    }
   }
 
   if (props.variant === 'alert') {
