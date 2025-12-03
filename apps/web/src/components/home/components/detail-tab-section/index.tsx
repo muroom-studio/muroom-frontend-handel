@@ -1,7 +1,9 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { scroller } from 'react-scroll';
+
+import Image from 'next/image';
 
 import { Badge, TabBar } from '@muroom/components';
 import { LocationIcon } from '@muroom/icons';
@@ -39,8 +41,7 @@ export default function DetailTabSection({
     address,
     studioLongitude,
     studioLatitude,
-    nearbySubwayStationInfo,
-    walkingTimeMinutesToSubwayStation,
+    nearbySubwayStations,
   } = detailStudio.studioBaseInfo;
 
   const [activeTab, setActiveTab] = useState('building-info');
@@ -150,10 +151,26 @@ export default function DetailTabSection({
     };
   }, [isClickScrolling, activeTab, containerRef]);
 
+  // 1. 도보 시간이 가장 짧은 역 찾기 (Text 표시용)
+  const nearestStation = useMemo(() => {
+    if (!nearbySubwayStations || nearbySubwayStations.length === 0) return null;
+    // 시간순 오름차순 정렬 후 첫 번째 요소 선택
+    return [...nearbySubwayStations].sort(
+      (a, b) => a.walkingTimeMinutes - b.walkingTimeMinutes,
+    )[0];
+  }, [nearbySubwayStations]);
+
   return (
     <>
       <div className='bg-white'>
-        <div className='h-[250px] w-full bg-red-600' />
+        {/* 임시 방편 박기 */}
+        <Image
+          src={detailStudio.studioImages.mainImageKeys[0] || ''}
+          alt={'더미이미지'}
+          width={375.3}
+          height={250}
+          style={{ objectFit: 'cover' }}
+        />
         <div className='px-5 py-6'>
           <div className='flex flex-col gap-y-6'>
             <div className='flex flex-col gap-y-2'>
@@ -167,16 +184,22 @@ export default function DetailTabSection({
             </div>
             <div className='flex flex-col gap-y-3'>
               <div className='flex items-center gap-x-1'>
-                {Array.isArray(nearbySubwayStationInfo.lines) &&
-                  nearbySubwayStationInfo.lines.map((line, index) => (
+                {nearbySubwayStations
+                  ?.flatMap((station) => station.lines)
+                  .filter(
+                    (line, index, self) =>
+                      index ===
+                      self.findIndex((t) => t.lineName === line.lineName),
+                  )
+                  .map((line) => (
                     <Badge
-                      key={index}
+                      key={line.lineName}
                       variant='subway'
                       lineName={line.lineName}
                       lineColor={line.lineColor}
                     />
                   ))}
-                <span className='text-base-m-14-1'>{`${nearbySubwayStationInfo.stationName}역 도보 ${walkingTimeMinutesToSubwayStation}분`}</span>
+                <span className='text-base-m-14-1'>{`${nearestStation?.stationName}역 도보 ${nearestStation?.walkingTimeMinutes}분`}</span>
               </div>
               <div className='flex -translate-x-1 items-center gap-x-1'>
                 <LocationIcon className='size-6 text-gray-400' />
@@ -210,14 +233,26 @@ export default function DetailTabSection({
         <section id='building-info'>
           <BuildingInfoSection
             title='건물정보'
-            data={detailStudio.studioBuildingInfo}
+            buildingData={detailStudio.studioBuildingInfo}
+            priceData={{
+              minPrice: detailStudio.studioBaseInfo.studioMinPrice,
+              maxPrice: detailStudio.studioBaseInfo.studioMaxPrice,
+              deposit: detailStudio.studioBaseInfo.depositAmount,
+            }}
           />
         </section>
+
         <section id='notice'>
           <NoticeSection title='안내사항' data={detailStudio.studioNotice} />
         </section>
         <section id='room-info'>
-          <RoomInfoSection title='방 정보' data={detailStudio.studioRooms} />
+          <RoomInfoSection
+            title='방 정보'
+            roomData={detailStudio.studioRooms}
+            roomImgs={detailStudio.studioImages.roomImageKeys}
+            blueprintImg={detailStudio.studioImages.blueprintImageKey}
+            instruments={detailStudio.studioForbiddenInstruments.instruments}
+          />
         </section>
         <section id='option'>
           <OptionSection title='옵션' data={detailStudio.studioOptions} />

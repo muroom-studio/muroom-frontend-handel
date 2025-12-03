@@ -16,12 +16,19 @@ import RoomImageGroup from './room-image-group';
 
 interface Props {
   title: string;
-  data: StudioRoomsInfo;
+  roomData: StudioRoomsInfo;
+  roomImgs: string[];
+  blueprintImg?: string;
+  instruments: string[];
 }
 
-export default function RoomInfoSection({ title, data }: Props) {
-  console.log(data);
-
+export default function RoomInfoSection({
+  title,
+  roomData,
+  roomImgs,
+  blueprintImg,
+  instruments,
+}: Props) {
   return (
     <SectionWrapper title={title}>
       <>
@@ -29,33 +36,34 @@ export default function RoomInfoSection({ title, data }: Props) {
           title='방개수'
           sub1={
             <div className='flex items-center gap-x-1.5'>
-              <span>{(data.rooms || []).length}개</span>
+              <span>{(roomData.rooms || []).length}개</span>
               <Tag variant='blue'>
-                {data.rooms.filter((room) => room.isAvailable).length}개 남음
+                {roomData.rooms.filter((room) => room.isAvailable).length}개
+                남음
               </Tag>
             </div>
           }
         />
         <div className='h-px bg-gray-200' />
 
-        <div className='flex flex-col gap-y-6'>
-          <div className='text-base-l-16-2 w-[80px] flex-none whitespace-nowrap text-black'>
-            금지악기
-          </div>
-          <div className='flex items-center gap-x-2'>
-            {data.forbiddenInstruments.map((item) => (
-              <Tag key={item} variant='outline'>
-                {item}
-              </Tag>
-            ))}
-          </div>
-        </div>
+        <GridRowItem
+          title='금지악기'
+          sub1={
+            instruments
+              ? instruments.map((item) => (
+                  <Tag key={item} variant='outline'>
+                    {item}
+                  </Tag>
+                ))
+              : '없음'
+          }
+        />
         <div className='h-px bg-gray-200' />
 
-        <RoomImageGroup />
+        <RoomImageGroup roomImgs={roomImgs} />
         <div className='h-px bg-gray-200' />
 
-        <RoomImage />
+        <RoomImage blueprintImg={blueprintImg} />
 
         <h3 className='text-base-exl-18-2 text-gray-900'>Room 1</h3>
 

@@ -1,5 +1,7 @@
 import type { NextConfig } from 'next';
 
+import { BE_BASE_URL } from '@/config/constants';
+
 const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
@@ -24,13 +26,18 @@ const nextConfig: NextConfig = {
         hostname: 'muroom-storage.s3.ap-northeast-2.amazonaws.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'muroom-bach-dev-storage.s3.ap-northeast-2.amazonaws.com',
+        pathname: '/**',
+      },
     ],
   },
   async rewrites() {
     return [
       {
         source: '/api/v1/:path*',
-        destination: 'https://dev-api.muroom.kr/api/v1/:path*',
+        destination: `${BE_BASE_URL}/api/v1/:path*`,
       },
     ];
   },

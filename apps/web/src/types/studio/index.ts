@@ -11,78 +11,102 @@ export interface StudioBaseInfo {
   studioLatitude: number;
   studioMinPrice: number;
   studioMaxPrice: number;
-  nearbySubwayStationInfo: {
+  depositAmount: number; // [이동됨] 건물 정보 -> 기본 정보로 이동
+  nearbySubwayStations: {
     stationName: string;
     lines: {
       lineName: string;
       lineColor: string;
     }[];
-  };
-  walkingTimeMinutesToSubwayStation: string;
-  studioMainImageUrls: string[];
+    walkingTimeMinutes: number;
+  }[];
 }
 
 export interface StudioBuildingInfo {
+  // [변경] Object -> string (Java DTO에 별도 Class 정의가 없으므로 Enum Code 문자열로 추정)
   floorType: {
-    code: string;
     description: string;
+    code: 'ALL' | 'GROUND' | 'BASEMENT';
   };
   floorNumber: number;
-  isParkingAvailable: boolean; // 주차 가능 여부
-  parkingFeeType: 'FREE' | 'PAID' | 'NONE'; // 주차비 형태
-  parkingFeeInfo: string; // 주차비 정보
-  parkingSpots: number; // 주차 가능 대수 (int32)
-  parkingLocationName: string; // 주차장 이름
-  parkingLocationAddress: string; // 주차장 주소
-  parkingLocationLongitude: number;
-  parkingLocationLatitude: number;
-  isLodgingAvailable: boolean; // 숙식 가능 여부
-  hasFireInsurance: boolean; // 화재 보험 유무
-  depositAmount: number; // 보증금 (int32)
-  studioBuildingImageUrls: string[]; // 건물 이미지 URL 목록
+  isParkingAvailable: boolean;
+
+  // [변경] Object -> string (Java DTO 기준 Enum Code)
+  parkingFeeType: {
+    description: string;
+    code: 'FREE' | 'PAID' | 'NONE';
+  };
+
+  parkingFeeInfo?: string; // [Optional] 주차 정보가 없을 수 있음
+  parkingSpots?: number; // [Optional]
+  parkingLocationName?: string; // [Optional]
+  parkingLocationAddress?: string; // [Optional]
+  parkingLocationLongitude?: number;
+  parkingLocationLatitude?: number;
+  isLodgingAvailable: boolean;
+  hasFireInsurance: boolean;
+
+  // [삭제됨] depositAmount -> StudioBaseInfo로 이동
+  // [삭제됨] studioBuildingImageUrls -> StudioImagesDto로 통합 이동
 }
 
 export interface StudioNotice {
-  ownerNickname: string; // 호스트 닉네임
-  experienceYears: number; // 경력 (int32)
-  isIdentityVerified: boolean; // 본인 인증 완료 여부
-  introduction: string; // 소개글
+  ownerNickname: string;
+  ownerPhoneNumber: string; // [추가] Java DTO에 존재함
+  experienceYears: number;
+  isIdentityVerified: boolean;
+  introduction: string;
+}
+
+// [추가] Java DTO 구조에 맞춰 별도 인터페이스로 분리
+export interface StudioForbiddenInstruments {
+  instruments: string[]; // 예: ["드럼", "금관"]
 }
 
 export interface StudioRoomItem {
-  roomId: number; // integer(int64)
-  roomName: string; // 방 이름
-  isAvailable: boolean; // 입실 가능 여부
-  availableAt: string; // 입실 가능일 (Date string, e.g. "2023-10-01")
-  widthMm: number; // 가로 길이 (mm)
-  heightMm: number; // 세로 길이 (mm)
-  roomBasePrice: number; // 기본 가격
+  roomId: number;
+  roomName: string;
+  isAvailable: boolean;
+  availableAt: string; // Date string "YYYY-MM-DD"
+  widthMm: number;
+  heightMm: number;
+  roomBasePrice: number;
 }
 
-// 스튜디오 방 정보 그룹
 export interface StudioRoomsInfo {
-  forbiddenInstruments: string[]; // 연주 금지 악기 목록
-  roomImageUrls: string[]; // 방 관련 이미지 URL 목록
-  rooms: StudioRoomItem[]; // 방 목록
+  // [삭제됨] forbiddenInstruments -> StudioForbiddenInstruments로 분리
+  // [삭제됨] roomImageUrls -> StudioImagesDto로 통합 이동
+  rooms: StudioRoomItem[];
 }
 
-// 개별 옵션 아이템 (공통/개별 옵션 내부 구조가 동일함)
 export interface StudioOptionItem {
-  code: string; // 옵션 코드 (예: "WIFI")
-  description: string; // 옵션 설명 (예: "와이파이")
-  iconImageUrl: string; // 아이콘 이미지 URL
+  code: string;
+  description: string;
+  iconImageKey: string; // [이름 변경] Url -> Key (Java DTO: iconImageKey)
 }
 
-// 스튜디오 옵션 그룹
 export interface StudioOptionsInfo {
-  commonOptions: StudioOptionItem[]; // 공통 옵션 목록
-  individualOptions: StudioOptionItem[]; // 개별 옵션 목록
+  commonOptions: StudioOptionItem[];
+  individualOptions: StudioOptionItem[];
 }
 
+// [추가] Java DTO의 StudioImagesDto 대응 (모든 이미지 키가 여기에 모여있음)
+export interface StudioImages {
+  mainImageKeys: string[]; // [이동됨] BaseInfo에서 이동
+  buildingImageKeys: string[]; // [이동됨] BuildingInfo에서 이동
+  roomImageKeys: string[]; // [이동됨] RoomsInfo에서 이동
+  blueprintImageKey?: string; // [추가] 도면 이미지 (Optional 가능성)
+  commonOptionImageKeys: string[]; // [추가] 공용 옵션 이미지
+  individualOptionImageKeys: string[]; // [추가] 개별 옵션 이미지
+}
+
+// 최종 응답 타입
 export interface StudioDetailResponseProps {
-  studioBaseInfo: StudioBaseInfo; // 1. 기본 정보
-  studioBuildingInfo: StudioBuildingInfo; // 2. 건물 정보
-  studioNotice: StudioNotice; // 3. 안내 사항
-  studioRooms: StudioRoomsInfo; // 4. 방 정보
-  studioOptions: StudioOptionsInfo; // 5. 옵션 정보
+  studioBaseInfo: StudioBaseInfo;
+  studioBuildingInfo: StudioBuildingInfo;
+  studioNotice: StudioNotice;
+  studioForbiddenInstruments: StudioForbiddenInstruments;
+  studioRooms: StudioRoomsInfo;
+  studioOptions: StudioOptionsInfo;
+  studioImages: StudioImages;
 }

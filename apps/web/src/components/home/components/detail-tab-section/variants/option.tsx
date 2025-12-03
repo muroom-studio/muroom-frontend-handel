@@ -1,7 +1,5 @@
 import Image from 'next/image';
 
-import { WaterPurifyIcon } from '@muroom/icons';
-
 import { StudioOptionsInfo } from '@/types/studio';
 
 import SectionWrapper from '../components/section-wrapper';
@@ -24,7 +22,7 @@ export default function OptionSection({ title, data }: Props) {
               key={option.code}
               icon={
                 <Image
-                  src={option.iconImageUrl}
+                  src={option.iconImageKey}
                   alt={`${option.code} 이미지`}
                   fill
                   style={{ objectFit: 'cover' }}
@@ -44,7 +42,7 @@ export default function OptionSection({ title, data }: Props) {
               key={option.code}
               icon={
                 <Image
-                  src={option.iconImageUrl}
+                  src={option.iconImageKey}
                   alt={`${option.code} 이미지`}
                   fill
                   style={{ objectFit: 'cover' }}

@@ -60,14 +60,13 @@ export default function CommonMap({
     }
   }, []);
 
-  const uiBottom = useTransform(sheetY || new MotionValue(0), (latestY) => {
-    if (!windowHeight) return 12;
+  const uiTop = useTransform(sheetY || new MotionValue(0), (latestY) => {
+    if (!windowHeight) return -1000;
 
     const middleYLimit = windowHeight * (1 - middleRatio);
-
     const effectiveY = Math.max(latestY, middleYLimit);
 
-    return windowHeight - effectiveY + 12;
+    return effectiveY - 100;
   });
 
   const handleMarkerClick = useCallback(
@@ -189,23 +188,29 @@ export default function CommonMap({
             />
             <FilterBtns />
           </div>
-          <motion.div
-            className='absolute right-4 z-50 flex flex-col gap-y-3'
-            style={{ bottom: uiBottom }}
-          >
-            <CompareBtn isMobile={isMobile} />
-            <CurrentLocationBtn
-              isMobile={isMobile}
-              mapValue={mapValue}
-              setMapValue={setMapValue}
-            />
-          </motion.div>
 
           <motion.div
-            className='absolute left-1/2 z-50 -translate-x-1/2'
-            style={{ bottom: uiBottom }}
+            className='pointer-events-none absolute left-0 z-50 w-full px-4'
+            style={{ top: uiTop }}
           >
-            <LocationTag mapCenter={mapValue.center} size='S' />
+            <div className='relative flex w-full items-end justify-end'>
+              <div className='pointer-events-auto absolute bottom-0 left-1/2 -translate-x-1/2'>
+                <LocationTag
+                  mapCenter={mapValue.center}
+                  size='S'
+                  className='h-9'
+                />
+              </div>
+
+              <div className='pointer-events-auto flex flex-col gap-y-3'>
+                <CompareBtn isMobile={isMobile} />
+                <CurrentLocationBtn
+                  isMobile={isMobile}
+                  mapValue={mapValue}
+                  setMapValue={setMapValue}
+                />
+              </div>
+            </div>
           </motion.div>
         </>
       );

@@ -131,9 +131,6 @@ const NoDataSection = ({ isMobile }: { isMobile: boolean }) => {
           아직 작업실이 없습니다.
         </p>
       </div>
-      <p className='text-base-l-16-2 text-primary-600 cursor-pointer underline decoration-1 underline-offset-4'>
-        현재 위치에서 가장 가까운 작업실 찾기
-      </p>
     </div>
   );
 };

@@ -8,6 +8,7 @@ import { SearchIcon } from '@muroom/icons';
 import BaseLogo from '@muroom/ui/assets/base-logo.svg';
 import { Button, TextField } from '@muroom/ui/components';
 
+import SearchBar from '@/components/common/search-bar';
 import { useAuthRedirectStore } from '@/store/useAuthRedirectStore';
 
 export default function DesktopBaseHeader() {
@@ -30,12 +31,7 @@ export default function DesktopBaseHeader() {
           <Image src={BaseLogo} alt='로고' width={133} height={32} priority />
         </Link>
         <div className='w-[404px]'>
-          <TextField
-            id='keyword'
-            name='keyword'
-            placeholder='지하철역 또는 작업실 검색하기'
-            leftIcon={<SearchIcon className='size-6' />}
-          />
+          <SearchBar />
         </div>
       </div>
       <Link
