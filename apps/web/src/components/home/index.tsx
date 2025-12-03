@@ -5,6 +5,7 @@ import { useState } from 'react';
 import DesktopHomePage from '@/components/home/desktop';
 import MobileHomePage from '@/components/home/mobile';
 import { useStudiosQueries } from '@/hooks/api/studios/useQueries';
+import { useSearch } from '@/hooks/nuqs/common/useSearch';
 import { useFilters } from '@/hooks/nuqs/home/useFilters';
 import { useMapState } from '@/hooks/nuqs/home/useMapState';
 
@@ -14,6 +15,8 @@ interface Props {
 
 export default function HomePage({ isMobile }: Props) {
   const [page, setPage] = useState(1);
+
+  const [keyword] = useSearch();
 
   const initCenter = { lat: 37.553993, lng: 126.9243517 };
   const [mapValue, setMapValue] = useMapState({
@@ -25,6 +28,7 @@ export default function HomePage({ isMobile }: Props) {
 
   const searchParams = mapValue.bounds
     ? {
+        keyword: keyword ?? undefined,
         minPrice: filters.minPrice ?? undefined,
         maxPrice: filters.maxPrice ?? undefined,
         minRoomWidth: filters.minRoomWidth ?? undefined,
@@ -82,8 +86,6 @@ export default function HomePage({ isMobile }: Props) {
   const studios = listData?.pages.flatMap((page) => page.content) || [];
 
   const { data: detailStudio } = useStudiosDetailQuery(mapValue.studioId);
-
-  console.log(detailStudio);
 
   // 6. Props 구성
   const commonProps = {

@@ -21,7 +21,10 @@ export default function NoticeSection({ title, data }: Props) {
             {data.ownerNickname}
           </span>
         </div>
-        <GridRowItem title='운영' sub1={`${data.experienceYears}년`} />
+        <GridRowItem
+          title='운영'
+          sub1={data.experienceYears ? `${data.experienceYears}년` : '확인필요'}
+        />
         <div className='h-px bg-gray-200' />
         <GridRowItem
           title='본인인증'

@@ -10,6 +10,7 @@ import {
   MailIcon,
   VisitListOutlineIcon,
 } from '@muroom/icons';
+import { formatPhoneNumber } from '@muroom/util';
 
 import CheckTabSection from '@/components/home/components/check-tab-section';
 import DetailTabSection from '@/components/home/components/detail-tab-section';
@@ -95,13 +96,17 @@ export default function CommonDetailStudio({
         className='flex-none border-t border-t-gray-200 bg-white p-5'
         style={{ height: BOTTOM_FOOTER_HEIGHT }}
       >
-        <DetailFooter />
+        <DetailFooter
+          phoneNum={
+            detailStudio.studioNotice.ownerPhoneNumber || '010-1234-1234'
+          }
+        />
       </div>
     </div>
   );
 }
 
-const DetailFooter = () => {
+const DetailFooter = ({ phoneNum }: { phoneNum: string }) => {
   const [isSnackOpen, setIsSnackOpen] = useState<'mail' | 'call' | null>(null);
 
   return (
@@ -131,7 +136,9 @@ const DetailFooter = () => {
         onClose={() => setIsSnackOpen(null)}
         showCloseButton
       >
-        <span className='underline underline-offset-4'>010-1234-5678</span>
+        <span className='underline underline-offset-4'>
+          {formatPhoneNumber(phoneNum)}
+        </span>
       </Snackbar>
 
       <Button variant='outline' size='xl' className='flex-1'>

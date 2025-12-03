@@ -25,6 +25,7 @@ export interface StudiosMapSearchRequestProps {
   maxLatitude: number;
   minLongitude: number;
   maxLongitude: number;
+  keyword?: string;
   commonOptionCodes?: string[];
   individualOptionCodes?: string[];
   minPrice?: number;

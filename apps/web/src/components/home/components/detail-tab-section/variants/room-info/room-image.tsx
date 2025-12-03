@@ -10,10 +10,16 @@ import {
   DropdownItem,
   DropdownTrigger,
 } from '@muroom/components';
+import { cn } from '@muroom/lib';
+import VacantThumnail from '@muroom/ui/assets/vacant-thumnail.svg';
 
 import OptionItem from '@/components/common/option-item';
 
-export default function RoomImage() {
+interface Props {
+  blueprintImg?: string;
+}
+
+export default function RoomImage({ blueprintImg }: Props) {
   const [showRoom, setShowRoom] = useState(''); // 드롭다운용 더미 room
 
   return (
@@ -39,15 +45,30 @@ export default function RoomImage() {
           </DropdownContent>
         </Dropdown>
       </div>
-      <div className='rounded-4 border border-gray-300 px-[22px] py-[9px]'>
-        <Image
-          src={'https://placehold.co/292x262/555/fff?text=ROOM'}
-          alt={'더미 이미지'}
-          width={292}
-          height={262}
-          unoptimized
-          className='object-cover'
-        />
+      <div
+        className={cn('rounded-4 size-full border border-gray-300', {
+          'h-70 w-[335px]': !blueprintImg,
+        })}
+      >
+        {blueprintImg ? (
+          <Image
+            src={blueprintImg}
+            alt={'도면 이미지'}
+            width={335}
+            height={280}
+            unoptimized
+            className='object-cover'
+          />
+        ) : (
+          <Image
+            src={VacantThumnail}
+            alt={'빈 이미지'}
+            width={62}
+            height={50}
+            unoptimized
+            className='rounded-4 object-cover'
+          />
+        )}
       </div>
     </div>
   );
