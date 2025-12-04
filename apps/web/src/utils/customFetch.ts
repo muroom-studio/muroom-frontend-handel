@@ -1,4 +1,3 @@
-import { BE_BASE_URL } from '@/config/constants';
 import { type ApiResponse } from '@/types/api';
 import { HttpSuccessStatusCode } from '@/types/http';
 
@@ -32,7 +31,7 @@ export const customFetch = async <T>(
     },
   };
 
-  const response = await fetch(BE_BASE_URL + url, mergedOptions);
+  const response = await fetch('/api/v1' + url, mergedOptions);
 
   const responseData: ApiResponse<T> = await response.json();
 
