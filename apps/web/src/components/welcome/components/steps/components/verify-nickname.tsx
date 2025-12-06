@@ -10,7 +10,7 @@ import {
   TextField,
 } from '@muroom/components';
 
-import { useUserQueries } from '@/hooks/api/user/useQueries';
+import { useUserNicknameCheckQuery } from '@/hooks/api/user/useQueries';
 
 interface Props {
   value: string;
@@ -23,8 +23,7 @@ export default function VerifyNickname({ value, setValue }: Props) {
   const [localValue, setLocalValue] = useState(value || '');
   const [checkStatus, setCheckStatus] = useState<CheckStatus>('idle');
 
-  const { refetch, isLoading } =
-    useUserQueries().useUserNicknameCheckQuery(localValue);
+  const { refetch, isLoading } = useUserNicknameCheckQuery(localValue);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocalValue(e.target.value);

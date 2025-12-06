@@ -8,22 +8,24 @@ import {
   MusicianRegisterResponseProps,
 } from '@/types/musician';
 
-export const useMusicianMutation = () => {
-  const musicianLoginMutation: UseMutationResult<
-    MusicianLoginResponseProps,
-    Error,
-    MusicianLoginRequestProps
-  > = useMutation({
+const useMusicianLoginMutation = (): UseMutationResult<
+  MusicianLoginResponseProps,
+  Error,
+  MusicianLoginRequestProps
+> => {
+  return useMutation({
     mutationFn: postMusicianLogin,
   });
+};
 
-  const musicianRegisterMutation: UseMutationResult<
-    MusicianRegisterResponseProps,
-    Error,
-    MusicianRegisterRequestProps
-  > = useMutation({
+const useMusicianRegisterMutation = (): UseMutationResult<
+  MusicianRegisterResponseProps,
+  Error,
+  MusicianRegisterRequestProps
+> => {
+  return useMutation({
     mutationFn: postMusicianRegister,
   });
-
-  return { musicianLoginMutation, musicianRegisterMutation };
 };
+
+export { useMusicianLoginMutation, useMusicianRegisterMutation };

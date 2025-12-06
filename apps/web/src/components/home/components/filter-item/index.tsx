@@ -6,7 +6,7 @@ import { Button, ModalBottomSheet, Popover } from '@muroom/components';
 import { DownArrowIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 
-import { useStudiosQueries } from '@/hooks/api/studios/useQueries';
+import { useStudioFilterOptionsQuery } from '@/hooks/api/studios/useQueries';
 import { useFilters } from '@/hooks/nuqs/home/useFilters';
 import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 import { getFilterLabel } from '@/utils/filters/getFilterLabel';
@@ -36,7 +36,7 @@ interface Props {
 }
 
 export default function FilterItem({ variant, filters, setFilters }: Props) {
-  const { data } = useStudiosQueries().studioFilterOptionsQuery;
+  const { data } = useStudioFilterOptionsQuery();
 
   const { isMobile } = useResponsiveLayout();
   const [isOpen, setIsOpen] = useState(false);

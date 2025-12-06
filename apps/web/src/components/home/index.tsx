@@ -4,7 +4,11 @@ import { useState } from 'react';
 
 import DesktopHomePage from '@/components/home/desktop';
 import MobileHomePage from '@/components/home/mobile';
-import { useStudiosQueries } from '@/hooks/api/studios/useQueries';
+import {
+  useStudioDetailQuery,
+  useStudiosMapListInfiniteQuery,
+  useStudiosMapSearchQuery,
+} from '@/hooks/api/studios/useQueries';
 import { useSearch } from '@/hooks/nuqs/common/useSearch';
 import { useFilters } from '@/hooks/nuqs/home/useFilters';
 import { useMapState } from '@/hooks/nuqs/home/useMapState';
@@ -56,12 +60,6 @@ export default function HomePage({ isMobile }: Props) {
       }
     : undefined;
 
-  const {
-    useStudiosMapSearchQuery,
-    useStudiosMapListInfiniteQuery,
-    useStudiosDetailQuery,
-  } = useStudiosQueries();
-
   const { data: markersData, isLoading: isMarkersLoading } =
     useStudiosMapSearchQuery(searchParams);
 
@@ -85,7 +83,7 @@ export default function HomePage({ isMobile }: Props) {
   // 통합된 스튜디오 리스트 (모바일은 누적, PC는 교체됨)
   const studios = listData?.pages.flatMap((page) => page.content) || [];
 
-  const { data: detailStudio } = useStudiosDetailQuery(mapValue.studioId);
+  const { data: detailStudio } = useStudioDetailQuery(mapValue.studioId);
 
   // 6. Props 구성
   const commonProps = {

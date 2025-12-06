@@ -53,15 +53,15 @@ export default function RootLayout({
     <html lang='en'>
       <body className={pretendard.className}>
         <RQProvider>
-          <MapProvider>
-            <NuqsAdapter>
+          <NuqsAdapter>
+            <MapProvider>
               <BaseLayout>
                 {children}
                 {modal}
                 <SonnerProvider />
               </BaseLayout>
-            </NuqsAdapter>
-          </MapProvider>
+            </MapProvider>
+          </NuqsAdapter>
         </RQProvider>
         <Script
           strategy='afterInteractive'

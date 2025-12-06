@@ -5,7 +5,8 @@ import { useEffect, useRef } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 
 import Loading from '@/app/loading';
-import { useMusicianMutation } from '@/hooks/api/musician/useMutations';
+import { useMusicianLoginMutation } from '@/hooks/api/musician/useMutations';
+import { useAuthRedirectStore } from '@/store/useAuthRedirectStore';
 import { useMusicianStore } from '@/store/useMusicianStore';
 import { setToken } from '@/utils/cookie';
 
@@ -14,14 +15,14 @@ export default function Page() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const { mutateAsync: loginMutateAsync } =
-    useMusicianMutation().musicianLoginMutation;
+  const { mutateAsync: loginMutateAsync } = useMusicianLoginMutation();
 
   const isProcessing = useRef(false);
 
   const provider = params.provider as string;
   const code = searchParams.get('code');
 
+  const { performRedirect } = useAuthRedirectStore();
   const { setRegisterDTO } = useMusicianStore();
 
   useEffect(() => {
@@ -41,7 +42,7 @@ export default function Page() {
         if (type === 'LOGIN' && accessToken) {
           await setToken(accessToken);
 
-          router.replace('/home');
+          performRedirect();
           return;
         } else if (type === 'SIGNUP_REQUIRED' && signupToken) {
           setRegisterDTO({

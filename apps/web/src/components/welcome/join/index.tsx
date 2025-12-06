@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import { useMusicianMutation } from '@/hooks/api/musician/useMutations';
+import { useMusicianRegisterMutation } from '@/hooks/api/musician/useMutations';
 import { useWelcomeMode } from '@/hooks/nuqs/welcome/useWelcomeMode';
 import { useAuthRedirectStore } from '@/store/useAuthRedirectStore';
 import { useMusicianStore } from '@/store/useMusicianStore';
@@ -20,8 +20,7 @@ interface Props {
 
 export default function JoinPage({ isMobile }: Props) {
   const { dto } = useMusicianStore();
-  const { mutateAsync: registerMutateAsync } =
-    useMusicianMutation().musicianRegisterMutation;
+  const { mutateAsync: registerMutateAsync } = useMusicianRegisterMutation();
 
   const [step, setStep] = useState<0 | 1 | 2>(0);
   const [isNextValid, setIsNextValid] = useState(false);
