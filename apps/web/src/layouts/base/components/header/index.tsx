@@ -4,9 +4,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 
-import { SearchIcon } from '@muroom/icons';
 import BaseLogo from '@muroom/ui/assets/base-logo.svg';
-import { Button, TextField } from '@muroom/ui/components';
+import { Button } from '@muroom/ui/components';
 
 import SearchBar from '@/components/common/search-bar';
 import { useAuthRedirectStore } from '@/store/useAuthRedirectStore';

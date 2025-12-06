@@ -40,11 +40,15 @@ const TextField = ({
 
   const showClearIcon = !!displayValue && !props.disabled && !hideClearButton;
 
-  const handleClear = () => {
+  const handleClear = (e: any) => {
     if (onClear) {
+      e.preventDefault();
+      e.stopPropagation();
       onClear();
     }
     if (!isControlled) {
+      e.preventDefault();
+      e.stopPropagation();
       setInternalValue('');
     }
   };

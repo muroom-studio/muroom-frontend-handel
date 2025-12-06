@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { RequiredText } from '@muroom/components';
 
 import OptionItem from '@/components/common/option-item';
-import { useInstrumentsQueries } from '@/hooks/api/instruments/useQueries';
+import { useInstrumentsQuery } from '@/hooks/api/instruments/useQueries';
 import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 import { useMusicianStore } from '@/store/useMusicianStore';
 
@@ -42,7 +42,7 @@ export default function JoinThirdStep({ onValidChange }: Props) {
     studioName: '',
   });
 
-  const { data: INSTRUMENTS } = useInstrumentsQueries().instrumentsQuery;
+  const { data: INSTRUMENTS } = useInstrumentsQuery();
 
   const prevStudioJusoRef = useRef<StudioJuso>(studioJuso);
 

@@ -2,6 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
 import { MotionValue, motion, useTransform } from 'framer-motion';
 
 import {
@@ -18,9 +21,10 @@ import {
   InstrumentFilter,
   OptionFilter,
 } from '@/components/home/components/filter-item/variants';
-import { useStudiosQueries } from '@/hooks/api/studios/useQueries';
+import { useStudioFilterOptionsQuery } from '@/hooks/api/studios/useQueries';
 import { useMapOverlays } from '@/hooks/map/useMapOverlay';
 import { useNaverMap } from '@/hooks/map/useNaverMap';
+import { useSearch } from '@/hooks/nuqs/common/useSearch';
 import { useFilters } from '@/hooks/nuqs/home/useFilters';
 import { MAX_ZOOM, MIN_ZOOM, MapState } from '@/hooks/nuqs/home/useMapState';
 import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
@@ -46,6 +50,7 @@ export default function CommonMap({
   sheetY,
   middleRatio = 0.4,
 }: Props) {
+  const [keyword, setKeyword] = useSearch();
   const { isMobile } = useResponsiveLayout();
   const mapRef = useRef<HTMLDivElement | null>(null);
   const [windowHeight, setWindowHeight] = useState(0);
@@ -179,13 +184,19 @@ export default function CommonMap({
       return (
         <>
           <div className='absolute top-2 flex w-full flex-col gap-y-3 px-4'>
-            <TextField
-              id='keyword'
-              name='keyword'
-              placeholder='지하철역 또는 작업실 검색하기'
-              leftIcon={<SearchIcon className='size-6' />}
-              className='bg-white'
-            />
+            <Link href='/search' scroll={false}>
+              <TextField
+                id='keyword'
+                name='keyword'
+                value={keyword}
+                onClear={() => setKeyword('')}
+                placeholder='지하철역 또는 작업실 검색하기'
+                leftIcon={<SearchIcon className='size-6' />}
+                inputClassName={
+                  'bg-white cursor-pointer focus:border-primary-400'
+                }
+              />
+            </Link>
             <FilterBtns />
           </div>
 
@@ -242,7 +253,7 @@ export default function CommonMap({
 }
 
 const FilterBtns = () => {
-  const { data } = useStudiosQueries().studioFilterOptionsQuery;
+  const { data } = useStudioFilterOptionsQuery();
 
   const { filters, setFilters } = useFilters();
 
@@ -304,7 +315,7 @@ const FilterBtns = () => {
           </div>
         }
       >
-        <div className='flex flex-col gap-y-2'>
+        <div className='flex flex-col gap-y-5'>
           <OptionFilter
             commonOptionCodes={filters.commonOptionCodes}
             individualOptionCodes={filters.individualOptionCodes}
@@ -312,6 +323,7 @@ const FilterBtns = () => {
             publicOptions={data?.studioCommonOptions}
             privateOptions={data?.studioIndividualOptions}
           />
+          <div className='h-2 bg-gray-200' />
           <BuildingTypeFilter
             floorTypes={filters.floorTypes}
             restroomTypes={filters.restroomTypes}
@@ -322,6 +334,7 @@ const FilterBtns = () => {
             floorOptionsData={data?.floorOptions}
             restroomOptionsData={data?.restroomOptions}
           />
+          <div className='h-2 bg-gray-200' />
           <InstrumentFilter
             forbiddenInstrumentCodes={filters.forbiddenInstrumentCodes}
             onChange={(vals) => setFilters(vals)}
