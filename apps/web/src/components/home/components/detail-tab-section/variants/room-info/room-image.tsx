@@ -12,6 +12,7 @@ import {
 } from '@muroom/components';
 import { cn } from '@muroom/lib';
 import VacantThumnail from '@muroom/ui/assets/vacant-thumnail.svg';
+import { getFormattedDate } from '@muroom/util';
 
 import OptionItem from '@/components/common/option-item';
 import { StudioRoomItem } from '@/types/studio';
@@ -29,16 +30,13 @@ export default function RoomImage({
   roomsData,
   blueprintImg,
 }: Props) {
-  const [rooms, setRooms] = useState<StudioRoomItem[]>(roomsData);
-  console.log(rooms);
-
   const [showRoom, setShowRoom] = useState('');
 
   return (
     <div className='flex flex-col gap-y-6'>
-      <div className='flex items-center gap-x-2'>
-        {rooms
-          ?.filter((r) => r.isAvailable === false) // rooms가 없을 경우를 대비해 ?. 추가
+      <div className='scrollbar-hide flex flex-nowrap items-center gap-x-2 overflow-x-auto'>
+        {roomsData
+          ?.filter((r) => r.isAvailable === false)
           .map((room) => (
             <OptionItem
               key={room.roomId}
@@ -50,22 +48,35 @@ export default function RoomImage({
 
         <Dropdown
           value={showRoom}
-          onValueChange={setShowRoom}
+          onValueChange={(val) => {
+            setShowRoom(val);
+            setSelectedRoomId(Number(val));
+          }}
           placeholder='이미 계약됨'
           className='w-fit'
         >
           <DropdownTrigger variant='primary' size='m' className='h-9' />
           <DropdownContent className='max-h-[295px] overflow-y-auto'>
-            {rooms
+            {roomsData
               ?.filter((r) => r.isAvailable !== false)
               .map((room) => (
-                <DropdownItem key={room.roomId} value={`${room.roomId}`}>
-                  {room.roomName}
+                <DropdownItem
+                  key={room.roomId}
+                  value={`${room.roomId}`}
+                  className='flex items-center gap-x-2'
+                >
+                  <span>{room.roomName}</span>
+                  {room.availableAt && (
+                    <span className='text-base-s-12-1 text-primary-600'>
+                      {`${getFormattedDate(room.availableAt, 'yy.MM.dd(E)')} 입주가능`}
+                    </span>
+                  )}
                 </DropdownItem>
               ))}
           </DropdownContent>
         </Dropdown>
       </div>
+
       <div
         className={cn('rounded-4 size-full border border-gray-300', {
           'h-70 w-[335px]': !blueprintImg,
@@ -94,17 +105,3 @@ export default function RoomImage({
     </div>
   );
 }
-
-const dummy_rooms = [
-  'Room3',
-  'Room4',
-  'Room5',
-  'Room6',
-  'Room7',
-  'Room8',
-  'Room9',
-  'Room10',
-  'Room11',
-  'Room12',
-  'Room13',
-];

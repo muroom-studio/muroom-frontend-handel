@@ -28,8 +28,10 @@ function Modal({ isOpen, onClose, children }: ModalProps) {
   useEffect(() => {
     if (!isOpen) return;
 
+    // 모달 열릴 때 스크롤 막기
     document.body.style.overflow = 'hidden';
 
+    // ESC 키로 닫기
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose();
     };
@@ -47,6 +49,7 @@ function Modal({ isOpen, onClose, children }: ModalProps) {
     <AnimatePresence>
       {isOpen && (
         <ModalContext.Provider value={{ onClose }}>
+          {/* 배경 (Backdrop) */}
           <motion.div
             onClick={onClose}
             className='fixed inset-0 z-50 bg-black/50'
@@ -55,6 +58,7 @@ function Modal({ isOpen, onClose, children }: ModalProps) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
           />
+          {/* 모달 컨텐츠 */}
           {children}
         </ModalContext.Provider>
       )}
@@ -87,9 +91,15 @@ const ModalWrapper = ({ className, children, ...props }: ModalWrapperProps) => {
 
 interface ModalHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   title?: string;
+  customTitle?: React.ReactNode;
 }
 
-const ModalHeader = ({ className, title, ...props }: ModalHeaderProps) => {
+const ModalHeader = ({
+  className,
+  title,
+  customTitle,
+  ...props
+}: ModalHeaderProps) => {
   const { onClose } = useContext(ModalContext);
 
   return (
@@ -100,7 +110,12 @@ const ModalHeader = ({ className, title, ...props }: ModalHeaderProps) => {
       )}
       {...props}
     >
-      <span className='text-base-exl-18-2 text-black'>{title}</span>
+      {customTitle ? (
+        customTitle
+      ) : (
+        <span className='text-base-exl-18-2 text-black'>{title}</span>
+      )}
+
       <CloseIcon
         onClick={onClose}
         aria-label='Close'

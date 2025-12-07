@@ -30,6 +30,16 @@ export interface StudioBuildingInfo {
   };
   floorNumber: number;
 
+  hasRestroom: boolean;
+  restroomLocation: {
+    description: string;
+    code: string;
+  };
+  restroomGender: {
+    description: string;
+    code: string;
+  };
+
   // [변경] Object -> string (Java DTO 기준 Enum Code)
   parkingFeeType: {
     description: string;

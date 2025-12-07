@@ -74,6 +74,28 @@ export default function BuildingInfoSection({
           title='숙식'
           sub1={buildingData.isLodgingAvailable ? '가능' : '불가능'}
         />
+        {buildingData.hasRestroom && (
+          <>
+            <div className='h-px bg-gray-200' />
+            <GridRowItem
+              title='화장실'
+              sub1={
+                <div className='flex items-center gap-x-2'>
+                  {buildingData.restroomLocation && (
+                    <Tag variant='outline'>
+                      {buildingData.restroomLocation.description}
+                    </Tag>
+                  )}
+                  {buildingData.restroomGender && (
+                    <Tag variant='outline'>
+                      {buildingData.restroomGender.description}
+                    </Tag>
+                  )}
+                </div>
+              }
+            />
+          </>
+        )}
         <div className='h-px bg-gray-200' />
         <GridRowItem
           title='화재보험'

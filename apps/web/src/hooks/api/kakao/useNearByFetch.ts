@@ -20,11 +20,14 @@ interface Props {
 
 export const useNearbyFetch = ({ lat, lng, category }: Props) => {
   const [places, setPlaces] = useState<PlaceData[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (!lat || !lng) return;
 
     const fetchPlaces = async () => {
+      setIsLoading(true);
+
       try {
         let queryParams = '';
 
@@ -42,6 +45,7 @@ export const useNearbyFetch = ({ lat, lng, category }: Props) => {
             queryParams = 'keyword=빨래방';
             break;
           default:
+            setIsLoading(false);
             return;
         }
 
@@ -49,11 +53,13 @@ export const useNearbyFetch = ({ lat, lng, category }: Props) => {
           `/api/kakao/place?lat=${lat}&lng=${lng}&${queryParams}`,
         );
 
-        if (!res.ok) return;
+        if (!res.ok) {
+          setIsLoading(false);
+          return;
+        }
 
         const data = await res.json();
 
-        // 데이터 가공
         const loadedPlaces = (data.documents || [])
           .slice(0, 3)
           .map((item: any) => ({
@@ -68,11 +74,13 @@ export const useNearbyFetch = ({ lat, lng, category }: Props) => {
       } catch (error) {
         console.error('Failed to fetch nearby places:', error);
         setPlaces([]);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchPlaces();
-  }, [lat, lng, category]); // 카테고리가 바뀌면 재요청
+  }, [lat, lng, category]);
 
-  return { places };
+  return { places, isLoading };
 };

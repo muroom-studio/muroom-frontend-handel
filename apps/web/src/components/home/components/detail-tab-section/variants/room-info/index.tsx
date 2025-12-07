@@ -1,6 +1,9 @@
 'use client';
 
+import { useState } from 'react';
+
 import {
+  HelperMessage,
   Tag,
   Tooltip,
   TooltipContent,
@@ -8,6 +11,7 @@ import {
 } from '@muroom/components';
 import { InfoIcon, ResetIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
+import { getFormattedDate } from '@muroom/util';
 
 import { StudioRoomsInfo } from '@/types/studio';
 
@@ -15,7 +19,6 @@ import GridRowItem from '../../components/grid-row-item';
 import SectionWrapper from '../../components/section-wrapper';
 import RoomImage from './room-image';
 import RoomImageGroup from './room-image-group';
-import { useState } from 'react';
 
 interface Props {
   title: string;
@@ -32,7 +35,20 @@ export default function RoomInfoSection({
   blueprintImg,
   instruments,
 }: Props) {
-  const [selectedRoomId, setSelectedRoomId] = useState(0);
+  const [selectedRoomId, setSelectedRoomId] = useState(
+    roomData.rooms?.[0]?.roomId || 0,
+  );
+
+  const [unit, setUnit] = useState<'cm' | 'mm'>('cm');
+
+  const selectedRoom =
+    roomData.rooms?.find((room) => room.roomId === selectedRoomId) ||
+    roomData.rooms?.[0];
+
+  const handleToggleUnit = () => {
+    setUnit((prev) => (prev === 'cm' ? 'mm' : 'cm'));
+  };
+
   return (
     <SectionWrapper title={title}>
       <>
@@ -71,44 +87,87 @@ export default function RoomInfoSection({
         <RoomImageGroup roomImgs={roomImgs} />
         <div className='h-px bg-gray-200' />
 
-        <RoomImage selectedRoomId={selectedRoomId} setSelectedRoomId={setSelectedRoomId} roomsData={roomData.rooms} blueprintImg={blueprintImg} />
+        <RoomImage
+          selectedRoomId={selectedRoomId}
+          setSelectedRoomId={setSelectedRoomId}
+          roomsData={roomData.rooms}
+          blueprintImg={blueprintImg}
+        />
 
-        <h3 className='text-base-exl-18-2 text-gray-900'>Room 1</h3>
+        <h3 className='text-base-exl-18-2 text-gray-900'>
+          {selectedRoom?.roomName}
+        </h3>
+
+        <div className='h-px bg-gray-200' />
+        <GridRowItem
+          title='입주'
+          sub1={
+            selectedRoom?.availableAt ? (
+              <span>
+                {getFormattedDate(selectedRoom.availableAt, 'yy.MM.dd(E)') +
+                  ' 입주가능'}
+              </span>
+            ) : (
+              <span>문의필요</span>
+            )
+          }
+        />
 
         <div className='h-px bg-gray-200' />
 
         <GridRowItem
           title='사이즈'
           sub1={
-            <div className='flex-between'>
-              <div className='flex items-center gap-x-1'>
-                <span>305 cm X 294 cm</span>
-                <Tooltip side='top'>
-                  <TooltipTrigger asChild>
-                    <InfoIcon className='size-5 cursor-pointer text-gray-400' />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    {`최대길이 X 최대폭으로\n 실제사이즈와 오차가 있을 수 있습니다.`}
-                  </TooltipContent>
-                </Tooltip>
+            selectedRoom?.widthMm && selectedRoom?.heightMm ? (
+              <div className='flex-between'>
+                <div className='flex items-center gap-x-1'>
+                  <span>
+                    {unit === 'cm'
+                      ? selectedRoom.widthMm / 10
+                      : selectedRoom.widthMm}{' '}
+                    {unit} X{' '}
+                    {unit === 'cm'
+                      ? selectedRoom.heightMm / 10
+                      : selectedRoom.heightMm}{' '}
+                    {unit}
+                  </span>
+                  <Tooltip side='top'>
+                    <TooltipTrigger asChild>
+                      <InfoIcon className='size-5 cursor-pointer text-gray-400' />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      {`최대길이 X 최대폭으로\n 실제사이즈와 오차가 있을 수 있습니다.`}
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
+                <div
+                  aria-label='toggle-btn'
+                  onClick={handleToggleUnit}
+                  className={cn(
+                    'flex-center rounded-4 text-base-m-14-1 inline-flex cursor-pointer gap-x-1 border border-gray-300 bg-white px-3 py-[5px]',
+                    'hover:bg-gray-100 hover:opacity-80',
+                  )}
+                >
+                  <ResetIcon className='size-4 rotate-90' />
+                  <span>{unit}</span>
+                </div>
               </div>
-              <div
-                aria-label='toggle-btn'
-                className={cn(
-                  'flex-center rounded-4 text-base-m-14-1 inline-flex cursor-pointer gap-x-1 border border-gray-300 bg-white px-3 py-[5px]',
-                  'hover:bg-gray-100 hover:opacity-80',
-                )}
-              >
-                <ResetIcon className='size-4 rotate-90' />
-                <span>cm</span>
-              </div>
-            </div>
+            ) : (
+              <HelperMessage variant='error'>도면확인이 필요해요</HelperMessage>
+            )
           }
         />
 
         <div className='h-px bg-gray-200' />
 
-        <GridRowItem title='가격' sub1='15~20만원' />
+        <GridRowItem
+          title='가격'
+          sub1={
+            selectedRoom?.roomBasePrice
+              ? `${selectedRoom.roomBasePrice / 10000}만원`
+              : '문의 필요'
+          }
+        />
       </>
     </SectionWrapper>
   );

@@ -10,6 +10,8 @@ import { LocationIcon } from '@muroom/icons';
 
 import { StudioDetailResponseProps } from '@/types/studio';
 
+import ImageGalleryModal, { useGalleryModal } from './components/gallery-modal';
+import MainImageSection from './components/main-image-section';
 import ShareBtn from './components/share-btn';
 import {
   BuildingInfoSection,
@@ -43,6 +45,18 @@ export default function DetailTabSection({
     studioLatitude,
     nearbySubwayStations,
   } = detailStudio.studioBaseInfo;
+
+  const galleryController = useGalleryModal();
+
+  // 2. 갤러리 모달에 넘겨줄 전체 이미지 데이터 구성
+  const allGalleryImages = useMemo(
+    () => ({
+      main: detailStudio.studioImages.mainImageKeys || [],
+      building: detailStudio.studioImages.buildingImageKeys || [],
+      room: detailStudio.studioImages.roomImageKeys || [],
+    }),
+    [detailStudio.studioImages],
+  );
 
   const [activeTab, setActiveTab] = useState('building-info');
   const [isClickScrolling, setIsClickScrolling] = useState(false);
@@ -154,14 +168,11 @@ export default function DetailTabSection({
   return (
     <>
       <div className='bg-white'>
-        {/* 임시 방편 박기 */}
         <div className='relative h-[250px] w-full overflow-hidden'>
-          <Image
-            src={detailStudio.studioImages.mainImageKeys[0] || ''}
-            alt={'더미이미지'}
-            width={376}
-            height={250}
-            className='h-full w-full object-cover'
+          {/* 3. MainImageSection에 컨트롤러 전달 */}
+          <MainImageSection
+            roomImgs={detailStudio.studioImages.mainImageKeys}
+            controller={galleryController}
           />
         </div>
         <div className='px-5 py-6'>
@@ -222,7 +233,7 @@ export default function DetailTabSection({
 
       <div className='flex flex-col gap-y-4'>
         <section id='building-info'>
-          {/* <BuildingInfoSection
+          <BuildingInfoSection
             title='건물정보'
             buildingData={detailStudio.studioBuildingInfo}
             priceData={{
@@ -230,23 +241,23 @@ export default function DetailTabSection({
               maxPrice: detailStudio.studioBaseInfo.studioMaxPrice,
               deposit: detailStudio.studioBaseInfo.depositAmount,
             }}
-          /> */}
+          />
         </section>
 
         <section id='notice'>
-          {/* <NoticeSection title='안내사항' data={detailStudio.studioNotice} /> */}
+          <NoticeSection title='안내사항' data={detailStudio.studioNotice} />
         </section>
         <section id='room-info'>
-          {/* <RoomInfoSection
+          <RoomInfoSection
             title='방 정보'
             roomData={detailStudio.studioRooms}
             roomImgs={detailStudio.studioImages.roomImageKeys}
             blueprintImg={detailStudio.studioImages.blueprintImageKey}
             instruments={detailStudio.studioForbiddenInstruments.instruments}
-          /> */}
+          />
         </section>
         <section id='option'>
-          {/* <OptionSection title='옵션' data={detailStudio.studioOptions} /> */}
+          <OptionSection title='옵션' data={detailStudio.studioOptions} />
         </section>
         <section id='near-facility'>
           <NearFacilitySection
@@ -256,6 +267,11 @@ export default function DetailTabSection({
           />
         </section>
       </div>
+
+      <ImageGalleryModal
+        controller={galleryController}
+        images={allGalleryImages}
+      />
     </>
   );
 }

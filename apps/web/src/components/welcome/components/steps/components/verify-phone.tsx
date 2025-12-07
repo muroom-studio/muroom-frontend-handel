@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Button, OtpGroup, RequiredText, TextField } from '@muroom/components';
 import { CheckSmallIcon } from '@muroom/icons';
 
+import { useUserSmsAuthMutation } from '@/hooks/api/user/useMutation';
+
 interface Props {
   id?: string;
   name?: string;
@@ -20,6 +22,8 @@ export default function VerifyPhone({
   const [isSent, setIsSent] = useState(false);
   const [timeLeft, setTimeLeft] = useState(180);
   const [isVerified, setIsVerified] = useState(false);
+
+  const { mutateAsync: authMutateAsync } = useUserSmsAuthMutation();
 
   const [otp, setOtp] = useState<string[]>(Array(6).fill(''));
 
@@ -51,6 +55,13 @@ export default function VerifyPhone({
 
   const handleSend = () => {
     if (!phoneNumber) return;
+
+    authMutateAsync(
+      { phone: phoneNumber },
+      {
+        onSuccess: (data) => console.log(data),
+      },
+    );
 
     setIsSent(true);
     setIsVerified(false);
