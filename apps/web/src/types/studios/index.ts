@@ -2,8 +2,10 @@
 import { PageRequestProps, PaginationInfo } from '../api';
 
 export type FilterOptionItem = {
+  id?: number;
   code: string;
   description: string;
+  iconImageKey?: string;
 };
 
 export interface StudioFilterOptionsResponseProps {
@@ -11,7 +13,7 @@ export interface StudioFilterOptionsResponseProps {
   restroomOptions: FilterOptionItem[];
   studioCommonOptions: FilterOptionItem[];
   studioIndividualOptions: FilterOptionItem[];
-  unavailableInstrumentOptions: FilterOptionItem[];
+  forbiddenInstrumentOptions: FilterOptionItem[];
 }
 
 // =======================================================

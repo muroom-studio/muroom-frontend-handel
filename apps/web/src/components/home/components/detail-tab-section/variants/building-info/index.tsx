@@ -35,7 +35,9 @@ export default function BuildingInfoSection({
             <div className='flex-between'>
               <div className='flex items-center gap-x-1.5'>
                 <span>
-                  {buildingData.isParkingAvailable ? '가능' : '불가능'}
+                  {buildingData.parkingFeeType.code === 'NONE'
+                    ? '불가능'
+                    : '가능'}
                 </span>
                 {buildingData.parkingFeeType.code !== 'NONE' &&
                   (buildingData.parkingFeeType.code === 'PAID' ? (

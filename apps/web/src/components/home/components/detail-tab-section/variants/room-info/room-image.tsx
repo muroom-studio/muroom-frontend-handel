@@ -14,20 +14,39 @@ import { cn } from '@muroom/lib';
 import VacantThumnail from '@muroom/ui/assets/vacant-thumnail.svg';
 
 import OptionItem from '@/components/common/option-item';
+import { StudioRoomItem } from '@/types/studio';
 
 interface Props {
+  selectedRoomId: number;
+  setSelectedRoomId: React.Dispatch<React.SetStateAction<number>>;
+  roomsData: StudioRoomItem[];
   blueprintImg?: string;
 }
 
-export default function RoomImage({ blueprintImg }: Props) {
-  const [showRoom, setShowRoom] = useState(''); // 드롭다운용 더미 room
+export default function RoomImage({
+  selectedRoomId,
+  setSelectedRoomId,
+  roomsData,
+  blueprintImg,
+}: Props) {
+  const [rooms, setRooms] = useState<StudioRoomItem[]>(roomsData);
+  console.log(rooms);
+
+  const [showRoom, setShowRoom] = useState('');
 
   return (
     <div className='flex flex-col gap-y-6'>
       <div className='flex items-center gap-x-2'>
-        <OptionItem item={'Room1'} selected={false} onClick={() => {}} />
-
-        <OptionItem item={'Room2'} selected={false} onClick={() => {}} />
+        {rooms
+          ?.filter((r) => r.isAvailable === false) // rooms가 없을 경우를 대비해 ?. 추가
+          .map((room) => (
+            <OptionItem
+              key={room.roomId}
+              item={room.roomName}
+              selected={selectedRoomId === room.roomId}
+              onClick={() => setSelectedRoomId(room.roomId)}
+            />
+          ))}
 
         <Dropdown
           value={showRoom}
@@ -37,11 +56,13 @@ export default function RoomImage({ blueprintImg }: Props) {
         >
           <DropdownTrigger variant='primary' size='m' className='h-9' />
           <DropdownContent className='max-h-[295px] overflow-y-auto'>
-            {dummy_rooms.map((room) => (
-              <DropdownItem key={room} value={room}>
-                {room}
-              </DropdownItem>
-            ))}
+            {rooms
+              ?.filter((r) => r.isAvailable !== false)
+              .map((room) => (
+                <DropdownItem key={room.roomId} value={`${room.roomId}`}>
+                  {room.roomName}
+                </DropdownItem>
+              ))}
           </DropdownContent>
         </Dropdown>
       </div>

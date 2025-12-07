@@ -112,7 +112,7 @@ export const getFilterLabel = ({ variant, filters, data }: GetLabelParams) => {
       return formatList(
         filters.forbiddenInstrumentCodes,
         VARIANT_DEFAULT_LABELS.e5,
-        data?.unavailableInstrumentOptions,
+        data?.forbiddenInstrumentOptions,
       );
 
     default:

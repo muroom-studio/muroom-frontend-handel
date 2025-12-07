@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 import { MotionValue, motion, useTransform } from 'framer-motion';
 
@@ -28,6 +27,7 @@ import { useSearch } from '@/hooks/nuqs/common/useSearch';
 import { useFilters } from '@/hooks/nuqs/home/useFilters';
 import { MAX_ZOOM, MIN_ZOOM, MapState } from '@/hooks/nuqs/home/useMapState';
 import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
+import { useRecentSearchStore } from '@/store/useRecentKeywordStore';
 import { StudiosMapSearchItem } from '@/types/studios';
 
 import CompareBtn from './ui/compare-btn';
@@ -179,6 +179,15 @@ export default function CommonMap({
     }));
   }, [setMapValue]);
 
+  const { pendingKeyword, setPendingKeyword } = useRecentSearchStore();
+
+  useEffect(() => {
+    if (pendingKeyword !== null) {
+      setKeyword(pendingKeyword); // 여기서 URL 쿼리 업데이트 (?keyword=값)
+      setPendingKeyword(null); // 반영 후 우체통 비우기 (중복 실행 방지)
+    }
+  }, [pendingKeyword, setKeyword, setPendingKeyword]);
+
   const renderMapUI = () => {
     if (isMobile) {
       return (
@@ -188,7 +197,7 @@ export default function CommonMap({
               <TextField
                 id='keyword'
                 name='keyword'
-                value={keyword}
+                value={keyword || ''}
                 onClear={() => setKeyword('')}
                 placeholder='지하철역 또는 작업실 검색하기'
                 leftIcon={<SearchIcon className='size-6' />}
@@ -338,7 +347,7 @@ const FilterBtns = () => {
           <InstrumentFilter
             forbiddenInstrumentCodes={filters.forbiddenInstrumentCodes}
             onChange={(vals) => setFilters(vals)}
-            instrumentOptions={data?.unavailableInstrumentOptions}
+            instrumentOptions={data?.forbiddenInstrumentOptions}
           />
         </div>
       </ModalBottomSheet>

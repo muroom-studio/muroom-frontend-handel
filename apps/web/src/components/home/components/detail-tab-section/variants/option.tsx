@@ -1,5 +1,6 @@
 import Image from 'next/image';
 
+import { S3_BUCKET_URL } from '@/config/constants';
 import { StudioOptionsInfo } from '@/types/studio';
 
 import SectionWrapper from '../components/section-wrapper';
@@ -22,10 +23,12 @@ export default function OptionSection({ title, data }: Props) {
               key={option.code}
               icon={
                 <Image
-                  src={option.iconImageKey}
+                  src={`${S3_BUCKET_URL}${option.iconImageKey}`}
                   alt={`${option.code} 이미지`}
-                  fill
-                  style={{ objectFit: 'cover' }}
+                  width={0}
+                  height={0}
+                  sizes='100vw'
+                  style={{ width: '100%', height: 'auto' }} // 핵심: 너비는 꽉 채우고, 높이는 비율에 맞춰 자동 조절
                 />
               }
               name={option.description}
@@ -42,10 +45,12 @@ export default function OptionSection({ title, data }: Props) {
               key={option.code}
               icon={
                 <Image
-                  src={option.iconImageKey}
+                  src={`${S3_BUCKET_URL}${option.iconImageKey}`}
                   alt={`${option.code} 이미지`}
-                  fill
-                  style={{ objectFit: 'cover' }}
+                  width={0}
+                  height={0}
+                  sizes='100vw'
+                  style={{ width: '100%', height: 'auto' }} // 핵심: 너비는 꽉 채우고, 높이는 비율에 맞춰 자동 조절
                 />
               }
               name={option.description}
