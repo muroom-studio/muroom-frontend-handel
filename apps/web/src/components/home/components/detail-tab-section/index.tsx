@@ -38,7 +38,7 @@ export default function DetailTabSection({
     studioName,
     studioMinPrice,
     studioMaxPrice,
-    address,
+    roadNameAddress,
     studioLongitude,
     studioLatitude,
     nearbySubwayStations,
@@ -151,26 +151,19 @@ export default function DetailTabSection({
     };
   }, [isClickScrolling, activeTab, containerRef]);
 
-  // 1. 도보 시간이 가장 짧은 역 찾기 (Text 표시용)
-  const nearestStation = useMemo(() => {
-    if (!nearbySubwayStations || nearbySubwayStations.length === 0) return null;
-    // 시간순 오름차순 정렬 후 첫 번째 요소 선택
-    return [...nearbySubwayStations].sort(
-      (a, b) => a.walkingTimeMinutes - b.walkingTimeMinutes,
-    )[0];
-  }, [nearbySubwayStations]);
-
   return (
     <>
       <div className='bg-white'>
         {/* 임시 방편 박기 */}
-        <Image
-          src={detailStudio.studioImages.mainImageKeys[0] || ''}
-          alt={'더미이미지'}
-          width={375.3}
-          height={250}
-          style={{ objectFit: 'cover' }}
-        />
+        <div className='relative h-[250px] w-full overflow-hidden'>
+          <Image
+            src={detailStudio.studioImages.mainImageKeys[0] || ''}
+            alt={'더미이미지'}
+            width={376}
+            height={250}
+            className='h-full w-full object-cover'
+          />
+        </div>
         <div className='px-5 py-6'>
           <div className='flex flex-col gap-y-6'>
             <div className='flex flex-col gap-y-2'>
@@ -183,15 +176,12 @@ export default function DetailTabSection({
               </span>
             </div>
             <div className='flex flex-col gap-y-3'>
-              <div className='flex items-center gap-x-1'>
-                {nearbySubwayStations
-                  ?.flatMap((station) => station.lines)
-                  .filter(
-                    (line, index, self) =>
-                      index ===
-                      self.findIndex((t) => t.lineName === line.lineName),
-                  )
-                  .map((line) => (
+              {nearbySubwayStations.map((place) => (
+                <div
+                  key={place.stationName}
+                  className='flex items-center gap-x-1'
+                >
+                  {place.lines.map((line) => (
                     <Badge
                       key={line.lineName}
                       variant='subway'
@@ -199,11 +189,12 @@ export default function DetailTabSection({
                       lineColor={line.lineColor}
                     />
                   ))}
-                <span className='text-base-m-14-1'>{`${nearestStation?.stationName}역 도보 ${nearestStation?.walkingTimeMinutes}분`}</span>
-              </div>
+                  <span className='text-base-m-14-1'>{`${place?.stationName}역 도보 ${place?.walkingTimeMinutes}분`}</span>
+                </div>
+              ))}
               <div className='flex -translate-x-1 items-center gap-x-1'>
                 <LocationIcon className='size-6 text-gray-400' />
-                <span className='text-base-m-14-1'>{address}</span>
+                <span className='text-base-m-14-1'>{roadNameAddress}</span>
               </div>
             </div>
           </div>
@@ -231,7 +222,7 @@ export default function DetailTabSection({
 
       <div className='flex flex-col gap-y-4'>
         <section id='building-info'>
-          <BuildingInfoSection
+          {/* <BuildingInfoSection
             title='건물정보'
             buildingData={detailStudio.studioBuildingInfo}
             priceData={{
@@ -239,23 +230,23 @@ export default function DetailTabSection({
               maxPrice: detailStudio.studioBaseInfo.studioMaxPrice,
               deposit: detailStudio.studioBaseInfo.depositAmount,
             }}
-          />
+          /> */}
         </section>
 
         <section id='notice'>
-          <NoticeSection title='안내사항' data={detailStudio.studioNotice} />
+          {/* <NoticeSection title='안내사항' data={detailStudio.studioNotice} /> */}
         </section>
         <section id='room-info'>
-          <RoomInfoSection
+          {/* <RoomInfoSection
             title='방 정보'
             roomData={detailStudio.studioRooms}
             roomImgs={detailStudio.studioImages.roomImageKeys}
             blueprintImg={detailStudio.studioImages.blueprintImageKey}
             instruments={detailStudio.studioForbiddenInstruments.instruments}
-          />
+          /> */}
         </section>
         <section id='option'>
-          <OptionSection title='옵션' data={detailStudio.studioOptions} />
+          {/* <OptionSection title='옵션' data={detailStudio.studioOptions} /> */}
         </section>
         <section id='near-facility'>
           <NearFacilitySection

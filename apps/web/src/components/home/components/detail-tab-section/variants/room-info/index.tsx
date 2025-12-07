@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Tag,
   Tooltip,
@@ -13,6 +15,7 @@ import GridRowItem from '../../components/grid-row-item';
 import SectionWrapper from '../../components/section-wrapper';
 import RoomImage from './room-image';
 import RoomImageGroup from './room-image-group';
+import { useState } from 'react';
 
 interface Props {
   title: string;
@@ -29,6 +32,7 @@ export default function RoomInfoSection({
   blueprintImg,
   instruments,
 }: Props) {
+  const [selectedRoomId, setSelectedRoomId] = useState(0);
   return (
     <SectionWrapper title={title}>
       <>
@@ -49,13 +53,17 @@ export default function RoomInfoSection({
         <GridRowItem
           title='금지악기'
           sub1={
-            instruments
-              ? instruments.map((item) => (
+            instruments ? (
+              <div className='flex items-center gap-x-2'>
+                {instruments.map((item) => (
                   <Tag key={item} variant='outline'>
                     {item}
                   </Tag>
-                ))
-              : '없음'
+                ))}
+              </div>
+            ) : (
+              '없음'
+            )
           }
         />
         <div className='h-px bg-gray-200' />
@@ -63,7 +71,7 @@ export default function RoomInfoSection({
         <RoomImageGroup roomImgs={roomImgs} />
         <div className='h-px bg-gray-200' />
 
-        <RoomImage blueprintImg={blueprintImg} />
+        <RoomImage selectedRoomId={selectedRoomId} setSelectedRoomId={setSelectedRoomId} roomsData={roomData.rooms} blueprintImg={blueprintImg} />
 
         <h3 className='text-base-exl-18-2 text-gray-900'>Room 1</h3>
 

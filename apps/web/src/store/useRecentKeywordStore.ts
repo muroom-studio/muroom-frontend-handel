@@ -1,4 +1,3 @@
-// 비회원 전용
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -7,6 +6,8 @@ interface RecentSearchStoreProps {
   addRecentSearch: (keyword: string) => void;
   removeRecentSearch: (keyword: string) => void;
   clearRecentSearches: () => void;
+  pendingKeyword: string | null;
+  setPendingKeyword: (keyword: string | null) => void;
 }
 
 export const useRecentSearchStore = create<RecentSearchStoreProps>()(
@@ -14,16 +15,17 @@ export const useRecentSearchStore = create<RecentSearchStoreProps>()(
     (set) => ({
       recentSearches: [],
 
+      pendingKeyword: null,
+      setPendingKeyword: (keyword) => set({ pendingKeyword: keyword }),
+
       addRecentSearch: (keyword: string) =>
         set((state) => {
           const trimmedKeyword = keyword.trim();
           if (!trimmedKeyword) return state;
-
           const filtered = state.recentSearches.filter(
             (item) => item !== trimmedKeyword,
           );
           const newRecentSearches = [trimmedKeyword, ...filtered].slice(0, 7);
-
           return { recentSearches: newRecentSearches };
         }),
 

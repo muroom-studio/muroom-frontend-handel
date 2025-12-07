@@ -92,7 +92,7 @@ export default function FilterItem({ variant, filters, setFilters }: Props) {
           <InstrumentFilter
             forbiddenInstrumentCodes={filters.forbiddenInstrumentCodes}
             onChange={(vals) => setFilters(vals)}
-            instrumentOptions={data?.unavailableInstrumentOptions}
+            instrumentOptions={data?.forbiddenInstrumentOptions}
           />
         );
       default:

@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation';
 import { TextField } from '@muroom/components';
 import { CloseIcon, RightArrowIcon } from '@muroom/icons';
 
-import { useSearch } from '@/hooks/nuqs/common/useSearch';
 import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 import { useRecentSearchStore } from '@/store/useRecentKeywordStore';
 
@@ -15,9 +14,13 @@ export default function SearchPage() {
   const { isMobile } = useResponsiveLayout();
 
   const router = useRouter();
-  const [_, setKeyword] = useSearch();
-  const { recentSearches, addRecentSearch, removeRecentSearch } =
-    useRecentSearchStore();
+  const {
+    recentSearches,
+    addRecentSearch,
+    removeRecentSearch,
+    setPendingKeyword,
+  } = useRecentSearchStore();
+
   const [inputValue, setInputValue] = useState('');
 
   const inputRef = (element: HTMLInputElement | null) => {
@@ -29,8 +32,9 @@ export default function SearchPage() {
   const handleSearch = (value: string) => {
     if (value.trim().length > 0) {
       addRecentSearch(value);
+      setPendingKeyword(value);
     }
-    setKeyword(value);
+
     router.back();
   };
 
@@ -75,11 +79,9 @@ export default function SearchPage() {
                   <li
                     key={item}
                     className='flex-between border-b border-gray-50 p-4 last:border-0'
+                    onClick={() => handleSearch(item)}
                   >
-                    <span
-                      onClick={() => handleSearch(item)}
-                      className='text-base-m-14-2 flex-1 cursor-pointer'
-                    >
+                    <span className='text-base-m-14-2 flex-1 cursor-pointer'>
                       {item}
                     </span>
                     <button

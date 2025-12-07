@@ -6,7 +6,7 @@ export interface StudioDetailRequestProps {
 export interface StudioBaseInfo {
   studioId: number;
   studioName: string;
-  address: string;
+  roadNameAddress: string;
   studioLongitude: number;
   studioLatitude: number;
   studioMinPrice: number;
@@ -29,7 +29,6 @@ export interface StudioBuildingInfo {
     code: 'ALL' | 'GROUND' | 'BASEMENT';
   };
   floorNumber: number;
-  isParkingAvailable: boolean;
 
   // [변경] Object -> string (Java DTO 기준 Enum Code)
   parkingFeeType: {
@@ -66,7 +65,7 @@ export interface StudioForbiddenInstruments {
 export interface StudioRoomItem {
   roomId: number;
   roomName: string;
-  isAvailable: boolean;
+  isAvailable: boolean | null;
   availableAt: string; // Date string "YYYY-MM-DD"
   widthMm: number;
   heightMm: number;
