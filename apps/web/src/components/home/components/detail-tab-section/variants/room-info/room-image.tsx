@@ -32,34 +32,39 @@ export default function RoomImage({
 }: Props) {
   const [showRoom, setShowRoom] = useState('');
 
+  // 1. [버튼용] 계약 완료된 방 (또는 즉시 입주 불가)
+  const unavailableRooms =
+    roomsData?.filter((r) => r.isAvailable === false) || [];
+
+  // 2. [드롭다운용] 입주 가능한 방 (isAvailable !== false)
+  const availableRooms =
+    roomsData?.filter((r) => r.isAvailable !== false) || [];
+
   return (
     <div className='flex flex-col gap-y-6'>
       <div className='scrollbar-hide flex flex-nowrap items-center gap-x-2 overflow-x-auto'>
-        {roomsData
-          ?.filter((r) => r.isAvailable === false)
-          .map((room) => (
-            <OptionItem
-              key={room.roomId}
-              item={room.roomName}
-              selected={selectedRoomId === room.roomId}
-              onClick={() => setSelectedRoomId(room.roomId)}
-            />
-          ))}
+        {unavailableRooms.map((room) => (
+          <OptionItem
+            key={room.roomId}
+            item={room.roomName}
+            selected={selectedRoomId === room.roomId}
+            onClick={() => setSelectedRoomId(room.roomId)}
+          />
+        ))}
 
-        <Dropdown
-          value={showRoom}
-          onValueChange={(val) => {
-            setShowRoom(val);
-            setSelectedRoomId(Number(val));
-          }}
-          placeholder='이미 계약됨'
-          className='w-fit'
-        >
-          <DropdownTrigger variant='primary' size='m' className='h-9' />
-          <DropdownContent className='max-h-[295px] overflow-y-auto'>
-            {roomsData
-              ?.filter((r) => r.isAvailable !== false)
-              .map((room) => (
+        {availableRooms.length > 0 && (
+          <Dropdown
+            value={showRoom}
+            onValueChange={(val) => {
+              setShowRoom(val);
+              setSelectedRoomId(Number(val));
+            }}
+            placeholder='이미 계약됨'
+            className='w-fit'
+          >
+            <DropdownTrigger variant='primary' size='m' className='h-9' />
+            <DropdownContent className='max-h-[295px] overflow-y-auto'>
+              {availableRooms.map((room) => (
                 <DropdownItem
                   key={room.roomId}
                   value={`${room.roomId}`}
@@ -73,8 +78,9 @@ export default function RoomImage({
                   )}
                 </DropdownItem>
               ))}
-          </DropdownContent>
-        </Dropdown>
+            </DropdownContent>
+          </Dropdown>
+        )}
       </div>
 
       <div

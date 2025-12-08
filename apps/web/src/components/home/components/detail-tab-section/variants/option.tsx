@@ -29,6 +29,7 @@ const RenderOptionList = ({ options }: { options: StudioOptionItem[] }) => {
                 width={0}
                 height={0}
                 sizes='100vw'
+                unoptimized
                 style={{ width: '100%', height: 'auto' }}
               />
             }
@@ -36,23 +37,21 @@ const RenderOptionList = ({ options }: { options: StudioOptionItem[] }) => {
           />
         ))
       ) : (
-        // 2. 데이터가 없을 때: 대체 이미지와 메시지 렌더링 (공용/개인 모두 동일)
-        <div className='col-span-4 flex items-center justify-center py-4'>
-          <OptionItem
-            key={'none'}
-            icon={
-              <Image
-                src={NONE_IMAGE_URL}
-                alt={'옵션 없음'}
-                width={0}
-                height={0}
-                sizes='100vw'
-                style={{ width: '100%', height: 'auto' }}
-              />
-            }
-            name={'제공되는 옵션 정보 없음'}
-          />
-        </div>
+        <OptionItem
+          key={'none'}
+          icon={
+            <Image
+              src={NONE_IMAGE_URL}
+              alt={'옵션 없음'}
+              width={0}
+              height={0}
+              sizes='100vw'
+              unoptimized
+              style={{ width: '100%', height: 'auto' }}
+            />
+          }
+          name={'없음'}
+        />
       )}
     </div>
   );

@@ -169,7 +169,6 @@ export default function DetailTabSection({
     <>
       <div className='bg-white'>
         <div className='relative h-[250px] w-full overflow-hidden'>
-          {/* 3. MainImageSection에 컨트롤러 전달 */}
           <MainImageSection
             roomImgs={detailStudio.studioImages.mainImageKeys}
             controller={galleryController}
@@ -250,6 +249,7 @@ export default function DetailTabSection({
         <section id='room-info'>
           <RoomInfoSection
             title='방 정보'
+            controller={galleryController}
             roomData={detailStudio.studioRooms}
             roomImgs={detailStudio.studioImages.roomImageKeys}
             blueprintImg={detailStudio.studioImages.blueprintImageKey}

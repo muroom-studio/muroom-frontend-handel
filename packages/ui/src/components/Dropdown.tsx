@@ -66,20 +66,27 @@ function Dropdown({
 
   const setSelected = useCallback(
     (newValue: string, newLabel: React.ReactNode) => {
-      if (!isControlled) {
-        setInternalValue(newValue);
+      if (value === newValue) {
+        if (!isControlled) {
+          setInternalValue('');
+        }
+        setSelectedLabel('');
+        onValueChange?.('');
+      } else {
+        if (!isControlled) {
+          setInternalValue(newValue);
+        }
+        setSelectedLabel(newLabel);
+        onValueChange?.(newValue);
       }
-      setSelectedLabel(newLabel);
-      onValueChange?.(newValue);
       setIsOpen(false);
     },
-    [isControlled, onValueChange],
+    [isControlled, onValueChange, value],
   );
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
-      // Trigger나 Content 내부를 클릭한 경우가 아니라면 닫기
       if (
         triggerRef.current &&
         !triggerRef.current.contains(target) &&

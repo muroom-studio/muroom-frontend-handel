@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 
+// 경로에 맞게 수정해주세요
 import VacantThumnail from '@muroom/ui/assets/vacant-thumnail.svg';
 
 import { useGalleryModal } from '../gallery-modal';
@@ -15,7 +16,8 @@ export default function MainImageSection({ roomImgs, controller }: Props) {
   // 이미지가 없을 때
   if (!roomImgs || roomImgs.length === 0) {
     return (
-      <div className='flex-center rounded-4 h-[250px] w-[376px] border border-gray-300 bg-gray-50'>
+      // ⭐️ 수정: w-[376px] -> w-full
+      <div className='flex-center rounded-4 h-[250px] w-full border border-gray-300 bg-gray-50'>
         <Image
           src={VacantThumnail}
           alt='빈 이미지'
@@ -35,7 +37,8 @@ export default function MainImageSection({ roomImgs, controller }: Props) {
       {/* CASE 1: 이미지 1개 -> 클릭 시 0번 인덱스 */}
       {totalCount === 1 && (
         <div
-          className='rounded-4 relative h-[250px] w-[376px] cursor-pointer overflow-hidden'
+          // ⭐️ 수정: w-[376px] -> w-full
+          className='rounded-4 relative h-[250px] w-full cursor-pointer overflow-hidden'
           onClick={() => controller.openSingle('main', 0)}
         >
           <Image
@@ -50,7 +53,8 @@ export default function MainImageSection({ roomImgs, controller }: Props) {
 
       {/* CASE 2: 이미지 2개 -> 클릭한 idx로 이동 */}
       {totalCount === 2 && (
-        <div className='rounded-4 grid h-[250px] w-[376px] grid-cols-2 overflow-hidden'>
+        // ⭐️ 수정: w-[376px] -> w-full
+        <div className='rounded-4 grid h-[250px] w-full grid-cols-2 overflow-hidden'>
           {roomImgs.map((img, idx) => (
             <div
               key={idx}
@@ -71,7 +75,8 @@ export default function MainImageSection({ roomImgs, controller }: Props) {
 
       {/* CASE 3: 이미지 3개 이상 */}
       {totalCount >= 3 && (
-        <div className='rounded-4 grid h-[250px] w-[376px] grid-cols-3 grid-rows-2 overflow-hidden'>
+        // ⭐️ 수정: w-[376px] -> w-full
+        <div className='rounded-4 grid h-[250px] w-full grid-cols-3 grid-rows-2 overflow-hidden'>
           <div
             className='relative col-span-2 row-span-2 cursor-pointer'
             onClick={() => controller.openSingle('main', 0)}

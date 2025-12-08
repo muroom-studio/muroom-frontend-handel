@@ -3,7 +3,7 @@ import { cn } from '../lib/utils';
 
 interface HeaderProps {
   title?: React.ReactNode;
-  onBackClick: () => void;
+  onBackClick?: () => void;
   rightSlot?: React.ReactNode;
   className?: string;
 }

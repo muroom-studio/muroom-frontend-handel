@@ -324,7 +324,7 @@ const FilterBtns = () => {
           </div>
         }
       >
-        <div className='flex flex-col gap-y-5'>
+        <div className='gap-y-15 flex flex-col'>
           <OptionFilter
             commonOptionCodes={filters.commonOptionCodes}
             individualOptionCodes={filters.individualOptionCodes}
@@ -332,7 +332,6 @@ const FilterBtns = () => {
             publicOptions={data?.studioCommonOptions}
             privateOptions={data?.studioIndividualOptions}
           />
-          <div className='h-2 bg-gray-200' />
           <BuildingTypeFilter
             floorTypes={filters.floorTypes}
             restroomTypes={filters.restroomTypes}
@@ -343,7 +342,6 @@ const FilterBtns = () => {
             floorOptionsData={data?.floorOptions}
             restroomOptionsData={data?.restroomOptions}
           />
-          <div className='h-2 bg-gray-200' />
           <InstrumentFilter
             forbiddenInstrumentCodes={filters.forbiddenInstrumentCodes}
             onChange={(vals) => setFilters(vals)}

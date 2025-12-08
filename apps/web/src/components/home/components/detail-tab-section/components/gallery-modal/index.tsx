@@ -1,8 +1,15 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 
-import { Header, Modal } from '@muroom/components';
+import { AnimatePresence, motion } from 'framer-motion';
+
+import { Header } from '@muroom/components';
+import { CloseIcon } from '@muroom/icons';
+import { cn } from '@muroom/lib';
+
+import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 
 import GroupImageSection from './group-view';
 import SingleImageSection from './single-view';
@@ -13,11 +20,10 @@ import {
   GalleryViewMode,
 } from './types';
 
+// Hook (기존 동일)
 export function useGalleryModal() {
   const [viewMode, setViewMode] = useState<GalleryViewMode>('NONE');
-
   const [activeCategory, setActiveCategory] = useState<GalleryCategory>('main');
-
   const [initialIndex, setInitialIndex] = useState(0);
 
   const close = useCallback(() => {
@@ -68,50 +74,118 @@ export default function ImageGalleryModal({
     openGroup,
     openSingle,
   } = controller;
-  const currentCategoryImages = images[activeCategory] || [];
 
+  const { isMobile } = useResponsiveLayout();
+  const [mounted, setMounted] = useState(false);
   const [_, setCurrentSlideIndex] = useState(initialIndex);
 
+  const currentCategoryImages = images[activeCategory] || [];
+
   useEffect(() => {
+    setMounted(true);
     if (isOpen) setCurrentSlideIndex(initialIndex);
+
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
   }, [isOpen, initialIndex]);
 
   const headerTitle =
-    viewMode === 'GROUP' ? '전체 사진' : CATEGORY_TITLES[activeCategory];
+    viewMode === 'GROUP'
+      ? isMobile
+        ? '사진'
+        : '전체 사진'
+      : CATEGORY_TITLES[activeCategory];
 
-  return (
-    <Modal isOpen={isOpen} onClose={close}>
-      <Modal.Wrapper className='flex h-[80vh] w-[800px] max-w-full flex-col p-0'>
-        {/* Header */}
-        <Modal.Header
-          className='px-5 pt-4'
-          title={viewMode === 'GROUP' ? headerTitle : undefined}
-          customTitle={
-            viewMode === 'SINGLE' ? (
-              <Header
-                title={headerTitle}
-                onBackClick={openGroup}
-                className='p-0'
-              />
-            ) : undefined
-          }
-        />
+  const handleBackClick = () => {
+    if (viewMode === 'SINGLE') {
+      openGroup();
+    } else if (isMobile && viewMode === 'GROUP') {
+      close();
+    }
+  };
 
-        {/* Body */}
-        <Modal.Body className='flex-1 overflow-y-auto p-5'>
-          {viewMode === 'GROUP' && (
-            <GroupImageSection images={images} onImageClick={openSingle} />
-          )}
+  const showCustomHeader = isMobile || viewMode === 'SINGLE';
 
-          {viewMode === 'SINGLE' && (
-            <SingleImageSection
-              images={currentCategoryImages}
-              initialIndex={initialIndex}
-              onIndexChange={setCurrentSlideIndex}
-            />
-          )}
-        </Modal.Body>
-      </Modal.Wrapper>
-    </Modal>
+  if (!mounted) return null;
+
+  const modalContent = (
+    <AnimatePresence>
+      {isOpen && (
+        <div className='z-99999 fixed inset-0 flex items-center justify-center'>
+          <motion.div
+            className='absolute inset-0 bg-black/50'
+            onClick={close}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          />
+
+          <motion.div
+            className={cn(
+              'relative flex flex-col overflow-hidden bg-white shadow-xl',
+              isMobile
+                ? 'h-full w-full rounded-none'
+                : 'rounded-4 h-[80vh] w-[800px] max-w-full',
+            )}
+            initial={{ opacity: 0, y: 20, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.98 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+          >
+            <div
+              className={cn(
+                'flex-none border-b-[0.5px] border-b-gray-300 px-5 py-4',
+              )}
+            >
+              {showCustomHeader ? (
+                <Header
+                  title={headerTitle}
+                  onBackClick={handleBackClick}
+                  className='p-0'
+                />
+              ) : (
+                <div className='flex items-center justify-between border-b border-gray-200 pb-4'>
+                  <span className='text-base-l-16-2 text-black'>
+                    {headerTitle}
+                  </span>
+                  <button
+                    onClick={close}
+                    type='button'
+                    className='cursor-pointer'
+                  >
+                    <CloseIcon className='size-6 text-gray-900' />
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Body Area */}
+            <div className='flex-1 overflow-y-auto p-5'>
+              {viewMode === 'GROUP' && (
+                <GroupImageSection images={images} onImageClick={openSingle} />
+              )}
+
+              {viewMode === 'SINGLE' && (
+                <SingleImageSection
+                  images={currentCategoryImages}
+                  initialIndex={initialIndex}
+                  onIndexChange={setCurrentSlideIndex}
+                  isMobile={isMobile}
+                />
+              )}
+            </div>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
   );
+
+  return createPortal(modalContent, document.body);
 }

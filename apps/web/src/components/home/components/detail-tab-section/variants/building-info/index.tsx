@@ -32,79 +32,103 @@ export default function BuildingInfoSection({
         <GridRowItem
           title='주차'
           sub1={
-            <div className='flex-between'>
-              <div className='flex items-center gap-x-1.5'>
-                <span>
-                  {buildingData.parkingFeeType.code === 'NONE'
-                    ? '불가능'
-                    : '가능'}
-                </span>
-                {buildingData.parkingFeeType.code !== 'NONE' &&
-                  (buildingData.parkingFeeType.code === 'PAID' ? (
-                    <Tag variant='red'>유료</Tag>
-                  ) : (
-                    <Tag variant='blue'>무료</Tag>
-                  ))}
-                <Tag variant='blue'>{buildingData.parkingSpots}개 남음</Tag>
+            !buildingData.parkingFeeType ? (
+              <span>문의필요</span>
+            ) : (
+              <div className='flex-between'>
+                <div className='flex items-center gap-x-1.5'>
+                  <span>
+                    {buildingData.parkingFeeType.code === 'NONE'
+                      ? '불가능'
+                      : '가능'}
+                  </span>
+                  {buildingData.parkingFeeType.code !== 'NONE' &&
+                    (buildingData.parkingFeeType.code === 'PAID' ? (
+                      <Tag variant='red'>유료</Tag>
+                    ) : (
+                      <Tag variant='blue'>무료</Tag>
+                    ))}
+                  <Tag variant='blue'>{buildingData.parkingSpots}개 남음</Tag>
+                </div>
+                {buildingData.parkingLocationName && (
+                  <ParkingBtn
+                    parkingInfo={{
+                      parkingLocationAddress:
+                        buildingData.parkingLocationAddress as string,
+                      parkingLocationName:
+                        buildingData.parkingLocationName as string,
+                      parkingLocationLatitude:
+                        buildingData.parkingLocationLatitude as number,
+                      parkingLocationLongitude:
+                        buildingData.parkingLocationLongitude as number,
+                    }}
+                  />
+                )}
               </div>
-              {buildingData.parkingLocationName && (
-                <ParkingBtn
-                  parkingInfo={{
-                    parkingLocationAddress:
-                      buildingData.parkingLocationAddress as string,
-                    parkingLocationName:
-                      buildingData.parkingLocationName as string,
-                    parkingLocationLatitude:
-                      buildingData.parkingLocationLatitude as number,
-                    parkingLocationLongitude:
-                      buildingData.parkingLocationLongitude as number,
-                  }}
-                />
-              )}
-            </div>
+            )
           }
           sub2={
-            <p className='text-base-l-16-1 mt-4'>
-              {buildingData.parkingFeeInfo}
-            </p>
+            !buildingData.parkingFeeType ? null : (
+              <p className='text-base-l-16-1 mt-4'>
+                {buildingData.parkingFeeInfo}
+              </p>
+            )
           }
         />
         <div className='h-px bg-gray-200' />
         <GridRowItem
           title='숙식'
-          sub1={buildingData.isLodgingAvailable ? '가능' : '불가능'}
+          sub1={
+            buildingData.isLodgingAvailable === true
+              ? '가능'
+              : buildingData.isLodgingAvailable === false
+                ? '불가능'
+                : '문의 필요'
+          }
         />
-        {buildingData.hasRestroom && (
-          <>
-            <div className='h-px bg-gray-200' />
-            <GridRowItem
-              title='화장실'
-              sub1={
-                <div className='flex items-center gap-x-2'>
-                  {buildingData.restroomLocation && (
-                    <Tag variant='outline'>
-                      {buildingData.restroomLocation.description}
-                    </Tag>
-                  )}
-                  {buildingData.restroomGender && (
-                    <Tag variant='outline'>
-                      {buildingData.restroomGender.description}
-                    </Tag>
-                  )}
-                </div>
-              }
-            />
-          </>
-        )}
+        <div className='h-px bg-gray-200' />
+        <GridRowItem
+          title='화장실'
+          sub1={
+            buildingData.hasRestroom === true ? (
+              <div className='flex items-center gap-x-2'>
+                {buildingData.restroomLocation && (
+                  <Tag variant='outline'>
+                    {buildingData.restroomLocation.description}
+                  </Tag>
+                )}
+                {buildingData.restroomGender && (
+                  <Tag variant='outline'>
+                    {buildingData.restroomGender.description}
+                  </Tag>
+                )}
+              </div>
+            ) : buildingData.hasRestroom === false ? (
+              '없음'
+            ) : (
+              '문의 필요'
+            )
+          }
+        />
         <div className='h-px bg-gray-200' />
         <GridRowItem
           title='화재보험'
-          sub1={buildingData.hasFireInsurance ? '가입' : '미가입'}
+          sub1={
+            buildingData.hasFireInsurance === true
+              ? '가입'
+              : buildingData.hasFireInsurance === false
+                ? '미가입'
+                : '문의필요'
+          }
         />
         <div className='h-px bg-gray-200' />
         <GridRowItem
           title='가격'
-          sub1={`${priceData.minPrice / 10000}~${priceData.maxPrice / 10000}만원`}
+          sub1={
+            priceData.minPrice != null && priceData.maxPrice != null
+              ? `${priceData.minPrice / 10000}~${priceData.maxPrice / 10000}만원`
+              : '문의필요'
+          }
           sub2={
             <div className='mt-[7px] flex items-center gap-x-2'>
               <Tag variant='blue'>첫달 30,000원 할인</Tag>
@@ -113,7 +137,14 @@ export default function BuildingInfoSection({
           }
         />
         <div className='h-px bg-gray-200' />
-        <GridRowItem title='보증금' sub1={`${priceData.deposit / 10000}만원`} />
+        <GridRowItem
+          title='보증금'
+          sub1={
+            priceData.deposit != null
+              ? `${priceData.deposit / 10000}만원`
+              : '문의필요'
+          }
+        />
       </>
     </SectionWrapper>
   );

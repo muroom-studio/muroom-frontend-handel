@@ -36,8 +36,12 @@ export default function NoticeSection({ title, data }: Props) {
             )
           }
         />
-        <div className='h-px bg-gray-200' />
-        <ExpandableText message={data.introduction} />
+        {data.introduction && (
+          <>
+            <div className='h-px bg-gray-200' />
+            <ExpandableText message={data.introduction} />
+          </>
+        )}
       </>
     </SectionWrapper>
   );

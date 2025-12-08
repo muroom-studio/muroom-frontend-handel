@@ -1,6 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+import { toast } from 'sonner';
 
 import {
   HelperMessage,
@@ -15,6 +17,7 @@ import { getFormattedDate } from '@muroom/util';
 
 import { StudioRoomsInfo } from '@/types/studio';
 
+import { useGalleryModal } from '../../components/gallery-modal';
 import GridRowItem from '../../components/grid-row-item';
 import SectionWrapper from '../../components/section-wrapper';
 import RoomImage from './room-image';
@@ -22,6 +25,7 @@ import RoomImageGroup from './room-image-group';
 
 interface Props {
   title: string;
+  controller: ReturnType<typeof useGalleryModal>;
   roomData: StudioRoomsInfo;
   roomImgs: string[];
   blueprintImg?: string;
@@ -30,6 +34,7 @@ interface Props {
 
 export default function RoomInfoSection({
   title,
+  controller,
   roomData,
   roomImgs,
   blueprintImg,
@@ -38,6 +43,14 @@ export default function RoomInfoSection({
   const [selectedRoomId, setSelectedRoomId] = useState(
     roomData.rooms?.[0]?.roomId || 0,
   );
+
+  useEffect(() => {
+    if (roomData.rooms && roomData.rooms.length > 0 && !selectedRoomId) {
+      toast.error('최소한 하나의 방은 선택되어야 합니다.');
+
+      setSelectedRoomId(roomData?.rooms?.[0]?.roomId || 0);
+    }
+  }, [selectedRoomId, roomData.rooms]);
 
   const [unit, setUnit] = useState<'cm' | 'mm'>('cm');
 
@@ -69,7 +82,7 @@ export default function RoomInfoSection({
         <GridRowItem
           title='금지악기'
           sub1={
-            instruments ? (
+            instruments.length > 0 ? (
               <div className='flex items-center gap-x-2'>
                 {instruments.map((item) => (
                   <Tag key={item} variant='outline'>
@@ -78,14 +91,18 @@ export default function RoomInfoSection({
                 ))}
               </div>
             ) : (
-              '없음'
+              <Tag>없음</Tag>
             )
           }
         />
         <div className='h-px bg-gray-200' />
 
-        <RoomImageGroup roomImgs={roomImgs} />
-        <div className='h-px bg-gray-200' />
+        {roomImgs.length > 0 && (
+          <>
+            <RoomImageGroup roomImgs={roomImgs} controller={controller} />
+            <div className='h-px bg-gray-200' />
+          </>
+        )}
 
         <RoomImage
           selectedRoomId={selectedRoomId}
@@ -149,7 +166,7 @@ export default function RoomInfoSection({
                   )}
                 >
                   <ResetIcon className='size-4 rotate-90' />
-                  <span>{unit}</span>
+                  <span>{unit === 'cm' ? 'mm' : 'cm'}</span>
                 </div>
               </div>
             ) : (
