@@ -1,7 +1,7 @@
 import Image from 'next/image';
 
 import { S3_BUCKET_URL } from '@/config/constants';
-import { StudioOptionsInfo } from '@/types/studio';
+import { StudioOptionItem, StudioOptionsInfo } from '@/types/studio';
 
 import SectionWrapper from '../components/section-wrapper';
 
@@ -10,53 +10,66 @@ interface Props {
   data: StudioOptionsInfo;
 }
 
-export default function OptionSection({ title, data }: Props) {
-  console.log(data);
+const NONE_IMAGE_URL =
+  'https://muroom-storage.s3.ap-northeast-2.amazonaws.com/systems/icons/NONE.svg';
 
+const RenderOptionList = ({ options }: { options: StudioOptionItem[] }) => {
+  const optionList = options || [];
+
+  return (
+    <div className='grid grid-cols-4 gap-4'>
+      {optionList.length > 0 ? (
+        optionList.map((option) => (
+          <OptionItem
+            key={option.code}
+            icon={
+              <Image
+                src={`${S3_BUCKET_URL}${option.iconImageKey}`}
+                alt={`${option.code} 이미지`}
+                width={0}
+                height={0}
+                sizes='100vw'
+                unoptimized
+                style={{ width: '100%', height: 'auto' }}
+              />
+            }
+            name={option.description}
+          />
+        ))
+      ) : (
+        <OptionItem
+          key={'none'}
+          icon={
+            <Image
+              src={NONE_IMAGE_URL}
+              alt={'옵션 없음'}
+              width={0}
+              height={0}
+              sizes='100vw'
+              unoptimized
+              style={{ width: '100%', height: 'auto' }}
+            />
+          }
+          name={'없음'}
+        />
+      )}
+    </div>
+  );
+};
+
+export default function OptionSection({ title, data }: Props) {
   return (
     <SectionWrapper title={title}>
       <>
+        {/* 공용 옵션 */}
         <p className='text-base-l-16-2 text-gray-900'>공용</p>
-        <div className='grid grid-cols-4 gap-4'>
-          {data.commonOptions.map((option) => (
-            <OptionItem
-              key={option.code}
-              icon={
-                <Image
-                  src={`${S3_BUCKET_URL}${option.iconImageKey}`}
-                  alt={`${option.code} 이미지`}
-                  width={0}
-                  height={0}
-                  sizes='100vw'
-                  style={{ width: '100%', height: 'auto' }} // 핵심: 너비는 꽉 채우고, 높이는 비율에 맞춰 자동 조절
-                />
-              }
-              name={option.description}
-            />
-          ))}
-        </div>
+        <RenderOptionList options={data.commonOptions} />
 
         <div className='h-px bg-gray-200' />
 
+        {/* 개인 옵션 */}
         <p className='text-base-l-16-2 text-gray-900'>개인</p>
-        <div className='grid grid-cols-4 gap-4'>
-          {data.individualOptions.map((option) => (
-            <OptionItem
-              key={option.code}
-              icon={
-                <Image
-                  src={`${S3_BUCKET_URL}${option.iconImageKey}`}
-                  alt={`${option.code} 이미지`}
-                  width={0}
-                  height={0}
-                  sizes='100vw'
-                  style={{ width: '100%', height: 'auto' }} // 핵심: 너비는 꽉 채우고, 높이는 비율에 맞춰 자동 조절
-                />
-              }
-              name={option.description}
-            />
-          ))}
-        </div>
+        <RenderOptionList options={data.individualOptions} />
       </>
     </SectionWrapper>
   );

@@ -27,7 +27,7 @@ interface BottomSheetProps {
 export default function BottomSheet({
   children,
   header,
-  topMargin = 118,
+  topMargin = 114,
   middleRatio = 0.4,
   minHeight = 80,
   footerHeight = 64,

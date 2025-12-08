@@ -8,7 +8,7 @@ import Loading from '@/app/loading';
 import CommonDetailStudio from '@/components/common/detail-studio';
 import CommonMap from '@/components/common/map';
 import { MapState } from '@/hooks/nuqs/home/useMapState';
-import { Studio } from '@/types/studio';
+import { StudioDetailResponseProps } from '@/types/studio';
 import { StudiosMapListItem, StudiosMapSearchItem } from '@/types/studios';
 
 import ListFilter from '../components/list-filter';
@@ -18,7 +18,7 @@ interface Props {
   mapValue: MapState;
   setMapValue: (newState: MapState | ((prev: MapState) => MapState)) => void;
   studios: StudiosMapListItem[];
-  detailStudio: Studio;
+  detailStudio?: StudioDetailResponseProps;
   markersData: StudiosMapSearchItem[];
   isLoading: boolean;
 

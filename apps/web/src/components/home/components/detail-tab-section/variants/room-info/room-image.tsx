@@ -12,6 +12,7 @@ import {
 } from '@muroom/components';
 import { cn } from '@muroom/lib';
 import VacantThumnail from '@muroom/ui/assets/vacant-thumnail.svg';
+import { getFormattedDate } from '@muroom/util';
 
 import OptionItem from '@/components/common/option-item';
 import { StudioRoomItem } from '@/types/studio';
@@ -29,43 +30,59 @@ export default function RoomImage({
   roomsData,
   blueprintImg,
 }: Props) {
-  const [rooms, setRooms] = useState<StudioRoomItem[]>(roomsData);
-  console.log(rooms);
-
   const [showRoom, setShowRoom] = useState('');
+
+  // 1. [버튼용] 계약 완료된 방 (또는 즉시 입주 불가)
+  const unavailableRooms =
+    roomsData?.filter((r) => r.isAvailable === false) || [];
+
+  // 2. [드롭다운용] 입주 가능한 방 (isAvailable !== false)
+  const availableRooms =
+    roomsData?.filter((r) => r.isAvailable !== false) || [];
 
   return (
     <div className='flex flex-col gap-y-6'>
-      <div className='flex items-center gap-x-2'>
-        {rooms
-          ?.filter((r) => r.isAvailable === false) // rooms가 없을 경우를 대비해 ?. 추가
-          .map((room) => (
-            <OptionItem
-              key={room.roomId}
-              item={room.roomName}
-              selected={selectedRoomId === room.roomId}
-              onClick={() => setSelectedRoomId(room.roomId)}
-            />
-          ))}
+      <div className='scrollbar-hide flex flex-nowrap items-center gap-x-2 overflow-x-auto'>
+        {unavailableRooms.map((room) => (
+          <OptionItem
+            key={room.roomId}
+            item={room.roomName}
+            selected={selectedRoomId === room.roomId}
+            onClick={() => setSelectedRoomId(room.roomId)}
+          />
+        ))}
 
-        <Dropdown
-          value={showRoom}
-          onValueChange={setShowRoom}
-          placeholder='이미 계약됨'
-          className='w-fit'
-        >
-          <DropdownTrigger variant='primary' size='m' className='h-9' />
-          <DropdownContent className='max-h-[295px] overflow-y-auto'>
-            {rooms
-              ?.filter((r) => r.isAvailable !== false)
-              .map((room) => (
-                <DropdownItem key={room.roomId} value={`${room.roomId}`}>
-                  {room.roomName}
+        {availableRooms.length > 0 && (
+          <Dropdown
+            value={showRoom}
+            onValueChange={(val) => {
+              setShowRoom(val);
+              setSelectedRoomId(Number(val));
+            }}
+            placeholder='이미 계약됨'
+            className='w-fit'
+          >
+            <DropdownTrigger variant='primary' size='m' className='h-9' />
+            <DropdownContent className='max-h-[295px] overflow-y-auto'>
+              {availableRooms.map((room) => (
+                <DropdownItem
+                  key={room.roomId}
+                  value={`${room.roomId}`}
+                  className='flex items-center gap-x-2'
+                >
+                  <span>{room.roomName}</span>
+                  {room.availableAt && (
+                    <span className='text-base-s-12-1 text-primary-600'>
+                      {`${getFormattedDate(room.availableAt, 'yy.MM.dd(E)')} 입주가능`}
+                    </span>
+                  )}
                 </DropdownItem>
               ))}
-          </DropdownContent>
-        </Dropdown>
+            </DropdownContent>
+          </Dropdown>
+        )}
       </div>
+
       <div
         className={cn('rounded-4 size-full border border-gray-300', {
           'h-70 w-[335px]': !blueprintImg,
@@ -94,17 +111,3 @@ export default function RoomImage({
     </div>
   );
 }
-
-const dummy_rooms = [
-  'Room3',
-  'Room4',
-  'Room5',
-  'Room6',
-  'Room7',
-  'Room8',
-  'Room9',
-  'Room10',
-  'Room11',
-  'Room12',
-  'Room13',
-];

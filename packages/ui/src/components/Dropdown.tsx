@@ -9,6 +9,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { createPortal } from 'react-dom';
 
 import { BottomDotIcon } from '../icons-generated';
 import { cn } from '../lib/utils';
@@ -21,6 +22,7 @@ interface DropdownContextProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   selectedValue: string | undefined;
+  selectedLabel: React.ReactNode | undefined;
   setSelected: (value: string, label: React.ReactNode) => void;
   placeholder?: string;
   triggerRef: React.RefObject<HTMLButtonElement | null>;
@@ -54,64 +56,81 @@ function Dropdown({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [internalValue, setInternalValue] = useState(defaultValue);
+  const [selectedLabel, setSelectedLabel] = useState<React.ReactNode>(''); // ⭐️ 라벨 상태 관리
 
   const isControlled = controlledValue !== undefined;
   const value = isControlled ? controlledValue : internalValue;
 
-  const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
   const setSelected = useCallback(
-    (newValue: string) => {
-      if (!isControlled) {
-        setInternalValue(newValue);
+    (newValue: string, newLabel: React.ReactNode) => {
+      if (value === newValue) {
+        if (!isControlled) {
+          setInternalValue('');
+        }
+        setSelectedLabel('');
+        onValueChange?.('');
+      } else {
+        if (!isControlled) {
+          setInternalValue(newValue);
+        }
+        setSelectedLabel(newLabel);
+        onValueChange?.(newValue);
       }
-      onValueChange?.(newValue);
       setIsOpen(false);
     },
-    [isControlled, onValueChange],
+    [isControlled, onValueChange, value],
   );
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
       if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
+        triggerRef.current &&
+        !triggerRef.current.contains(target) &&
+        contentRef.current &&
+        !contentRef.current.contains(target)
       ) {
         setIsOpen(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [isOpen]);
 
   const contextValue = useMemo(
     () => ({
       isOpen,
       setIsOpen,
       selectedValue: value,
+      selectedLabel, // 전달
       setSelected,
       placeholder,
       triggerRef,
       contentRef,
     }),
-    [isOpen, value, setSelected, placeholder],
+    [isOpen, value, selectedLabel, setSelected, placeholder],
   );
 
   return (
     <DropdownContext.Provider value={contextValue}>
-      <div ref={containerRef} className={cn('relative w-full', className)}>
-        {children}
-      </div>
+      <div className={cn('relative w-full', className)}>{children}</div>
     </DropdownContext.Provider>
   );
 }
 
-type DropdownVariant = 'primary' | 'neutral' | 'text';
+// ----------------------------------------------------------------------
+// 2. DropdownTrigger
+// ----------------------------------------------------------------------
 
+type DropdownVariant = 'primary' | 'neutral' | 'text';
 type DropdownSize = 'l' | 'm' | 's';
 
 interface DropdownTriggerProps extends React.ComponentPropsWithRef<'button'> {
@@ -126,17 +145,21 @@ function DropdownTrigger({
   ref,
   ...props
 }: DropdownTriggerProps) {
-  const { isOpen, setIsOpen, selectedValue, placeholder, triggerRef } =
-    useDropdown();
+  const {
+    isOpen,
+    setIsOpen,
+    selectedValue,
+    selectedLabel,
+    placeholder,
+    triggerRef,
+  } = useDropdown();
 
+  // Ref merge
   const composedRef = (el: HTMLButtonElement) => {
     (triggerRef as React.MutableRefObject<HTMLButtonElement | null>).current =
       el;
-    if (typeof ref === 'function') {
-      ref(el);
-    } else if (ref) {
-      ref.current = el;
-    }
+    if (typeof ref === 'function') ref(el);
+    else if (ref) ref.current = el;
   };
 
   const baseStyle =
@@ -176,7 +199,6 @@ function DropdownTrigger({
 
   const variantStyle = styles[variant]?.base || '';
   const sizeStyle = styles[variant]?.[size] || '';
-
   const finalClassName = cn(baseStyle, variantStyle, sizeStyle, propsClassName);
 
   return (
@@ -190,11 +212,16 @@ function DropdownTrigger({
       className={finalClassName}
       {...props}
     >
-      {selectedValue ? selectedValue : placeholder || '선택...'}
+      {/* ⭐️ selectedValue(ID) 대신 selectedLabel(이름) 표시 */}
+      {selectedValue ? selectedLabel : placeholder || '선택...'}
       <BottomDotIcon className='rotate size-5 transition-transform duration-200 group-data-[state=open]:rotate-180' />
     </button>
   );
 }
+
+// ----------------------------------------------------------------------
+// 3. DropdownContent (with Portal)
+// ----------------------------------------------------------------------
 
 function DropdownContent({
   className,
@@ -202,40 +229,81 @@ function DropdownContent({
   ref,
   ...props
 }: React.ComponentPropsWithRef<'div'>) {
-  const { isOpen, contentRef, triggerRef } = useDropdown();
+  const { isOpen, contentRef, triggerRef, setIsOpen } = useDropdown(); // setIsOpen 추가
+
+  // 1. width -> minWidth로 변경하여 상태 관리
+  const [coords, setCoords] = useState({ top: 0, left: 0, minWidth: 0 });
 
   const composedRef = (el: HTMLDivElement) => {
     (contentRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
-    if (typeof ref === 'function') {
-      ref(el);
-    } else if (ref) {
-      ref.current = el;
-    }
+    if (typeof ref === 'function') ref(el);
+    else if (ref) ref.current = el;
   };
 
-  if (!isOpen) {
-    return null;
-  }
+  useEffect(() => {
+    if (isOpen && triggerRef.current) {
+      const updatePosition = () => {
+        const rect = triggerRef.current!.getBoundingClientRect();
+        setCoords({
+          top: rect.bottom + 8,
+          left: rect.left,
+          // 2. 트리거의 너비를 '최소 너비'로 설정
+          minWidth: rect.width,
+        });
+      };
 
-  return (
+      updatePosition();
+
+      const handleScroll = (event: Event) => {
+        if (
+          contentRef.current &&
+          contentRef.current.contains(event.target as Node)
+        ) {
+          return;
+        }
+        setIsOpen(false);
+      };
+
+      window.addEventListener('resize', updatePosition);
+      window.addEventListener('scroll', handleScroll, { capture: true });
+
+      return () => {
+        window.removeEventListener('resize', updatePosition);
+        window.removeEventListener('scroll', handleScroll, { capture: true });
+      };
+    }
+  }, [isOpen, triggerRef, setIsOpen, contentRef]);
+
+  if (!isOpen) return null;
+  if (typeof document === 'undefined') return null;
+
+  return createPortal(
     <div
       ref={composedRef}
       role='listbox'
       className={cn(
-        'rounded-4 shadow-level-0 absolute top-full z-50 mt-2 w-full border border-gray-300 bg-white',
+        // 3. whitespace-nowrap 추가: 내부 텍스트가 길어도 줄바꿈 되지 않고 가로로 늘어남
+        'rounded-4 shadow-level-0 fixed z-[9999] whitespace-nowrap border border-gray-300 bg-white',
         'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
         'data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
         className,
       )}
       style={{
-        minWidth: triggerRef.current?.offsetWidth,
+        top: coords.top,
+        left: coords.left,
+        minWidth: coords.minWidth,
       }}
       {...props}
     >
       {children}
-    </div>
+    </div>,
+    document.body,
   );
 }
+
+// ----------------------------------------------------------------------
+// 4. DropdownItem
+// ----------------------------------------------------------------------
 
 function DropdownItem({
   className,
@@ -254,6 +322,7 @@ function DropdownItem({
       role='option'
       aria-selected={isSelected}
       data-selected={isSelected ? 'true' : undefined}
+      // ⭐️ 클릭 시 value와 children(라벨)을 모두 전달
       onClick={() => setSelected(value, children)}
       className={cn(
         'text-base-m-14-1 relative flex w-full cursor-pointer select-none items-center border-b border-gray-200 bg-white px-3 py-[9px] outline-none transition-all',
