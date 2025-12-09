@@ -25,7 +25,10 @@ export default function DesktopLoginPage() {
         </div>
         <div className='h-29' />
         <div className='flex flex-col gap-y-3'>
-          {(['KAKAO', 'NAVER', 'GOOGLE'] as SocialType[]).map((social) => (
+          {/* {(['KAKAO', 'NAVER', 'GOOGLE'] as SocialType[]).map((social) => (
+            <SocialBtn key={social} social={social} />
+          ))} */}
+          {(['KAKAO'] as SocialType[]).map((social) => (
             <SocialBtn key={social} social={social} />
           ))}
         </div>

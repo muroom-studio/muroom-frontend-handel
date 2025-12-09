@@ -9,7 +9,7 @@ import {
 } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 
-export default function MobileBaseFooter() {
+export default function MobileFooter() {
   const FooterList = [
     {
       id: 1,

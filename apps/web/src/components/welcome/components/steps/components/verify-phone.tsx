@@ -2,7 +2,13 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-import { Button, OtpGroup, RequiredText, TextField } from '@muroom/components';
+import {
+  Button,
+  HelperMessage,
+  OtpGroup,
+  RequiredText,
+  TextField,
+} from '@muroom/components';
 import { CheckSmallIcon } from '@muroom/icons';
 
 import { useUserSmsAuthMutation } from '@/hooks/api/user/useMutation';
@@ -140,14 +146,13 @@ export default function VerifyPhone({
 
           <div className='flex justify-between px-1'>
             {isVerified ? (
-              <div className='text-base-s-12-2 flex items-center gap-x-1 text-blue-500'>
-                <CheckSmallIcon className='size-3' />
-                <span>사용가능한 번호입니다</span>
-              </div>
+              <HelperMessage variant='success' showIcon>
+                인증 완료되었습니다
+              </HelperMessage>
             ) : (
-              <span className='text-base-s-12-2 text-blue-400'>
-                인증번호를 발송했습니다
-              </span>
+              <HelperMessage variant='success'>
+                인증번호를 전송했습니다
+              </HelperMessage>
             )}
 
             {!isVerified && (

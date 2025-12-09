@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 const GUEST_ONLY_PATHS = ['/welcome', '/login', '/redirect/oauth'];
-const PUBLIC_PATHS = ['/home', '/search'];
+const PUBLIC_PATHS = ['/home', '/search', '/terms'];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

@@ -24,22 +24,6 @@ export default function CommonStudioCard({
 }: Props) {
   const { isMobile } = useResponsiveLayout();
   const {
-    // id,
-    // name,
-    // imageUrl,
-    // priceMin,
-    // priceMax,
-    // nearestStation,
-    // lineInfo,
-    // walkingTime,
-    // rating,
-    // reviewCount,
-    // isAd,
-    // isNew,
-    // isWished,
-    // vacancy,
-    // lat,
-    // lng,
     studioId: numericStudioId,
     latitude,
     longitude,
@@ -60,7 +44,7 @@ export default function CommonStudioCard({
       className={cn(
         'flex cursor-pointer gap-x-3 border-b border-b-gray-300 px-4 py-6 transition-colors hover:bg-gray-100',
         {
-          'bg-primary-50 hover:bg-primary-50': currentStudioId === studioId,
+          'bg-primary-50 hover:bg-primary-50': currentStudioId == studioId,
         },
         {
           'px-0': isMobile,

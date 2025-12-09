@@ -108,6 +108,12 @@ export default function JoinFirstStep({ onValidChange }: Props) {
     setAgreements(nextAgreements);
   };
 
+  const detailTermHandler = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    console.log('약관 상세 보기 클릭');
+    window.open('/terms/1', '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <div className='gap-y-15 flex h-full flex-col'>
       <div className='mb-10 flex flex-col gap-y-5'>
@@ -131,12 +137,12 @@ export default function JoinFirstStep({ onValidChange }: Props) {
               className='flex items-start justify-between gap-x-2'
             >
               <div className='flex w-full flex-col gap-y-1'>
-                <Checkbox
-                  checked={agreements[term.id]}
-                  onChange={() => handleToggle(term.id)}
-                  className='w-full'
-                  label={
-                    <div className='flex-between w-full'>
+                <div className='flex-between w-full'>
+                  <Checkbox
+                    checked={agreements[term.id]}
+                    onChange={() => handleToggle(term.id)}
+                    className='w-full'
+                    label={
                       <span className='text-base-m-14-2 flex items-center'>
                         <span
                           className={cn(
@@ -150,11 +156,13 @@ export default function JoinFirstStep({ onValidChange }: Props) {
                         </span>
                         <span>{term.label}</span>
                       </span>
-                      <DownArrowIcon className='size-6 -rotate-90 text-gray-500' />
-                    </div>
-                  }
-                />
-
+                    }
+                  />
+                  <DownArrowIcon
+                    onClick={detailTermHandler}
+                    className='size-6 -rotate-90 cursor-pointer text-gray-500'
+                  />
+                </div>
                 {'subText' in term && term.subText && (
                   <div className='flex items-center gap-x-1 pl-[34px]'>
                     <CheckSmallIcon className='size-2 text-gray-400' />

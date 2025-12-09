@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@muroom/components';
+import { Button, Spinner } from '@muroom/components';
 import { ResetIcon } from '@muroom/icons';
 
 import Loading from '@/app/loading';
@@ -23,6 +23,7 @@ interface Props {
   clearFilters: () => void;
   studios: StudiosMapListItem[];
   detailStudio?: StudioDetailResponseProps;
+  isDetailLoading?: boolean;
   markersData: StudiosMapSearchItem[];
   isLoading: boolean;
   isListLoading: boolean;
@@ -44,6 +45,7 @@ export default function DesktopHomePage({
   clearFilters,
   studios,
   detailStudio,
+  isDetailLoading,
   markersData,
   isLoading,
   isListLoading,
@@ -94,7 +96,11 @@ export default function DesktopHomePage({
           }}
         >
           <div className='flex h-full min-h-0 flex-col border-r border-r-gray-300 bg-white'>
-            <ListFilter studioNum={studios.length || 0} />
+            <ListFilter
+              studioNum={studios.length || 0}
+              currentSort={filters.sort}
+              onSortChange={(val) => setFilters({ sort: val })}
+            />
             <div className='min-h-0 flex-1 overflow-y-scroll'>
               <ListView
                 studios={studios}
@@ -108,17 +114,21 @@ export default function DesktopHomePage({
             </div>
           </div>
 
-          {detailStudio && (
+          {mapValue.studioId && (
             <div className='shadow-detail flex h-full min-h-0 flex-col border-r-[0.5px] border-gray-300 bg-white'>
-              <CommonDetailStudio
-                detailStudio={detailStudio}
-                setStudioId={(id: string) =>
-                  setMapValue((prev) => ({
-                    ...prev,
-                    studioId: prev.studioId === id ? null : id,
-                  }))
-                }
-              />
+              {isDetailLoading ? (
+                <Spinner variant='component' />
+              ) : detailStudio ? (
+                <CommonDetailStudio
+                  detailStudio={detailStudio}
+                  setStudioId={(id: string) =>
+                    setMapValue((prev) => ({
+                      ...prev,
+                      studioId: prev.studioId === id ? null : id,
+                    }))
+                  }
+                />
+              ) : null}
             </div>
           )}
 

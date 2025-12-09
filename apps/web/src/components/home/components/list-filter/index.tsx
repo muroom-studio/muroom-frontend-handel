@@ -8,26 +8,30 @@ import { cn } from '@muroom/lib';
 
 import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 
-const SORT_OPTIONS = [
-  '선택',
-  '추천순',
-  '최신순',
-  '리뷰많은순',
-  '평점높은순',
-  '높은가격순',
-  '낮은가격순',
-];
+export const SORT_MAP: Record<string, string> = {
+  'latest,desc': '최신순',
+  'price,asc': '높은가격순',
+  'price,desc': '낮은가격순',
+};
+
+const SORT_CODES = Object.keys(SORT_MAP);
 
 interface Props {
   studioNum: number;
+  currentSort: string | null;
+  onSortChange: (sortCode: string | null) => void;
 }
 
-export default function ListFilter({ studioNum }: Props) {
+export default function ListFilter({
+  studioNum,
+  currentSort,
+  onSortChange,
+}: Props) {
   const { isMobile } = useResponsiveLayout();
 
-  const [selectedOption, setSelectedOption] = useState('');
-
   const [isOpen, setIsOpen] = useState(false);
+
+  const currentLabel = currentSort ? SORT_MAP[currentSort] : '선택';
   return (
     <div
       className={cn('flex-between h-14 border-b border-b-gray-300 p-4', {
@@ -48,35 +52,34 @@ export default function ListFilter({ studioNum }: Props) {
               'flex-center rounded-4 text-base-l-16-1 w-full max-w-[202px] cursor-pointer gap-x-1 truncate p-1 transition-all',
               {
                 'bg-gray-100': isOpen,
-                'text-base-l-16-2': selectedOption,
+                'text-base-l-16-2': currentSort,
               },
             )}
           >
-            <span>{selectedOption || '전체'}</span>
+            <span>{currentLabel}</span>
             <BottomDotIcon className='size-5 rotate-0 transition-transform duration-200 group-data-[state=open]:rotate-180' />
           </button>
         </Popover.Trigger>
         <Popover.Content align='end'>
           <div className='rounded-4 shadow-level-0 border border-gray-300 bg-white'>
-            {SORT_OPTIONS.map((option) => (
+            {SORT_CODES.map((code) => (
               <button
-                key={option}
+                key={code}
                 onClick={() => {
-                  setSelectedOption(option);
+                  onSortChange(code); // ⭐️ nuqs 상태 업데이트
                   setIsOpen(false);
                 }}
                 className={cn(
                   'text-base-m-14-1 relative flex w-full cursor-pointer select-none items-center border-b border-gray-200 bg-white px-3 py-[9px] outline-none transition-all',
-                  'hover:bg-gray-100 disabled:cursor-default disabled:text-gray-300',
+                  'hover:bg-gray-100',
                   {
                     '!text-primary-600 text-base-m-14-2 hover:bg-gray-50':
-                      option === selectedOption,
+                      code === currentSort,
                   },
-                  'first: rounded-t-4',
-                  'last: rounded-b-4 last:border-b-0',
+                  'last:border-b-0',
                 )}
               >
-                {option}
+                {SORT_MAP[code]}
               </button>
             ))}
           </div>

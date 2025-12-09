@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-
 import Image from 'next/image';
 
 import {
@@ -30,15 +28,18 @@ export default function RoomImage({
   roomsData,
   blueprintImg,
 }: Props) {
-  const [showRoom, setShowRoom] = useState('');
-
-  // 1. [버튼용] 계약 완료된 방 (또는 즉시 입주 불가)
+  // 1. [버튼용] 계약 완료된 방
   const unavailableRooms =
     roomsData?.filter((r) => r.isAvailable === false) || [];
 
-  // 2. [드롭다운용] 입주 가능한 방 (isAvailable !== false)
+  // 2. [드롭다운용] 입주 가능한 방
   const availableRooms =
     roomsData?.filter((r) => r.isAvailable !== false) || [];
+
+  // ⭐️ 핵심 수정: 현재 선택된 ID가 '입주 가능한 방(드롭다운 목록)' 안에 있는지 확인
+  const isAvailableSelected = availableRooms.some(
+    (r) => r.roomId === selectedRoomId,
+  );
 
   return (
     <div className='flex flex-col gap-y-6'>
@@ -54,9 +55,8 @@ export default function RoomImage({
 
         {availableRooms.length > 0 && (
           <Dropdown
-            value={showRoom}
+            value={isAvailableSelected ? String(selectedRoomId) : ''}
             onValueChange={(val) => {
-              setShowRoom(val);
               setSelectedRoomId(Number(val));
             }}
             placeholder='이미 계약됨'

@@ -7,6 +7,7 @@ import { BottomSheet } from '@muroom/components';
 import Loading from '@/app/loading';
 import CommonDetailStudio from '@/components/common/detail-studio';
 import CommonMap from '@/components/common/map';
+import { useFilters } from '@/hooks/nuqs/home/useFilters';
 import { MapState } from '@/hooks/nuqs/home/useMapState';
 import { StudioDetailResponseProps } from '@/types/studio';
 import { StudiosMapListItem, StudiosMapSearchItem } from '@/types/studios';
@@ -17,6 +18,8 @@ import ListView from '../components/list-view';
 interface Props {
   mapValue: MapState;
   setMapValue: (newState: MapState | ((prev: MapState) => MapState)) => void;
+  filters: ReturnType<typeof useFilters>['filters'];
+  setFilters: ReturnType<typeof useFilters>['setFilters'];
   studios: StudiosMapListItem[];
   detailStudio?: StudioDetailResponseProps;
   markersData: StudiosMapSearchItem[];
@@ -40,6 +43,8 @@ const SHEET_CONFIG = {
 export default function MobileHomePage({
   mapValue,
   setMapValue,
+  filters,
+  setFilters,
   studios,
   detailStudio,
   markersData,
@@ -66,7 +71,13 @@ export default function MobileHomePage({
 
       <BottomSheet
         {...SHEET_CONFIG}
-        header={<ListFilter studioNum={studios.length || 0} />}
+        header={
+          <ListFilter
+            studioNum={studios.length || 0}
+            currentSort={filters.sort}
+            onSortChange={(val) => setFilters({ sort: val })}
+          />
+        }
         externalY={sheetY}
       >
         <ListView

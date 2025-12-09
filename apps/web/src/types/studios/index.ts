@@ -28,6 +28,7 @@ export interface StudiosMapSearchRequestProps {
   minLongitude: number;
   maxLongitude: number;
   keyword?: string;
+  sort?: string;
   commonOptionCodes?: string[];
   individualOptionCodes?: string[];
   minPrice?: number;
@@ -61,8 +62,7 @@ export type StudiosMapSearchResponseProps = StudiosMapSearchItem[];
 // 작업실 목록 불러오기
 
 export interface StudiosMapListRequestProps
-  extends StudiosMapSearchRequestProps,
-    PageRequestProps {}
+  extends StudiosMapSearchRequestProps, PageRequestProps {}
 
 export interface StudiosMapListItem {
   latitude: number;
