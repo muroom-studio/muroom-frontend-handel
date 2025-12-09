@@ -1,5 +1,4 @@
 import DesktopBaseHeader from '../components/header';
-import DesktopBaseSnb from '../components/snb';
 
 interface Props {
   children: React.ReactNode;
@@ -7,13 +6,11 @@ interface Props {
 
 export default function DesktopBaseLayout({ children }: Props) {
   return (
-    <div className='grid h-screen w-full overflow-hidden'>
-      <DesktopBaseHeader />
-
-      <div className='grid grid-cols-[80px_1fr] overflow-hidden'>
-        <DesktopBaseSnb />
-        {children}
+    <div className='flex h-screen w-full flex-col overflow-hidden'>
+      <div className='z-50 flex-none'>
+        <DesktopBaseHeader />
       </div>
+      <main className='relative flex-1 overflow-y-auto'>{children}</main>
     </div>
   );
 }

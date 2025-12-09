@@ -32,6 +32,9 @@ const filterKeys = {
 
   // e5 필터
   forbiddenInstrumentCodes: parseAsArrayOf(parseAsString), // 금지 악기 (배열)
+
+  // 최신순, 리뷰순, ...
+  sort: parseAsString,
 };
 
 export function useFilters() {
@@ -53,6 +56,7 @@ export function useFilters() {
       isLodgingAvailable: null,
       hasFireInsurance: null,
       forbiddenInstrumentCodes: null,
+      sort: null,
     });
   };
 

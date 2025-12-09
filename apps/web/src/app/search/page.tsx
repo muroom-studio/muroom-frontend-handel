@@ -1,3 +1,3 @@
-export default function SearchPage() {
+export default function Page() {
   return null;
 }

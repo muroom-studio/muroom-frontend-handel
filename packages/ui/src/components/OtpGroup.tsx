@@ -62,7 +62,7 @@ const OtpGroup = ({ length = 6, value, onChange, className }: Props) => {
           className='min-w-0 flex-1'
           inputClassName={cn(
             'h-[48px] text-center p-0',
-            'focus:border-primary-300 focus:ring-1 focus:ring-primary-600',
+            // 'focus:border-primary-300 focus:ring-1 focus:ring-primary-600',
           )}
           inputMode='numeric'
           maxLength={1}

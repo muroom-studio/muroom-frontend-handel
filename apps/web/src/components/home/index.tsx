@@ -33,6 +33,7 @@ export default function HomePage({ isMobile }: Props) {
   const searchParams = mapValue.bounds
     ? {
         keyword: keyword ?? undefined,
+        sort: filters.sort ?? undefined,
         minPrice: filters.minPrice ?? undefined,
         maxPrice: filters.maxPrice ?? undefined,
         minRoomWidth: filters.minRoomWidth ?? undefined,
@@ -83,7 +84,8 @@ export default function HomePage({ isMobile }: Props) {
   // 통합된 스튜디오 리스트 (모바일은 누적, PC는 교체됨)
   const studios = listData?.pages.flatMap((page) => page.content) || [];
 
-  const { data: detailStudio } = useStudioDetailQuery(mapValue.studioId);
+  const { data: detailStudio, isLoading: isDetailLoading } =
+    useStudioDetailQuery(mapValue.studioId);
 
   // 6. Props 구성
   const commonProps = {
@@ -92,9 +94,9 @@ export default function HomePage({ isMobile }: Props) {
     filters,
     setFilters,
     clearFilters,
-
     studios,
     detailStudio,
+    isDetailLoading,
     markersData: markersData ?? [],
 
     // [수정됨] 전체 로딩 상태는 '마커 데이터' 기준입니다.

@@ -20,7 +20,6 @@ import {
   GalleryViewMode,
 } from './types';
 
-// Hook (기존 동일)
 export function useGalleryModal() {
   const [viewMode, setViewMode] = useState<GalleryViewMode>('NONE');
   const [activeCategory, setActiveCategory] = useState<GalleryCategory>('main');
@@ -151,7 +150,7 @@ export default function ImageGalleryModal({
                   className='p-0'
                 />
               ) : (
-                <div className='flex items-center justify-between border-b border-gray-200 pb-4'>
+                <div className='flex-between'>
                   <span className='text-base-l-16-2 text-black'>
                     {headerTitle}
                   </span>
