@@ -115,7 +115,8 @@ export default function SizeFilter({
             'hover:bg-gray-100 hover:opacity-80',
           )}
         >
-          <span onClick={toggleUnit}>{unit}</span>
+          <ResetIcon className='size-4 rotate-180' />
+          <span onClick={toggleUnit}>{unit === 'cm' ? 'mm' : 'cm'}</span>
         </div>
       }
     >

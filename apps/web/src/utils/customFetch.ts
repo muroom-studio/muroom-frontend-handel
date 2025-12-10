@@ -1,8 +1,9 @@
-import { type ApiResponse } from '@/types/api';
+import { ApiRequestError, type ApiResponse } from '@/types/api';
 import { HttpSuccessStatusCode } from '@/types/http';
 
 import { getToken } from './cookie';
 
+// 성공 응답인지 판별하는 Type Guard
 function isSuccessResponse<T>(
   response: ApiResponse<T>,
 ): response is { status: HttpSuccessStatusCode; data: T; message: string } {
@@ -31,13 +32,21 @@ export const customFetch = async <T>(
     },
   };
 
-  const response = await fetch('/api/v1' + url, mergedOptions);
+  try {
+    const response = await fetch('/api/v1' + url, mergedOptions);
+    const responseData: ApiResponse<T> = await response.json();
 
-  const responseData: ApiResponse<T> = await response.json();
-
-  if (isSuccessResponse(responseData)) {
-    return responseData.data;
-  } else {
-    throw new Error(responseData.error?.message || 'API 요청에 실패했습니다.');
+    if (isSuccessResponse(responseData)) {
+      return responseData.data;
+    } else {
+      throw new ApiRequestError(responseData);
+    }
+  } catch (error) {
+    if (error instanceof ApiRequestError) {
+      throw error;
+    }
+    throw new Error(
+      error instanceof Error ? error.message : '네트워크 요청 실패',
+    );
   }
 };

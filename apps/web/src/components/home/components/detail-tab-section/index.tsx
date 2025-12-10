@@ -3,8 +3,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { scroller } from 'react-scroll';
 
-import Image from 'next/image';
-
 import { Badge, TabBar } from '@muroom/components';
 import { LocationIcon } from '@muroom/icons';
 
