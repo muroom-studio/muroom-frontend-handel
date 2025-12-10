@@ -1,75 +1,80 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { Checkbox } from '@muroom/components';
+import { Checkbox, Spinner } from '@muroom/components';
 import { CheckSmallIcon, DownArrowIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 
+import { useTermsMusicianSignupQuery } from '@/hooks/api/term/useQueries';
 import { useMusicianStore } from '@/store/useMusicianStore';
 
 interface Props {
   onValidChange: (isValid: boolean) => void;
 }
 
-const TERMS = [
-  {
-    id: 1,
-    label: '만 14세 이상입니다.',
-    required: true,
-  },
-  {
-    id: 2,
-    label: '이용약관 동의',
-    required: true,
-  },
-  {
-    id: 3,
-    label: '개인정보 수집 및 이용동의',
-    required: true,
-  },
-  {
-    id: 4,
-    label: '마케팅 수신 동의',
-    required: false,
-    subText: '이벤트 / 혜택 알림',
-  },
-] as const;
+const AGE_CONSENT_ID = 0;
 
 const arraysEqual = (a: number[], b: number[]) => {
   if (a.length !== b.length) return false;
-
   const sortedA = [...a].sort((n1, n2) => n1 - n2);
   const sortedB = [...b].sort((n1, n2) => n1 - n2);
-
-  for (let i = 0; i < sortedA.length; i++) {
-    if (sortedA[i] !== sortedB[i]) return false;
-  }
-  return true;
+  return sortedA.every((val, idx) => val === sortedB[idx]);
 };
 
 export default function JoinFirstStep({ onValidChange }: Props) {
-  const { setRegisterDTO } = useMusicianStore();
+  // 1. API 데이터 호출
+  const { data: termsData = [] } = useTermsMusicianSignupQuery();
 
+  const { setRegisterDTO } = useMusicianStore();
   const prevTermIdsRef = useRef<number[]>([]);
 
-  const [agreements, setAgreements] = useState<Record<number, boolean>>({
-    1: false,
-    2: false,
-    3: false,
-    4: false,
-  });
+  // 2. 약관 리스트 생성 (정적 항목 + 서버 데이터)
+  const terms = useMemo(() => {
+    if (!termsData || termsData.length === 0) return [];
 
+    const ageConsentTerm = {
+      id: AGE_CONSENT_ID, // 0
+      label: '만 14세 이상입니다.',
+      required: true, // 필수
+      termCode: 'AGE_CONSENT',
+      subText: undefined,
+      url: '', // 상세 페이지 없음
+    };
+
+    // 서버 데이터 매핑
+    const mappedTerms = termsData.map((item) => ({
+      id: item.termId,
+      label: item.code.description,
+      required: item.isMandatory,
+      termCode: item.code.code,
+      subText:
+        item.code.code === 'MARKETING_RECEIVE'
+          ? '이벤트 / 혜택 알림'
+          : undefined,
+      url: `/terms/${item.termId}`,
+    }));
+
+    return [ageConsentTerm, ...mappedTerms];
+  }, [termsData]);
+
+  const [agreements, setAgreements] = useState<Record<number, boolean>>({});
+
+  // 3. 유효성 검사 및 스토어 업데이트
   useEffect(() => {
-    const requiredTerms = TERMS.filter((term) => term.required);
+    if (terms.length === 0) return;
 
+    // (1) UI 유효성 검사: '만 14세' 포함 모든 필수 항목 체크 여부 확인
+    const requiredTerms = terms.filter((term) => term.required);
     const isAllRequiredChecked = requiredTerms.every(
       (term) => agreements[term.id],
     );
 
+    // (2) 서버 전송용 ID 목록 추출
     const agreedTermIds = Object.keys(agreements)
-      .filter((id) => agreements[Number(id)])
-      .map(Number);
+      .map(Number)
+      .filter((id) => agreements[id]) // 체크된 것만 필터링
+      .filter((id) => id !== AGE_CONSENT_ID); // ⭐️ 중요: '만 14세(ID: 0)'는 서버로 보내지 않음
 
     const prevTermIds = prevTermIdsRef.current;
 
@@ -77,15 +82,13 @@ export default function JoinFirstStep({ onValidChange }: Props) {
       setRegisterDTO({
         termIds: agreedTermIds,
       });
-
       prevTermIdsRef.current = agreedTermIds;
     }
 
     onValidChange(isAllRequiredChecked);
+  }, [agreements, onValidChange, terms, setRegisterDTO]);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [agreements, onValidChange]);
-
+  // 개별 토글
   const handleToggle = (id: number) => {
     setAgreements((prev) => ({
       ...prev,
@@ -93,25 +96,27 @@ export default function JoinFirstStep({ onValidChange }: Props) {
     }));
   };
 
-  const isAllChecked = TERMS.every((term) => agreements[term.id]);
+  // 모두 동의
+  const isAllChecked =
+    terms.length > 0 && terms.every((term) => agreements[term.id]);
 
   const handleAllCheck = () => {
     const nextState = !isAllChecked;
-    const nextAgreements = TERMS.reduce(
+    const nextAgreements = terms.reduce(
       (acc, term) => {
         acc[term.id] = nextState;
         return acc;
       },
       {} as Record<number, boolean>,
     );
-
     setAgreements(nextAgreements);
   };
 
-  const detailTermHandler = (e: React.MouseEvent) => {
+  // 상세 보기
+  const detailTermHandler = (e: React.MouseEvent, url: string) => {
     e.stopPropagation();
-    console.log('약관 상세 보기 클릭');
-    window.open('/terms/1', '_blank', 'noopener,noreferrer');
+    if (!url) return; // URL 없으면 동작 안 함
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -123,57 +128,67 @@ export default function JoinFirstStep({ onValidChange }: Props) {
         </h2>
       </div>
 
-      <div>
-        <Checkbox
-          checked={isAllChecked}
-          onChange={handleAllCheck}
-          label={<span className='text-base-l-16-2'>모두 동의합니다</span>}
-        />
-        <div className='my-6 h-px w-full bg-gray-200' />
-        <div className='flex flex-col gap-y-6'>
-          {TERMS.map((term) => (
-            <div
-              key={term.id}
-              className='flex items-start justify-between gap-x-2'
-            >
-              <div className='flex w-full flex-col gap-y-1'>
-                <div className='flex-between w-full'>
-                  <Checkbox
-                    checked={agreements[term.id]}
-                    onChange={() => handleToggle(term.id)}
-                    className='w-full'
-                    label={
-                      <span className='text-base-m-14-2 flex items-center'>
-                        <span
-                          className={cn(
-                            'mr-1',
-                            term.required
-                              ? 'text-primary-400'
-                              : 'text-gray-400',
-                          )}
-                        >
-                          [{term.required ? '필수' : '선택'}]
+      {terms.length > 0 ? (
+        <div>
+          <Checkbox
+            checked={isAllChecked}
+            onChange={handleAllCheck}
+            label={<span className='text-base-l-16-2'>모두 동의합니다</span>}
+          />
+          <div className='my-6 h-px w-full bg-gray-200' />
+          <div className='flex flex-col gap-y-6'>
+            {terms.map((term) => (
+              <div
+                key={term.id}
+                className='flex items-start justify-between gap-x-2'
+              >
+                <div className='flex w-full flex-col gap-y-1'>
+                  <div className='flex-between w-full'>
+                    <Checkbox
+                      checked={!!agreements[term.id]}
+                      onChange={() => handleToggle(term.id)}
+                      className='w-full'
+                      label={
+                        <span className='text-base-m-14-2 flex items-center'>
+                          <span
+                            className={cn(
+                              'mr-1',
+                              term.required
+                                ? 'text-primary-400'
+                                : 'text-gray-400',
+                            )}
+                          >
+                            [{term.required ? '필수' : '선택'}]
+                          </span>
+                          <span>
+                            {term.label} {term.url && '동의'}
+                          </span>
                         </span>
-                        <span>{term.label}</span>
-                      </span>
-                    }
-                  />
-                  <DownArrowIcon
-                    onClick={detailTermHandler}
-                    className='size-6 -rotate-90 cursor-pointer text-gray-500'
-                  />
-                </div>
-                {'subText' in term && term.subText && (
-                  <div className='flex items-center gap-x-1 pl-[34px]'>
-                    <CheckSmallIcon className='size-2 text-gray-400' />
-                    <p className='text-base-s-12-1'>{term.subText}</p>
+                      }
+                    />
+                    {term.url && (
+                      <DownArrowIcon
+                        onClick={(e) => detailTermHandler(e, term.url!)}
+                        className='size-6 -rotate-90 cursor-pointer text-gray-500'
+                      />
+                    )}
                   </div>
-                )}
+                  {term.subText && (
+                    <div className='flex items-center gap-x-1 pl-[34px]'>
+                      <CheckSmallIcon className='size-2 text-gray-400' />
+                      <p className='text-base-s-12-1'>{term.subText}</p>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className='flex-center h-32 w-full'>
+          <Spinner variant='component' />
+        </div>
+      )}
     </div>
   );
 }
