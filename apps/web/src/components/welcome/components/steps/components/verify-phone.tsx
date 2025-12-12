@@ -80,12 +80,10 @@ export default function VerifyPhone({
       console.log(`인증번호 전송 성공: ${phoneNumber}`);
     } catch (error) {
       console.error(error);
-      alert('인증번호 전송에 실패했습니다. 다시 시도해주세요.');
     }
   };
 
   const handleVerify = async () => {
-    // 시간이 초과되었으면 함수 종료 (혹은 버튼 disabled로 막힘)
     if (timeLeft === 0) return;
 
     const code = otp.join('');

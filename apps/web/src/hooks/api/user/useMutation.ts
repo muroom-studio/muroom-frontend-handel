@@ -4,7 +4,6 @@ import { postSmsAuth, postSmsVerify } from '@/lib/user';
 import {
   UserSmsAuthRequestProps,
   UserSmsVerifyRequestProps,
-  UserSmsVerifyResponseProps,
 } from '@/types/user';
 
 const useUserSmsAuthMutation = (): UseMutationResult<
@@ -18,7 +17,7 @@ const useUserSmsAuthMutation = (): UseMutationResult<
 };
 
 const useUserSmsVerifyMutation = (): UseMutationResult<
-  UserSmsVerifyResponseProps,
+  any,
   Error,
   UserSmsVerifyRequestProps
 > => {

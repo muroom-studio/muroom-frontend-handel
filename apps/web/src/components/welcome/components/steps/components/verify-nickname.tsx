@@ -23,7 +23,9 @@ export default function VerifyNickname({ value, setValue }: Props) {
   const [localValue, setLocalValue] = useState(value || '');
   const [checkStatus, setCheckStatus] = useState<CheckStatus>('idle');
 
-  const { refetch, isLoading } = useUserNicknameCheckQuery(localValue);
+  const { refetch, isLoading } = useUserNicknameCheckQuery({
+    nickname: localValue,
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocalValue(e.target.value);

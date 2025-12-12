@@ -1,6 +1,7 @@
 import {
   MusicianLoginRequestProps,
   MusicianLoginResponseProps,
+  MusicianMeResponseDto,
   MusicianRegisterRequestProps,
   MusicianRegisterResponseProps,
 } from '@/types/musician';
@@ -29,6 +30,17 @@ export const postMusicianRegister = async (
     {
       method: 'POST',
       body: JSON.stringify(dto),
+    },
+  );
+
+  return responseData;
+};
+
+export const getMusicianMe = async () => {
+  const responseData = await customFetch<MusicianMeResponseDto>(
+    '/musician/me',
+    {
+      method: 'GET',
     },
   );
 

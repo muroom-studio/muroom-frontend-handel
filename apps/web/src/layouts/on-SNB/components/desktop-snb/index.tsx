@@ -9,7 +9,7 @@ import {
 } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 
-export default function DesktopSnb() {
+export default function OnSNBDesktopSnb() {
   const SnbList = [
     {
       id: 1,

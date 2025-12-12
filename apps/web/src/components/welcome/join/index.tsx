@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
+import { toast } from 'sonner';
+
 import { useMusicianRegisterMutation } from '@/hooks/api/musician/useMutations';
 import { useWelcomeMode } from '@/hooks/nuqs/welcome/useWelcomeMode';
 import { useAuthRedirectStore } from '@/store/useAuthRedirectStore';
@@ -47,6 +49,7 @@ export default function JoinPage({ isMobile }: Props) {
 
       if (accessToken) {
         await setToken(accessToken);
+        toast.success('회원가입이 완료되었습니다.');
         performRedirect();
       }
 
