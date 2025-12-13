@@ -2,8 +2,8 @@
 
 import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 
-import DesktopBaseLayout from './desktop';
-import MobileBaseLayout from './mobile';
+import BaseDesktopLayout from './desktop';
+import BaseMobileLayout from './mobile';
 
 interface Props {
   children: React.ReactNode;
@@ -17,8 +17,8 @@ export default function BaseLayout({ children }: Props) {
   }
 
   return isMobile ? (
-    <MobileBaseLayout>{children}</MobileBaseLayout>
+    <BaseMobileLayout>{children}</BaseMobileLayout>
   ) : (
-    <DesktopBaseLayout>{children}</DesktopBaseLayout>
+    <BaseDesktopLayout>{children}</BaseDesktopLayout>
   );
 }

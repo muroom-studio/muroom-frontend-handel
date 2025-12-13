@@ -41,6 +41,8 @@ function useDropdown() {
 
 function Dropdown({
   value: controlledValue,
+  // ⭐️ 1. label prop 추가 (화면에 표시될 텍스트를 외부에서 받음)
+  label: controlledLabel,
   onValueChange,
   defaultValue,
   placeholder,
@@ -48,6 +50,7 @@ function Dropdown({
   children,
 }: {
   value?: string;
+  label?: React.ReactNode; // 타입 정의 추가
   onValueChange?: (value: string) => void;
   defaultValue?: string;
   placeholder?: string;
@@ -56,10 +59,14 @@ function Dropdown({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [internalValue, setInternalValue] = useState(defaultValue);
-  const [selectedLabel, setSelectedLabel] = useState<React.ReactNode>(''); // ⭐️ 라벨 상태 관리
+  const [selectedLabel, setSelectedLabel] = useState<React.ReactNode>(''); // 내부 라벨 상태
 
   const isControlled = controlledValue !== undefined;
   const value = isControlled ? controlledValue : internalValue;
+
+  // ⭐️ 2. 텍스트 결정 로직: 외부에서 label을 주면 그걸 쓰고, 없으면 내부 상태 사용
+  const currentLabel =
+    controlledLabel !== undefined ? controlledLabel : selectedLabel;
 
   const triggerRef = useRef<HTMLButtonElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -110,13 +117,14 @@ function Dropdown({
       isOpen,
       setIsOpen,
       selectedValue: value,
-      selectedLabel, // 전달
+      // ⭐️ 3. 결정된 currentLabel을 Context로 전달
+      selectedLabel: currentLabel,
       setSelected,
       placeholder,
       triggerRef,
       contentRef,
     }),
-    [isOpen, value, selectedLabel, setSelected, placeholder],
+    [isOpen, value, currentLabel, setSelected, placeholder],
   );
 
   return (
@@ -212,7 +220,7 @@ function DropdownTrigger({
       className={finalClassName}
       {...props}
     >
-      {/* ⭐️ selectedValue(ID) 대신 selectedLabel(이름) 표시 */}
+      {/* selectedValue가 있으면 selectedLabel(우리가 주입한 값)을 보여줌 */}
       {selectedValue ? selectedLabel : placeholder || '선택...'}
       <BottomDotIcon className='rotate size-5 transition-transform duration-200 group-data-[state=open]:rotate-180' />
     </button>
@@ -229,7 +237,7 @@ function DropdownContent({
   ref,
   ...props
 }: React.ComponentPropsWithRef<'div'>) {
-  const { isOpen, contentRef, triggerRef, setIsOpen } = useDropdown(); // setIsOpen 추가
+  const { isOpen, contentRef, triggerRef, setIsOpen } = useDropdown();
 
   // 1. width -> minWidth로 변경하여 상태 관리
   const [coords, setCoords] = useState({ top: 0, left: 0, minWidth: 0 });
@@ -247,7 +255,6 @@ function DropdownContent({
         setCoords({
           top: rect.bottom + 8,
           left: rect.left,
-          // 2. 트리거의 너비를 '최소 너비'로 설정
           minWidth: rect.width,
         });
       };
@@ -282,7 +289,6 @@ function DropdownContent({
       ref={composedRef}
       role='listbox'
       className={cn(
-        // 3. whitespace-nowrap 추가: 내부 텍스트가 길어도 줄바꿈 되지 않고 가로로 늘어남
         'rounded-4 shadow-level-0 fixed z-[9999] whitespace-nowrap border border-gray-300 bg-white',
         'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
         'data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
@@ -322,7 +328,6 @@ function DropdownItem({
       role='option'
       aria-selected={isSelected}
       data-selected={isSelected ? 'true' : undefined}
-      // ⭐️ 클릭 시 value와 children(라벨)을 모두 전달
       onClick={() => setSelected(value, children)}
       className={cn(
         'text-base-m-14-1 relative flex w-full cursor-pointer select-none items-center border-b border-gray-200 bg-white px-3 py-[9px] outline-none transition-all',

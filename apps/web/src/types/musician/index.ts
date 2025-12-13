@@ -37,3 +37,19 @@ export interface MusicianRegisterResponseProps {
   accessToken: string;
   musicianId: number;
 }
+
+// ==================================================
+// ==================================================
+// 홈 -> 로그인 후 닉네임, instrument 얻기
+export interface MusicianInstrument {
+  code: string;
+  description: string;
+}
+
+// 뮤지션 응답 DTO
+export interface MusicianMeResponseDto {
+  musicianId: number;
+  nickname: string;
+  profileImageUrl: string;
+  musicianInstrument: MusicianInstrument;
+}

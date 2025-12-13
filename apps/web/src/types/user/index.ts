@@ -18,8 +18,3 @@ export interface UserSmsVerifyRequestProps {
   phone: string;
   code: string;
 }
-
-// 회원가입 -> sms 인증 응답 dto
-export interface UserSmsVerifyResponseProps {
-  success: boolean;
-}

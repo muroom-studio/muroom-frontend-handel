@@ -12,6 +12,7 @@ import {
 import { useSearch } from '@/hooks/nuqs/common/useSearch';
 import { useFilters } from '@/hooks/nuqs/home/useFilters';
 import { useMapState } from '@/hooks/nuqs/home/useMapState';
+import { useSort } from '@/hooks/nuqs/home/useSort';
 
 interface Props {
   isMobile: boolean;
@@ -30,10 +31,12 @@ export default function HomePage({ isMobile }: Props) {
 
   const { filters, setFilters, clearFilters } = useFilters();
 
+  const { sort, setSort } = useSort();
+
   const searchParams = mapValue.bounds
     ? {
         keyword: keyword ?? undefined,
-        sort: filters.sort ?? undefined,
+        sort: sort ?? undefined,
         minPrice: filters.minPrice ?? undefined,
         maxPrice: filters.maxPrice ?? undefined,
         minRoomWidth: filters.minRoomWidth ?? undefined,
@@ -83,6 +86,7 @@ export default function HomePage({ isMobile }: Props) {
   // 5. 데이터 가공
   // 통합된 스튜디오 리스트 (모바일은 누적, PC는 교체됨)
   const studios = listData?.pages.flatMap((page) => page.content) || [];
+  const totalElements = listData?.pages[0]?.pagination.totalElements || 0;
 
   const { data: detailStudio, isLoading: isDetailLoading } =
     useStudioDetailQuery(mapValue.studioId);
@@ -93,8 +97,11 @@ export default function HomePage({ isMobile }: Props) {
     setMapValue,
     filters,
     setFilters,
+    sort,
+    setSort,
     clearFilters,
     studios,
+    totalElements,
     detailStudio,
     isDetailLoading,
     markersData: markersData ?? [],

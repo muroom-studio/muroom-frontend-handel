@@ -9,6 +9,7 @@ import { cn } from '@muroom/lib';
 import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 
 export const SORT_MAP: Record<string, string> = {
+  '': '선택',
   'latest,desc': '최신순',
   'price,asc': '높은가격순',
   'price,desc': '낮은가격순',
@@ -31,7 +32,8 @@ export default function ListFilter({
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const currentLabel = currentSort ? SORT_MAP[currentSort] : '선택';
+  const currentLabel = currentSort ? SORT_MAP[currentSort] : SORT_MAP[''];
+
   return (
     <div
       className={cn('flex-between h-14 border-b border-b-gray-300 p-4', {
@@ -62,26 +64,31 @@ export default function ListFilter({
         </Popover.Trigger>
         <Popover.Content align='end'>
           <div className='rounded-4 shadow-level-0 border border-gray-300 bg-white'>
-            {SORT_CODES.map((code) => (
-              <button
-                key={code}
-                onClick={() => {
-                  onSortChange(code); // ⭐️ nuqs 상태 업데이트
-                  setIsOpen(false);
-                }}
-                className={cn(
-                  'text-base-m-14-1 relative flex w-full cursor-pointer select-none items-center border-b border-gray-200 bg-white px-3 py-[9px] outline-none transition-all',
-                  'hover:bg-gray-100',
-                  {
-                    '!text-primary-600 text-base-m-14-2 hover:bg-gray-50':
-                      code === currentSort,
-                  },
-                  'last:border-b-0',
-                )}
-              >
-                {SORT_MAP[code]}
-              </button>
-            ))}
+            {SORT_CODES.map((code) => {
+              const isSelected =
+                (currentSort === null && code === '') || code === currentSort;
+
+              return (
+                <button
+                  key={code}
+                  onClick={() => {
+                    onSortChange(code === '' ? null : code);
+                    setIsOpen(false);
+                  }}
+                  className={cn(
+                    'text-base-m-14-1 relative flex w-full cursor-pointer select-none items-center border-b border-gray-200 bg-white px-3 py-[9px] outline-none transition-all',
+                    'hover:bg-gray-100',
+                    {
+                      '!text-primary-600 text-base-m-14-2 hover:bg-gray-50':
+                        isSelected,
+                    },
+                    'last:border-b-0',
+                  )}
+                >
+                  {SORT_MAP[code]}
+                </button>
+              );
+            })}
           </div>
         </Popover.Content>
       </Popover>

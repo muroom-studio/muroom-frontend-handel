@@ -9,6 +9,7 @@ import CommonMap from '@/components/common/map';
 import FilterItem, { Variant } from '@/components/home/components/filter-item';
 import { useFilters } from '@/hooks/nuqs/home/useFilters';
 import { MapState } from '@/hooks/nuqs/home/useMapState';
+import { useSort } from '@/hooks/nuqs/home/useSort';
 import { StudioDetailResponseProps } from '@/types/studio';
 import { StudiosMapListItem, StudiosMapSearchItem } from '@/types/studios';
 
@@ -20,8 +21,11 @@ interface Props {
   setMapValue: (newState: MapState | ((prev: MapState) => MapState)) => void;
   filters: ReturnType<typeof useFilters>['filters'];
   setFilters: ReturnType<typeof useFilters>['setFilters'];
+  sort: ReturnType<typeof useSort>['sort'];
+  setSort: ReturnType<typeof useSort>['setSort'];
   clearFilters: () => void;
   studios: StudiosMapListItem[];
+  totalElements: number;
   detailStudio?: StudioDetailResponseProps;
   isDetailLoading?: boolean;
   markersData: StudiosMapSearchItem[];
@@ -43,7 +47,10 @@ export default function DesktopHomePage({
   filters,
   setFilters,
   clearFilters,
+  sort,
+  setSort,
   studios,
+  totalElements,
   detailStudio,
   isDetailLoading,
   markersData,
@@ -97,9 +104,9 @@ export default function DesktopHomePage({
         >
           <div className='flex h-full min-h-0 flex-col border-r border-r-gray-300 bg-white'>
             <ListFilter
-              studioNum={studios.length || 0}
-              currentSort={filters.sort}
-              onSortChange={(val) => setFilters({ sort: val })}
+              studioNum={totalElements}
+              currentSort={sort}
+              onSortChange={(val) => setSort(val)}
             />
             <div className='min-h-0 flex-1 overflow-y-scroll'>
               <ListView
@@ -117,7 +124,9 @@ export default function DesktopHomePage({
           {mapValue.studioId && (
             <div className='shadow-detail flex h-full min-h-0 flex-col border-r-[0.5px] border-gray-300 bg-white'>
               {isDetailLoading ? (
-                <Spinner variant='component' />
+                <div className='flex-center size-full'>
+                  <Spinner variant='component' />
+                </div>
               ) : detailStudio ? (
                 <CommonDetailStudio
                   detailStudio={detailStudio}

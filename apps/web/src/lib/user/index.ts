@@ -2,7 +2,6 @@ import {
   UserNicknameCheckRequestProps,
   UserSmsAuthRequestProps,
   UserSmsVerifyRequestProps,
-  UserSmsVerifyResponseProps,
 } from '@/types/user';
 import { customFetch } from '@/utils/customFetch';
 
@@ -34,13 +33,10 @@ export const postSmsAuth = async (dto: UserSmsAuthRequestProps) => {
 
 // 회원가입 -> 인증번호 확인
 export const postSmsVerify = async (dto: UserSmsVerifyRequestProps) => {
-  const responseData = await customFetch<UserSmsVerifyResponseProps>(
-    '/user/sms/verify',
-    {
-      method: 'POST',
-      body: JSON.stringify(dto),
-    },
-  );
+  const responseData = await customFetch('/user/sms/verify', {
+    method: 'POST',
+    body: JSON.stringify(dto),
+  });
 
   return responseData;
 };

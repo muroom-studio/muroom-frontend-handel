@@ -13,14 +13,14 @@ interface Props {
   images: string[];
   initialIndex: number;
   onIndexChange?: (index: number) => void;
-  isMobile?: boolean; // ⭐️ 추가: 모바일 여부 prop
+  isMobile?: boolean;
 }
 
 export default function SingleImageSection({
   images,
   initialIndex,
   onIndexChange,
-  isMobile = false, // 기본값 false
+  isMobile = false,
 }: Props) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
@@ -71,7 +71,7 @@ export default function SingleImageSection({
             <button
               onClick={scrollPrev}
               className={cn(
-                'absolute left-4 z-10',
+                'absolute left-4 z-10 cursor-pointer',
                 'flex items-center justify-center rounded-full p-2',
                 'transition-colors hover:bg-gray-100/50',
                 'disabled:opacity-30',
@@ -84,7 +84,7 @@ export default function SingleImageSection({
             <button
               onClick={scrollNext}
               className={cn(
-                'absolute right-4 z-10',
+                'absolute right-4 z-10 cursor-pointer',
                 'flex items-center justify-center rounded-full p-2',
                 'transition-colors hover:bg-gray-100/50',
                 'disabled:opacity-30',

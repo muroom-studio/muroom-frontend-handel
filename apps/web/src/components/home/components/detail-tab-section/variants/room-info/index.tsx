@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from 'react';
 
-import { toast } from 'sonner';
-
 import {
   HelperMessage,
   Tag,
@@ -45,12 +43,16 @@ export default function RoomInfoSection({
   );
 
   useEffect(() => {
-    if (roomData.rooms && roomData.rooms.length > 0 && !selectedRoomId) {
-      toast.error('최소한 하나의 방은 선택되어야 합니다.');
+    if (!roomData.rooms || roomData.rooms.length === 0) return;
 
-      setSelectedRoomId(roomData?.rooms?.[0]?.roomId || 0);
+    const isCurrentIdValid = roomData.rooms.some(
+      (room) => room.roomId === selectedRoomId,
+    );
+
+    if (!isCurrentIdValid) {
+      setSelectedRoomId(roomData.rooms?.[0]?.roomId || 0);
     }
-  }, [selectedRoomId, roomData.rooms]);
+  }, [roomData.rooms, selectedRoomId]);
 
   const [unit, setUnit] = useState<'cm' | 'mm'>('cm');
 

@@ -3,8 +3,9 @@
 import { cookies } from 'next/headers';
 
 const ACCESS_TOKEN_KEY = 'accessToken';
-// 1주일(초 단위)
-const MAX_AGE_ONE_WEEK = 60 * 60 * 24 * 7;
+
+// 10분(초 단위): 60초 * 10분
+const MAX_AGE_TEN_MINUTES = 60 * 10;
 
 /**
  * 서버에서 안전하게 액세스 토큰을 쿠키에 저장합니다. (로그인 시 사용)
@@ -16,7 +17,7 @@ export async function setToken(accessToken: string) {
   cookieStore.set(ACCESS_TOKEN_KEY, accessToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    maxAge: MAX_AGE_ONE_WEEK,
+    maxAge: MAX_AGE_TEN_MINUTES, // 10분으로 설정
     path: '/',
   });
 }

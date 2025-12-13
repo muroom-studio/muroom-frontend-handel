@@ -9,7 +9,19 @@ import {
 } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 
-export default function DesktopSnb() {
+import { usePrepareModal } from '@/hooks/usePrepareModal.tsx';
+
+export default function OnSNBDesktopSnb() {
+  const { open, Modal } = usePrepareModal();
+
+  const handleMenuClick = (id: number) => {
+    if (id !== 1) {
+      open();
+    } else {
+      // 작업실 이동 로직 (필요시 구현)
+    }
+  };
+
   const SnbList = [
     {
       id: 1,
@@ -48,9 +60,12 @@ export default function DesktopSnb() {
             icon={list.icon}
             label={list.label}
             isActive={list.isActive}
+            onClick={() => handleMenuClick(list.id)}
           />
         ))}
       </div>
+
+      <Modal />
     </aside>
   );
 }
@@ -59,13 +74,16 @@ const SnbItem = ({
   icon,
   label,
   isActive,
+  onClick,
 }: {
   icon: React.ReactElement<{ className?: string }>;
   label: string;
   isActive?: boolean;
+  onClick?: () => void;
 }) => {
   return (
     <div
+      onClick={onClick}
       className={cn(
         'flex-center-col rounded-4 group size-16 cursor-pointer gap-y-[2px] transition-all hover:bg-gray-50',
         {
