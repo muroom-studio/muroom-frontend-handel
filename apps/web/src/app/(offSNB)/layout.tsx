@@ -3,5 +3,5 @@ interface Props {
 }
 
 export default function Layout({ children }: Props) {
-  <>{children}</>;
+  <div>{children}</div>;
 }
