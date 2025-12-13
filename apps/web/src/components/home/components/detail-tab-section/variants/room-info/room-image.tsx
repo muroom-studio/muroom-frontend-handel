@@ -185,7 +185,6 @@ export default function RoomImage({
             alt={'도면 이미지'}
             width={335}
             height={280}
-            unoptimized
             className='object-cover'
           />
         ) : (
@@ -194,7 +193,6 @@ export default function RoomImage({
             alt={'빈 이미지'}
             width={62}
             height={50}
-            unoptimized
             className='rounded-4 object-cover'
           />
         )}

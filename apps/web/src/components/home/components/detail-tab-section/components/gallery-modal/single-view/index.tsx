@@ -112,7 +112,6 @@ export default function SingleImageSection({
                   alt={`detail-view-${index}`}
                   fill
                   className='object-contain'
-                  unoptimized // S3 에러 방지
                   priority={index === initialIndex}
                 />
               </div>

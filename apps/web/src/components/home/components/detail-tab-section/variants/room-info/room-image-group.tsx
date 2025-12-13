@@ -37,7 +37,6 @@ export default function RoomImageGroup({ roomImgs, controller }: Props) {
               src={room}
               alt={`${room}이미지`}
               fill
-              unoptimized
               className='object-cover'
               sizes='109px'
             />

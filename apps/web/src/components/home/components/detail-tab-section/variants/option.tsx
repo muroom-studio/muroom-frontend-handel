@@ -29,7 +29,6 @@ const RenderOptionList = ({ options }: { options: StudioOptionItem[] }) => {
                 width={0}
                 height={0}
                 sizes='100vw'
-                unoptimized
                 style={{ width: '100%', height: 'auto' }}
               />
             }
@@ -46,7 +45,6 @@ const RenderOptionList = ({ options }: { options: StudioOptionItem[] }) => {
               width={0}
               height={0}
               sizes='100vw'
-              unoptimized
               style={{ width: '100%', height: 'auto' }}
             />
           }
