@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 
+import { useRouter } from 'next/navigation';
+
 import { Checkbox, Spinner } from '@muroom/components';
 import { CheckSmallIcon, DownArrowIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
@@ -25,6 +27,7 @@ const arraysEqual = (a: number[], b: number[]) => {
 
 export default function JoinFirstStep({ onValidChange }: Props) {
   const { isMobile } = useResponsiveLayout();
+  const router = useRouter();
   const { data: termsData = [] } = useTermsMusicianSignupQuery();
 
   const { setRegisterDTO } = useMusicianStore();
@@ -113,7 +116,7 @@ export default function JoinFirstStep({ onValidChange }: Props) {
       if (!url) return; // URL 없으면 동작 안 함
       window.open(url, '_blank', 'noopener,noreferrer');
     }
-    return console.log('상세약관 열기');
+    return router.push(url);
   };
 
   return (

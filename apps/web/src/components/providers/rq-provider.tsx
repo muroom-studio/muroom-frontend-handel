@@ -36,10 +36,12 @@ function RQProvider({ children }: Props) {
     new QueryClient({
       defaultOptions: {
         queries: {
+          staleTime: 1000 * 60,
+          gcTime: 1000 * 60 * 5,
           refetchOnWindowFocus: false,
-          retryOnMount: true,
           refetchOnReconnect: false,
           retry: false,
+          retryOnMount: true,
         },
       },
       mutationCache: new MutationCache({
