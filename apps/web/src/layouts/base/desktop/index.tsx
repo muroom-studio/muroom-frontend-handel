@@ -10,7 +10,7 @@ export default function BaseDesktopLayout({ children }: Props) {
       <div className='z-50 flex-none'>
         <BaseDesktopHeader />
       </div>
-      <main className='relative flex-1 overflow-hidden'>{children}</main>
+      <main className='relative min-h-0 flex-1'>{children}</main>
     </div>
   );
 }
