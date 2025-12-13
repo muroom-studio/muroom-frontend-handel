@@ -65,10 +65,11 @@ const Button = ({
           active:bg-gray-200
           disabled:bg-gray-200 disabled:text-gray-400
         `,
-      xl: 'px-4 py-[18px] text-base-l-16-2',
+      xl: 'px-7 py-[18px] text-base-l-16-2',
       l: 'p-3 text-base-l-16-2',
       m: 'px-3 py-[9px] text-base-m-14-2',
       s: 'px-3 py-[5px] text-base-m-14-1',
+      xs: 'px-2 py-[3px] text-base-m-14-1',
     },
     primary_icon: {
       base: `

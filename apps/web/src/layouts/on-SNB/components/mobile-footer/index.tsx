@@ -9,7 +9,18 @@ import {
 } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 
+import { usePrepareModal } from '@/hooks/usePrepareModal.tsx';
+
 export default function OnSNBMobileFooter() {
+  const { open, Modal } = usePrepareModal();
+
+  const handleMenuClick = (id: number) => {
+    if (id !== 1) {
+      open();
+    } else {
+      // 작업실 이동 로직 (필요시 구현)
+    }
+  };
   const FooterList = [
     {
       id: 1,
@@ -46,8 +57,11 @@ export default function OnSNBMobileFooter() {
           icon={list.icon}
           label={list.label}
           isActive={list.isActive}
+          onClick={() => handleMenuClick(list.id)}
         />
       ))}
+
+      <Modal />
     </footer>
   );
 }
@@ -57,14 +71,17 @@ const FooterItem = ({
   label,
   isActive,
   className,
+  onClick,
 }: {
   icon: React.ReactElement<{ className?: string }>;
   label: string;
   isActive?: boolean;
   className?: string;
+  onClick?: () => void;
 }) => {
   return (
     <div
+      onClick={onClick}
       className={cn(
         'flex-center-col rounded-4 group size-16 cursor-pointer gap-y-[2px] bg-white transition-all hover:text-gray-50',
         {

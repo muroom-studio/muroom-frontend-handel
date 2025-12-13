@@ -9,12 +9,10 @@ interface Props {
   children: React.ReactNode;
 }
 
-export default function OnSNBLayout({ children }: Props) {
+export default function OnSNBLayout({ children, ...props }: Props) {
   const { isMobile } = useResponsiveLayout();
 
-  return isMobile ? (
-    <OnSNBMobileLayout>{children}</OnSNBMobileLayout>
-  ) : (
-    <OnSNBDesktopLayout>{children}</OnSNBDesktopLayout>
-  );
+  const LayoutComponent = isMobile ? OnSNBMobileLayout : OnSNBDesktopLayout;
+
+  return <LayoutComponent {...props}>{children}</LayoutComponent>;
 }

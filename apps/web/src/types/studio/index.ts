@@ -83,8 +83,6 @@ export interface StudioRoomItem {
 }
 
 export interface StudioRoomsInfo {
-  // [삭제됨] forbiddenInstruments -> StudioForbiddenInstruments로 분리
-  // [삭제됨] roomImageUrls -> StudioImagesDto로 통합 이동
   rooms: StudioRoomItem[];
 }
 

@@ -134,7 +134,7 @@ const ModalBody = ({ className, ...props }: ModalBodyProps) => (
 interface ModalFooterProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const ModalFooter = ({ className, ...props }: ModalFooterProps) => (
-  <div className={cn('flex-center w-full', className)} {...props} />
+  <div className={cn('flex-center w-full pt-5', className)} {...props} />
 );
 
 Modal.Wrapper = ModalWrapper;

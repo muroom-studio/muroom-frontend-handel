@@ -14,6 +14,8 @@ import { formatPhoneNumber } from '@muroom/util';
 
 import CheckTabSection from '@/components/home/components/check-tab-section';
 import DetailTabSection from '@/components/home/components/detail-tab-section';
+import { useAuthCheck } from '@/hooks/auth/useAuthCheck';
+import { LoginLink } from '@/hooks/auth/useAuthRedirect';
 import { StudioDetailResponseProps } from '@/types/studio';
 
 interface Props {
@@ -107,7 +109,32 @@ export default function CommonDetailStudio({
 }
 
 const DetailFooter = ({ phoneNum }: { phoneNum: string }) => {
+  const { isLoggedIn } = useAuthCheck();
   const [isSnackOpen, setIsSnackOpen] = useState<'mail' | 'call' | null>(null);
+
+  const ContactButton = ({
+    type,
+    icon,
+  }: {
+    type: 'mail' | 'call';
+    icon: React.ReactNode;
+  }) => {
+    const ButtonUI = (
+      <Button
+        variant='outline_icon'
+        size='xl'
+        onClick={isLoggedIn ? () => setIsSnackOpen(type) : undefined}
+      >
+        {icon}
+      </Button>
+    );
+
+    if (!isLoggedIn) {
+      return <LoginLink>{ButtonUI}</LoginLink>;
+    }
+
+    return ButtonUI;
+  };
 
   return (
     <div className='relative flex items-center gap-x-1'>
@@ -115,21 +142,15 @@ const DetailFooter = ({ phoneNum }: { phoneNum: string }) => {
         <ChatIcon className='size-6 text-white' />
       </Button>
 
-      <Button
-        variant='outline_icon'
-        size='xl'
-        onClick={() => setIsSnackOpen('mail')}
-      >
-        <MailIcon className='text-primary-400 size-6' />
-      </Button>
+      <ContactButton
+        type='mail'
+        icon={<MailIcon className='text-primary-400 size-6' />}
+      />
 
-      <Button
-        variant='outline_icon'
-        size='xl'
-        onClick={() => setIsSnackOpen('call')}
-      >
-        <CallIcon className='text-primary-400 size-6' />
-      </Button>
+      <ContactButton
+        type='call'
+        icon={<CallIcon className='text-primary-400 size-6' />}
+      />
 
       <Snackbar
         isOpen={!!isSnackOpen}
