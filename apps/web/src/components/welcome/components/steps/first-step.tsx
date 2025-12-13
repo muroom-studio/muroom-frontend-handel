@@ -7,6 +7,7 @@ import { CheckSmallIcon, DownArrowIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 
 import { useTermsMusicianSignupQuery } from '@/hooks/api/term/useQueries';
+import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 import { useMusicianStore } from '@/store/useMusicianStore';
 
 interface Props {
@@ -23,26 +24,24 @@ const arraysEqual = (a: number[], b: number[]) => {
 };
 
 export default function JoinFirstStep({ onValidChange }: Props) {
-  // 1. API 데이터 호출
+  const { isMobile } = useResponsiveLayout();
   const { data: termsData = [] } = useTermsMusicianSignupQuery();
 
   const { setRegisterDTO } = useMusicianStore();
   const prevTermIdsRef = useRef<number[]>([]);
 
-  // 2. 약관 리스트 생성 (정적 항목 + 서버 데이터)
   const terms = useMemo(() => {
     if (!termsData || termsData.length === 0) return [];
 
     const ageConsentTerm = {
-      id: AGE_CONSENT_ID, // 0
+      id: AGE_CONSENT_ID,
       label: '만 14세 이상입니다.',
-      required: true, // 필수
+      required: true,
       termCode: 'AGE_CONSENT',
       subText: undefined,
-      url: '', // 상세 페이지 없음
+      url: '',
     };
 
-    // 서버 데이터 매핑
     const mappedTerms = termsData.map((item) => ({
       id: item.termId,
       label: item.code.description,
@@ -60,21 +59,18 @@ export default function JoinFirstStep({ onValidChange }: Props) {
 
   const [agreements, setAgreements] = useState<Record<number, boolean>>({});
 
-  // 3. 유효성 검사 및 스토어 업데이트
   useEffect(() => {
     if (terms.length === 0) return;
 
-    // (1) UI 유효성 검사: '만 14세' 포함 모든 필수 항목 체크 여부 확인
     const requiredTerms = terms.filter((term) => term.required);
     const isAllRequiredChecked = requiredTerms.every(
       (term) => agreements[term.id],
     );
 
-    // (2) 서버 전송용 ID 목록 추출
     const agreedTermIds = Object.keys(agreements)
       .map(Number)
-      .filter((id) => agreements[id]) // 체크된 것만 필터링
-      .filter((id) => id !== AGE_CONSENT_ID); // ⭐️ 중요: '만 14세(ID: 0)'는 서버로 보내지 않음
+      .filter((id) => agreements[id])
+      .filter((id) => id !== AGE_CONSENT_ID);
 
     const prevTermIds = prevTermIdsRef.current;
 
@@ -88,7 +84,6 @@ export default function JoinFirstStep({ onValidChange }: Props) {
     onValidChange(isAllRequiredChecked);
   }, [agreements, onValidChange, terms, setRegisterDTO]);
 
-  // 개별 토글
   const handleToggle = (id: number) => {
     setAgreements((prev) => ({
       ...prev,
@@ -96,7 +91,6 @@ export default function JoinFirstStep({ onValidChange }: Props) {
     }));
   };
 
-  // 모두 동의
   const isAllChecked =
     terms.length > 0 && terms.every((term) => agreements[term.id]);
 
@@ -115,8 +109,11 @@ export default function JoinFirstStep({ onValidChange }: Props) {
   // 상세 보기
   const detailTermHandler = (e: React.MouseEvent, url: string) => {
     e.stopPropagation();
-    if (!url) return; // URL 없으면 동작 안 함
-    window.open(url, '_blank', 'noopener,noreferrer');
+    if (!isMobile) {
+      if (!url) return; // URL 없으면 동작 안 함
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+    return console.log('상세약관 열기');
   };
 
   return (

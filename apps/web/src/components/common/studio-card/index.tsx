@@ -160,6 +160,7 @@ const StudioImg = ({
           alt={alt}
           width={140}
           height={140}
+          unoptimized
           className='rounded-4 h-[140px] min-h-[140px] w-[140px] min-w-[140px] shrink-0 object-cover'
         />
       ) : (

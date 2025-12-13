@@ -32,6 +32,7 @@ export default function GroupImageSection({ images, onImageClick }: Props) {
                 alt={`${category}-${idx}`}
                 fill
                 className='object-cover transition-opacity hover:opacity-90'
+                unoptimized
                 sizes='(max-width: 768px) 33vw, 200px'
               />
             </div>

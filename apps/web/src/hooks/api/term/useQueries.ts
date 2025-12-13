@@ -11,10 +11,10 @@ const useTermsMusicianSignupQuery = () => {
 };
 
 const useTermsTermIdQuery = (params: TermsTermIdRequestProps) => {
+  const termId = params.termId;
   return useQuery({
-    queryKey: ['terms', params.termId],
-    queryFn: () => getTermsTermId(params),
-    enabled: !!params,
+    queryKey: ['terms', termId],
+    queryFn: () => getTermsTermId({ termId }),
   });
 };
 
