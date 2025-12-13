@@ -26,7 +26,7 @@ export default function MobileLoginPage() {
 
         <div className='flex-center-col gap-y-6'>
           <div className='flex w-full flex-col gap-y-3'>
-            {(['KAKAO', 'NAVER', 'GOOGLE'] as SocialType[]).map((social) => (
+            {(['KAKAO'] as SocialType[]).map((social) => (
               <SocialBtn key={social} social={social} />
             ))}
           </div>
