@@ -37,33 +37,13 @@ export default function RoomImageGroup({ roomImgs, controller }: Props) {
               src={room}
               alt={`${room}이미지`}
               fill
+              unoptimized
               className='object-cover'
               sizes='109px'
             />
           </div>
         ))}
       </div>
-
-      {/* <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-        <Modal.Wrapper className='w-[1091px]'>
-          <Modal.Header title='사진' />
-          <Modal.Body>
-            <p className='text-base-l-16-2 py-3 text-gray-900'>건물사진</p>
-            <div className='grid grid-cols-3 gap-2'>
-              {roomImgs.map((room) => (
-                <Image
-                  key={room}
-                  src={room}
-                  alt={`${room}이미지`}
-                  width={345}
-                  height={345}
-                  priority
-                />
-              ))}
-            </div>
-          </Modal.Body>
-        </Modal.Wrapper>
-      </Modal> */}
     </div>
   );
 }
