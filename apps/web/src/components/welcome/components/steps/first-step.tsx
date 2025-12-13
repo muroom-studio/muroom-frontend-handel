@@ -115,8 +115,9 @@ export default function JoinFirstStep({ onValidChange }: Props) {
     if (!isMobile) {
       if (!url) return; // URL 없으면 동작 안 함
       window.open(url, '_blank', 'noopener,noreferrer');
+    } else {
+      return router.push(url);
     }
-    return router.push(url);
   };
 
   return (
