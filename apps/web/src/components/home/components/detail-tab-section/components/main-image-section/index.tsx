@@ -18,13 +18,7 @@ export default function MainImageSection({ roomImgs, controller }: Props) {
     return (
       // ⭐️ 수정: w-[376px] -> w-full
       <div className='flex-center rounded-4 h-[250px] w-full border border-gray-300 bg-gray-50'>
-        <Image
-          src={VacantThumnail}
-          alt='빈 이미지'
-          width={62}
-          height={50}
-          unoptimized
-        />
+        <Image src={VacantThumnail} alt='빈 이미지' width={62} height={50} />
       </div>
     );
   }
@@ -45,7 +39,6 @@ export default function MainImageSection({ roomImgs, controller }: Props) {
             src={roomImgs[0] as string}
             alt='room-img-0'
             fill
-            unoptimized
             className='object-cover transition-opacity hover:opacity-90'
             sizes='(max-width: 768px) 100vw, 50vw'
           />
@@ -66,7 +59,6 @@ export default function MainImageSection({ roomImgs, controller }: Props) {
                 src={img}
                 alt={`room-img-${idx}`}
                 fill
-                unoptimized
                 className='object-cover transition-opacity hover:opacity-90'
                 sizes='50vw'
               />
@@ -87,7 +79,6 @@ export default function MainImageSection({ roomImgs, controller }: Props) {
               src={roomImgs[0] as string}
               alt='room-main'
               fill
-              unoptimized
               className='object-cover transition-opacity hover:opacity-90'
               sizes='66vw'
             />
@@ -102,7 +93,6 @@ export default function MainImageSection({ roomImgs, controller }: Props) {
               src={roomImgs[1] as string}
               alt='room-sub-1'
               fill
-              unoptimized
               className='object-cover transition-opacity hover:opacity-90'
               sizes='33vw'
             />
@@ -117,7 +107,6 @@ export default function MainImageSection({ roomImgs, controller }: Props) {
               src={roomImgs[2] as string}
               alt='room-sub-2'
               fill
-              unoptimized
               className='object-cover transition-opacity hover:opacity-90'
               sizes='33vw'
             />
