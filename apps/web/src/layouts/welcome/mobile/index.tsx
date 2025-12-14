@@ -3,7 +3,5 @@ interface Props {
 }
 
 export default function MobileWelcomeLayout({ children }: Props) {
-  return (
-    <div className='bg-white pb-[env(safe-area-inset-bottom)]'>{children}</div>
-  );
+  return <div className='bg-red-400'>{children}</div>;
 }
