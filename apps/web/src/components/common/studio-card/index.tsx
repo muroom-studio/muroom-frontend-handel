@@ -96,7 +96,7 @@ export default function CommonStudioCard({
             </div>
 
             <p className='text-base-m-14-1'>
-              {`${nearbySubwayStationInfo.stationName}역 ${nearbySubwayStationInfo.distanceInMeters.toLocaleString()}m`}
+              {`${nearbySubwayStationInfo.stationName}역에서 ${nearbySubwayStationInfo.distanceInMeters.toLocaleString()}m`}
             </p>
           </div>
         </div>
