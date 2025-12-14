@@ -18,7 +18,7 @@ export interface StudioBaseInfo {
       lineName: string;
       lineColor: string;
     }[];
-    walkingTimeMinutes: number;
+    distanceInMeters: number;
   }[];
 }
 

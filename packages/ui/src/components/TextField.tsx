@@ -29,6 +29,7 @@ const TextField = ({
   label,
   id,
   required,
+  maxLength,
   ...props
 }: TextFieldProps) => {
   const generatedId = useId();
@@ -54,9 +55,17 @@ const TextField = ({
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (!isControlled) {
-      setInternalValue(e.target.value);
+    let newValue = e.target.value;
+
+    if (maxLength && newValue.length > maxLength) {
+      newValue = newValue.slice(0, maxLength);
+      e.target.value = newValue;
     }
+
+    if (!isControlled) {
+      setInternalValue(newValue);
+    }
+
     onChange?.(e);
   };
 
@@ -82,6 +91,7 @@ const TextField = ({
           required={required}
           value={displayValue}
           onChange={handleChange}
+          maxLength={maxLength}
           disabled={props.disabled}
           className={cn(
             'rounded-4 w-full border border-gray-300 p-3 transition-all',

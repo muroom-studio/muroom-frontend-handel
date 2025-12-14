@@ -23,6 +23,9 @@ const useUserSmsVerifyMutation = (): UseMutationResult<
 > => {
   return useMutation({
     mutationFn: postSmsVerify,
+    meta: {
+      ignoreErrorToast: true,
+    },
   });
 };
 

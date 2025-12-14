@@ -30,7 +30,7 @@ export default function MobileLoginPage() {
               <SocialBtn key={social} social={social} />
             ))}
           </div>
-          <div className='flex-center gap-x-2'>
+          {/* <div className='flex-center gap-x-2'>
             <span className='text-base-l-16-1'>사장님이시면</span>
             <span
               onClick={() => setJoin(true)}
@@ -38,7 +38,7 @@ export default function MobileLoginPage() {
             >
               뮤룸 파트너로 시작하기
             </span>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
