@@ -25,6 +25,7 @@ interface Props {
   setSort: ReturnType<typeof useSort>['setSort'];
   clearFilters: () => void;
   studios: StudiosMapListItem[];
+  listRef: React.RefObject<HTMLDivElement | null>;
   totalElements: number;
   detailStudio?: StudioDetailResponseProps;
   isDetailLoading?: boolean;
@@ -50,6 +51,7 @@ export default function DesktopHomePage({
   sort,
   setSort,
   studios,
+  listRef,
   totalElements,
   detailStudio,
   isDetailLoading,
@@ -108,7 +110,7 @@ export default function DesktopHomePage({
               currentSort={sort}
               onSortChange={(val) => setSort(val)}
             />
-            <div className='min-h-0 flex-1 overflow-y-scroll'>
+            <div ref={listRef} className='min-h-0 flex-1 overflow-y-scroll'>
               <ListView
                 studios={studios}
                 mapValue={mapValue}

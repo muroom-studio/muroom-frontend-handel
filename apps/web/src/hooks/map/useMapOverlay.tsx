@@ -5,7 +5,7 @@ import type { Root } from 'react-dom/client';
 
 import CustomMarker from '@/components/common/map/ui/custom-marker';
 import { MarkerSize, StudiosMapSearchItem } from '@/types/studios';
-import { cleanupMarkers, createMarkerWithReactRoot } from '@/utils/map/marker';
+import { createMarkerWithReactRoot } from '@/utils/map/marker';
 
 import { useResponsiveLayout } from '../useResponsiveLayout';
 
@@ -18,8 +18,14 @@ function getMarkerSize(zoom: number): MarkerSize {
 type Props = {
   mapInstance: naver.maps.Map | null;
   markers: StudiosMapSearchItem[];
-  onMarkerClick?: (id: string, lat: number, lng: number) => void;
+  onMarkerClick?: (id: string) => void;
   selectedId?: string | null;
+};
+
+type MarkerRef = {
+  marker: naver.maps.Marker;
+  root: Root;
+  data: StudiosMapSearchItem;
 };
 
 export function useMapOverlays({
@@ -30,9 +36,7 @@ export function useMapOverlays({
 }: Props) {
   const { isMobile } = useResponsiveLayout();
 
-  const markerInstancesRef = useRef<naver.maps.Marker[]>([]);
-  const rootInstancesRef = useRef<Root[]>([]);
-
+  const markersRef = useRef<Map<string, MarkerRef>>(new Map());
   const [currentZoom, setCurrentZoom] = useState<number>(14);
 
   useEffect(() => {
@@ -55,49 +59,93 @@ export function useMapOverlays({
 
   useEffect(() => {
     const map = mapInstance;
+    if (!map) return;
 
-    if (!map || !markers) {
-      cleanupMarkers(markerInstancesRef.current, rootInstancesRef.current);
-      markerInstancesRef.current = [];
-      rootInstancesRef.current = [];
-      return;
-    }
+    const newIds = new Set(markers.map((m) => m.id));
 
-    cleanupMarkers(markerInstancesRef.current, rootInstancesRef.current);
+    markersRef.current.forEach((value, key) => {
+      if (!newIds.has(key)) {
+        value.marker.setMap(null);
 
-    const newMarkers: naver.maps.Marker[] = [];
-    const newRoots: Root[] = [];
+        setTimeout(() => {
+          value.root.unmount();
+        }, 0);
+
+        markersRef.current.delete(key);
+      }
+    });
 
     const size = getMarkerSize(currentZoom);
 
     markers.forEach((markerData) => {
-      const isSelected = markerData.id === selectedId;
+      const existing = markersRef.current.get(markerData.id);
+
+      if (existing) {
+        existing.data = markerData;
+        existing.marker.setPosition(
+          new naver.maps.LatLng(markerData.latitude, markerData.longitude),
+        );
+        return;
+      }
 
       const handleInternalClick = (clickedId: string) => {
         if (onMarkerClick) {
-          onMarkerClick(clickedId, markerData.latitude, markerData.longitude);
+          onMarkerClick(clickedId);
         }
       };
+
+      const isSelected = markerData.id == selectedId;
 
       const { marker, root } = createMarkerWithReactRoot(
         map,
         markerData,
-        handleInternalClick || (() => {}),
+        handleInternalClick,
         CustomMarker,
         size,
         isSelected,
         isMobile,
       );
 
-      newMarkers.push(marker);
-      newRoots.push(root);
+      markersRef.current.set(markerData.id, {
+        marker,
+        root,
+        data: markerData,
+      });
     });
+  }, [mapInstance, markers, isMobile, onMarkerClick]);
 
-    markerInstancesRef.current = newMarkers;
-    rootInstancesRef.current = newRoots;
+  useEffect(() => {
+    const size = getMarkerSize(currentZoom);
 
+    markersRef.current.forEach((ref) => {
+      const isSelected = ref.data.id == selectedId;
+
+      ref.root.render(
+        <CustomMarker
+          isMobile={isMobile}
+          minPrice={ref.data.minPrice}
+          maxPrice={ref.data.maxPrice}
+          name={ref.data.name}
+          isAd={ref.data.isAd}
+          size={size}
+          isSelected={isSelected}
+          onClick={() => onMarkerClick?.(ref.data.id)}
+        />,
+      );
+
+      ref.marker.setZIndex(isSelected ? 100 : 10);
+    });
+  }, [selectedId, currentZoom, isMobile, onMarkerClick]);
+
+  useEffect(() => {
     return () => {
-      cleanupMarkers(newMarkers, newRoots);
+      markersRef.current.forEach((value) => {
+        value.marker.setMap(null);
+        setTimeout(() => {
+          value.root.unmount();
+        }, 0);
+      });
+      markersRef.current.clear();
     };
-  }, [mapInstance, markers, onMarkerClick, currentZoom, selectedId]); // 의존성에 zoom, selectedId 추가
+  }, []);
 }

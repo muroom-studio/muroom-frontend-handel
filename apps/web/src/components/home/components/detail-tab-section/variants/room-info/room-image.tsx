@@ -41,17 +41,16 @@ export default function RoomImage({
   const { isMobile } = useResponsiveLayout();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
-  const unavailableRooms =
-    roomsData?.filter((r) => r.isAvailable === false) || [];
+  const availableRooms = roomsData?.filter((r) => r.isAvailable === true) || [];
 
-  const availableRooms =
-    roomsData?.filter((r) => r.isAvailable !== false) || [];
+  const unAvailableRooms =
+    roomsData?.filter((r) => r.isAvailable !== true) || [];
 
-  const isAvailableSelected = availableRooms.some(
+  const isUnAvailableSelected = unAvailableRooms.some(
     (r) => r.roomId === selectedRoomId,
   );
 
-  const selectedRoom = availableRooms.find(
+  const selectedRoom = unAvailableRooms.find(
     (room) => String(room.roomId) === String(selectedRoomId),
   );
 
@@ -62,7 +61,7 @@ export default function RoomImage({
     <div className='flex flex-col gap-y-6'>
       <div className='scrollbar-hide flex flex-nowrap items-center gap-x-2 overflow-x-auto'>
         {/* 계약 완료된 방 리스트 (변동 없음) */}
-        {unavailableRooms.map((room) => (
+        {availableRooms.map((room) => (
           <OptionItem
             key={room.roomId}
             item={room.roomName}
@@ -71,8 +70,8 @@ export default function RoomImage({
           />
         ))}
 
-        {/* 입주 가능한 방 리스트 (데스크탑/모바일 분기) */}
-        {availableRooms.length > 0 && (
+        {/* 입실 완료된 방 리스트 (데스크탑/모바일 분기) */}
+        {unAvailableRooms.length > 0 && (
           <>
             {isMobile ? (
               <>
@@ -84,7 +83,7 @@ export default function RoomImage({
                     'hover:bg-gray-50',
                     {
                       'border-primary-400 bg-primary-50 !text-primary-600':
-                        isAvailableSelected, // 선택되었을 때 스타일
+                        isUnAvailableSelected, // 선택되었을 때 스타일
                     },
                   )}
                 >
@@ -103,7 +102,7 @@ export default function RoomImage({
                   className='pb-safe' // 하단 안전 영역 확보
                 >
                   <div className='flex flex-col'>
-                    {availableRooms.map((room) => {
+                    {unAvailableRooms.map((room) => {
                       const isSelected = selectedRoomId === room.roomId;
                       return (
                         <button
@@ -143,7 +142,7 @@ export default function RoomImage({
               </>
             ) : (
               <Dropdown
-                value={isAvailableSelected ? String(selectedRoomId) : ''}
+                value={isUnAvailableSelected ? String(selectedRoomId) : ''}
                 label={currentLabel}
                 onValueChange={(val) => {
                   setSelectedRoomId(Number(val));
@@ -153,7 +152,7 @@ export default function RoomImage({
               >
                 <DropdownTrigger variant='primary' size='m' className='h-9' />
                 <DropdownContent className='max-h-[295px] overflow-y-auto'>
-                  {availableRooms.map((room) => (
+                  {unAvailableRooms.map((room) => (
                     <DropdownItem
                       key={room.roomId}
                       value={`${room.roomId}`}

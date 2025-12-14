@@ -74,36 +74,33 @@ function Tooltip({
     const contentHeight = contentRef.current.offsetHeight;
     const contentWidth = contentRef.current.offsetWidth;
 
-    const scrollX = window.scrollX || window.pageXOffset;
-    const scrollY = window.scrollY || window.pageYOffset;
-
     let x = 0;
     let y = 0;
 
-    const triggerCenterX = triggerRect.left + triggerRect.width / 2 + scrollX;
-    const triggerCenterY = triggerRect.top + triggerRect.height / 2 + scrollY;
+    const triggerCenterX = triggerRect.left + triggerRect.width / 2;
+    const triggerCenterY = triggerRect.top + triggerRect.height / 2;
 
     switch (side) {
       case 'top':
         x = triggerCenterX;
-        y = triggerRect.top + scrollY - contentHeight - sideOffset;
+        y = triggerRect.top - contentHeight - sideOffset;
         break;
       case 'bottom':
         x = triggerCenterX;
-        y = triggerRect.bottom + scrollY + sideOffset;
+        y = triggerRect.bottom + sideOffset;
         break;
       case 'left':
-        x = triggerRect.left + scrollX - contentWidth - sideOffset;
+        x = triggerRect.left - contentWidth - sideOffset;
         y = triggerCenterY;
         break;
       case 'right':
-        x = triggerRect.right + scrollX + sideOffset;
+        x = triggerRect.right + sideOffset;
         y = triggerCenterY;
         break;
     }
 
     setContentStyles({
-      position: 'absolute',
+      position: 'fixed',
       left: x,
       top: y,
       zIndex: 9999,
@@ -114,7 +111,7 @@ function Tooltip({
     if (isOpen && contentRef.current && triggerRef.current) {
       calculatePosition();
 
-      window.addEventListener('scroll', calculatePosition);
+      window.addEventListener('scroll', calculatePosition, true);
       window.addEventListener('resize', calculatePosition);
 
       const resizeObserver = new ResizeObserver(() => {
@@ -124,7 +121,7 @@ function Tooltip({
       resizeObserver.observe(triggerRef.current);
 
       return () => {
-        window.removeEventListener('scroll', calculatePosition);
+        window.removeEventListener('scroll', calculatePosition, true);
         window.removeEventListener('resize', calculatePosition);
         resizeObserver.disconnect();
       };
@@ -179,7 +176,7 @@ function TooltipTrigger({
   asChild = false,
   ...props
 }: TooltipTriggerProps) {
-  const { triggerRef } = useTooltip();
+  const { triggerRef, setIsOpen } = useTooltip();
 
   const mergedRef = useCallback(
     (node: HTMLElement | null) => {
@@ -193,6 +190,11 @@ function TooltipTrigger({
     },
     [ref, triggerRef],
   );
+
+  const handleClick = (e: React.MouseEvent<HTMLElement>) => {
+    setIsOpen((prev) => !prev);
+    props.onClick?.(e as any);
+  };
 
   if (asChild && React.isValidElement(children)) {
     const childProps = children.props as Record<string, any>;
@@ -210,7 +212,7 @@ function TooltipTrigger({
         childProps.onMouseLeave?.(e);
       },
       onClick: (e: React.MouseEvent<HTMLElement>) => {
-        props.onClick?.(e as any);
+        handleClick(e);
         childProps.onClick?.(e);
       },
     } as React.Attributes & { [key: string]: any });
@@ -221,6 +223,7 @@ function TooltipTrigger({
       ref={mergedRef as React.Ref<HTMLButtonElement>}
       data-slot='tooltip-trigger'
       className={cn('inline-flex', className)}
+      onClick={handleClick}
       {...props}
     >
       {children}
@@ -239,7 +242,7 @@ function TooltipContent({
   ref,
   ...props
 }: TooltipContentProps) {
-  const { isOpen, contentRef, side, contentStyles } = useTooltip();
+  const { isOpen, contentRef, side, contentStyles, setIsOpen } = useTooltip();
 
   const mergedRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -316,13 +319,14 @@ function TooltipContent({
           animate='animate'
           exit='exit'
           className={cn(
-            'text-base-m-14-1 rounded-4 z-50 w-fit whitespace-pre-wrap text-balance bg-gray-700 p-3 text-center text-white',
+            'text-base-m-14-1 rounded-4 z-50 w-fit whitespace-pre break-keep bg-gray-700 p-3 text-center text-white',
             className,
           )}
           style={{
             ...contentStyles,
             transformOrigin: transformOriginMap[side],
           }}
+          onClick={() => setIsOpen(false)}
           {...(props as any)}
         >
           {children}

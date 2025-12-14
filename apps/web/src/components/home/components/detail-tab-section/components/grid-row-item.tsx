@@ -15,13 +15,17 @@ const GridRowItem = ({ title, sub1, sub2, className }: Props) => {
           {title}
         </div>
 
-        <div className='wrap-break-word text-base-l-16-1 grow'>{sub1}</div>
+        <div className='wrap-break-word text-base-l-16-1 min-w-0 grow'>
+          {sub1}
+        </div>
       </div>
 
       {sub2 && (
         <div className='flex w-full'>
           <div className='w-[80px] flex-none'></div>
-          <div className='wrap-break-word text-base-l-16-1 grow'>{sub2}</div>
+          <div className='wrap-break-word text-base-l-16-1 min-w-0 grow'>
+            {sub2}
+          </div>
         </div>
       )}
     </div>

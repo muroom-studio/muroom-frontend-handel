@@ -75,10 +75,9 @@ export default function CommonMap({
   });
 
   const handleMarkerClick = useCallback(
-    (id: string, lat: number, lng: number) => {
+    (id: string) => {
       setMapValue((prev) => ({
         ...prev,
-        center: { lat, lng },
         studioId: prev.studioId === id ? null : id,
       }));
     },

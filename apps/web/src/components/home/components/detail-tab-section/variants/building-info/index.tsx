@@ -48,7 +48,9 @@ export default function BuildingInfoSection({
                     ) : (
                       <Tag variant='blue'>무료</Tag>
                     ))}
-                  <Tag variant='blue'>{buildingData.parkingSpots}개 남음</Tag>
+                  {buildingData.parkingSpots && (
+                    <Tag variant='blue'>{buildingData.parkingSpots}개 남음</Tag>
+                  )}
                 </div>
                 {buildingData.parkingLocationName && (
                   <ParkingBtn
@@ -68,11 +70,11 @@ export default function BuildingInfoSection({
             )
           }
           sub2={
-            !buildingData.parkingFeeType ? null : (
+            buildingData.parkingFeeInfo ? (
               <p className='text-base-l-16-1 mt-4'>
                 {buildingData.parkingFeeInfo}
               </p>
-            )
+            ) : null
           }
         />
         <div className='h-px bg-gray-200' />

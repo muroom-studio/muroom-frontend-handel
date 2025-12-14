@@ -4,11 +4,10 @@ import { cn } from '@muroom/lib';
 
 import { MarkerSize, StudiosMapSearchItem } from '@/types/studios';
 
-export interface CustomMarkerProps
-  extends Pick<
-    StudiosMapSearchItem,
-    'minPrice' | 'maxPrice' | 'name' | 'isAd'
-  > {
+export interface CustomMarkerProps extends Pick<
+  StudiosMapSearchItem,
+  'minPrice' | 'maxPrice' | 'name' | 'isAd'
+> {
   isMobile?: boolean;
   size: MarkerSize;
   isSelected: boolean;
@@ -42,8 +41,8 @@ export default function CustomMarker({
         }}
         className={cn(
           centerPositionClasses,
-          'rounded-4 shadow-level-2 flex-center-col z-50 border-2 border-white bg-white p-3 transition-transform hover:scale-105',
-          'text-primary-600 min-w-[140px]',
+          'rounded-4 shadow-level-2 flex-center-col z-50 gap-y-2 border-2 border-white bg-white p-3 transition-transform hover:scale-105',
+          'text-primary-600 w-[154px]',
           {
             'min-w-[120px] px-3 py-2': isMobile,
           },

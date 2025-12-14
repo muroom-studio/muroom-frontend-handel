@@ -2,14 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
-import {
-  HelperMessage,
-  Tag,
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@muroom/components';
-import { InfoIcon, ResetIcon } from '@muroom/icons';
+import { HelperMessage, Tag } from '@muroom/components';
+import { ResetIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 import { getFormattedDate } from '@muroom/util';
 
@@ -85,7 +79,7 @@ export default function RoomInfoSection({
           title='금지악기'
           sub1={
             instruments.length > 0 ? (
-              <div className='flex items-center gap-x-2'>
+              <div className='scrollbar-hide flex w-full items-center gap-x-2 overflow-x-auto'>
                 {instruments.map((item) => (
                   <Tag key={item} variant='outline'>
                     {item}
@@ -139,36 +133,26 @@ export default function RoomInfoSection({
           sub1={
             selectedRoom?.widthMm && selectedRoom?.heightMm ? (
               <div className='flex-between'>
-                <div className='flex items-center gap-x-1'>
-                  <span>
-                    {unit === 'cm'
-                      ? selectedRoom.widthMm / 10
-                      : selectedRoom.widthMm}{' '}
-                    {unit} X{' '}
-                    {unit === 'cm'
-                      ? selectedRoom.heightMm / 10
-                      : selectedRoom.heightMm}{' '}
-                    {unit}
-                  </span>
-                  <Tooltip side='top'>
-                    <TooltipTrigger asChild>
-                      <InfoIcon className='size-5 cursor-pointer text-gray-400' />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      {`최대길이 X 최대폭으로\n 실제사이즈와 오차가 있을 수 있습니다.`}
-                    </TooltipContent>
-                  </Tooltip>
-                </div>
+                <span>
+                  {unit === 'cm'
+                    ? selectedRoom.widthMm / 10
+                    : selectedRoom.widthMm}{' '}
+                  {unit} X{' '}
+                  {unit === 'cm'
+                    ? selectedRoom.heightMm / 10
+                    : selectedRoom.heightMm}{' '}
+                  {unit}
+                </span>
                 <div
                   aria-label='toggle-btn'
                   onClick={handleToggleUnit}
                   className={cn(
-                    'flex-center rounded-4 text-base-m-14-1 inline-flex cursor-pointer gap-x-1 border border-gray-300 bg-white px-3 py-[5px]',
+                    'flex-center rounded-4 text-base-m-14-1 inline-flex shrink-0 cursor-pointer gap-x-1 border border-gray-300 bg-white px-3 py-[5px]',
                     'hover:bg-gray-100 hover:opacity-80',
                   )}
                 >
                   <ResetIcon className='size-4 rotate-90' />
-                  <span>{unit === 'cm' ? 'mm' : 'cm'}</span>
+                  <span className='w-6'>{unit === 'cm' ? 'mm' : 'cm'}</span>
                 </div>
               </div>
             ) : (

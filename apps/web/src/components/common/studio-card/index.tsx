@@ -1,9 +1,6 @@
-import { useState } from 'react';
-
 import Image from 'next/image';
 
-import { Badge, Tag, ToggleButton } from '@muroom/components';
-import { HeartIcon, StarIcon } from '@muroom/icons';
+import { Badge } from '@muroom/components';
 import { cn } from '@muroom/lib';
 import VacantThumnail from '@muroom/ui/assets/vacant-thumnail.svg';
 
@@ -52,7 +49,6 @@ export default function CommonStudioCard({
       onClick={() =>
         setMapValue((prev) => ({
           ...prev,
-          center: { lat: latitude, lng: longitude },
           studioId: prev.studioId === studioId ? null : studioId,
         }))
       }

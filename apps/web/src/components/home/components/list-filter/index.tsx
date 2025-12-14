@@ -63,7 +63,7 @@ export default function ListFilter({
           </button>
         </Popover.Trigger>
         <Popover.Content align='end'>
-          <div className='rounded-4 shadow-level-0 border border-gray-300 bg-white'>
+          <div className='rounded-4 shadow-level-0 overflow-hidden border border-gray-300 bg-white'>
             {SORT_CODES.map((code) => {
               const isSelected =
                 (currentSort === null && code === '') || code === currentSort;

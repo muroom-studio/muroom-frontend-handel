@@ -131,7 +131,7 @@ export default function ImageGalleryModal({
               'relative flex flex-col overflow-hidden bg-white shadow-xl',
               isMobile
                 ? 'h-full w-full rounded-none'
-                : 'rounded-4 h-[80vh] w-[800px] max-w-full',
+                : 'rounded-4 h-[832px] w-[1091px] max-w-full',
             )}
             initial={{ opacity: 0, y: 20, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -166,7 +166,12 @@ export default function ImageGalleryModal({
             </div>
 
             {/* Body Area */}
-            <div className='flex-1 overflow-y-auto p-5'>
+            <div
+              className={cn('flex-1 overflow-y-auto px-5', {
+                'py-5': !(viewMode === 'SINGLE' && isMobile),
+                'px-0': viewMode === 'SINGLE' && isMobile,
+              })}
+            >
               {viewMode === 'GROUP' && (
                 <GroupImageSection images={images} onImageClick={openSingle} />
               )}

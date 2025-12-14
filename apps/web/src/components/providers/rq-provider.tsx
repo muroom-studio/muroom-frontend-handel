@@ -7,7 +7,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query';
-import { useIsFetching, useIsMutating } from '@tanstack/react-query';
+import { useIsMutating } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { toast } from 'sonner';
 
@@ -18,12 +18,6 @@ import { ApiRequestError } from '@/types/api';
 const MutatingIndicator = () => {
   const isMutating = useIsMutating();
   if (isMutating === 0) return null;
-  return <Spinner variant='component' />;
-};
-
-const FetchingIndicator = () => {
-  const isFetching = useIsFetching();
-  if (isFetching === 0) return null;
   return <Spinner variant='component' />;
 };
 
@@ -86,7 +80,6 @@ function RQProvider({ children }: Props) {
       />
 
       <MutatingIndicator />
-      <FetchingIndicator />
     </QueryClientProvider>
   );
 }

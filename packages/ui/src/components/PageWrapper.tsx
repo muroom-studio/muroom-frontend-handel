@@ -1,3 +1,6 @@
+/* 
+  해당 컴포넌트는 home을 제외한 모든 페이지 단위 컴포넌트에서 사용됩니다. 
+*/
 import { cn } from '../lib/utils';
 
 interface Props {
