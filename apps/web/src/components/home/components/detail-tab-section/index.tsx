@@ -197,7 +197,7 @@ export default function DetailTabSection({
                       lineColor={line.lineColor}
                     />
                   ))}
-                  <span className='text-base-m-14-1'>{`${place?.stationName}역 ${place?.distanceInMeters?.toLocaleString()}m`}</span>
+                  <span className='text-base-m-14-1'>{`${place?.stationName}역에서 ${place?.distanceInMeters?.toLocaleString()}m`}</span>
                 </div>
               ))}
               <div className='flex -translate-x-1 items-center gap-x-1'>
