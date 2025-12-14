@@ -77,9 +77,9 @@ export interface StudiosMapListItem {
       lineName: string;
       lineColor: string;
     }[];
+    distanceInMeters: number;
   };
   thumbnailImageUrl?: string;
-  walkingTimeMinutes: number;
 }
 
 // 3. 응답 타입

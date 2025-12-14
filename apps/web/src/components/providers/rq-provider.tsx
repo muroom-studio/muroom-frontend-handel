@@ -54,7 +54,15 @@ function RQProvider({ children }: Props) {
             toast.success(meta.successMessage);
           }
         },
-        onError: (error, _variables, _context, _mutation) => {
+        onError: (error, _variables, _context, mutation) => {
+          const meta = mutation.options.meta as
+            | { ignoreErrorToast?: boolean }
+            | undefined;
+
+          if (meta?.ignoreErrorToast) {
+            return;
+          }
+
           if (error instanceof ApiRequestError) {
             toast.error(error.message);
             return;

@@ -2,15 +2,11 @@
 
 import { KeyboardEvent, useEffect, useRef, useState } from 'react';
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-
-import { TextField } from '@muroom/components';
+import { Popover, TextField } from '@muroom/components';
 import { CloseIcon, SearchIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 
 import { useSearch } from '@/hooks/nuqs/common/useSearch';
-import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
-import { useAuthRedirectStore } from '@/store/useAuthRedirectStore';
 import { useRecentSearchStore } from '@/store/useRecentKeywordStore';
 
 interface SearchListProps {
@@ -20,169 +16,189 @@ interface SearchListProps {
 }
 
 const RecentSearchList = ({ items, onSelect, onDelete }: SearchListProps) => {
+  if (items.length === 0) {
+    return (
+      <div className='flex-center flex-1'>
+        <p className='text-base-l-16-1 text-gray-400'>
+          최근검색한 결과가 없습니다.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <ul className='flex flex-1 flex-col'>
-      {items.length === 0 ? (
-        <div className='flex-center flex-1 flex-col text-gray-400'>
-          <SearchIcon className='mb-3 size-11' />
+      {items.map((item) => (
+        <li
+          key={item}
+          onMouseDown={(e) => {
+            e.preventDefault();
+            onSelect(item);
+          }}
+          className={cn(
+            'flex-between group',
+            'text-base-m-14-2 cursor-pointer rounded px-3 py-[11px] hover:bg-gray-50',
+          )}
+        >
+          <span>{item}</span>
+          <div
+            className='hidden group-hover:block'
+            onMouseDown={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              onDelete(item);
+            }}
+          >
+            <CloseIcon className='size-4 text-gray-400 hover:text-gray-600' />
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+};
+
+interface SearchResultListProps {
+  onSelect: (value: string) => void;
+  mockApiKeywords?: string[];
+}
+
+const SearchResultList = ({
+  onSelect,
+  mockApiKeywords = [],
+}: SearchResultListProps) => {
+  if (mockApiKeywords.length === 0) {
+    return (
+      <div className='flex-center flex-1'>
+        <div className='flex-center-col gap-y-3 text-gray-400'>
+          <SearchIcon className='size-11' />
           <p className='text-base-l-16-1 text-center'>
             검색결과에 일치하는 <br /> 장소가 없습니다
           </p>
         </div>
-      ) : (
-        items.map((item) => (
-          <li
-            key={item}
-            onMouseDown={(e) => {
-              e.preventDefault();
-              onSelect(item);
-            }}
-            className={cn(
-              'flex-between group',
-              'text-base-m-14-2 cursor-pointer rounded px-3 py-[11px] hover:bg-gray-50',
-            )}
-          >
-            <span>{item}</span>
-            <div
-              className='hidden group-hover:block'
-              onMouseDown={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                onDelete(item);
-              }}
-            >
-              <CloseIcon className='size-4 text-gray-400 hover:text-gray-600' />
-            </div>
-          </li>
-        ))
-      )}
+      </div>
+    );
+  }
+
+  // 2. API 결과가 있을 때 -> 리스트 표시
+  return (
+    <ul className='flex flex-1 flex-col'>
+      {mockApiKeywords.map((item, index) => (
+        <li
+          key={`${item}-${index}`}
+          onMouseDown={(e) => {
+            e.preventDefault();
+            onSelect(item);
+          }}
+          className={cn(
+            'flex items-center',
+            'text-base-m-14-2 cursor-pointer rounded px-3 py-[11px] hover:bg-gray-50',
+          )}
+        >
+          <span>{item}</span>
+        </li>
+      ))}
     </ul>
   );
 };
 
 export default function SearchBar() {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const { isMobile } = useResponsiveLayout();
-
-  const [keyword, setKeyword] = useSearch(); // URL State
-  const { setRedirectUrl } = useAuthRedirectStore(); // Return URL Store
+  const [keyword, setKeyword] = useSearch();
   const { recentSearches, addRecentSearch, removeRecentSearch } =
-    useRecentSearchStore(); // Keyword Store
+    useRecentSearchStore();
 
-  // 2. Local State
   const [inputValue, setInputValue] = useState(keyword ?? '');
-  const [isFocused, setIsFocused] = useState(false);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+
+  const [triggerWidth, setTriggerWidth] = useState<number | undefined>(
+    undefined,
+  );
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // 3. Effects
-  // URL keyword 변경 시 로컬 인풋 동기화
   useEffect(() => {
     setInputValue(keyword ?? '');
   }, [keyword]);
 
-  // 외부 클릭 시 드롭다운 닫기 (데스크탑 전용)
   useEffect(() => {
-    if (isMobile) return; // 모바일에서는 이벤트 리스너 부착 불필요
-
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        setIsFocused(false);
+    const updateWidth = () => {
+      if (containerRef.current) {
+        setTriggerWidth(containerRef.current.offsetWidth);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isMobile]);
 
-  // 4. Handlers
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
+  }, []);
 
-  // [Mobile] 페이지 이동 핸들러
-  const handleMobileClick = () => {
-    if (!isMobile) return;
-
-    const queryString = searchParams.toString();
-    const currentUrl = queryString ? `${pathname}?${queryString}` : pathname;
-    setRedirectUrl(currentUrl);
-
-    router.push('/search');
-  };
-
-  // [Desktop] 검색 실행 핸들러
   const handleSearch = (value: string) => {
     if (value.trim().length > 0) {
       addRecentSearch(value);
     }
     setKeyword(value);
     setInputValue(value);
-    setIsFocused(false);
+    setIsPopoverOpen(false);
   };
 
-  // [Desktop] 엔터키 핸들러
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (isMobile) return; // 모바일은 엔터 이벤트 무시 (어차피 readOnly지만 안전장치)
     if (e.key === 'Enter') {
       handleSearch(inputValue);
     }
   };
 
-  // [Desktop] 초기화 핸들러
   const handleClear = () => {
     setInputValue('');
     setKeyword('');
+    setIsPopoverOpen(true);
   };
 
-  const showRecentSearch = !isMobile && isFocused && inputValue.length === 0;
-
   return (
-    <div ref={containerRef} className='relative w-full'>
-      <TextField
-        id='keyword'
-        name='keyword'
-        autoComplete='off'
-        value={inputValue}
-        placeholder='지하철역 또는 작업실 검색하기'
-        leftIcon={<SearchIcon className='size-6' />}
-        readOnly={isMobile}
-        onClick={handleMobileClick}
-        // Desktop Logic
-        onFocus={() => !isMobile && setIsFocused(true)}
-        onChange={(e) => {
-          setInputValue(e.target.value);
-          if (!isMobile) setIsFocused(true);
-        }}
-        onKeyDown={handleKeyDown}
-        onClear={handleClear}
-        inputClassName={cn(
-          'transition-all duration-200 bg-white focus:rounded-b-none focus:border-primary-400',
-          isMobile && 'cursor-pointer border-transparent',
-        )}
-      />
+    <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+      <Popover.Trigger>
+        <div ref={containerRef} className='w-full'>
+          <TextField
+            id='keyword'
+            name='keyword'
+            autoComplete='off'
+            value={inputValue}
+            placeholder='지하철역 또는 작업실 검색하기'
+            leftIcon={<SearchIcon className='size-6' />}
+            onClick={() => setIsPopoverOpen(true)}
+            onChange={(e) => {
+              setInputValue(e.target.value);
+              if (!isPopoverOpen) setIsPopoverOpen(true);
+            }}
+            onKeyDown={handleKeyDown}
+            onClear={handleClear}
+            inputClassName={cn(
+              'transition-all duration-200 bg-white focus:border-primary-400',
+              isPopoverOpen ? 'rounded-b-none' : '',
+            )}
+          />
+        </div>
+      </Popover.Trigger>
 
-      {showRecentSearch && (
+      <Popover.Content align='start' side='bottom' sideOffset={-1}>
         <div
+          style={{ width: triggerWidth ? `${triggerWidth}px` : 'auto' }}
           className={cn(
-            'absolute left-0 top-full w-full',
             'flex flex-col',
             'min-h-[308px]',
             'border border-gray-100 bg-white',
             'shadow-level-0',
-            'z-40',
             'rounded-b-4',
           )}
         >
-          <RecentSearchList
-            items={recentSearches}
-            onSelect={handleSearch}
-            onDelete={removeRecentSearch}
-          />
+          {inputValue.length === 0 ? (
+            <RecentSearchList
+              items={recentSearches}
+              onSelect={handleSearch}
+              onDelete={removeRecentSearch}
+            />
+          ) : (
+            <SearchResultList onSelect={handleSearch} mockApiKeywords={[]} />
+          )}
         </div>
-      )}
-    </div>
+      </Popover.Content>
+    </Popover>
   );
 }

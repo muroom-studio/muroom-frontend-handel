@@ -122,7 +122,7 @@ export default function JoinFirstStep({ onValidChange }: Props) {
 
   return (
     <div className='gap-y-15 flex h-full flex-col'>
-      <div className='mb-10 flex flex-col gap-y-5'>
+      <div className='flex flex-col gap-y-5'>
         <h1 className='text-title-m-26-2'>약관동의</h1>
         <h2 className='text-base-l-16-1 text-text1'>
           회원가입을 위한 서비스 이용약관에 동의해주세요
