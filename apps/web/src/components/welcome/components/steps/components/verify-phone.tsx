@@ -7,6 +7,7 @@ import {
   HelperMessage,
   OtpGroup,
   RequiredText,
+  Spinner,
   TextField,
 } from '@muroom/components';
 
@@ -33,8 +34,10 @@ export default function VerifyPhone({
   const [isVerified, setIsVerified] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const { mutateAsync: authMutateAsync } = useUserSmsAuthMutation();
-  const { mutateAsync: verifyMutateAsync } = useUserSmsVerifyMutation();
+  const { mutateAsync: authMutateAsync, isPending: isAuthPending } =
+    useUserSmsAuthMutation();
+  const { mutateAsync: verifyMutateAsync, isPending: isVerifyPending } =
+    useUserSmsVerifyMutation();
 
   const [otp, setOtp] = useState<string[]>(Array(6).fill(''));
 
@@ -76,8 +79,6 @@ export default function VerifyPhone({
       setTimeLeft(180);
       setOtp(Array(6).fill(''));
       setErrorMessage(''); // 재전송 시 에러 메시지 초기화
-
-      console.log(`인증번호 전송 성공: ${phoneNumber}`);
     } catch (error) {
       console.error(error);
     }
@@ -142,6 +143,7 @@ export default function VerifyPhone({
             disabled={!phoneNumber || isVerified}
           >
             {isSent ? '재전송' : '인증요청'}
+            {isAuthPending && <Spinner variant='component' />}
           </Button>
         </div>
       </div>
@@ -161,7 +163,7 @@ export default function VerifyPhone({
               // ⭐️ 2. 시간이 초과되었거나(timeLeft === 0), 입력이 덜 됐거나, 이미 인증됐으면 비활성화
               disabled={timeLeft === 0 || otp.some((v) => !v) || isVerified}
             >
-              확인하기
+              {isVerifyPending ? <Spinner variant='component' /> : '확인하기'}
             </Button>
           </div>
 

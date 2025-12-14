@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import DesktopHomePage from '@/components/home/desktop';
 import MobileHomePage from '@/components/home/mobile';
@@ -21,6 +21,8 @@ interface Props {
 export default function HomePage({ isMobile }: Props) {
   const [page, setPage] = useState(1);
 
+  const listRef = useRef<HTMLDivElement>(null); // 페이지 change하면 최상단으로 올리기 위한 ref
+
   const [keyword] = useSearch();
 
   const initCenter = { lat: 37.553993, lng: 126.9243517 };
@@ -33,12 +35,20 @@ export default function HomePage({ isMobile }: Props) {
 
   const { sort, setSort } = useSort();
 
+  useEffect(() => {
+    setPage(1);
+
+    listRef.current?.scrollTo({ top: 0 });
+  }, [filters, keyword, sort]);
+
   const searchParams = mapValue.bounds
     ? {
         keyword: keyword ?? undefined,
         sort: sort ?? undefined,
-        minPrice: filters.minPrice ?? undefined,
-        maxPrice: filters.maxPrice ?? undefined,
+        minPrice:
+          filters.minPrice != null ? filters.minPrice * 10000 : undefined,
+        maxPrice:
+          filters.maxPrice != null ? filters.maxPrice * 10000 : undefined,
         minRoomWidth: filters.minRoomWidth ?? undefined,
         maxRoomWidth: filters.maxRoomWidth ?? undefined,
         minRoomHeight: filters.minRoomHeight ?? undefined,
@@ -56,7 +66,6 @@ export default function HomePage({ isMobile }: Props) {
 
         forbiddenInstrumentCodes: filters.forbiddenInstrumentCodes ?? undefined,
 
-        // 지도 범위
         minLatitude: mapValue.bounds.minLat,
         maxLatitude: mapValue.bounds.maxLat,
         minLongitude: mapValue.bounds.minLng,
@@ -101,6 +110,7 @@ export default function HomePage({ isMobile }: Props) {
     setSort,
     clearFilters,
     studios,
+    listRef,
     totalElements,
     detailStudio,
     isDetailLoading,
@@ -119,7 +129,7 @@ export default function HomePage({ isMobile }: Props) {
       totalPages: listData?.pages[0]?.pagination.totalPages || 0,
       onPageChange: (newPage: number) => {
         setPage(newPage);
-        // 필요하다면 리스트 상단으로 스크롤 이동 로직 추가
+        listRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
       },
     },
 

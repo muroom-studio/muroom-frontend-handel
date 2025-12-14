@@ -21,8 +21,8 @@ export default function PriceFilter({
   onChange,
   onReset,
 }: Props) {
-  const targetMin = minPrice ?? 40;
-  const targetMax = maxPrice ?? 60;
+  const targetMin = minPrice ?? 0;
+  const targetMax = maxPrice ?? 100;
 
   const {
     rangeValue,

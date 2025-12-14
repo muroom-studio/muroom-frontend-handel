@@ -24,6 +24,7 @@ export default function SingleImageSection({
 }: Props) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
+    align: 'center',
     startIndex: initialIndex,
     duration: 20,
   });
@@ -52,11 +53,9 @@ export default function SingleImageSection({
 
   useEffect(() => {
     if (!emblaApi) return;
-
     onSelect(emblaApi);
     emblaApi.on('select', onSelect);
     emblaApi.on('reInit', onSelect);
-
     return () => {
       emblaApi.off('select', onSelect);
       emblaApi.off('reInit', onSelect);
@@ -65,13 +64,13 @@ export default function SingleImageSection({
 
   return (
     <div className='relative flex h-full w-full flex-col'>
-      <div className='relative flex min-h-0 w-full flex-1 flex-col justify-center'>
+      <div className='flex-center-col relative min-h-0 w-full flex-1 gap-y-5 overflow-hidden'>
         {!isMobile && (
           <>
             <button
               onClick={scrollPrev}
               className={cn(
-                'absolute left-4 z-10 cursor-pointer',
+                'absolute left-0 z-20 cursor-pointer',
                 'flex items-center justify-center rounded-full p-2',
                 'transition-colors hover:bg-gray-100/50',
                 'disabled:opacity-30',
@@ -84,7 +83,7 @@ export default function SingleImageSection({
             <button
               onClick={scrollNext}
               className={cn(
-                'absolute right-4 z-10 cursor-pointer',
+                'absolute right-0 z-20 cursor-pointer',
                 'flex items-center justify-center rounded-full p-2',
                 'transition-colors hover:bg-gray-100/50',
                 'disabled:opacity-30',
@@ -96,36 +95,43 @@ export default function SingleImageSection({
           </>
         )}
 
-        {/* Carousel Viewport */}
         <div
-          className={cn('h-full overflow-hidden', isMobile ? 'mx-0' : 'mx-20')}
+          className={cn(
+            'overflow-hidden',
+            isMobile ? 'h-[375px] w-full' : 'h-[698px] w-[698px]',
+          )}
           ref={emblaRef}
         >
           <div className='flex h-full touch-pan-y'>
             {images.map((src, index) => (
               <div
                 key={index}
-                className='relative h-full min-w-0 flex-[0_0_100%]'
+                className={cn(
+                  'relative',
+
+                  isMobile
+                    ? 'h-full w-full flex-[0_0_100%]'
+                    : 'h-[698px] w-[698px] flex-[0_0_698px]',
+                )}
               >
                 <Image
                   src={src}
                   alt={`detail-view-${index}`}
                   fill
-                  className='object-contain'
+                  className='object-cover'
                   priority={index === initialIndex}
                 />
               </div>
             ))}
           </div>
         </div>
-      </div>
 
-      {/* Bottom Index Indicator */}
-      <div className='flex-center text-base-m-14-1 gap-x-1 bg-white py-6'>
-        <span className='text-black'>{currentIndex + 1}</span>
-        <span className='text-base-m-14-1 text-gray-400'>
-          / {images.length}
-        </span>
+        <div className='flex-center text-base-m-14-1 gap-x-1 bg-white'>
+          <span className='text-black'>{currentIndex + 1}</span>
+          <span className='text-base-m-14-1 text-gray-400'>
+            / {images.length}
+          </span>
+        </div>
       </div>
     </div>
   );

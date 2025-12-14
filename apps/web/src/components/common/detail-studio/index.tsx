@@ -113,43 +113,48 @@ const DetailFooter = ({ phoneNum }: { phoneNum: string }) => {
   const [isSnackOpen, setIsSnackOpen] = useState<'mail' | 'call' | null>(null);
 
   const ContactButton = ({
+    name,
     type,
     icon,
   }: {
+    name: string;
     type: 'mail' | 'call';
     icon: React.ReactNode;
   }) => {
     const ButtonUI = (
       <Button
-        variant='outline_icon'
+        variant='outline'
         size='xl'
+        className='flex-center flex-1 gap-x-2'
         onClick={isLoggedIn ? () => setIsSnackOpen(type) : undefined}
       >
         {icon}
+        <span className='text-base-m-14-2'>{name}</span>
       </Button>
     );
 
     if (!isLoggedIn) {
-      return <LoginLink>{ButtonUI}</LoginLink>;
+      return <LoginLink className='flex w-full'>{ButtonUI}</LoginLink>;
     }
 
     return ButtonUI;
   };
 
   return (
-    <div className='relative flex items-center gap-x-1'>
-      <Button variant='primary_icon'>
+    <div className='relative grid grid-cols-2 gap-x-1'>
+      {/* <Button variant='primary_icon'>
         <ChatIcon className='size-6 text-white' />
-      </Button>
-
+      </Button> */}
       <ContactButton
-        type='mail'
-        icon={<MailIcon className='text-primary-400 size-6' />}
+        type='call'
+        name='전화문의'
+        icon={<CallIcon className='text-primary-400 size-6' />}
       />
 
       <ContactButton
-        type='call'
-        icon={<CallIcon className='text-primary-400 size-6' />}
+        type='mail'
+        name='문자문의'
+        icon={<MailIcon className='text-primary-400 size-6' />}
       />
 
       <Snackbar
@@ -162,9 +167,9 @@ const DetailFooter = ({ phoneNum }: { phoneNum: string }) => {
         </span>
       </Snackbar>
 
-      <Button variant='outline' size='xl' className='flex-1'>
+      {/* <Button variant='outline' size='xl' className='flex-1'>
         비교함 담기
-      </Button>
+      </Button> */}
     </div>
   );
 };

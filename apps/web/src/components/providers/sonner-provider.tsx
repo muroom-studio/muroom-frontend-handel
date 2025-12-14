@@ -10,6 +10,8 @@ function SonnerProvider() {
   return (
     <Toaster
       position={isMobile ? 'bottom-center' : 'bottom-right'}
+      offset={8}
+      style={{ zIndex: 99999 }}
       toastOptions={{
         className: `
           !bg-gray-700 

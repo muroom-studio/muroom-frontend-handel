@@ -67,9 +67,9 @@ export default function InstrumentFilter({
           />
         ))}
       </div>
-      <div className='flex justify-end'>
+      {/* <div className='flex justify-end'>
         <Button variant='secondary'>추가요청</Button>
-      </div>
+      </div> */}
     </FilterWrapper>
   );
 }

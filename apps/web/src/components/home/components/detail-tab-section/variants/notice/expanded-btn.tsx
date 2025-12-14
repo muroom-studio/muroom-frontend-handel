@@ -23,7 +23,7 @@ export default function ExpandableText({ message }: Props) {
   const isShortText = lines.length <= MAX_LINES;
 
   return (
-    <div className='relative'>
+    <div className='relative flex flex-col gap-y-6'>
       <p className='whitespace-pre-wrap text-base'>
         {isExpanded ? message : initialText}
       </p>
