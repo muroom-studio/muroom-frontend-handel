@@ -13,7 +13,7 @@ export default function MobileJoinPage({
   onBackClick,
 }: JoinCommonProps) {
   return (
-    <div className='flex h-screen flex-col bg-white'>
+    <div className='flex h-full flex-col bg-white'>
       <WelcomeHeader backClickHandler={onBackClick} />
 
       <Progressbar progress={progress} />
