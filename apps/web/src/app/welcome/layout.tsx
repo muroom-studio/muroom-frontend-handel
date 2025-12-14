@@ -43,8 +43,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             }}
           >
             <div
-              className={cn(!isMobile && 'size-auto')}
               onClick={(e) => e.stopPropagation()}
+              className={cn('size-full', !isMobile && 'size-auto')}
             >
               <Suspense>
                 <WelcomeLayout>{children}</WelcomeLayout>
