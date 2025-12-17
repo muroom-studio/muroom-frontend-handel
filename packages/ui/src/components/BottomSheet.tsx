@@ -181,7 +181,6 @@ export default function BottomSheet({
         }}
         className={cn(
           'scrollbar-hide flex-1 bg-white px-4',
-          // tailwind class parser를 위해 템플릿 리터럴 대신 style 사용 권장되나 기존 유지
           `pb-[${footerHeight + 40}px]`,
           'overscroll-y-none',
           sheetState === 'open'

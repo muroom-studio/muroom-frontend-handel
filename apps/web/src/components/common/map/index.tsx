@@ -53,25 +53,24 @@ export default function CommonMap({
   const [keyword, setKeyword] = useSearch();
   const { isMobile } = useResponsiveLayout();
   const mapRef = useRef<HTMLDivElement | null>(null);
+
   const [windowHeight, setWindowHeight] = useState(0);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setWindowHeight(window.innerHeight);
-
       const handleResize = () => setWindowHeight(window.innerHeight);
       window.addEventListener('resize', handleResize);
       return () => window.removeEventListener('resize', handleResize);
     }
   }, []);
 
-  const uiTop = useTransform(sheetY || new MotionValue(0), (latestY) => {
-    if (!windowHeight) return -1000;
+  const uiY = useTransform(sheetY || new MotionValue(0), (latestY) => {
+    if (!windowHeight) return latestY;
 
-    const middleYLimit = windowHeight * (1 - middleRatio);
-    const effectiveY = Math.max(latestY, middleYLimit);
+    const middleY = windowHeight * (1 - middleRatio);
 
-    return effectiveY - 100;
+    return Math.max(latestY, middleY);
   });
 
   const handleMarkerClick = useCallback(
@@ -208,29 +207,41 @@ export default function CommonMap({
             <FilterBtns />
           </div>
 
-          <motion.div
-            className='pointer-events-none absolute left-0 z-50 w-full px-4'
-            style={{ top: uiTop }}
-          >
-            <div className='relative flex w-full items-end justify-end'>
-              <div className='pointer-events-auto absolute bottom-0 left-1/2 -translate-x-1/2'>
-                <LocationTag
-                  mapCenter={mapValue.center}
-                  size='S'
-                  className='h-9'
-                />
-              </div>
+          {/* Floating UI */}
+          {sheetY && (
+            <motion.div
+              className='pointer-events-none absolute left-0 top-0 z-50 w-full px-4'
+              // [수정됨] sheetY 대신 제한된 uiY 사용
+              style={{ y: uiY }}
+            >
+              <div
+                className={
+                  // -translate-y-full: 자신의 높이만큼 위로 올려 바텀시트 상단에 붙임
+                  // pb-4: 바텀시트와의 간격 16px 확보
+                  'relative flex w-full -translate-y-full flex-col pb-4'
+                }
+              >
+                <div className='relative flex w-full items-end justify-end'>
+                  <div className='pointer-events-auto absolute bottom-0 left-1/2 -translate-x-1/2'>
+                    <LocationTag
+                      mapCenter={mapValue.center}
+                      size='S'
+                      className='h-9'
+                    />
+                  </div>
 
-              <div className='pointer-events-auto flex flex-col gap-y-3'>
-                {/* <CompareBtn isMobile={isMobile} /> */}
-                <CurrentLocationBtn
-                  isMobile={isMobile}
-                  mapValue={mapValue}
-                  setMapValue={setMapValue}
-                />
+                  <div className='pointer-events-auto flex flex-col gap-y-3'>
+                    {/* <CompareBtn isMobile={isMobile} /> */}
+                    <CurrentLocationBtn
+                      isMobile={isMobile}
+                      mapValue={mapValue}
+                      setMapValue={setMapValue}
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          )}
         </>
       );
     }
