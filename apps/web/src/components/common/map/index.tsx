@@ -182,8 +182,8 @@ export default function CommonMap({
 
   useEffect(() => {
     if (pendingKeyword !== null) {
-      setKeyword(pendingKeyword); // 여기서 URL 쿼리 업데이트 (?keyword=값)
-      setPendingKeyword(null); // 반영 후 우체통 비우기 (중복 실행 방지)
+      setKeyword(pendingKeyword);
+      setPendingKeyword(null);
     }
   }, [pendingKeyword, setKeyword, setPendingKeyword]);
 
@@ -222,7 +222,7 @@ export default function CommonMap({
               </div>
 
               <div className='pointer-events-auto flex flex-col gap-y-3'>
-                <CompareBtn isMobile={isMobile} />
+                {/* <CompareBtn isMobile={isMobile} /> */}
                 <CurrentLocationBtn
                   isMobile={isMobile}
                   mapValue={mapValue}
@@ -247,7 +247,7 @@ export default function CommonMap({
           className='absolute bottom-10 left-1/2 z-50 -translate-x-1/2'
         />
 
-        <CompareBtn className='absolute bottom-12 right-10 z-50' />
+        {/* <CompareBtn className='absolute bottom-12 right-10 z-50' /> */}
       </>
     );
   };

@@ -3,13 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { Button, Header, Snackbar, TabBar } from '@muroom/components';
-import {
-  CallIcon,
-  ChatIcon,
-  HeartOutlineIcon,
-  MailIcon,
-  VisitListOutlineIcon,
-} from '@muroom/icons';
+import { CallIcon, MailIcon } from '@muroom/icons';
 import { formatPhoneNumber } from '@muroom/util';
 
 import CheckTabSection from '@/components/home/components/check-tab-section';
@@ -17,6 +11,7 @@ import DetailTabSection from '@/components/home/components/detail-tab-section';
 import { useAuthCheck } from '@/hooks/auth/useAuthCheck';
 import { LoginLink } from '@/hooks/auth/useAuthRedirect';
 import { StudioDetailResponseProps } from '@/types/studio';
+import { handleCopyClipboard } from '@/utils/handleCopyClipboard';
 
 interface Props {
   detailStudio: StudioDetailResponseProps;
@@ -76,12 +71,12 @@ export default function CommonDetailStudio({
           <Header
             title={detailStudio.studioBaseInfo.studioName}
             onBackClick={() => setStudioId('')}
-            rightSlot={
-              <>
-                <VisitListOutlineIcon className='size-6' />
-                <HeartOutlineIcon className='size-6' />
-              </>
-            }
+            // rightSlot={
+            //   <>
+            //     <VisitListOutlineIcon className='size-6' />
+            //     <HeartOutlineIcon className='size-6' />
+            //   </>
+            // }
           />
           <TabBar
             level={2}
@@ -110,7 +105,9 @@ export default function CommonDetailStudio({
 
 const DetailFooter = ({ phoneNum }: { phoneNum: string }) => {
   const { isLoggedIn } = useAuthCheck();
+
   const [isSnackOpen, setIsSnackOpen] = useState<'mail' | 'call' | null>(null);
+  const [showCopyMsg, setShowCopyMsg] = useState(false);
 
   const ContactButton = ({
     name,
@@ -126,7 +123,23 @@ const DetailFooter = ({ phoneNum }: { phoneNum: string }) => {
         variant='outline'
         size='xl'
         className='flex-center flex-1 gap-x-2'
-        onClick={isLoggedIn ? () => setIsSnackOpen(type) : undefined}
+        onClick={
+          isLoggedIn
+            ? () => {
+                setIsSnackOpen(type);
+                setShowCopyMsg(false);
+
+                handleCopyClipboard({
+                  text: phoneNum,
+                  showToast: false,
+                  onSuccess: () => {
+                    setShowCopyMsg(true);
+                    setTimeout(() => setShowCopyMsg(false), 2000);
+                  },
+                });
+              }
+            : undefined
+        }
       >
         {icon}
         <span className='text-base-m-14-2'>{name}</span>
@@ -142,9 +155,6 @@ const DetailFooter = ({ phoneNum }: { phoneNum: string }) => {
 
   return (
     <div className='relative grid grid-cols-2 gap-x-1'>
-      {/* <Button variant='primary_icon'>
-        <ChatIcon className='size-6 text-white' />
-      </Button> */}
       <ContactButton
         type='call'
         name='전화문의'
@@ -160,6 +170,7 @@ const DetailFooter = ({ phoneNum }: { phoneNum: string }) => {
       <Snackbar
         isOpen={!!isSnackOpen}
         onClose={() => setIsSnackOpen(null)}
+        duration={0}
         showCloseButton
       >
         <span className='underline underline-offset-4'>
@@ -167,9 +178,14 @@ const DetailFooter = ({ phoneNum }: { phoneNum: string }) => {
         </span>
       </Snackbar>
 
-      {/* <Button variant='outline' size='xl' className='flex-1'>
-        비교함 담기
-      </Button> */}
+      <Snackbar
+        isOpen={showCopyMsg}
+        onClose={() => setShowCopyMsg(false)}
+        duration={2000}
+        offset={isSnackOpen ? 60 : 0}
+      >
+        전화번호가 복사되었습니다
+      </Snackbar>
     </div>
   );
 };

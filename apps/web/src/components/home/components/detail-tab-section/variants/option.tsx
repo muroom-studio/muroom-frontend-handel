@@ -81,7 +81,7 @@ const OptionItem = ({
   name: string;
 }) => {
   return (
-    <div className='flex flex-col gap-y-2'>
+    <div className='flex-center-col gap-y-2'>
       <div className='flex-center size-18 rounded-4 bg-gray-50'>{icon}</div>
       <p className='text-base-m-14-1 text-center'>{name}</p>
     </div>

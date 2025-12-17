@@ -29,9 +29,9 @@ const FilterWrapper = ({
           {titleChildren}
         </div>
 
-        {!isMobile && (
-          <div className='flex items-stretch gap-x-2'>
-            {headerChildren}
+        <div className='flex items-stretch gap-x-2'>
+          {headerChildren}
+          {!isMobile && (
             <Button
               variant='outline_icon'
               size='l'
@@ -40,8 +40,8 @@ const FilterWrapper = ({
             >
               <ResetIcon className='size-4' />
             </Button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
       {children}
     </div>

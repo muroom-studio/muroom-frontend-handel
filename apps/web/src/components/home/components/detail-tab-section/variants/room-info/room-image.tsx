@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 
-// useState 추가
-
 import Image from 'next/image';
 
 import {
@@ -13,20 +11,18 @@ import {
   DropdownTrigger,
   ModalBottomSheet,
 } from '@muroom/components';
-import { BottomDotIcon } from '@muroom/icons';
-// 아이콘 import 확인 필요
+import { DownArrowIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 import VacantThumnail from '@muroom/ui/assets/vacant-thumnail.svg';
 import { getFormattedDate } from '@muroom/util';
 
 import OptionItem from '@/components/common/option-item';
 import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
-// 경로에 맞게 수정
 import { StudioRoomItem } from '@/types/studio';
 
 interface Props {
-  selectedRoomId: number;
-  setSelectedRoomId: React.Dispatch<React.SetStateAction<number>>;
+  selectedRoomId?: number;
+  setSelectedRoomId: React.Dispatch<React.SetStateAction<number | undefined>>;
   roomsData: StudioRoomItem[];
   blueprintImg?: string;
 }
@@ -88,7 +84,7 @@ export default function RoomImage({
                   )}
                 >
                   <span className='text-base-m-14-1'>{currentLabel}</span>
-                  <BottomDotIcon
+                  <DownArrowIcon
                     className={cn(
                       'size-5 transition-transform duration-200',
                       isSheetOpen && 'rotate-180',
@@ -172,28 +168,31 @@ export default function RoomImage({
           </>
         )}
       </div>
-
       <div
-        className={cn('rounded-4 size-full border border-gray-300', {
-          'h-70 w-[335px]': !blueprintImg,
-        })}
+        className={cn(
+          'rounded-4 relative overflow-hidden border border-gray-300',
+          'aspect-335/280 w-full',
+          'min-[1080px]:aspect-auto min-[1080px]:h-[280px] min-[1080px]:w-[335px]',
+        )}
       >
         {blueprintImg ? (
           <Image
             src={blueprintImg}
             alt={'도면 이미지'}
-            width={335}
-            height={280}
+            fill
             className='object-cover'
+            sizes='(max-width: 1079px) 100vw, 335px'
           />
         ) : (
-          <Image
-            src={VacantThumnail}
-            alt={'빈 이미지'}
-            width={62}
-            height={50}
-            className='rounded-4 object-cover'
-          />
+          <div className='flex size-full items-center justify-center bg-gray-100'>
+            <Image
+              src={VacantThumnail}
+              alt={'빈 이미지'}
+              width={62}
+              height={50}
+              className='object-contain'
+            />
+          </div>
         )}
       </div>
     </div>

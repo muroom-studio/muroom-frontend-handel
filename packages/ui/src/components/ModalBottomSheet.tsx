@@ -6,6 +6,9 @@ import { AnimatePresence, PanInfo, motion } from 'framer-motion';
 
 import { cn } from '../lib/utils';
 
+const EASING_EMPHASIZED_DECELERATE = [0.05, 0.7, 0.1, 1.0] as const;
+const EASING_EMPHASIZED_ACCELERATE = [0.3, 0.0, 0.8, 0.15] as const;
+
 interface ModalBottomSheetProps {
   isOpen: boolean;
   onClose: () => void;
@@ -45,9 +48,20 @@ const ModalBottomSheet = ({
 
           <motion.div
             initial={{ y: '100%' }}
-            animate={{ y: 0 }}
-            exit={{ y: '100%' }}
-            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            animate={{
+              y: 0,
+              transition: {
+                duration: 0.4,
+                ease: EASING_EMPHASIZED_DECELERATE,
+              },
+            }}
+            exit={{
+              y: '100%',
+              transition: {
+                duration: 0.2,
+                ease: EASING_EMPHASIZED_ACCELERATE,
+              },
+            }}
             drag='y'
             dragConstraints={{ top: 0 }}
             dragElastic={{ top: 0, bottom: 0.5 }}

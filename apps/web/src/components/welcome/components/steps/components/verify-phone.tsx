@@ -142,8 +142,13 @@ export default function VerifyPhone({
             onClick={handleSend}
             disabled={!phoneNumber || isVerified}
           >
-            {isSent ? '재전송' : '인증요청'}
-            {isAuthPending && <Spinner variant='component' />}
+            {isAuthPending ? (
+              <Spinner variant='component' />
+            ) : isSent ? (
+              '재전송'
+            ) : (
+              '인증요청'
+            )}
           </Button>
         </div>
       </div>
@@ -160,7 +165,6 @@ export default function VerifyPhone({
               variant={'outline'}
               size='l'
               onClick={handleVerify}
-              // ⭐️ 2. 시간이 초과되었거나(timeLeft === 0), 입력이 덜 됐거나, 이미 인증됐으면 비활성화
               disabled={timeLeft === 0 || otp.some((v) => !v) || isVerified}
             >
               {isVerifyPending ? <Spinner variant='component' /> : '확인하기'}

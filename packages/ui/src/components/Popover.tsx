@@ -13,6 +13,10 @@ import { createPortal } from 'react-dom';
 
 import { cn } from '../lib/utils';
 
+// ----------------------------------------------------------------------
+// Interfaces
+// ----------------------------------------------------------------------
+
 interface PopoverContextProps {
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
@@ -38,6 +42,10 @@ interface PopoverContentProps {
   side?: 'top' | 'right' | 'bottom' | 'left';
 }
 
+// ----------------------------------------------------------------------
+// Context & Hooks
+// ----------------------------------------------------------------------
+
 const PopoverContext = createContext<PopoverContextProps | null>(null);
 
 const usePopover = () => {
@@ -50,6 +58,10 @@ const usePopover = () => {
   }
   return popoverContext;
 };
+
+// ----------------------------------------------------------------------
+// Components
+// ----------------------------------------------------------------------
 
 const Popover = ({
   children,
@@ -74,6 +86,7 @@ const Popover = ({
     [isControlled, onOpenChange],
   );
 
+  // Outside Click 감지
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (!event.target || !document.contains(event.target as Node)) {
@@ -144,7 +157,16 @@ const PopoverContent = ({
   side = 'bottom',
 }: PopoverContentProps) => {
   const { isOpen, triggerRef, contentRef } = usePopover();
-  const [position, setPosition] = useState({ top: 0, left: 0 });
+
+  // [수정] maxHeight를 포함한 스타일 상태 관리
+  const [style, setStyle] = useState<{
+    top: number;
+    left: number;
+    maxHeight?: number;
+  }>({
+    top: 0,
+    left: 0,
+  });
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -161,9 +183,19 @@ const PopoverContent = ({
       let top = 0,
         left = 0;
 
-      // side prop에 따라 위치 계산
+      // [핵심] 뷰포트 높이 기반 Max Height 계산을 위한 변수
+      // 기본적으로 화면 전체 높이를 사용하되, 아래 로직에서 가용 공간으로 덮어씌움
+      let calculatedMaxHeight = viewportHeight;
+
+      // --- Side 계산 (위치 및 높이 제한) ---
       if (side === 'bottom') {
         top = triggerRect.bottom + window.scrollY + sideOffset;
+
+        // [Bottom일 때] Trigger 아래쪽 남은 공간 계산 (하단 여백 16px 확보)
+        const availableSpace =
+          viewportHeight - triggerRect.bottom - sideOffset - 16;
+        calculatedMaxHeight = availableSpace;
+
         if (align === 'center') {
           left =
             triggerRect.left +
@@ -178,6 +210,11 @@ const PopoverContent = ({
       } else if (side === 'top') {
         top =
           triggerRect.top + window.scrollY - contentRect.height - sideOffset;
+
+        // [Top일 때] Trigger 위쪽 남은 공간 계산
+        const availableSpace = triggerRect.top - sideOffset - 16;
+        calculatedMaxHeight = availableSpace;
+
         if (align === 'center') {
           left =
             triggerRect.left +
@@ -218,20 +255,24 @@ const PopoverContent = ({
         }
       }
 
+      // --- 가로축(Left) 화면 충돌 방지 ---
       if (left < 8) {
         left = 8;
       }
       if (left + contentRect.width > viewportWidth - 8) {
         left = viewportWidth - contentRect.width - 8;
       }
-      if (top < 8) {
-        top = 8;
-      }
-      if (top + contentRect.height > viewportHeight - 8) {
-        top = viewportHeight - contentRect.height - 8;
+
+      // [수정] 세로축 강제 이동 로직 제거
+      // 높이 부족 시 위치를 옮기는 대신 maxHeight로 스크롤을 유도합니다.
+
+      // 최소 높이 안전장치 (너무 좁아도 최소 150px은 확보하거나, 상황에 맞게 조정)
+      if (calculatedMaxHeight < 150) {
+        // 공간이 너무 협소할 경우에 대한 정책이 필요하면 여기서 처리
+        // 예: calculatedMaxHeight = 150;
       }
 
-      setPosition({ top, left });
+      setStyle({ top, left, maxHeight: calculatedMaxHeight });
     }
   }, [isOpen, triggerRef, contentRef, sideOffset, align, side]);
 
@@ -242,8 +283,19 @@ const PopoverContent = ({
   return createPortal(
     <div
       ref={contentRef}
-      className={`z-9999 absolute ${className} data-[state=open]:animate-in data-[state=closed]:animate-out`}
-      style={{ top: `${position.top}px`, left: `${position.left}px` }}
+      // [수정] flex, flex-col, overflow-y-auto 추가
+      // maxHeight를 넘어가는 컨텐츠는 스크롤 처리됨
+      className={cn(
+        'z-9999 absolute flex flex-col overflow-y-auto',
+        'data-[state=open]:animate-in data-[state=closed]:animate-out',
+        className,
+      )}
+      style={{
+        top: `${style.top}px`,
+        left: `${style.left}px`,
+        // [수정] 계산된 maxHeight 적용
+        maxHeight: style.maxHeight ? `${style.maxHeight}px` : undefined,
+      }}
       data-state={isOpen ? 'open' : 'closed'}
       role='dialog'
     >
@@ -265,6 +317,10 @@ const PopoverMenuItem = ({ children }: { children: React.ReactNode }) => {
 
   return <div className={cn(commonClasses, 'cursor-pointer')}>{children}</div>;
 };
+
+// ----------------------------------------------------------------------
+// Exports
+// ----------------------------------------------------------------------
 
 Popover.Trigger = PopoverTrigger;
 Popover.Content = PopoverContent;

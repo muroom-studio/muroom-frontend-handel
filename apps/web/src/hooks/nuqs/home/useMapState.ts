@@ -24,15 +24,15 @@ export interface MapState {
   bounds: Bounds | null;
 }
 
-export const MIN_ZOOM = 14;
-export const MAX_ZOOM = 20;
+export const MIN_ZOOM = 13;
+export const MAX_ZOOM = 17;
 
 const DEFAULT_CENTER = {
   lat: 37.566,
   lng: 126.978,
 };
 
-const DEFAULT_ZOOM = 16;
+export const DEFAULT_ZOOM = 16;
 
 const parseAsCenter = createParser({
   parse: (value) => {
