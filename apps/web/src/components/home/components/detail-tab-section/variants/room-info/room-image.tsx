@@ -33,7 +33,6 @@ export default function RoomImage({
   roomsData,
   blueprintImg,
 }: Props) {
-  // 1. 모바일 여부 및 바텀시트 상태 관리
   const { isMobile } = useResponsiveLayout();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 

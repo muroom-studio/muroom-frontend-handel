@@ -10,7 +10,7 @@ function SonnerProvider() {
   return (
     <Toaster
       position={isMobile ? 'bottom-center' : 'bottom-right'}
-      offset={8}
+      offset={isMobile ? 24 : 16}
       style={{ zIndex: 99999 }}
       toastOptions={{
         className: `
@@ -18,12 +18,13 @@ function SonnerProvider() {
           !text-white 
           !rounded-4 
           !p-3 
-          !w-full 
           !flex 
           !items-center 
           !justify-start
           !gap-3
           !text-base-m-14-1
+          le ? '!w-[calc(100vw-32px)]' : '!w-[360px]'}
+          !mx-auto
         `,
 
         classNames: {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 import Image from 'next/image';
 
@@ -25,17 +25,37 @@ export default function RoomImageGroup({ roomImgs, controller }: Props) {
     [WheelGesturesPlugin()],
   );
 
+  const isScroll = useRef(false);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    const onScroll = () => {
+      isScroll.current = true; // 스크롤(드래그) 발생 시 true
+    };
+
+    const onPointerDown = () => {
+      isScroll.current = false; // 마우스를 누르는 순간 false로 초기화
+    };
+
+    emblaApi.on('scroll', onScroll);
+    emblaApi.on('pointerDown', onPointerDown);
+
+    return () => {
+      emblaApi.off('scroll', onScroll);
+      emblaApi.off('pointerDown', onPointerDown);
+    };
+  }, [emblaApi]);
+
   const handleImageClick = useCallback(
     (index: number) => {
-      if (!emblaApi) return;
-
-      const engine = emblaApi.internalEngine() as any;
-
-      if (engine.dragHandler && !engine.dragHandler.clickAllowed()) return;
+      // [수정 3] 에러가 나는 내부 엔진 코드 제거 및 Ref 상태 확인
+      // 드래그(스크롤) 중이었다면 클릭 무시
+      if (isScroll.current) return;
 
       controller.openSingle('room', index);
     },
-    [emblaApi, controller],
+    [controller], // emblaApi 의존성 제거 가능 (Ref 사용하므로)
   );
 
   return (
