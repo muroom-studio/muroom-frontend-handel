@@ -46,7 +46,6 @@ export default function DetailTabSection({
 
   const galleryController = useGalleryModal();
 
-  // 2. 갤러리 모달에 넘겨줄 전체 이미지 데이터 구성
   const allGalleryImages = useMemo(
     () => ({
       main: detailStudio.studioImages.mainImageKeys || [],
@@ -168,7 +167,11 @@ export default function DetailTabSection({
       <div className='bg-white'>
         <div className='relative h-[250px] w-full overflow-hidden'>
           <MainImageSection
-            roomImgs={detailStudio.studioImages.mainImageKeys}
+            roomImgs={[
+              ...(detailStudio.studioImages.mainImageKeys || []),
+              ...(detailStudio.studioImages.buildingImageKeys || []),
+              ...(detailStudio.studioImages.roomImageKeys || []),
+            ]}
             controller={galleryController}
           />
         </div>

@@ -131,12 +131,6 @@ export default function BuildingInfoSection({
               ? `${priceData.minPrice / 10000}~${priceData.maxPrice / 10000}만원`
               : '문의필요'
           }
-          sub2={
-            <div className='mt-[7px] flex items-center gap-x-2'>
-              <Tag variant='blue'>첫달 30,000원 할인</Tag>
-              <Tag variant='blue'>첫달 30,000원 할인</Tag>
-            </div>
-          }
         />
         <div className='h-px bg-gray-200' />
         <GridRowItem

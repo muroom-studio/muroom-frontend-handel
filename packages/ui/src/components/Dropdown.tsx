@@ -11,7 +11,7 @@ import React, {
 } from 'react';
 import { createPortal } from 'react-dom';
 
-import { BottomDotIcon } from '../icons-generated';
+import { DownArrowIcon } from '../icons-generated';
 import { cn } from '../lib/utils';
 
 type DropdownItemProps = React.ComponentPropsWithRef<'button'> & {
@@ -41,7 +41,6 @@ function useDropdown() {
 
 function Dropdown({
   value: controlledValue,
-  // ⭐️ 1. label prop 추가 (화면에 표시될 텍스트를 외부에서 받음)
   label: controlledLabel,
   onValueChange,
   defaultValue,
@@ -50,7 +49,7 @@ function Dropdown({
   children,
 }: {
   value?: string;
-  label?: React.ReactNode; // 타입 정의 추가
+  label?: React.ReactNode;
   onValueChange?: (value: string) => void;
   defaultValue?: string;
   placeholder?: string;
@@ -64,7 +63,6 @@ function Dropdown({
   const isControlled = controlledValue !== undefined;
   const value = isControlled ? controlledValue : internalValue;
 
-  // ⭐️ 2. 텍스트 결정 로직: 외부에서 label을 주면 그걸 쓰고, 없으면 내부 상태 사용
   const currentLabel =
     controlledLabel !== undefined ? controlledLabel : selectedLabel;
 
@@ -162,7 +160,6 @@ function DropdownTrigger({
     triggerRef,
   } = useDropdown();
 
-  // Ref merge
   const composedRef = (el: HTMLButtonElement) => {
     (triggerRef as React.MutableRefObject<HTMLButtonElement | null>).current =
       el;
@@ -222,7 +219,7 @@ function DropdownTrigger({
     >
       {/* selectedValue가 있으면 selectedLabel(우리가 주입한 값)을 보여줌 */}
       {selectedValue ? selectedLabel : placeholder || '선택...'}
-      <BottomDotIcon className='rotate size-5 transition-transform duration-200 group-data-[state=open]:rotate-180' />
+      <DownArrowIcon className='rotate size-5 transition-transform duration-200 group-data-[state=open]:rotate-180' />
     </button>
   );
 }

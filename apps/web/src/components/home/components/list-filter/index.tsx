@@ -11,8 +11,8 @@ import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 export const SORT_MAP: Record<string, string> = {
   '': '선택',
   'latest,desc': '최신순',
-  'price,asc': '높은가격순',
-  'price,desc': '낮은가격순',
+  'price,desc': '높은가격순',
+  'price,asc': '낮은가격순',
 };
 
 const SORT_CODES = Object.keys(SORT_MAP);

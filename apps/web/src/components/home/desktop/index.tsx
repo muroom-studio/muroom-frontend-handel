@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect } from 'react';
+
 import { Button, Spinner } from '@muroom/components';
 import { ResetIcon } from '@muroom/icons';
 
@@ -67,6 +69,14 @@ export default function DesktopHomePage({
   const hasActiveFilter = Object.values(filters).some(
     (value) => value !== null,
   );
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      window.dispatchEvent(new Event('resize'));
+    }, 250);
+
+    return () => clearTimeout(timer);
+  }, [mapValue.studioId]);
 
   if (isLoading) {
     return <Loading />;

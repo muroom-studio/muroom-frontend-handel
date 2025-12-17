@@ -148,6 +148,15 @@ export default function ImageGalleryModal({
                   title={headerTitle}
                   onBackClick={handleBackClick}
                   className='p-0'
+                  rightSlot={
+                    <button
+                      onClick={close}
+                      type='button'
+                      className='cursor-pointer'
+                    >
+                      <CloseIcon className='size-6 text-gray-900' />
+                    </button>
+                  }
                 />
               ) : (
                 <div className='flex-between'>

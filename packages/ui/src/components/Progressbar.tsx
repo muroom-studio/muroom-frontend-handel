@@ -1,7 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
-
 import { cn } from '../lib/utils';
 
 interface Props {
@@ -18,14 +16,12 @@ const ProgressBar = ({ progress, height = 4, className }: Props) => {
       className={cn('w-full bg-gray-200', className)}
       style={{ height: `${height}px` }}
     >
-      <motion.div
+      <div
         className={cn(
           'h-full',
           currentProgress > 0 ? 'bg-primary-400' : 'bg-transparent',
         )}
-        initial={{ width: '0%' }}
-        animate={{ width: `${currentProgress}%` }}
-        transition={{ duration: 1.2, ease: 'circOut' }}
+        style={{ width: `${currentProgress}%` }}
       />
     </div>
   );

@@ -14,6 +14,7 @@ interface SnackbarProps {
   children?: React.ReactNode;
   className?: string;
   showCloseButton?: boolean;
+  offset?: number; // [추가] 위치 보정값 (px)
 }
 
 const Snackbar = ({
@@ -24,13 +25,11 @@ const Snackbar = ({
   children,
   className,
   showCloseButton = false,
+  offset = 0, // 기본값 0
 }: SnackbarProps) => {
   useEffect(() => {
-    if (isOpen) {
-      const timer = setTimeout(() => {
-        onClose();
-      }, duration);
-
+    if (isOpen && duration > 0) {
+      const timer = setTimeout(() => onClose(), duration);
       return () => clearTimeout(timer);
     }
   }, [isOpen, duration, onClose]);
@@ -43,8 +42,9 @@ const Snackbar = ({
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 10, scale: 0.95 }}
           transition={{ duration: 0.2, type: 'spring', bounce: 0 }}
+          style={{ marginBottom: `${8 + offset}px` }}
           className={cn(
-            'absolute bottom-full left-1/2 z-50 mb-3 -translate-x-1/2',
+            'absolute bottom-full left-1/2 z-50 -translate-x-1/2', // mb-3 제거됨
             'rounded-4 text-base-m-14-1 flex-between w-full gap-3 bg-gray-700 p-3 text-white',
             className,
           )}

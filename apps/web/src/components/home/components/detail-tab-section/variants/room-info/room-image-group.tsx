@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback } from 'react';
 
 import Image from 'next/image';
 
-import { Modal } from '@muroom/components';
+import useEmblaCarousel from 'embla-carousel-react';
+import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures';
+
 import { DownArrowIcon } from '@muroom/icons';
 
 import { useGalleryModal } from '../../components/gallery-modal';
@@ -15,7 +17,27 @@ interface Props {
 }
 
 export default function RoomImageGroup({ roomImgs, controller }: Props) {
-  // const [showModal, setShowModal] = useState(false);
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    {
+      dragFree: true,
+      containScroll: 'trimSnaps',
+    },
+    [WheelGesturesPlugin()],
+  );
+
+  const handleImageClick = useCallback(
+    (index: number) => {
+      if (!emblaApi) return;
+
+      const engine = emblaApi.internalEngine() as any;
+
+      if (engine.dragHandler && !engine.dragHandler.clickAllowed()) return;
+
+      controller.openSingle('room', index);
+    },
+    [emblaApi, controller],
+  );
+
   return (
     <div className='flex flex-col gap-y-4'>
       <div className='flex-between'>
@@ -26,22 +48,28 @@ export default function RoomImageGroup({ roomImgs, controller }: Props) {
         />
       </div>
 
-      <div className='flex items-center gap-x-1 overflow-x-auto [&::-webkit-scrollbar]:hidden'>
-        {roomImgs.map((room, index) => (
-          <div
-            key={index}
-            className='relative h-[109px] w-[109px] shrink-0 cursor-pointer transition-opacity hover:opacity-90'
-            onClick={() => controller.openSingle('room', index)}
-          >
-            <Image
-              src={room}
-              alt={`${room}이미지`}
-              fill
-              className='object-cover'
-              sizes='109px'
-            />
-          </div>
-        ))}
+      <div
+        ref={emblaRef}
+        className='cursor-grab overflow-hidden active:cursor-grabbing'
+      >
+        <div className='flex touch-pan-y gap-x-1'>
+          {roomImgs.map((room, index) => (
+            <div
+              key={index}
+              className='relative h-[109px] w-[109px] flex-none cursor-pointer transition-opacity hover:opacity-90'
+              onClick={() => handleImageClick(index)}
+            >
+              <Image
+                src={room}
+                alt={`${room}이미지`}
+                fill
+                className='object-cover'
+                sizes='109px'
+                draggable={false}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

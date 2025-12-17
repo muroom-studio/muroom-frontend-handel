@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 
-// 경로에 맞게 수정해주세요
 import VacantThumnail from '@muroom/ui/assets/vacant-thumnail.svg';
 
 import { useGalleryModal } from '../gallery-modal';
@@ -13,7 +12,6 @@ interface Props {
 }
 
 export default function MainImageSection({ roomImgs, controller }: Props) {
-  // 이미지가 없을 때
   if (!roomImgs || roomImgs.length === 0) {
     return (
       <div className='flex-center h-[250px] w-full border border-gray-300 bg-gray-50'>
@@ -116,8 +114,8 @@ export default function MainImageSection({ roomImgs, controller }: Props) {
                   controller.openGroup();
                 }}
               >
-                <span className='text-lg font-medium text-white'>
-                  +{extraCount}
+                <span className='text-base-l-16-2 text-white'>
+                  +{roomImgs.length}
                 </span>
               </div>
             )}

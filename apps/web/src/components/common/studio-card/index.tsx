@@ -22,8 +22,6 @@ export default function CommonStudioCard({
   const { isMobile } = useResponsiveLayout();
   const {
     studioId: numericStudioId,
-    latitude,
-    longitude,
     studioName,
     minPrice,
     maxPrice,
@@ -63,7 +61,11 @@ export default function CommonStudioCard({
       <div className='flex flex-col justify-between'>
         <div className='flex flex-col gap-y-3'>
           <div className='flex-between'>
-            <span className='text-title-s-22-1'>{`${minPrice / 10000}~${maxPrice / 10000}만원`}</span>
+            <span className='text-title-s-22-1'>
+              {minPrice && maxPrice
+                ? `${minPrice / 10000}~${maxPrice / 10000}만원`
+                : '가격문의'}
+            </span>
             {/* <div className='flex items-center'>
               <StarIcon />
               <p className='text-base-m-14-1 flex items-center gap-x-px'>

@@ -75,7 +75,7 @@ const ModalWrapper = ({ className, children, ...props }: ModalWrapperProps) => {
   return (
     <motion.div
       className={cn(
-        'rounded-4 z-9999 fixed left-1/2 top-1/2 w-[420px] -translate-x-1/2 -translate-y-1/2 bg-white p-5 pt-4',
+        'rounded-4 z-9999 fixed left-1/2 top-1/2 w-[420px] -translate-x-1/2 -translate-y-1/2 bg-white',
         className,
       )}
       initial={{ opacity: 0, y: 20, scale: 0.98 }}
@@ -105,7 +105,7 @@ const ModalHeader = ({
   return (
     <div
       className={cn(
-        'flex items-center justify-between border-b-[0.5px] border-b-gray-300 pb-4',
+        'flex items-center justify-between border-b-[0.5px] border-b-gray-300 px-5 py-4',
         className,
       )}
       {...props}
@@ -128,13 +128,13 @@ const ModalHeader = ({
 interface ModalBodyProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const ModalBody = ({ className, ...props }: ModalBodyProps) => (
-  <div className={cn('flex flex-col pt-5', className)} {...props} />
+  <div className={cn('flex flex-col px-5 py-6', className)} {...props} />
 );
 
 interface ModalFooterProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const ModalFooter = ({ className, ...props }: ModalFooterProps) => (
-  <div className={cn('flex-center w-full pt-5', className)} {...props} />
+  <div className={cn('flex-center w-full py-5', className)} {...props} />
 );
 
 Modal.Wrapper = ModalWrapper;
