@@ -179,7 +179,11 @@ export default function DetailTabSection({
           <div className='flex flex-col gap-y-6'>
             <div className='flex flex-col gap-y-2'>
               <div className='flex-between'>
-                <span className='text-title-s-22-2'>{`${studioMinPrice / 10000}만원 ~ ${studioMaxPrice / 10000}만원`}</span>
+                <span className='text-title-s-22-2'>
+                  {studioMinPrice && studioMaxPrice
+                    ? `${studioMinPrice / 10000}만원 ~ ${studioMaxPrice / 10000}만원`
+                    : '가격문의'}
+                </span>
                 <ShareBtn />
               </div>
               <span className='text-base-m-14-1 text-gray-500'>

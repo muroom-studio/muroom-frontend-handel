@@ -90,7 +90,7 @@ export default function CommonDetailStudio({
       </div>
 
       <div
-        className='flex-none border-t border-t-gray-200 bg-white p-5'
+        className='flex-none bg-white p-5'
         style={{ height: BOTTOM_FOOTER_HEIGHT }}
       >
         <DetailFooter

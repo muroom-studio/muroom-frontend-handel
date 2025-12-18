@@ -30,7 +30,7 @@ const HelperMessage = ({
     },
     success: {
       color: 'text-blue-400',
-      icon: <CheckSmallIcon className='size-3' />,
+      icon: <CheckSmallIcon className='h-[6.27px] w-2' />,
     },
     error: {
       color: 'text-red-400',
@@ -49,7 +49,9 @@ const HelperMessage = ({
       )}
       {...props}
     >
-      {showIcon && icon && <span>{icon}</span>}
+      {showIcon && icon && (
+        <span className='flex size-4 items-center justify-center'>{icon}</span>
+      )}
       <span>{children}</span>
     </p>
   );

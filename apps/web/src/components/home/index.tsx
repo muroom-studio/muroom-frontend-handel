@@ -129,7 +129,7 @@ export default function HomePage({ isMobile }: Props) {
       totalPages: listData?.pages[0]?.pagination.totalPages || 0,
       onPageChange: (newPage: number) => {
         setPage(newPage);
-        listRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+        listRef.current?.scrollTo({ top: 0 });
       },
     },
 

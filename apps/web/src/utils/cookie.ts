@@ -17,7 +17,7 @@ export async function setToken(accessToken: string) {
   cookieStore.set(ACCESS_TOKEN_KEY, accessToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    maxAge: MAX_AGE_TEN_MINUTES, // 10분으로 설정
+    maxAge: MAX_AGE_TEN_MINUTES,
     path: '/',
   });
 }

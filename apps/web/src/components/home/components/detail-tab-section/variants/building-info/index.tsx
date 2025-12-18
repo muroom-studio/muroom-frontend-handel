@@ -33,7 +33,7 @@ export default function BuildingInfoSection({
           title='주차'
           sub1={
             !buildingData.parkingFeeType ? (
-              <span>문의필요</span>
+              <span>문의 필요</span>
             ) : (
               <div className='flex-between'>
                 <div className='flex items-center gap-x-1.5'>
@@ -120,7 +120,7 @@ export default function BuildingInfoSection({
               ? '가입'
               : buildingData.hasFireInsurance === false
                 ? '미가입'
-                : '문의필요'
+                : '문의 필요'
           }
         />
         <div className='h-px bg-gray-200' />
@@ -129,7 +129,7 @@ export default function BuildingInfoSection({
           sub1={
             priceData.minPrice != null && priceData.maxPrice != null
               ? `${priceData.minPrice / 10000}~${priceData.maxPrice / 10000}만원`
-              : '문의필요'
+              : '문의 필요'
           }
         />
         <div className='h-px bg-gray-200' />
@@ -138,7 +138,7 @@ export default function BuildingInfoSection({
           sub1={
             priceData.deposit != null
               ? `${priceData.deposit / 10000}만원`
-              : '문의필요'
+              : '문의 필요'
           }
         />
       </>

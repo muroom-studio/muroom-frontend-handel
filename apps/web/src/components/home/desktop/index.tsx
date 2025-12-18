@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { Button, Spinner } from '@muroom/components';
 import { ResetIcon } from '@muroom/icons';
@@ -62,6 +62,8 @@ export default function DesktopHomePage({
   isListLoading,
   pagination,
 }: Props) {
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+
   const gridTemplateColumns = mapValue.studioId
     ? '375px 375px 1fr'
     : '375px 1fr';
@@ -71,12 +73,19 @@ export default function DesktopHomePage({
   );
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      window.dispatchEvent(new Event('resize'));
-    }, 250);
+    const container = mapContainerRef.current;
+    if (!container) return;
 
-    return () => clearTimeout(timer);
-  }, [mapValue.studioId]);
+    const observer = new ResizeObserver(() => {
+      window.dispatchEvent(new Event('resize'));
+    });
+
+    observer.observe(container);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   if (isLoading) {
     return <Loading />;
@@ -111,7 +120,7 @@ export default function DesktopHomePage({
           className='mb-[92px] grid min-h-0 flex-1'
           style={{
             gridTemplateColumns,
-            transition: 'grid-template-columns 0.2s',
+            transition: 'grid-template-columns 0.2s ease-in-out',
           }}
         >
           <div className='flex h-full min-h-0 flex-col border-r border-r-gray-300 bg-white'>
@@ -153,7 +162,7 @@ export default function DesktopHomePage({
             </div>
           )}
 
-          <div className='h-full w-full'>
+          <div ref={mapContainerRef} className='h-full w-full'>
             <CommonMap
               mapValue={mapValue}
               setMapValue={setMapValue}
