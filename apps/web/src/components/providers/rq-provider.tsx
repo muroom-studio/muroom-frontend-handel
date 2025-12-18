@@ -7,19 +7,10 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query';
-import { useIsMutating } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { toast } from 'sonner';
 
-import { Spinner } from '@muroom/ui/components';
-
 import { ApiRequestError } from '@/types/api';
-
-const MutatingIndicator = () => {
-  const isMutating = useIsMutating();
-  if (isMutating === 0) return null;
-  return <Spinner variant='component' />;
-};
 
 interface Props {
   children: React.ReactNode;
@@ -78,8 +69,6 @@ function RQProvider({ children }: Props) {
       <ReactQueryDevtools
         initialIsOpen={process.env.NEXT_PUBLIC_MODE === 'local'}
       />
-
-      <MutatingIndicator />
     </QueryClientProvider>
   );
 }

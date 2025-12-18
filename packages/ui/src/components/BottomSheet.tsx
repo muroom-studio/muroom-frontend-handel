@@ -165,7 +165,9 @@ export default function BottomSheet({
         className='flex-none cursor-grab touch-none pt-3 active:cursor-grabbing'
       >
         <div className='rounded-1000 mx-auto h-1 w-8 bg-gray-300' />
-        {header && <div className='mt-2 px-4'>{header}</div>}
+        {header && (
+          <div className='mt-2 border-b border-b-gray-300 px-4'>{header}</div>
+        )}
       </div>
 
       <div

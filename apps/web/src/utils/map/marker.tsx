@@ -13,8 +13,16 @@ export function createMarkerWithReactRoot(
   isMobile: boolean,
 ): { marker: naver.maps.Marker; root: Root } {
   const container = document.createElement('div');
-
   const root = createRoot(container);
+
+  let marker: naver.maps.Marker;
+
+  const handleHoverChange = (isHovered: boolean) => {
+    if (marker) {
+      const zIndex = isHovered ? 9999 : isSelected ? 100 : 10;
+      marker.setZIndex(zIndex);
+    }
+  };
 
   root.render(
     <CustomMarkerComponent
@@ -28,10 +36,12 @@ export function createMarkerWithReactRoot(
       onClick={() => {
         onMarkerClick(data.id);
       }}
+      onHoverChange={handleHoverChange}
     />,
   );
 
-  const marker = new naver.maps.Marker({
+  // marker 인스턴스 생성 및 할당
+  marker = new naver.maps.Marker({
     position: new naver.maps.LatLng(data.latitude, data.longitude),
     map: map,
     icon: {

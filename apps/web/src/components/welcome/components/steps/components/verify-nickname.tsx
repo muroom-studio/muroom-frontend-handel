@@ -11,7 +11,6 @@ import {
 } from '@muroom/components';
 
 import { useUserNicknameCheckQuery } from '@/hooks/api/user/useQueries';
-import { validateNickname } from '@/utils/validation';
 
 interface Props {
   value: string;
@@ -22,7 +21,7 @@ type CheckStatus = 'idle' | 'success' | 'error';
 
 export default function VerifyNickname({ value, setValue }: Props) {
   const [localValue, setLocalValue] = useState(value || '');
-  const [nicknameError, setNicknameError] = useState<string>('');
+
   const [checkStatus, setCheckStatus] = useState<CheckStatus>('idle');
 
   const { refetch, isLoading } = useUserNicknameCheckQuery({
@@ -30,11 +29,13 @@ export default function VerifyNickname({ value, setValue }: Props) {
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    setLocalValue(val);
+    const rawValue = e.target.value;
 
-    const errorMsg = validateNickname(val);
-    setNicknameError(errorMsg);
+    const sanitizedValue = rawValue.replace(/[^ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]/g, '');
+
+    const finalValue = sanitizedValue.slice(0, 20);
+
+    setLocalValue(finalValue);
 
     if (checkStatus !== 'idle') {
       setCheckStatus('idle');
@@ -43,7 +44,7 @@ export default function VerifyNickname({ value, setValue }: Props) {
   };
 
   const handleVerifyClick = async () => {
-    if (!localValue || nicknameError) return;
+    if (!localValue) return;
 
     const result = await refetch();
 
@@ -59,15 +60,19 @@ export default function VerifyNickname({ value, setValue }: Props) {
   };
 
   const getHelperMessageInfo = () => {
-    if (nicknameError) {
-      return { text: nicknameError, variant: 'error' as const };
-    }
-
     if (checkStatus === 'success') {
-      return { text: '사용 가능한 닉네임입니다', variant: 'success' as const };
+      return {
+        text: '사용 가능한 닉네임입니다',
+        variant: 'success' as const,
+        showIcon: true,
+      };
     }
     if (checkStatus === 'error') {
-      return { text: '이미 사용 중인 닉네임입니다', variant: 'error' as const };
+      return {
+        text: '이미 사용 중인 닉네임입니다',
+        variant: 'error' as const,
+        showIcon: false,
+      };
     }
 
     return null;
@@ -97,7 +102,6 @@ export default function VerifyNickname({ value, setValue }: Props) {
               setLocalValue('');
               setValue('');
               setCheckStatus('idle');
-              setNicknameError('');
             }}
             placeholder='닉네임을 입력해주세요'
             maxLength={20}
@@ -106,7 +110,7 @@ export default function VerifyNickname({ value, setValue }: Props) {
             type='button'
             variant='primary'
             size='l'
-            disabled={localValue === '' || isLoading || !!nicknameError}
+            disabled={localValue === '' || isLoading}
             onClick={handleVerifyClick}
           >
             {isLoading ? <Spinner variant='component' /> : '확인하기'}
@@ -114,7 +118,10 @@ export default function VerifyNickname({ value, setValue }: Props) {
         </div>
 
         {helperInfo && (
-          <HelperMessage variant={helperInfo.variant} showIcon={true}>
+          <HelperMessage
+            variant={helperInfo.variant}
+            showIcon={helperInfo.showIcon}
+          >
             {helperInfo.text}
           </HelperMessage>
         )}

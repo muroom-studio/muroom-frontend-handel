@@ -10,6 +10,8 @@ function SonnerProvider() {
   return (
     <Toaster
       position={isMobile ? 'bottom-center' : 'bottom-right'}
+      expand={true}
+      gap={8}
       offset={isMobile ? 24 : 16}
       style={{ zIndex: 99999 }}
       toastOptions={{
@@ -23,16 +25,14 @@ function SonnerProvider() {
           !justify-start
           !gap-3
           !text-base-m-14-1
-          le ? '!w-[calc(100vw-32px)]' : '!w-[360px]'}
+          ${isMobile ? '!w-[calc(100vw-32px)]' : '!w-[360px]'}
           !mx-auto
         `,
-
         classNames: {
           icon: '!hidden',
           actionButton:
             '!ml-auto !bg-transparent !text-white !text-base-m-14-2 !shrink-0 !cursor-pointer hover:!bg-gray-600',
         },
-
         style: {
           border: 'none',
         },

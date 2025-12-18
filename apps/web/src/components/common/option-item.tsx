@@ -8,13 +8,14 @@ const OptionItem = ({
 }: {
   item: string;
   selected: boolean;
-  onClick: () => void;
+  onClick?: () => void;
 }) => {
   return (
     <Button
       variant='outline'
-      className={cn('h-9', {
-        'bg-primary-400 hover:bg-primary-600 border-none': selected,
+      className={cn('h-9 transition-colors', {
+        'bg-primary-400 border-primary-400 hover:bg-primary-600 hover:border-primary-600':
+          selected,
       })}
       onClick={onClick}
     >

@@ -111,7 +111,7 @@ export default function RoomInfoSection({
                       ' 입주가능'}
                   </span>
                 ) : (
-                  <span>문의필요</span>
+                  <span>문의 필요</span>
                 )
               }
             />
@@ -146,9 +146,10 @@ export default function RoomInfoSection({
                     </div>
                   </div>
                 ) : (
-                  <HelperMessage variant='error'>
-                    도면확인이 필요해요
-                  </HelperMessage>
+                  // <HelperMessage variant='error'>
+                  //   도면확인이 필요해요
+                  // </HelperMessage>
+                  '문의 필요'
                 )
               }
             />

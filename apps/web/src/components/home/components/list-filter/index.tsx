@@ -36,8 +36,9 @@ export default function ListFilter({
 
   return (
     <div
-      className={cn('flex-between h-14 border-b border-b-gray-300 p-4', {
+      className={cn('flex-between h-14 p-4', {
         'px-0 py-4': isMobile,
+        'border-b border-b-gray-300': !isMobile,
       })}
     >
       <span className='text-base-exl-18-2 text-black'>{studioNum}개</span>
