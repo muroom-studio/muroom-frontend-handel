@@ -14,9 +14,9 @@ export default function BaseDesktopHeader() {
         <Link href={'/home'} className='cursor-pointer'>
           <Image src={BaseLogo} alt='로고' width={133} height={32} priority />
         </Link>
-        <div className='w-[404px]'>
+        {/* <div className='w-[404px]'>
           <SearchBar />
-        </div>
+        </div> */}
       </div>
       <AuthSection />
     </header>

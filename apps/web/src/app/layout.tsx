@@ -20,11 +20,11 @@ const pretendard = localFont({
 });
 
 export const metadata: Metadata = {
-  title: '뮤룸 (Muroom) | 우리들만의 음악 공간',
+  title: '뮤룸 (Muroom) | 우리들의 음악 공간',
   description: '뮤룸에서 쉽고 빠르게 뮤지션을 위한 음악 작업실을 올려보세요.',
 
   openGraph: {
-    title: '뮤룸 (Muroom) | 우리들만의 음악 공간',
+    title: '뮤룸 (Muroom) | 우리들의 음악 공간',
     description: '뮤룸에서 쉽고 빠르게 뮤지션을 위한 음악 작업실을 올려보세요.',
     url: 'https://muroom.kr',
     siteName: '뮤룸 (Muroom)',
