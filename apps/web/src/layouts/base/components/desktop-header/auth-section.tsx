@@ -1,6 +1,10 @@
 'use client';
 
-import { Button, Tag } from '@muroom/components';
+import { useState } from 'react';
+
+import Link from 'next/link';
+
+import { Button, Popover, Tag } from '@muroom/components';
 
 import { useMusicianMeQuery } from '@/hooks/api/musician/useQueries';
 import { useAuthCheck } from '@/hooks/auth/useAuthCheck';
@@ -10,14 +14,64 @@ export default function AuthSection() {
   const { isLoggedIn } = useAuthCheck();
   const { data: musicianBaseData } = useMusicianMeQuery();
 
+  const [isOpen, setIsOpen] = useState(false);
+
+  const menuItems = [
+    {
+      id: 'm1',
+      label: '프로필',
+      url: '/mypage/profile',
+    },
+    {
+      id: 'm2',
+      label: '고객센터',
+      url: '/mypage/cs',
+    },
+    {
+      id: 'm3',
+      label: '신고내역',
+      url: '/mypage/reports',
+    },
+    {
+      id: 'm4',
+      label: '로그아웃',
+      url: '/logout',
+    },
+  ];
+
+  const isAuthenticatedTriggerDiv = (
+    <div
+      data-state={isOpen ? 'open' : 'closed'}
+      aria-haspopup='menu'
+      aria-expanded={isOpen}
+      onClick={() => setIsOpen((prev) => !prev)}
+      className='flex items-center gap-2'
+    >
+      <Tag variant='musician'>{`${musicianBaseData?.musicianInstrument.description}`}</Tag>
+      <span className='text-base-l-16-2 text-black'>
+        {musicianBaseData?.nickname}
+      </span>
+    </div>
+  );
+
   if (isLoggedIn) {
     return (
-      <div className='flex items-center gap-2'>
-        <Tag variant='musician'>{`${musicianBaseData?.musicianInstrument.description}`}</Tag>
-        <span className='text-base-l-16-2 text-black'>
-          {musicianBaseData?.nickname}
-        </span>
-      </div>
+      <Popover open={isOpen} onOpenChange={setIsOpen}>
+        <Popover.Trigger>{isAuthenticatedTriggerDiv}</Popover.Trigger>
+        <Popover.Content align='start' className='w-32'>
+          <Popover.MenuContainer>
+            {menuItems.map((item) => (
+              <Link
+                key={item.id}
+                href={item.url}
+                onClick={() => setIsOpen(false)}
+              >
+                <Popover.MenuItem>{item.label}</Popover.MenuItem>
+              </Link>
+            ))}
+          </Popover.MenuContainer>
+        </Popover.Content>
+      </Popover>
     );
   }
 

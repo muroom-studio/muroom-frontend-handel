@@ -20,7 +20,10 @@ const RequiredText = ({
   return (
     <label
       className={cn(
-        'text-base-exl-18-2 flex w-fit cursor-pointer items-center gap-x-1 text-black',
+        'text-base-exl-18-2 flex w-fit items-center gap-x-1 text-black',
+        {
+          'cursor-pointer': props.id,
+        },
         className,
       )}
       {...props}

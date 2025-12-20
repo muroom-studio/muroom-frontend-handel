@@ -10,6 +10,7 @@ import {
   TextField,
 } from '@muroom/components';
 import { CloseIcon } from '@muroom/icons';
+import { cn } from '@muroom/lib';
 import { updateObjectProperty } from '@muroom/util';
 
 import { StudioJuso } from '../third-step';
@@ -18,12 +19,14 @@ interface Props {
   isMobile?: boolean;
   value: StudioJuso;
   setValue: React.Dispatch<React.SetStateAction<StudioJuso>>;
+  onMyPage?: boolean;
 }
 
 export default function AddressForm({
   isMobile = false,
   value,
   setValue,
+  onMyPage = false,
 }: Props) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -59,11 +62,17 @@ export default function AddressForm({
 
   return (
     <div className='flex flex-col gap-y-[9px]'>
-      <RequiredText htmlFor='address' required={false}>
-        내 작업실
-      </RequiredText>
+      {!onMyPage && (
+        <RequiredText htmlFor='address' required={false}>
+          내 작업실
+        </RequiredText>
+      )}
 
-      <div className='grid grid-cols-[248px_1fr] gap-x-3'>
+      <div
+        className={cn('grid w-full grid-cols-[248px_1fr] gap-x-3', {
+          'grid-cols-[290px_1fr]': onMyPage,
+        })}
+      >
         <TextField
           id='address'
           value={value.juso}
@@ -73,7 +82,13 @@ export default function AddressForm({
           onClick={toggleModal}
           className='cursor-pointer'
         />
-        <Button type='button' variant='outline' size='l' onClick={toggleModal}>
+        <Button
+          type='button'
+          variant='outline'
+          size='l'
+          onClick={toggleModal}
+          className={onMyPage ? 'flex-none' : ''}
+        >
           주소찾기
         </Button>
       </div>

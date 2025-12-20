@@ -12,7 +12,7 @@ type TagVariant =
   | 'musician'
   | 'owner';
 
-type TagSize = 'm' | 's';
+type TagSize = 'l' | 'm' | 's';
 
 interface TagProps extends LabelHTMLAttributes<HTMLLabelElement> {
   variant?: TagVariant;
@@ -37,6 +37,7 @@ const Tag = ({
   > = {
     primary: {
       base: 'bg-primary-400 text-white',
+      l: 'text-base-m-14-2 px-2 py-[9px] text-white!', // 적용될 스타일
       s: 'text-base-exs-10 px-1 py-[6px] text-white!',
     },
     secondary: {
@@ -69,7 +70,7 @@ const Tag = ({
   const finalClassName = cn(baseStyle, variantStyle, sizeStyle, propsClassName);
 
   return (
-    <label className={finalClassName.trim() + ' text-base-s-12-2'} {...props}>
+    <label className={finalClassName} {...props}>
       {children}
     </label>
   );

@@ -220,10 +220,7 @@ export default function DetailTabSection({
         className='sticky z-40 border-b border-gray-200 bg-white'
         style={{ top: `${TOP_HEADER_HEIGHT}px` }}
       >
-        <div
-          ref={tabBarScrollRef}
-          className='flex overflow-x-auto [&::-webkit-scrollbar]:hidden'
-        >
+        <div ref={tabBarScrollRef} className='flex overflow-x-auto'>
           <TabBar
             level={3}
             tabs={DETAIL_TABS_DATA}

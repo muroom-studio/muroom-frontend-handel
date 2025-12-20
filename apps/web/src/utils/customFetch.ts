@@ -1,8 +1,15 @@
 import { BE_BASE_URL } from '@/config/constants';
+import { postUserRefresh } from '@/lib/user/(server)';
+// ⭐️ 방금 수정한 Server Action import (경로는 실제 파일 위치에 맞게 수정해주세요)
 import { ApiRequestError, type ApiResponse } from '@/types/api';
 import { HttpSuccessStatusCode } from '@/types/http';
 
-import { getToken } from './cookie';
+import { getToken, removeToken } from './cookie';
+
+// 재시도 여부 플래그 추가
+interface CustomRequestInit extends RequestInit {
+  _retry?: boolean;
+}
 
 function isSuccessResponse<T>(
   response: ApiResponse<T>,
@@ -12,9 +19,9 @@ function isSuccessResponse<T>(
 
 export const customFetch = async <T>(
   url: string,
-  options: RequestInit = {},
+  options: CustomRequestInit = {},
 ): Promise<T> => {
-  const { accessToken } = await getToken();
+  const { accessToken, refreshToken } = await getToken();
 
   const baseHeaders: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -24,7 +31,7 @@ export const customFetch = async <T>(
     baseHeaders['Authorization'] = `Bearer ${accessToken}`;
   }
 
-  const mergedOptions: RequestInit = {
+  const mergedOptions: CustomRequestInit = {
     ...options,
     headers: {
       ...baseHeaders,
@@ -33,7 +40,6 @@ export const customFetch = async <T>(
   };
 
   const baseUrl = typeof window === 'undefined' ? BE_BASE_URL : '';
-
   const fullUrl = `${baseUrl}/api/v1${url}`;
 
   try {
@@ -48,6 +54,32 @@ export const customFetch = async <T>(
     if (isSuccessResponse(responseData)) {
       return responseData.data;
     } else {
+      // ⭐️ [401 인터셉터 로직 추가]
+      // 401 에러이고 + 아직 재시도 안 했고 + 리프레시 토큰이 있다면
+      if (responseData.status === 401 && !options._retry && refreshToken) {
+        console.log('🔄 401 detected. Attempting to refresh token...');
+
+        // 1. Server Action 호출 (토큰 갱신 + 쿠키 설정)
+        const newTokens = await postUserRefresh();
+
+        if (newTokens?.accessToken) {
+          console.log('✅ Token refreshed. Retrying original request...');
+
+          // 2. 원래 요청 재시도
+          return await customFetch<T>(url, {
+            ...options,
+            _retry: true, // 재시도 플래그 설정 (무한 루프 방지)
+            headers: {
+              ...options.headers,
+              // 3. 방금 받은 새 토큰으로 헤더 교체 (쿠키 반영 시차 방지)
+              Authorization: `Bearer ${newTokens.accessToken}`,
+            },
+          });
+        }
+
+        // 갱신 실패 시 아래 에러 throw 로직으로 넘어감
+      }
+
       throw new ApiRequestError(responseData);
     }
   } catch (error) {

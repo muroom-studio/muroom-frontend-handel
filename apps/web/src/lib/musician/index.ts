@@ -1,6 +1,8 @@
 import {
   MusicianLoginRequestProps,
   MusicianLoginResponseProps,
+  MusicianMeDetailRequestDto,
+  MusicianMeDetailResponseDto,
   MusicianMeResponseDto,
   MusicianRegisterRequestProps,
   MusicianRegisterResponseProps,
@@ -43,6 +45,28 @@ export const getMusicianMe = async () => {
       method: 'GET',
     },
   );
+
+  return responseData;
+};
+
+export const getMusicianMeDetail = async () => {
+  const responseData = await customFetch<MusicianMeDetailResponseDto>(
+    '/musician/me/detail',
+    {
+      method: 'GET',
+    },
+  );
+
+  return responseData;
+};
+
+export const patchMusicianMeDetail = async (
+  dto: MusicianMeDetailRequestDto,
+) => {
+  const responseData = await customFetch('/musician/me/detail', {
+    method: 'PATCH',
+    body: JSON.stringify(dto),
+  });
 
   return responseData;
 };
