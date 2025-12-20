@@ -191,7 +191,7 @@ export default function CommonMap({
       return (
         <>
           <div className='absolute top-2 flex w-full flex-col gap-y-3 px-4'>
-            <Link href='/search' scroll={false}>
+            {/* <Link href='/search' scroll={false}>
               <TextField
                 id='keyword'
                 name='keyword'
@@ -203,7 +203,7 @@ export default function CommonMap({
                   'bg-white cursor-pointer focus:border-primary-400'
                 }
               />
-            </Link>
+            </Link> */}
             <FilterBtns />
           </div>
 
