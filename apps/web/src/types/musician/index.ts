@@ -12,6 +12,7 @@ export interface MusicianLoginRequestProps {
 export interface MusicianLoginResponseProps {
   type: LoginType;
   accessToken?: string;
+  refreshToken?: string;
   signupToken?: string;
   userId?: number;
   provider: ProviderType;
@@ -35,6 +36,7 @@ export interface MusicianRegisterRequestProps {
 
 export interface MusicianRegisterResponseProps {
   accessToken: string;
+  refreshToken: string;
   musicianId: number;
 }
 

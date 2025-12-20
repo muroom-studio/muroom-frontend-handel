@@ -11,8 +11,9 @@ export function useAuthCheck() {
   useEffect(() => {
     const checkLogin = async () => {
       try {
-        const token = await getToken();
-        setIsLoggedIn(!!token);
+        const tokenData = await getToken();
+
+        setIsLoggedIn(!!tokenData?.accessToken);
       } catch (err) {
         setIsLoggedIn(false);
       } finally {

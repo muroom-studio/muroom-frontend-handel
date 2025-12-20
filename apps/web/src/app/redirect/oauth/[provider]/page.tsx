@@ -39,10 +39,10 @@ export default function Page() {
           providerId: code,
         });
 
-        const { type, accessToken, signupToken } = result;
+        const { type, accessToken, refreshToken, signupToken } = result;
 
-        if (type === 'LOGIN' && accessToken) {
-          await setToken(accessToken);
+        if (type === 'LOGIN' && accessToken && refreshToken) {
+          await setToken(accessToken, refreshToken);
 
           toast.success('로그인이 완료되었습니다.');
           performRedirect();
