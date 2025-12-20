@@ -13,6 +13,8 @@ import {
 
 import { cn } from '../lib/utils';
 
+const EASING_EMPHASIZED = [0.2, 0.0, 0.0, 1.0] as const;
+
 interface BottomSheetProps {
   children: React.ReactNode;
   header?: React.ReactNode;
@@ -27,7 +29,7 @@ interface BottomSheetProps {
 export default function BottomSheet({
   children,
   header,
-  topMargin = 118,
+  topMargin = 114,
   middleRatio = 0.4,
   minHeight = 80,
   footerHeight = 64,
@@ -54,9 +56,7 @@ export default function BottomSheet({
   }, []);
 
   const OPEN_Y = topMargin;
-
   const MIDDLE_Y = windowHeight * (1 - middleRatio);
-
   const CLOSED_Y = windowHeight - footerHeight - minHeight;
 
   const [sheetState, setSheetState] = useState<'open' | 'middle' | 'closed'>(
@@ -143,7 +143,10 @@ export default function BottomSheet({
       onDragEnd={handleDragEnd}
       animate={controls}
       initial={{ y: windowHeight }}
-      transition={{ type: 'spring', damping: 40, stiffness: 300 }}
+      transition={{
+        duration: 0.5,
+        ease: EASING_EMPHASIZED,
+      }}
       style={{
         y,
         height: '100%',
@@ -159,10 +162,12 @@ export default function BottomSheet({
         onClick={() => {
           if (sheetState === 'closed') toMiddle();
         }}
-        className='flex-none cursor-grab touch-none pb-2 pt-3 active:cursor-grabbing'
+        className='flex-none cursor-grab touch-none pt-3 active:cursor-grabbing'
       >
         <div className='rounded-1000 mx-auto h-1 w-8 bg-gray-300' />
-        {header && <div className='mt-2 px-4'>{header}</div>}
+        {header && (
+          <div className='mt-2 border-b border-b-gray-300 px-4'>{header}</div>
+        )}
       </div>
 
       <div
@@ -179,7 +184,6 @@ export default function BottomSheet({
         className={cn(
           'scrollbar-hide flex-1 bg-white px-4',
           `pb-[${footerHeight + 40}px]`,
-
           'overscroll-y-none',
           sheetState === 'open'
             ? 'touch-pan-y overflow-y-auto'

@@ -1,10 +1,8 @@
-'use state';
+'use client';
 
-import React, { useMemo, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Button } from '@muroom/components';
-
-const MAX_LINES = 3;
 
 interface Props {
   message: string;
@@ -12,28 +10,34 @@ interface Props {
 
 export default function ExpandableText({ message }: Props) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+  const textRef = useRef<HTMLParagraphElement>(null);
 
-  const lines = useMemo(
-    () => message.split('\n').filter((line) => line.trim() !== ''),
-    [],
-  );
-
-  const initialText = lines.slice(0, MAX_LINES).join('\n');
-
-  const isShortText = lines.length <= MAX_LINES;
+  useEffect(() => {
+    if (textRef.current) {
+      const isClamped =
+        textRef.current.scrollHeight > textRef.current.clientHeight;
+      setIsOverflowing(isClamped);
+    }
+  }, [message]);
 
   return (
-    <div className='relative'>
-      <p className='whitespace-pre-wrap text-base'>
-        {isExpanded ? message : initialText}
+    <div className='relative flex flex-col gap-y-6'>
+      <p
+        ref={textRef}
+        className={`whitespace-pre-wrap text-base ${
+          !isExpanded ? 'line-clamp-3' : ''
+        }`}
+      >
+        {message}
       </p>
 
-      {!isShortText && !isExpanded && (
+      {isOverflowing && !isExpanded && (
         <div className='flex-center'>
           <Button
             variant='outline'
             size='l'
-            onClick={() => setIsExpanded(!isExpanded)}
+            onClick={() => setIsExpanded(true)}
           >
             {'더보기'}
           </Button>

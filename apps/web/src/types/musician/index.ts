@@ -12,6 +12,7 @@ export interface MusicianLoginRequestProps {
 export interface MusicianLoginResponseProps {
   type: LoginType;
   accessToken?: string;
+  refreshToken?: string;
   signupToken?: string;
   userId?: number;
   provider: ProviderType;
@@ -35,5 +36,22 @@ export interface MusicianRegisterRequestProps {
 
 export interface MusicianRegisterResponseProps {
   accessToken: string;
+  refreshToken: string;
   musicianId: number;
+}
+
+// ==================================================
+// ==================================================
+// 홈 -> 로그인 후 닉네임, instrument 얻기
+export interface MusicianInstrument {
+  code: string;
+  description: string;
+}
+
+// 뮤지션 응답 DTO
+export interface MusicianMeResponseDto {
+  musicianId: number;
+  nickname: string;
+  profileImageUrl: string;
+  musicianInstrument: MusicianInstrument;
 }

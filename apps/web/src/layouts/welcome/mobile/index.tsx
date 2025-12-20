@@ -3,5 +3,5 @@ interface Props {
 }
 
 export default function MobileWelcomeLayout({ children }: Props) {
-  return <div className='bg-white'>{children}</div>;
+  return <div className='h-full'>{children}</div>;
 }

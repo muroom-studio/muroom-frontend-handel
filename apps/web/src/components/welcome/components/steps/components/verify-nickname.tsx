@@ -21,12 +21,21 @@ type CheckStatus = 'idle' | 'success' | 'error';
 
 export default function VerifyNickname({ value, setValue }: Props) {
   const [localValue, setLocalValue] = useState(value || '');
+
   const [checkStatus, setCheckStatus] = useState<CheckStatus>('idle');
 
-  const { refetch, isLoading } = useUserNicknameCheckQuery(localValue);
+  const { refetch, isLoading } = useUserNicknameCheckQuery({
+    nickname: localValue,
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocalValue(e.target.value);
+    const rawValue = e.target.value;
+
+    const sanitizedValue = rawValue.replace(/[^ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]/g, '');
+
+    const finalValue = sanitizedValue.slice(0, 20);
+
+    setLocalValue(finalValue);
 
     if (checkStatus !== 'idle') {
       setCheckStatus('idle');
@@ -50,13 +59,26 @@ export default function VerifyNickname({ value, setValue }: Props) {
     }
   };
 
-  const messageMap = {
-    idle: { text: null, variant: 'default' },
-    success: { text: '사용 가능한 닉네임입니다', variant: 'success' },
-    error: { text: '이미 사용 중인 닉네임입니다', variant: 'error' },
-  } as const;
+  const getHelperMessageInfo = () => {
+    if (checkStatus === 'success') {
+      return {
+        text: '사용 가능한 닉네임입니다',
+        variant: 'success' as const,
+        showIcon: true,
+      };
+    }
+    if (checkStatus === 'error') {
+      return {
+        text: '이미 사용 중인 닉네임입니다',
+        variant: 'error' as const,
+        showIcon: false,
+      };
+    }
 
-  const currentMessage = messageMap[checkStatus];
+    return null;
+  };
+
+  const helperInfo = getHelperMessageInfo();
 
   return (
     <div className='flex flex-col gap-y-[9px]'>
@@ -70,7 +92,7 @@ export default function VerifyNickname({ value, setValue }: Props) {
         </div>
       </div>
       <div className='flex flex-col gap-y-2'>
-        <div className='grid grid-cols-[244px_1fr] gap-x-3'>
+        <div className='relative grid grid-cols-[244px_1fr] gap-x-3'>
           <TextField
             id='nickname'
             name='nickname'
@@ -95,9 +117,12 @@ export default function VerifyNickname({ value, setValue }: Props) {
           </Button>
         </div>
 
-        {checkStatus !== 'idle' && (
-          <HelperMessage variant={currentMessage.variant} showIcon={true}>
-            {currentMessage.text}
+        {helperInfo && (
+          <HelperMessage
+            variant={helperInfo.variant}
+            showIcon={helperInfo.showIcon}
+          >
+            {helperInfo.text}
           </HelperMessage>
         )}
       </div>

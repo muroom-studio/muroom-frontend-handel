@@ -25,12 +25,15 @@ export default function DesktopLoginPage() {
         </div>
         <div className='h-29' />
         <div className='flex flex-col gap-y-3'>
-          {(['KAKAO', 'NAVER', 'GOOGLE'] as SocialType[]).map((social) => (
+          {/* {(['KAKAO', 'NAVER', 'GOOGLE'] as SocialType[]).map((social) => (
+            <SocialBtn key={social} social={social} />
+          ))} */}
+          {(['KAKAO'] as SocialType[]).map((social) => (
             <SocialBtn key={social} social={social} />
           ))}
         </div>
-        <div className='h-6' />
-        <div className='flex-center gap-x-2'>
+        {/* <div className='h-6' /> */}
+        {/* <div className='flex-center gap-x-2'>
           <span className='text-base-l-16-1'>사장님이시면</span>
 
           <span
@@ -39,7 +42,7 @@ export default function DesktopLoginPage() {
           >
             뮤룸 파트너로 시작하기
           </span>
-        </div>
+        </div> */}
       </div>
     </>
   );

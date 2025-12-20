@@ -2,8 +2,10 @@
 import { PageRequestProps, PaginationInfo } from '../api';
 
 export type FilterOptionItem = {
+  id?: number;
   code: string;
   description: string;
+  iconImageKey?: string;
 };
 
 export interface StudioFilterOptionsResponseProps {
@@ -11,7 +13,7 @@ export interface StudioFilterOptionsResponseProps {
   restroomOptions: FilterOptionItem[];
   studioCommonOptions: FilterOptionItem[];
   studioIndividualOptions: FilterOptionItem[];
-  unavailableInstrumentOptions: FilterOptionItem[];
+  forbiddenInstrumentOptions: FilterOptionItem[];
 }
 
 // =======================================================
@@ -26,6 +28,7 @@ export interface StudiosMapSearchRequestProps {
   minLongitude: number;
   maxLongitude: number;
   keyword?: string;
+  sort?: string;
   commonOptionCodes?: string[];
   individualOptionCodes?: string[];
   minPrice?: number;
@@ -59,8 +62,7 @@ export type StudiosMapSearchResponseProps = StudiosMapSearchItem[];
 // 작업실 목록 불러오기
 
 export interface StudiosMapListRequestProps
-  extends StudiosMapSearchRequestProps,
-    PageRequestProps {}
+  extends StudiosMapSearchRequestProps, PageRequestProps {}
 
 export interface StudiosMapListItem {
   latitude: number;
@@ -75,9 +77,9 @@ export interface StudiosMapListItem {
       lineName: string;
       lineColor: string;
     }[];
+    distanceInMeters: number;
   };
   thumbnailImageUrl?: string;
-  walkingTimeMinutes: number;
 }
 
 // 3. 응답 타입

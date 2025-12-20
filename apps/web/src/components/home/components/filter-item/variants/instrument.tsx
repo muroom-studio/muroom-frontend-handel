@@ -1,6 +1,5 @@
 'use client';
 
-import { Button } from '@muroom/components';
 import { updateArrayByToggle } from '@muroom/util';
 
 import OptionItem from '@/components/common/option-item';
@@ -46,7 +45,7 @@ export default function InstrumentFilter({
     <FilterWrapper
       title='악기'
       titleChildren={
-        <span className='text-base-m-14-1 text-gray-500'>높은 이용빈도</span>
+        <span className='text-base-m-14-1 text-gray-500'>사용 가능 악기</span>
       }
       onReset={() => onChange({ forbiddenInstrumentCodes: null })}
     >
@@ -67,9 +66,9 @@ export default function InstrumentFilter({
           />
         ))}
       </div>
-      <div className='flex justify-end'>
+      {/* <div className='flex justify-end'>
         <Button variant='secondary'>추가요청</Button>
-      </div>
+      </div> */}
     </FilterWrapper>
   );
 }

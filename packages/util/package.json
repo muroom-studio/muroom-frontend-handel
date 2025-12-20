@@ -11,14 +11,17 @@
     "lint": "eslint src --max-warnings 0"
   },
   "peerDependencies": {
-    "react": "^19.2.0"
+    "react": "^19.0.1"
   },
   "devDependencies": {
     "@muroom/eslint-config": "workspace:*",
     "@muroom/typescript-config": "workspace:*",
-    "@types/react": "^19.1.0",
+    "@types/react": "^19.0.1",
     "eslint": "^9.31.0",
-    "react": "^19.1.0",
+    "react": "^19.0.1",
     "typescript": "5.8.2"
+  },
+  "dependencies": {
+    "date-fns": "4.1.0"
   }
 }

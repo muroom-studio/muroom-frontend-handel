@@ -12,7 +12,7 @@ import SocialBtn, { SocialType } from '../../components/social-btn';
 export default function MobileLoginPage() {
   const { setJoin } = useWelcomeMode();
   return (
-    <div className='flex h-screen flex-col'>
+    <div className='flex h-full flex-col'>
       <WelcomeHeader />
 
       <div className='flex flex-1 flex-col justify-between px-4 pb-10'>
@@ -26,11 +26,11 @@ export default function MobileLoginPage() {
 
         <div className='flex-center-col gap-y-6'>
           <div className='flex w-full flex-col gap-y-3'>
-            {(['KAKAO', 'NAVER', 'GOOGLE'] as SocialType[]).map((social) => (
+            {(['KAKAO'] as SocialType[]).map((social) => (
               <SocialBtn key={social} social={social} />
             ))}
           </div>
-          <div className='flex-center gap-x-2'>
+          {/* <div className='flex-center gap-x-2'>
             <span className='text-base-l-16-1'>사장님이시면</span>
             <span
               onClick={() => setJoin(true)}
@@ -38,7 +38,7 @@ export default function MobileLoginPage() {
             >
               뮤룸 파트너로 시작하기
             </span>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

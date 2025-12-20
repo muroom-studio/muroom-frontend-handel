@@ -4,6 +4,8 @@ import { useEffect, useRef } from 'react';
 
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 
+import { toast } from 'sonner';
+
 import Loading from '@/app/loading';
 import { useMusicianLoginMutation } from '@/hooks/api/musician/useMutations';
 import { useAuthRedirectStore } from '@/store/useAuthRedirectStore';
@@ -37,11 +39,12 @@ export default function Page() {
           providerId: code,
         });
 
-        const { type, accessToken, signupToken } = result;
+        const { type, accessToken, refreshToken, signupToken } = result;
 
-        if (type === 'LOGIN' && accessToken) {
-          await setToken(accessToken);
+        if (type === 'LOGIN' && accessToken && refreshToken) {
+          await setToken(accessToken, refreshToken);
 
+          toast.success('로그인이 완료되었습니다.');
           performRedirect();
           return;
         } else if (type === 'SIGNUP_REQUIRED' && signupToken) {

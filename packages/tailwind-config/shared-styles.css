@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@plugin "@tailwindcss/typography";
 
 @import './styles/_color.css';
 @import './styles/_radius.css';
@@ -69,14 +70,66 @@
   .shadow-detail {
     box-shadow: var(--shadow-detail);
   }
-}
 
-input[type='number']::-webkit-outer-spin-button,
-input[type='number']::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
+  /* 1. 스크롤바 커스터마이징 (호버 시 확장 방지 포함) */
+  .overflow-auto,
+  .overflow-scroll,
+  .overflow-x-auto,
+  .overflow-x-scroll,
+  .overflow-y-auto,
+  .overflow-y-scroll {
+    /* Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: #1e29391a transparent;
 
-input[type='number'] {
-  -moz-appearance: textfield;
+    /* Chrome, Edge, Safari, Opera */
+    &::-webkit-scrollbar {
+      width: 3px;
+      height: 3px;
+      background-color: transparent; /* 트랙 배경 투명 강제 */
+    }
+
+    /* [핵심] 스크롤바 영역에 마우스를 올려도 크기를 3px로 강제 고정 */
+    &::-webkit-scrollbar:hover {
+      width: 3px;
+      height: 3px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #1e29391a;
+      border-radius: 9999px;
+      background-clip: padding-box; /* 테두리 겹침 방지 */
+      border: 0 solid transparent;
+    }
+
+    /* Thumb에 호버했을 때 색상 유지 (필요 시 색상 변경 가능) */
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: #1e29391a;
+    }
+  }
+
+  /* 2. Input Number 화살표 제거 */
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+
+  /* 3. 스크롤바 숨기기 유틸리티 */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 }

@@ -3,13 +3,13 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { scroller } from 'react-scroll';
 
-import Image from 'next/image';
-
 import { Badge, TabBar } from '@muroom/components';
 import { LocationIcon } from '@muroom/icons';
 
 import { StudioDetailResponseProps } from '@/types/studio';
 
+import ImageGalleryModal, { useGalleryModal } from './components/gallery-modal';
+import MainImageSection from './components/main-image-section';
 import ShareBtn from './components/share-btn';
 import {
   BuildingInfoSection,
@@ -38,11 +38,22 @@ export default function DetailTabSection({
     studioName,
     studioMinPrice,
     studioMaxPrice,
-    address,
+    roadNameAddress,
     studioLongitude,
     studioLatitude,
     nearbySubwayStations,
   } = detailStudio.studioBaseInfo;
+
+  const galleryController = useGalleryModal();
+
+  const allGalleryImages = useMemo(
+    () => ({
+      main: detailStudio.studioImages.mainImageKeys || [],
+      building: detailStudio.studioImages.buildingImageKeys || [],
+      room: detailStudio.studioImages.roomImageKeys || [],
+    }),
+    [detailStudio.studioImages],
+  );
 
   const [activeTab, setActiveTab] = useState('building-info');
   const [isClickScrolling, setIsClickScrolling] = useState(false);
@@ -151,31 +162,28 @@ export default function DetailTabSection({
     };
   }, [isClickScrolling, activeTab, containerRef]);
 
-  // 1. 도보 시간이 가장 짧은 역 찾기 (Text 표시용)
-  const nearestStation = useMemo(() => {
-    if (!nearbySubwayStations || nearbySubwayStations.length === 0) return null;
-    // 시간순 오름차순 정렬 후 첫 번째 요소 선택
-    return [...nearbySubwayStations].sort(
-      (a, b) => a.walkingTimeMinutes - b.walkingTimeMinutes,
-    )[0];
-  }, [nearbySubwayStations]);
-
   return (
     <>
       <div className='bg-white'>
-        {/* 임시 방편 박기 */}
-        <Image
-          src={detailStudio.studioImages.mainImageKeys[0] || ''}
-          alt={'더미이미지'}
-          width={375.3}
-          height={250}
-          style={{ objectFit: 'cover' }}
-        />
+        <div className='relative h-[250px] w-full overflow-hidden'>
+          <MainImageSection
+            roomImgs={[
+              ...(detailStudio.studioImages.mainImageKeys || []),
+              ...(detailStudio.studioImages.buildingImageKeys || []),
+              ...(detailStudio.studioImages.roomImageKeys || []),
+            ]}
+            controller={galleryController}
+          />
+        </div>
         <div className='px-5 py-6'>
           <div className='flex flex-col gap-y-6'>
             <div className='flex flex-col gap-y-2'>
               <div className='flex-between'>
-                <span className='text-title-s-22-2'>{`${studioMinPrice / 10000}만원 ~ ${studioMaxPrice / 10000}만원`}</span>
+                <span className='text-title-s-22-2'>
+                  {studioMinPrice && studioMaxPrice
+                    ? `${studioMinPrice / 10000}만원 ~ ${studioMaxPrice / 10000}만원`
+                    : '가격문의'}
+                </span>
                 <ShareBtn />
               </div>
               <span className='text-base-m-14-1 text-gray-500'>
@@ -183,15 +191,12 @@ export default function DetailTabSection({
               </span>
             </div>
             <div className='flex flex-col gap-y-3'>
-              <div className='flex items-center gap-x-1'>
-                {nearbySubwayStations
-                  ?.flatMap((station) => station.lines)
-                  .filter(
-                    (line, index, self) =>
-                      index ===
-                      self.findIndex((t) => t.lineName === line.lineName),
-                  )
-                  .map((line) => (
+              {nearbySubwayStations.map((place) => (
+                <div
+                  key={place.stationName}
+                  className='flex items-center gap-x-1'
+                >
+                  {place.lines.map((line) => (
                     <Badge
                       key={line.lineName}
                       variant='subway'
@@ -199,11 +204,12 @@ export default function DetailTabSection({
                       lineColor={line.lineColor}
                     />
                   ))}
-                <span className='text-base-m-14-1'>{`${nearestStation?.stationName}역 도보 ${nearestStation?.walkingTimeMinutes}분`}</span>
-              </div>
+                  <span className='text-base-m-14-1'>{`${place?.stationName}역에서 ${place?.distanceInMeters?.toLocaleString()}m`}</span>
+                </div>
+              ))}
               <div className='flex -translate-x-1 items-center gap-x-1'>
                 <LocationIcon className='size-6 text-gray-400' />
-                <span className='text-base-m-14-1'>{address}</span>
+                <span className='text-base-m-14-1'>{roadNameAddress}</span>
               </div>
             </div>
           </div>
@@ -248,6 +254,7 @@ export default function DetailTabSection({
         <section id='room-info'>
           <RoomInfoSection
             title='방 정보'
+            controller={galleryController}
             roomData={detailStudio.studioRooms}
             roomImgs={detailStudio.studioImages.roomImageKeys}
             blueprintImg={detailStudio.studioImages.blueprintImageKey}
@@ -265,6 +272,11 @@ export default function DetailTabSection({
           />
         </section>
       </div>
+
+      <ImageGalleryModal
+        controller={galleryController}
+        images={allGalleryImages}
+      />
     </>
   );
 }

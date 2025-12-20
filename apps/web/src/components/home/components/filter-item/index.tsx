@@ -92,7 +92,7 @@ export default function FilterItem({ variant, filters, setFilters }: Props) {
           <InstrumentFilter
             forbiddenInstrumentCodes={filters.forbiddenInstrumentCodes}
             onChange={(vals) => setFilters(vals)}
-            instrumentOptions={data?.unavailableInstrumentOptions}
+            instrumentOptions={data?.forbiddenInstrumentOptions}
           />
         );
       default:
@@ -126,7 +126,7 @@ export default function FilterItem({ variant, filters, setFilters }: Props) {
       )}
     >
       <span className='truncate'>{buttonLabel}</span>
-      <DownArrowIcon className='rotate-0 transition-transform duration-200 group-data-[state=open]:rotate-180' />
+      <DownArrowIcon className='shrink-0 rotate-0 transition-transform duration-200 group-data-[state=open]:rotate-180' />
     </button>
   );
 

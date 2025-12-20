@@ -8,6 +8,6 @@ export interface Props {
 
 export default function ComponentSpinner({ size = 8 }: Props) {
   return (
-    <SyncLoader size={size} margin={3} color='#ffffff' speedMultiplier={0.7} />
+    <SyncLoader size={size} margin={3} color='#a684ff' speedMultiplier={0.7} />
   );
 }

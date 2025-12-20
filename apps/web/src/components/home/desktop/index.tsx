@@ -1,6 +1,8 @@
 'use client';
 
-import { Button } from '@muroom/components';
+import { useEffect, useRef } from 'react';
+
+import { Button, Spinner } from '@muroom/components';
 import { ResetIcon } from '@muroom/icons';
 
 import Loading from '@/app/loading';
@@ -9,6 +11,7 @@ import CommonMap from '@/components/common/map';
 import FilterItem, { Variant } from '@/components/home/components/filter-item';
 import { useFilters } from '@/hooks/nuqs/home/useFilters';
 import { MapState } from '@/hooks/nuqs/home/useMapState';
+import { useSort } from '@/hooks/nuqs/home/useSort';
 import { StudioDetailResponseProps } from '@/types/studio';
 import { StudiosMapListItem, StudiosMapSearchItem } from '@/types/studios';
 
@@ -20,9 +23,14 @@ interface Props {
   setMapValue: (newState: MapState | ((prev: MapState) => MapState)) => void;
   filters: ReturnType<typeof useFilters>['filters'];
   setFilters: ReturnType<typeof useFilters>['setFilters'];
+  sort: ReturnType<typeof useSort>['sort'];
+  setSort: ReturnType<typeof useSort>['setSort'];
   clearFilters: () => void;
   studios: StudiosMapListItem[];
+  listRef: React.RefObject<HTMLDivElement | null>;
+  totalElements: number;
   detailStudio?: StudioDetailResponseProps;
+  isDetailLoading?: boolean;
   markersData: StudiosMapSearchItem[];
   isLoading: boolean;
   isListLoading: boolean;
@@ -42,13 +50,20 @@ export default function DesktopHomePage({
   filters,
   setFilters,
   clearFilters,
+  sort,
+  setSort,
   studios,
+  listRef,
+  totalElements,
   detailStudio,
+  isDetailLoading,
   markersData,
   isLoading,
   isListLoading,
   pagination,
 }: Props) {
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+
   const gridTemplateColumns = mapValue.studioId
     ? '375px 375px 1fr'
     : '375px 1fr';
@@ -56,6 +71,21 @@ export default function DesktopHomePage({
   const hasActiveFilter = Object.values(filters).some(
     (value) => value !== null,
   );
+
+  useEffect(() => {
+    const container = mapContainerRef.current;
+    if (!container) return;
+
+    const observer = new ResizeObserver(() => {
+      window.dispatchEvent(new Event('resize'));
+    });
+
+    observer.observe(container);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   if (isLoading) {
     return <Loading />;
@@ -90,12 +120,16 @@ export default function DesktopHomePage({
           className='mb-[92px] grid min-h-0 flex-1'
           style={{
             gridTemplateColumns,
-            transition: 'grid-template-columns 0.2s',
+            transition: 'grid-template-columns 0.2s ease-in-out',
           }}
         >
           <div className='flex h-full min-h-0 flex-col border-r border-r-gray-300 bg-white'>
-            <ListFilter studioNum={studios.length || 0} />
-            <div className='min-h-0 flex-1 overflow-y-scroll'>
+            <ListFilter
+              studioNum={totalElements}
+              currentSort={sort}
+              onSortChange={(val) => setSort(val)}
+            />
+            <div ref={listRef} className='min-h-0 flex-1 overflow-y-scroll'>
               <ListView
                 studios={studios}
                 mapValue={mapValue}
@@ -108,21 +142,27 @@ export default function DesktopHomePage({
             </div>
           </div>
 
-          {detailStudio && (
+          {mapValue.studioId && (
             <div className='shadow-detail flex h-full min-h-0 flex-col border-r-[0.5px] border-gray-300 bg-white'>
-              <CommonDetailStudio
-                detailStudio={detailStudio}
-                setStudioId={(id: string) =>
-                  setMapValue((prev) => ({
-                    ...prev,
-                    studioId: prev.studioId === id ? null : id,
-                  }))
-                }
-              />
+              {isDetailLoading ? (
+                <div className='flex-center size-full'>
+                  <Spinner variant='component' />
+                </div>
+              ) : detailStudio ? (
+                <CommonDetailStudio
+                  detailStudio={detailStudio}
+                  setStudioId={(id: string) =>
+                    setMapValue((prev) => ({
+                      ...prev,
+                      studioId: prev.studioId === id ? null : id,
+                    }))
+                  }
+                />
+              ) : null}
             </div>
           )}
 
-          <div className='h-full w-full'>
+          <div ref={mapContainerRef} className='h-full w-full'>
             <CommonMap
               mapValue={mapValue}
               setMapValue={setMapValue}

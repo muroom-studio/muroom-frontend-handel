@@ -1,4 +1,5 @@
-import { type ApiResponse } from '@/types/api';
+import { BE_BASE_URL } from '@/config/constants';
+import { ApiRequestError, type ApiResponse } from '@/types/api';
 import { HttpSuccessStatusCode } from '@/types/http';
 
 import { getToken } from './cookie';
@@ -13,14 +14,14 @@ export const customFetch = async <T>(
   url: string,
   options: RequestInit = {},
 ): Promise<T> => {
-  const token = await getToken();
+  const { accessToken } = await getToken();
 
   const baseHeaders: Record<string, string> = {
     'Content-Type': 'application/json',
   };
 
-  if (token) {
-    baseHeaders['Authorization'] = `Bearer ${token}`;
+  if (accessToken) {
+    baseHeaders['Authorization'] = `Bearer ${accessToken}`;
   }
 
   const mergedOptions: RequestInit = {
@@ -31,13 +32,34 @@ export const customFetch = async <T>(
     },
   };
 
-  const response = await fetch('/api/v1' + url, mergedOptions);
+  const baseUrl = typeof window === 'undefined' ? BE_BASE_URL : '';
 
-  const responseData: ApiResponse<T> = await response.json();
+  const fullUrl = `${baseUrl}/api/v1${url}`;
 
-  if (isSuccessResponse(responseData)) {
-    return responseData.data;
-  } else {
-    throw new Error(responseData.error?.message || 'API 요청에 실패했습니다.');
+  try {
+    const response = await fetch(fullUrl, mergedOptions);
+
+    if (!response) {
+      throw new Error('No response from server');
+    }
+
+    const responseData: ApiResponse<T> = await response.json();
+
+    if (isSuccessResponse(responseData)) {
+      return responseData.data;
+    } else {
+      throw new ApiRequestError(responseData);
+    }
+  } catch (error) {
+    if (typeof window === 'undefined') {
+      console.error(`❌ [Server Fetch Error] ${fullUrl}:`, error);
+    }
+
+    if (error instanceof ApiRequestError) {
+      throw error;
+    }
+    throw new Error(
+      error instanceof Error ? error.message : '네트워크 요청 실패',
+    );
   }
 };

@@ -8,7 +8,8 @@ import Loading from '@/app/loading';
 import CommonDetailStudio from '@/components/common/detail-studio';
 import CommonMap from '@/components/common/map';
 import { MapState } from '@/hooks/nuqs/home/useMapState';
-import { Studio } from '@/types/studio';
+import { useSort } from '@/hooks/nuqs/home/useSort';
+import { StudioDetailResponseProps } from '@/types/studio';
 import { StudiosMapListItem, StudiosMapSearchItem } from '@/types/studios';
 
 import ListFilter from '../components/list-filter';
@@ -17,8 +18,11 @@ import ListView from '../components/list-view';
 interface Props {
   mapValue: MapState;
   setMapValue: (newState: MapState | ((prev: MapState) => MapState)) => void;
+  sort: ReturnType<typeof useSort>['sort'];
+  setSort: ReturnType<typeof useSort>['setSort'];
   studios: StudiosMapListItem[];
-  detailStudio: Studio;
+  totalElements: number;
+  detailStudio?: StudioDetailResponseProps;
   markersData: StudiosMapSearchItem[];
   isLoading: boolean;
 
@@ -40,16 +44,19 @@ const SHEET_CONFIG = {
 export default function MobileHomePage({
   mapValue,
   setMapValue,
+  sort,
+  setSort,
   studios,
+  totalElements,
   detailStudio,
   markersData,
   isLoading,
-  infiniteScroll, // destructuring
+  infiniteScroll,
 }: Props) {
   const sheetY = useMotionValue(0);
 
   if (isLoading) {
-    return <Loading />; // return 추가 (오타 수정)
+    return <Loading />;
   }
 
   return (
@@ -66,7 +73,13 @@ export default function MobileHomePage({
 
       <BottomSheet
         {...SHEET_CONFIG}
-        header={<ListFilter studioNum={studios.length || 0} />}
+        header={
+          <ListFilter
+            studioNum={totalElements}
+            currentSort={sort}
+            onSortChange={(val) => setSort(val)}
+          />
+        }
         externalY={sheetY}
       >
         <ListView

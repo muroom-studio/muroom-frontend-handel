@@ -19,6 +19,7 @@ export { default as RequiredText } from './RequiredText';
 export { default as OtpGroup } from './OtpGroup';
 export { default as HelperMessage } from './HelperMessage';
 export { default as Pagination } from './Pagination';
+export { default as PageWrapper } from './PageWrapper';
 
 export {
   Dropdown,

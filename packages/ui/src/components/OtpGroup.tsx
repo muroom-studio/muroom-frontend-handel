@@ -44,7 +44,7 @@ const OtpGroup = ({ length = 6, value, onChange, className }: Props) => {
 
   return (
     <div
-      className={cn('grid gap-[10.4px]', className)}
+      className={cn('grid items-center gap-[10.4px]', className)}
       style={{
         gridTemplateColumns: `repeat(${length}, minmax(0, 1fr))`,
       }}
@@ -60,10 +60,7 @@ const OtpGroup = ({ length = 6, value, onChange, className }: Props) => {
           onKeyDown={(e) => handleKeyDown(index, e)}
           hideClearButton={true}
           className='min-w-0 flex-1'
-          inputClassName={cn(
-            'h-[48px] text-center p-0',
-            'focus:border-primary-300 focus:ring-1 focus:ring-primary-600',
-          )}
+          inputClassName={cn('h-[48px] text-center p-0')}
           inputMode='numeric'
           maxLength={1}
           autoComplete='one-time-code'

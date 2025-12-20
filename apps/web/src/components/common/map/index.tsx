@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 import { MotionValue, motion, useTransform } from 'framer-motion';
 
@@ -28,6 +27,7 @@ import { useSearch } from '@/hooks/nuqs/common/useSearch';
 import { useFilters } from '@/hooks/nuqs/home/useFilters';
 import { MAX_ZOOM, MIN_ZOOM, MapState } from '@/hooks/nuqs/home/useMapState';
 import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
+import { useRecentSearchStore } from '@/store/useRecentKeywordStore';
 import { StudiosMapSearchItem } from '@/types/studios';
 
 import CompareBtn from './ui/compare-btn';
@@ -53,32 +53,30 @@ export default function CommonMap({
   const [keyword, setKeyword] = useSearch();
   const { isMobile } = useResponsiveLayout();
   const mapRef = useRef<HTMLDivElement | null>(null);
+
   const [windowHeight, setWindowHeight] = useState(0);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setWindowHeight(window.innerHeight);
-
       const handleResize = () => setWindowHeight(window.innerHeight);
       window.addEventListener('resize', handleResize);
       return () => window.removeEventListener('resize', handleResize);
     }
   }, []);
 
-  const uiTop = useTransform(sheetY || new MotionValue(0), (latestY) => {
-    if (!windowHeight) return -1000;
+  const uiY = useTransform(sheetY || new MotionValue(0), (latestY) => {
+    if (!windowHeight) return latestY;
 
-    const middleYLimit = windowHeight * (1 - middleRatio);
-    const effectiveY = Math.max(latestY, middleYLimit);
+    const middleY = windowHeight * (1 - middleRatio);
 
-    return effectiveY - 100;
+    return Math.max(latestY, middleY);
   });
 
   const handleMarkerClick = useCallback(
-    (id: string, lat: number, lng: number) => {
+    (id: string) => {
       setMapValue((prev) => ({
         ...prev,
-        center: { lat, lng },
         studioId: prev.studioId === id ? null : id,
       }));
     },
@@ -179,6 +177,15 @@ export default function CommonMap({
     }));
   }, [setMapValue]);
 
+  const { pendingKeyword, setPendingKeyword } = useRecentSearchStore();
+
+  useEffect(() => {
+    if (pendingKeyword !== null) {
+      setKeyword(pendingKeyword);
+      setPendingKeyword(null);
+    }
+  }, [pendingKeyword, setKeyword, setPendingKeyword]);
+
   const renderMapUI = () => {
     if (isMobile) {
       return (
@@ -188,7 +195,7 @@ export default function CommonMap({
               <TextField
                 id='keyword'
                 name='keyword'
-                value={keyword}
+                value={keyword || ''}
                 onClear={() => setKeyword('')}
                 placeholder='지하철역 또는 작업실 검색하기'
                 leftIcon={<SearchIcon className='size-6' />}
@@ -200,29 +207,41 @@ export default function CommonMap({
             <FilterBtns />
           </div>
 
-          <motion.div
-            className='pointer-events-none absolute left-0 z-50 w-full px-4'
-            style={{ top: uiTop }}
-          >
-            <div className='relative flex w-full items-end justify-end'>
-              <div className='pointer-events-auto absolute bottom-0 left-1/2 -translate-x-1/2'>
-                <LocationTag
-                  mapCenter={mapValue.center}
-                  size='S'
-                  className='h-9'
-                />
-              </div>
+          {/* Floating UI */}
+          {sheetY && (
+            <motion.div
+              className='pointer-events-none absolute left-0 top-0 z-50 w-full px-4'
+              // [수정됨] sheetY 대신 제한된 uiY 사용
+              style={{ y: uiY }}
+            >
+              <div
+                className={
+                  // -translate-y-full: 자신의 높이만큼 위로 올려 바텀시트 상단에 붙임
+                  // pb-4: 바텀시트와의 간격 16px 확보
+                  'relative flex w-full -translate-y-full flex-col pb-4'
+                }
+              >
+                <div className='relative flex w-full items-end justify-end'>
+                  <div className='pointer-events-auto absolute bottom-0 left-1/2 -translate-x-1/2'>
+                    <LocationTag
+                      mapCenter={mapValue.center}
+                      size='S'
+                      className='h-9'
+                    />
+                  </div>
 
-              <div className='pointer-events-auto flex flex-col gap-y-3'>
-                <CompareBtn isMobile={isMobile} />
-                <CurrentLocationBtn
-                  isMobile={isMobile}
-                  mapValue={mapValue}
-                  setMapValue={setMapValue}
-                />
+                  <div className='pointer-events-auto flex flex-col gap-y-3'>
+                    {/* <CompareBtn isMobile={isMobile} /> */}
+                    <CurrentLocationBtn
+                      isMobile={isMobile}
+                      mapValue={mapValue}
+                      setMapValue={setMapValue}
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          )}
         </>
       );
     }
@@ -239,7 +258,7 @@ export default function CommonMap({
           className='absolute bottom-10 left-1/2 z-50 -translate-x-1/2'
         />
 
-        <CompareBtn className='absolute bottom-12 right-10 z-50' />
+        {/* <CompareBtn className='absolute bottom-12 right-10 z-50' /> */}
       </>
     );
   };
@@ -315,7 +334,7 @@ const FilterBtns = () => {
           </div>
         }
       >
-        <div className='flex flex-col gap-y-5'>
+        <div className='gap-y-15 flex flex-col'>
           <OptionFilter
             commonOptionCodes={filters.commonOptionCodes}
             individualOptionCodes={filters.individualOptionCodes}
@@ -323,7 +342,6 @@ const FilterBtns = () => {
             publicOptions={data?.studioCommonOptions}
             privateOptions={data?.studioIndividualOptions}
           />
-          <div className='h-2 bg-gray-200' />
           <BuildingTypeFilter
             floorTypes={filters.floorTypes}
             restroomTypes={filters.restroomTypes}
@@ -334,11 +352,10 @@ const FilterBtns = () => {
             floorOptionsData={data?.floorOptions}
             restroomOptionsData={data?.restroomOptions}
           />
-          <div className='h-2 bg-gray-200' />
           <InstrumentFilter
             forbiddenInstrumentCodes={filters.forbiddenInstrumentCodes}
             onChange={(vals) => setFilters(vals)}
-            instrumentOptions={data?.unavailableInstrumentOptions}
+            instrumentOptions={data?.forbiddenInstrumentOptions}
           />
         </div>
       </ModalBottomSheet>

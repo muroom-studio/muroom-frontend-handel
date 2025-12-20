@@ -1,9 +1,6 @@
-import { useState } from 'react';
-
 import Image from 'next/image';
 
-import { Badge, Tag, ToggleButton } from '@muroom/components';
-import { HeartIcon, StarIcon } from '@muroom/icons';
+import { Badge } from '@muroom/components';
 import { cn } from '@muroom/lib';
 import VacantThumnail from '@muroom/ui/assets/vacant-thumnail.svg';
 
@@ -24,31 +21,12 @@ export default function CommonStudioCard({
 }: Props) {
   const { isMobile } = useResponsiveLayout();
   const {
-    // id,
-    // name,
-    // imageUrl,
-    // priceMin,
-    // priceMax,
-    // nearestStation,
-    // lineInfo,
-    // walkingTime,
-    // rating,
-    // reviewCount,
-    // isAd,
-    // isNew,
-    // isWished,
-    // vacancy,
-    // lat,
-    // lng,
     studioId: numericStudioId,
-    latitude,
-    longitude,
     studioName,
     minPrice,
     maxPrice,
     nearbySubwayStationInfo,
     thumbnailImageUrl,
-    walkingTimeMinutes,
   } = data as StudiosMapListItem;
 
   const studioId = String(numericStudioId);
@@ -60,7 +38,7 @@ export default function CommonStudioCard({
       className={cn(
         'flex cursor-pointer gap-x-3 border-b border-b-gray-300 px-4 py-6 transition-colors hover:bg-gray-100',
         {
-          'bg-primary-50 hover:bg-primary-50': currentStudioId === studioId,
+          'bg-primary-50 hover:bg-primary-50': currentStudioId == studioId,
         },
         {
           'px-0': isMobile,
@@ -69,7 +47,6 @@ export default function CommonStudioCard({
       onClick={() =>
         setMapValue((prev) => ({
           ...prev,
-          center: { lat: latitude, lng: longitude },
           studioId: prev.studioId === studioId ? null : studioId,
         }))
       }
@@ -84,7 +61,11 @@ export default function CommonStudioCard({
       <div className='flex flex-col justify-between'>
         <div className='flex flex-col gap-y-3'>
           <div className='flex-between'>
-            <span className='text-title-s-22-1'>{`${minPrice / 10000}~${maxPrice / 10000}만원`}</span>
+            <span className='text-title-s-22-1'>
+              {minPrice && maxPrice
+                ? `${minPrice / 10000}~${maxPrice / 10000}만원`
+                : '가격문의'}
+            </span>
             {/* <div className='flex items-center'>
               <StarIcon />
               <p className='text-base-m-14-1 flex items-center gap-x-px'>
@@ -113,7 +94,7 @@ export default function CommonStudioCard({
             </div>
 
             <p className='text-base-m-14-1'>
-              {`${nearbySubwayStationInfo.stationName}역 도보 ${walkingTimeMinutes}분`}
+              {`${nearbySubwayStationInfo.stationName}역에서 ${nearbySubwayStationInfo.distanceInMeters.toLocaleString()}m`}
             </p>
           </div>
         </div>
@@ -185,7 +166,6 @@ const StudioImg = ({
             alt={'빈 이미지'}
             width={62}
             height={50}
-            unoptimized
             className='rounded-4 object-cover'
           />
         </div>

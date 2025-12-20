@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { ToggleButton } from '@muroom/components';
+import { Spinner, ToggleButton } from '@muroom/components';
 import { cn } from '@muroom/lib';
 
 import StaticMap from '@/components/common/static-map';
@@ -25,7 +25,7 @@ export default function NearFacilitySection({
 }: Props) {
   const [nearItem, setNearItem] = useState<TargetPlace>('편의점');
 
-  const { places } = useNearbyFetch({
+  const { places, isLoading } = useNearbyFetch({
     lat: studioLatLng.lat,
     lng: studioLatLng.lng,
     category: nearItem,
@@ -62,18 +62,32 @@ export default function NearFacilitySection({
         </div>
 
         <div>
-          {places.map((place) => (
-            <PlcaeRow
-              key={place.id}
-              name={place.name}
-              distance={place.distance}
-              className={cn(
-                'border-y border-y-gray-200 py-4',
-                'first:border-t-0 first:pt-0',
-                'last:border-none last:pb-0',
-              )}
-            />
-          ))}
+          {isLoading ? (
+            // 1. 로딩 중일 때
+            <div className='flex-center min-h-40 w-full'>
+              <Spinner variant={'component'} />
+            </div>
+          ) : places.length > 0 ? (
+            // 2. 로딩 끝남 & 데이터 있을 때
+            places.map((place) => (
+              <PlcaeRow
+                key={place.id}
+                name={place.name}
+                distance={place.distance}
+                className={cn(
+                  'border-y border-y-gray-200 py-4',
+                  'first:border-t-0 first:pt-0',
+                  'last:border-none last:pb-0',
+                )}
+              />
+            ))
+          ) : (
+            // 3. 로딩 끝남 & 데이터 없을 때
+            <p className='text-base-l-16-1 flex-center min-h-40 text-center text-gray-400'>
+              도보 5분 기준이내 주변시설이 없습니다 <br />
+              다른 시설을 확인해볼까요?
+            </p>
+          )}
         </div>
       </>
     </SectionWrapper>
