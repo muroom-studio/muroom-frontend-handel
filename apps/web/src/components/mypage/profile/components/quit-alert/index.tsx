@@ -1,5 +1,9 @@
 import { useState } from 'react';
 
+import { useRouter } from 'next/navigation';
+
+import { toast } from 'sonner';
+
 import {
   Alert,
   Checkbox,
@@ -11,6 +15,9 @@ import {
   TextBox,
 } from '@muroom/components';
 
+import { useWithdrawalMusiciansMutation } from '@/hooks/api/withdrawal/useMutations';
+import { useWithdrawalReasonsQuery } from '@/hooks/api/withdrawal/useQueries';
+
 import ContentWrapper from '../edit-alert/components/content-wrapper';
 
 interface Props {
@@ -19,11 +26,37 @@ interface Props {
 }
 
 export default function QuitAlert({ isOpen, onClose }: Props) {
-  const [selectedReason, setSelectedReason] = useState('');
+  const router = useRouter();
+
+  const [selectedReason, setSelectedReason] = useState({
+    withdrawalReasonId: 0,
+    description: '',
+  });
+  const [opinion, setOpinion] = useState('');
   const [isChecked, setIsChecked] = useState(false);
 
+  const { data: withdrawalResonsData } = useWithdrawalReasonsQuery();
+
+  const { mutate: withdrawalMusiciansMutate } =
+    useWithdrawalMusiciansMutation();
+
   const handleConfirm = () => {
-    console.log('탈퇴 사유:', selectedReason);
+    withdrawalMusiciansMutate(
+      {
+        withdrawalReasonId: selectedReason.withdrawalReasonId,
+        opinion,
+      },
+      {
+        onSuccess: () => {
+          toast.success('탈퇴 처리가 성공적으로 완료되었습니다.');
+          onClose();
+          router.push('/logout');
+        },
+        onError: () => {
+          toast.error('탈퇴 처리가 실패했습니다.');
+        },
+      },
+    );
   };
 
   const AlertContent = () => {
@@ -46,17 +79,29 @@ export default function QuitAlert({ isOpen, onClose }: Props) {
             <RequiredText>탈퇴사유</RequiredText>
 
             <Dropdown
-              value={selectedReason}
-              onValueChange={(val) => setSelectedReason(val)}
+              value={
+                selectedReason.description === '선택'
+                  ? ''
+                  : selectedReason.description
+              }
+              onValueChange={(val) => {
+                const targetReason = withdrawalResonsData?.find(
+                  (reason) => reason.description === val,
+                );
+                setSelectedReason({
+                  withdrawalReasonId: targetReason?.id || 0,
+                  description: targetReason?.description || '',
+                });
+              }}
               placeholder='탈퇴유형을 선택해주세요'
               className='w-full'
             >
               <DropdownTrigger variant='primary' size='m' />
 
               <DropdownContent className='max-h-[295px] overflow-y-auto'>
-                {WITHDRAWAL_REASONS.map((reason) => (
-                  <DropdownItem key={reason} value={reason}>
-                    {reason}
+                {withdrawalResonsData?.map((reason) => (
+                  <DropdownItem key={reason.id} value={reason.description}>
+                    {reason.description}
                   </DropdownItem>
                 ))}
               </DropdownContent>
@@ -70,6 +115,8 @@ export default function QuitAlert({ isOpen, onClose }: Props) {
             <TextBox
               id='EXTRA_TEXT'
               placeholder='추가적인 다른 사유가 있다면 입력해주세요'
+              value={opinion}
+              onChange={(e) => setOpinion(e.target.value)}
             />
           </div>
 
@@ -92,7 +139,11 @@ export default function QuitAlert({ isOpen, onClose }: Props) {
       title='서비스 탈퇴'
       content={AlertContent()}
       confirmLabel='탈퇴하기'
-      confirmDisabled={selectedReason === ''}
+      confirmDisabled={
+        selectedReason.withdrawalReasonId === 0 ||
+        opinion.length === 0 ||
+        !isChecked
+      }
     />
   );
 }
@@ -102,18 +153,4 @@ const WITHDRAWAL_GUIDES = [
   '회원 탈퇴 시, 현재 로그인된 아이디는 즉시 탈퇴 처리됩니다.',
   '회원 정보 및 서비스 이용 기록(매물 정보, 찜, 리뷰, 톡톡, 활동 내역 등)은 모두 삭제되며, 삭제된 데이터는 복구되지 않습니다.',
   '보유하고 계신 [이용권 등]은 탈퇴와 동시에 모두 소멸되며 환불이 불가능할 수 있습니다.',
-];
-
-// 탈퇴 사유 목록 (사진 데이터 반영)
-const WITHDRAWAL_REASONS = [
-  '원하는 매물 정보가 부족함',
-  '매물 정보의 신뢰가 부족함',
-  '서비스 이용이 불편함',
-  '작업실 탐색/계약을 완료함',
-  '서비스 이용 목적이 사라짐',
-  '다른 유사 서비스 이용',
-  '개인 정보 삭제를 원함',
-  '고객 응대/지원 불만',
-  '유료 서비스/광고에 대한 불만',
-  '기타 직접 입력',
 ];

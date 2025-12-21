@@ -12,49 +12,38 @@ import { LoginLink } from '@/hooks/auth/useAuthRedirect';
 
 export default function AuthSection() {
   const { isLoggedIn } = useAuthCheck();
+
   const { data: musicianBaseData } = useMusicianMeQuery();
 
   const [isOpen, setIsOpen] = useState(false);
 
   const menuItems = [
-    {
-      id: 'm1',
-      label: '프로필',
-      url: '/mypage/profile',
-    },
-    {
-      id: 'm2',
-      label: '고객센터',
-      url: '/mypage/cs',
-    },
-    {
-      id: 'm3',
-      label: '신고내역',
-      url: '/mypage/reports',
-    },
-    {
-      id: 'm4',
-      label: '로그아웃',
-      url: '/logout',
-    },
+    { id: 'm1', label: '프로필', url: '/mypage/profile' },
+    { id: 'm2', label: '고객센터', url: '/mypage/cs' },
+    { id: 'm3', label: '신고내역', url: '/mypage/reports' },
+    { id: 'm4', label: '로그아웃', url: '/logout' },
   ];
 
-  const isAuthenticatedTriggerDiv = (
-    <div
-      data-state={isOpen ? 'open' : 'closed'}
-      aria-haspopup='menu'
-      aria-expanded={isOpen}
-      onClick={() => setIsOpen((prev) => !prev)}
-      className='flex items-center gap-2'
-    >
-      <Tag variant='musician'>{`${musicianBaseData?.musicianInstrument.description}`}</Tag>
-      <span className='text-base-l-16-2 text-black'>
-        {musicianBaseData?.nickname}
-      </span>
-    </div>
-  );
+  const showProfile = isLoggedIn && !!musicianBaseData;
 
-  if (isLoggedIn) {
+  if (showProfile) {
+    const isAuthenticatedTriggerDiv = (
+      <div
+        data-state={isOpen ? 'open' : 'closed'}
+        aria-haspopup='menu'
+        aria-expanded={isOpen}
+        onClick={() => setIsOpen((prev) => !prev)}
+        className='flex cursor-pointer items-center gap-2'
+      >
+        <Tag variant='musician'>
+          {musicianBaseData.musicianInstrument.description}
+        </Tag>
+        <span className='text-base-l-16-2 text-black'>
+          {musicianBaseData.nickname}
+        </span>
+      </div>
+    );
+
     return (
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <Popover.Trigger>{isAuthenticatedTriggerDiv}</Popover.Trigger>
