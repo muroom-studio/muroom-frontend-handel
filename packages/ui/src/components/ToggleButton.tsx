@@ -74,8 +74,7 @@ const ToggleButton = ({
     },
     text: {
       base: `
-        text-gray-400
-        ${isSelected && 'text-gray-800'}
+        ${isSelected ? '!text-gray-800' : '!text-gray-400'}
       `,
       m: `${isSelected ? 'text-base-l-16-2' : 'text-base-l-16-1'}`,
       s: `${isSelected ? 'text-base-l-14-2' : 'text-base-l-14-1'}`,

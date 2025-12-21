@@ -15,17 +15,19 @@ import {
   TextBox,
 } from '@muroom/components';
 
+import PageWrapper from '@/components/common/page-wrapper';
 import { useWithdrawalMusiciansMutation } from '@/hooks/api/withdrawal/useMutations';
 import { useWithdrawalReasonsQuery } from '@/hooks/api/withdrawal/useQueries';
 
 import ContentWrapper from '../edit-alert/components/content-wrapper';
 
 interface Props {
+  isMobile: boolean;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export default function QuitAlert({ isOpen, onClose }: Props) {
+export default function QuitAlert({ isMobile, isOpen, onClose }: Props) {
   const router = useRouter();
 
   const [selectedReason, setSelectedReason] = useState({
@@ -129,6 +131,19 @@ export default function QuitAlert({ isOpen, onClose }: Props) {
       </ContentWrapper>
     );
   };
+
+  if (isMobile) {
+    return (
+      <PageWrapper
+        isMobile
+        isHeader={{ title: '서비스 탈퇴', onBackClick: onClose }}
+        className='z-9999 fixed inset-0 bg-white'
+        isModal
+      >
+        {AlertContent()}
+      </PageWrapper>
+    );
+  }
 
   return (
     <Alert

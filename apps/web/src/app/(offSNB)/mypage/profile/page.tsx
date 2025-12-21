@@ -17,6 +17,7 @@ import {
 import EditableField from '@/components/mypage/profile/components/editable-field';
 import QuitAlert from '@/components/mypage/profile/components/quit-alert';
 import { useMusicianMeDetailQuery } from '@/hooks/api/musician/useQueries';
+import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 
 type AlertKey = 'NICKNAME' | 'INSTRUMENT' | 'PHONE' | 'STUDIO' | 'QUIT';
 
@@ -29,10 +30,26 @@ const ALERT_COMPONENTS = {
 };
 
 export default function Page() {
+  const { isMobile } = useResponsiveLayout();
+
   const { data: detailData, isLoading: isDetailLoading } =
     useMusicianMeDetailQuery();
 
   const [activeAlert, setActiveAlert] = useState<AlertKey | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleOpenAlert = (key: AlertKey) => {
+    setActiveAlert(key);
+    setIsOpen(true);
+  };
+
+  const handleCloseAlert = () => {
+    setIsOpen(false);
+
+    setTimeout(() => {
+      setActiveAlert(null);
+    }, 300);
+  };
 
   const fieldItems = useMemo(() => {
     if (!detailData) return [];
@@ -68,7 +85,9 @@ export default function Page() {
               {detailData.myStudio?.roadAddress}{' '}
               {detailData.myStudio?.detailAddress}
             </span>
-            <span>{detailData.myStudio?.name}</span>
+            <span className='text-base-m-14-1 text-gray-600'>
+              {detailData.myStudio?.name}
+            </span>
           </div>
         ),
         isEditable: true,
@@ -98,7 +117,7 @@ export default function Page() {
           isEditable={item.isEditable}
           onEdit={
             item.isEditable && item.id !== 'SNS'
-              ? () => setActiveAlert(item.id as AlertKey)
+              ? () => handleOpenAlert(item.id as AlertKey)
               : undefined
           }
         >
@@ -108,14 +127,14 @@ export default function Page() {
 
       <div className='flex-between pt-6'>
         <Link href='/logout'>
-          <Button variant='outline' size='m'>
+          <Button variant='outline' size='xl'>
             로그아웃
           </Button>
         </Link>
         <p
           aria-label='서비스 탈퇴 버튼'
           className='text-base-l-16-1 cursor-pointer text-gray-400 underline underline-offset-1'
-          onClick={() => setActiveAlert('QUIT')}
+          onClick={() => handleOpenAlert('QUIT')}
         >
           서비스 탈퇴
         </p>
@@ -123,8 +142,9 @@ export default function Page() {
 
       {ActiveAlertComponent && (
         <ActiveAlertComponent
-          isOpen={Boolean(activeAlert)}
-          onClose={() => setActiveAlert(null)}
+          isMobile={isMobile}
+          isOpen={isOpen}
+          onClose={handleCloseAlert}
         />
       )}
     </div>

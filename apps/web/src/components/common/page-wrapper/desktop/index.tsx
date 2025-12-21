@@ -1,7 +1,9 @@
-import { cn } from '../lib/utils';
-import TabBar, { TabItem } from './TabBar';
+import { TabBar, TabItem } from '@muroom/components';
+import { cn } from '@muroom/lib';
 
-interface Props {
+import Footer from '../../footer';
+
+export interface Props {
   title: string;
   children: React.ReactNode;
   className?: string;
@@ -10,7 +12,7 @@ interface Props {
   onTabChange?: (id: string) => void;
 }
 
-const PageWrapper = ({
+const DesktopPageWrapper = ({
   title,
   children,
   className,
@@ -51,14 +53,15 @@ const PageWrapper = ({
 
       <main
         className={cn(
-          'mx-auto w-full max-w-[1080px] px-5 pb-20 pt-10',
+          'pb-30 mx-auto w-full max-w-[1080px] flex-1 px-5 pt-10',
           className,
         )}
       >
         {children}
       </main>
+      <Footer />
     </div>
   );
 };
 
-export default PageWrapper;
+export default DesktopPageWrapper;

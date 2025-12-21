@@ -12,7 +12,7 @@ export default function EditableField({
   children,
 }: Props) {
   return (
-    <div className='flex w-full flex-col gap-y-6 border-b border-b-gray-400 px-5 py-6 first:pt-0'>
+    <div className='flex w-full flex-col gap-y-6 border-b border-b-gray-300 px-5 py-6 first:pt-0'>
       <div className='flex-between'>
         <span className='text-base-exl-18-2'>{name}</span>
         {isEditable && (

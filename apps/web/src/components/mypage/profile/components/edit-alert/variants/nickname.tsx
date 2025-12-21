@@ -6,6 +6,7 @@ import {
   Alert,
   Button,
   HelperMessage,
+  ModalBottomSheet,
   Spinner,
   TextField,
 } from '@muroom/components';
@@ -16,13 +17,18 @@ import { useUserNicknameCheckQuery } from '@/hooks/api/user/useQueries';
 import ContentWrapper from '../components/content-wrapper';
 
 interface Props {
+  isMobile: boolean;
   isOpen: boolean;
   onClose: () => void;
 }
 
 type CheckStatus = 'idle' | 'success' | 'error';
 
-export default function NicknameEditAlert({ isOpen, onClose }: Props) {
+export default function NicknameEditAlert({
+  isMobile,
+  isOpen,
+  onClose,
+}: Props) {
   const [nickname, setNickname] = useState('');
   const [confirmDisabled, setConfirmDisabled] = useState(true);
 
@@ -109,9 +115,13 @@ export default function NicknameEditAlert({ isOpen, onClose }: Props) {
 
   const AlertContent = () => {
     return (
-      <ContentWrapper description='변경할 닉네임을 입력해주세요'>
+      <ContentWrapper
+        isMobile
+        title='닉네임 변경'
+        description='변경할 닉네임을 입력해주세요'
+      >
         <div className='flex flex-col gap-y-2'>
-          <div className='relative grid grid-cols-[293px_1fr] gap-x-3'>
+          <div className='relative grid grid-cols-[1fr_75px] gap-x-3'>
             <TextField
               value={nickname}
               onChange={handleChange}
@@ -149,6 +159,32 @@ export default function NicknameEditAlert({ isOpen, onClose }: Props) {
       </ContentWrapper>
     );
   };
+
+  if (isMobile) {
+    return (
+      <ModalBottomSheet
+        isOpen={isOpen}
+        onClose={onClose}
+        footerBtns={
+          <div className='grid grid-cols-2 gap-x-3'>
+            <Button variant='outline' size='xl' onClick={onClose}>
+              취소하기
+            </Button>
+            <Button
+              onClick={handleConfirm}
+              variant='primary'
+              size='xl'
+              disabled={confirmDisabled}
+            >
+              변경하기
+            </Button>
+          </div>
+        }
+      >
+        {AlertContent()}
+      </ModalBottomSheet>
+    );
+  }
 
   return (
     <Alert

@@ -1,4 +1,8 @@
+'use client';
+
 import React from 'react';
+
+import { usePathname, useRouter } from 'next/navigation';
 
 import {
   ChatIcon,
@@ -6,60 +10,74 @@ import {
   HeartIcon,
   VisitListIcon,
   WorkroomFillIcon,
+  WorkroomIcon,
 } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 
 import { usePrepareModal } from '@/hooks/usePrepareModal.tsx';
 
 export default function OnSNBMobileFooter() {
+  const router = useRouter();
+  const pathname = usePathname();
   const { open, Modal } = usePrepareModal();
 
-  const handleMenuClick = (id: number) => {
-    if (id !== 1) {
-      open();
+  const handleMenuClick = (url?: string) => {
+    if (url) {
+      router.push(url);
     } else {
-      // 작업실 이동 로직 (필요시 구현)
+      open();
     }
   };
+
   const FooterList = [
     {
       id: 1,
-      icon: <WorkroomFillIcon />,
+      icon: <WorkroomIcon className='text-gray-300' />,
+      activeIcon: <WorkroomFillIcon />,
       label: '작업실',
-      isActive: true,
+      url: '/home',
     },
     {
       id: 2,
-      icon: <HeartIcon />,
+      icon: <HeartIcon className='text-gray-300' />,
       label: '찜',
     },
     {
       id: 3,
-      icon: <VisitListIcon />,
+      icon: <VisitListIcon className='text-gray-300' />,
       label: '방문목록',
     },
     {
       id: 4,
-      icon: <ChatIcon />,
+      icon: <ChatIcon className='text-gray-300' />,
       label: '톡톡',
     },
     {
       id: 5,
-      icon: <ExtraIcon />,
+      icon: <ExtraIcon className='text-gray-300' />,
       label: '더보기',
+      url: '/extra',
     },
   ];
+
   return (
     <footer className='flex-center gap-x-2'>
-      {FooterList.map((list) => (
-        <FooterItem
-          key={list.id}
-          icon={list.icon}
-          label={list.label}
-          isActive={list.isActive}
-          onClick={() => handleMenuClick(list.id)}
-        />
-      ))}
+      {FooterList.map((list) => {
+        const isActive = list.url ? pathname.startsWith(list.url) : false;
+
+        const targetIcon =
+          isActive && list.activeIcon ? list.activeIcon : list.icon;
+
+        return (
+          <FooterItem
+            key={list.id}
+            icon={targetIcon}
+            label={list.label}
+            isActive={isActive}
+            onClick={() => handleMenuClick(list.url)}
+          />
+        );
+      })}
 
       <Modal />
     </footer>
