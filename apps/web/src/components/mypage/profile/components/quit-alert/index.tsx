@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 
 import {
   Alert,
+  Button,
   Checkbox,
   Dropdown,
   DropdownContent,
@@ -63,7 +64,7 @@ export default function QuitAlert({ isMobile, isOpen, onClose }: Props) {
 
   const AlertContent = () => {
     return (
-      <ContentWrapper description='서비스 탈퇴'>
+      <ContentWrapper description='탈퇴하기 전에 아래 안내 사항을 확인해주세요'>
         <div className='flex flex-col gap-y-5'>
           {/* 안내 문구 리스트 */}
           <ol className='flex list-decimal flex-col pl-4'>
@@ -100,7 +101,7 @@ export default function QuitAlert({ isMobile, isOpen, onClose }: Props) {
             >
               <DropdownTrigger variant='primary' size='m' />
 
-              <DropdownContent className='max-h-[295px] overflow-y-auto'>
+              <DropdownContent className='max-h-73.75 overflow-y-auto'>
                 {withdrawalResonsData?.map((reason) => (
                   <DropdownItem key={reason.id} value={reason.description}>
                     {reason.description}
@@ -139,6 +140,25 @@ export default function QuitAlert({ isMobile, isOpen, onClose }: Props) {
         isHeader={{ title: '서비스 탈퇴', onBackClick: onClose }}
         className='z-9999 fixed inset-0 bg-white'
         isModal
+        bottomSlot={
+          <div className='grid grid-cols-2 gap-x-3'>
+            <Button variant='outline' size='xl' onClick={onClose}>
+              취소하기
+            </Button>
+            <Button
+              onClick={handleConfirm}
+              variant='danger'
+              size='xl'
+              disabled={
+                selectedReason.withdrawalReasonId === 0 ||
+                opinion.length === 0 ||
+                !isChecked
+              }
+            >
+              탈퇴하기
+            </Button>
+          </div>
+        }
       >
         {AlertContent()}
       </PageWrapper>

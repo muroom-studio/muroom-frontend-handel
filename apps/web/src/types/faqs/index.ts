@@ -1,4 +1,4 @@
-import { PageRequestProps, PaginationInfo } from '../api';
+import { PaginationInfo } from '../api';
 
 // faq 카테고리 아이템
 export interface FaqCategoryItem {
@@ -11,9 +11,9 @@ export interface FaqCategoryItem {
 export type FaqCategoriesResponseProps = FaqCategoryItem[];
 
 // faq 아이템 검색 요청 dto
-export interface FaqRequestProps extends PageRequestProps {
+export interface FaqRequestProps {
   keyword?: string;
-  categoryId?: string;
+  categoryId?: number;
 }
 
 // 개별 faq 아이템

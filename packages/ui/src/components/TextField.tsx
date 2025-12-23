@@ -9,6 +9,7 @@ import RequiredText from './RequiredText';
 export interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   onClear?: () => void;
   label?: string;
+  customLabel?: React.ReactNode;
   className?: string;
   inputClassName?: string;
   hideClearButton?: boolean; // 이미 존재하는 옵션 (true일 경우 닫기 버튼 숨김)
@@ -29,6 +30,7 @@ const TextField = ({
   leftIcon,
   rightIcon, // [New] destructuring
   label,
+  customLabel,
   id,
   required,
   maxLength,
@@ -85,6 +87,8 @@ const TextField = ({
           {label}
         </RequiredText>
       )}
+
+      {customLabel && <label htmlFor={inputId}>{customLabel}</label>}
 
       <div className='relative'>
         {/* [Left Icon] */}

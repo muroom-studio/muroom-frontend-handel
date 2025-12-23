@@ -19,9 +19,10 @@ const TABS: TabItem[] = [
 
 export default function Layout({ children }: Props) {
   const { isMobile } = useResponsiveLayout();
-
   const router = useRouter();
   const pathname = usePathname();
+
+  const isFullPage = pathname.includes('/cs/inquiry/new');
 
   // 데스크톱 Tab 표출용
   const activeTabId =
@@ -31,20 +32,12 @@ export default function Layout({ children }: Props) {
     router.push(id);
   };
 
-  // 모바일 Header title 표출용
-  const activeTabTitle =
-    TABS.find((tab) => pathname.startsWith(tab.id))?.label || TABS[0]?.label;
-
   if (isMobile) {
-    return (
-      <PageWrapper
-        isMobile
-        isHeader={{ title: activeTabTitle, onBackClick: () => router.back() }}
-        isFooter
-      >
-        {children}
-      </PageWrapper>
-    );
+    return <>{children}</>;
+  }
+
+  if (isFullPage) {
+    return <>{children}</>;
   }
 
   return (

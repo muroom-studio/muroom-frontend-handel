@@ -15,8 +15,7 @@ export interface Props {
   isFooter?: boolean;
   children: React.ReactNode;
   className?: string;
-
-  // 모달 전용 props
+  contentClassName?: string;
   isModal?: boolean;
   onClose?: () => void;
 }
@@ -27,10 +26,10 @@ const MobilePageWrapper = ({
   isFooter,
   children,
   className,
+  contentClassName,
   isModal = false,
   onClose,
 }: Props) => {
-  // --- [Logic] 모달 제어 ---
   const [isVisible, setIsVisible] = useState(true);
 
   const handleCloseAnimation = useCallback(() => {
@@ -55,6 +54,7 @@ const MobilePageWrapper = ({
     headerProps: ComponentProps<typeof Header> | undefined,
   ) => (
     <>
+      {/* 1. 헤더 (고정) */}
       {headerProps && (
         <Header
           {...headerProps}
@@ -65,24 +65,30 @@ const MobilePageWrapper = ({
         />
       )}
 
+      {/* 2. 메인 컨텐츠 & 푸터 (스크롤 영역) */}
       <main
-        className={cn('relative w-full flex-1 pb-20', {
-          'px-5 pt-10': headerProps,
-        })}
+        className={cn(
+          'scrollbar-hide w-full flex-1 overflow-y-auto',
+          {
+            'px-5 pt-10': headerProps,
+          },
+          contentClassName,
+        )}
       >
         {children}
+
+        {isFooter && <Footer isMobile />}
       </main>
 
-      {(bottomSlot || isFooter) && (
+      {bottomSlot && (
         <div className='w-full flex-none bg-white'>
-          {bottomSlot}
-          {isFooter && <Footer isMobile />}
+          <div className='px-5 pb-9'>{bottomSlot}</div>
         </div>
       )}
     </>
   );
 
-  // --- [Render 1] 모달 모드 (세로 애니메이션 적용) ---
+  // --- [Render 1] 모달 모드 ---
   if (isModal) {
     return (
       <AnimatePresence onExitComplete={onAnimationComplete}>
@@ -99,7 +105,7 @@ const MobilePageWrapper = ({
               mass: 0.8,
             }}
             className={cn(
-              'scrollbar-hide absolute inset-0 z-50 flex h-full w-full flex-col overflow-y-auto bg-white',
+              'absolute inset-0 z-50 flex h-dvh w-full flex-col overflow-hidden bg-white',
               className,
             )}
           >
@@ -110,11 +116,10 @@ const MobilePageWrapper = ({
     );
   }
 
-  // --- [Render 2] 일반 모드 (애니메이션 없음) ---
   return (
     <div
       className={cn(
-        'scrollbar-hide flex h-full w-full flex-col overflow-y-auto bg-white',
+        'flex h-dvh w-full flex-col overflow-hidden bg-white',
         className,
       )}
     >

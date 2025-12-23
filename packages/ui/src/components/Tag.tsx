@@ -29,29 +29,31 @@ const Tag = ({
   ...props
 }: TagProps) => {
   const baseStyle =
-    'inline-flex shrink-0 items-center justify-center rounded-4 px-2 py-[6px] text-base-s-12-2';
+    'inline-flex shrink-0 items-center justify-center rounded-4 px-2 py-[6px]';
+
+  const defaultFontStyle = 'text-base-s-12-2';
 
   const styles: Record<
     TagVariant,
     Partial<Record<TagSize | 'base', string>>
   > = {
     primary: {
-      base: 'bg-primary-400 text-white',
-      l: 'text-base-m-14-2 px-2 py-[9px] text-white!', // 적용될 스타일
-      s: 'text-base-exs-10 px-1 py-[6px] text-white!',
+      base: 'bg-primary-400 !text-white',
+      l: 'text-base-m-14-2 px-2 py-[9px] !text-white',
+      s: 'text-base-exs-10-1 px-1 py-[6px] !text-white',
     },
     secondary: {
-      base: 'bg-gray-700 text-white',
-      s: 'text-base-exs-10 px-1 py-[6px] text-white!',
+      base: 'bg-gray-700 !text-white',
+      s: 'text-base-exs-10-1 px-1 py-[6px] !text-white',
     },
     blue: {
-      base: 'bg-blue-100 text-blue-500',
+      base: 'bg-blue-100 !text-blue-500',
     },
     neutral: {
-      base: 'bg-gray-100 text-gray-400',
+      base: 'bg-gray-100 !text-gray-400',
     },
     red: {
-      base: 'bg-red-100 text-red-400',
+      base: 'bg-red-100 !text-red-400',
     },
     outline: {
       base: 'bg-white border border-gray-300',
@@ -67,7 +69,15 @@ const Tag = ({
   const variantStyle = styles[variant]?.base || '';
   const sizeStyle = styles[variant]?.[size] || '';
 
-  const finalClassName = cn(baseStyle, variantStyle, sizeStyle, propsClassName);
+  const hasCustomFont = sizeStyle.includes('text-base-');
+
+  const finalClassName = cn(
+    baseStyle,
+    variantStyle,
+    hasCustomFont ? '' : defaultFontStyle,
+    sizeStyle,
+    propsClassName,
+  );
 
   return (
     <label className={finalClassName} {...props}>

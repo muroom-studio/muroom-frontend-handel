@@ -1,5 +1,6 @@
 import { createQueryString } from '@muroom/util';
 
+import { PageRequestProps } from '@/types/api';
 import {
   FaqCategoriesResponseProps,
   FaqRequestProps,
@@ -17,7 +18,7 @@ export const getFaqCategories = async () => {
   return responseData;
 };
 
-export const getFaqs = async (params: FaqRequestProps) => {
+export const getFaqs = async (params: FaqRequestProps & PageRequestProps) => {
   const queryString = createQueryString(params);
   const responseData = await customFetch<FaqResponseProps>(
     `/faqs?${queryString}`,

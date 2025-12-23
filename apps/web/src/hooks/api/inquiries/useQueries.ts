@@ -4,44 +4,35 @@ import {
   useQuery,
 } from '@tanstack/react-query';
 
-import { getFaqCategories, getFaqs } from '@/lib/faqs';
+import { getInquiriesMy, getInquiryCategories } from '@/lib/inquiries';
 import { PageRequestProps } from '@/types/api';
-import { FaqRequestProps } from '@/types/faqs';
 
-const useFaqCategoriesQuery = () => {
+const useInquiryCategories = () => {
   return useQuery({
-    queryKey: ['faq', 'categories'],
-    queryFn: getFaqCategories,
+    queryKey: ['inquiry', 'categories'],
+    queryFn: getInquiryCategories,
     staleTime: Infinity,
     gcTime: 1000 * 60 * 60,
-    select: (data) => {
-      const defaultOption = { id: 0, code: '', name: '전체' };
-      return [defaultOption, ...data];
-    },
   });
 };
 
-const useFaqsQuery = (
-  params: FaqRequestProps,
-  config: {
-    page: number;
-    size: number;
-    isMobile: boolean;
-  },
-) => {
+const useInquiriesMyQuery = (config: {
+  page: number;
+  size: number;
+  isMobile: boolean;
+}) => {
   return useInfiniteQuery({
     queryKey: [
-      'faqs',
-      params,
+      'inquiries',
+      'my',
       config.isMobile ? 'mobile' : { page: config.page, type: 'pc' },
     ],
 
     queryFn: ({ pageParam }) => {
-      return getFaqs({
-        ...params,
+      return getInquiriesMy({
         page: pageParam,
         size: config.size,
-      } as FaqRequestProps & PageRequestProps);
+      } as PageRequestProps);
     },
 
     initialPageParam: config.isMobile ? 0 : config.page - 1,
@@ -53,4 +44,4 @@ const useFaqsQuery = (
   });
 };
 
-export { useFaqCategoriesQuery, useFaqsQuery };
+export { useInquiryCategories, useInquiriesMyQuery };

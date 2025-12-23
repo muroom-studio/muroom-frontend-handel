@@ -1,10 +1,9 @@
 import { BE_BASE_URL } from '@/config/constants';
 import { postUserRefresh } from '@/lib/user/(server)';
-// ⭐️ 방금 수정한 Server Action import (경로는 실제 파일 위치에 맞게 수정해주세요)
 import { ApiRequestError, type ApiResponse } from '@/types/api';
 import { HttpSuccessStatusCode } from '@/types/http';
 
-import { getToken, removeToken } from './cookie';
+import { getToken } from './cookie';
 
 // 재시도 여부 플래그 추가
 interface CustomRequestInit extends RequestInit {
