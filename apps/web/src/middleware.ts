@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 const GUEST_ONLY_PATHS = ['/welcome', '/login', '/redirect/oauth'];
-const PUBLIC_PATHS = ['/home', '/search', '/terms', '/'];
+const PUBLIC_PATHS = ['/home', '/search', '/terms', '/', '/studio-boasts'];
 const AUTH_REQUIRED_PATHS = ['/logout', '/mypage', '/extra'];
 
 export function middleware(request: NextRequest) {
