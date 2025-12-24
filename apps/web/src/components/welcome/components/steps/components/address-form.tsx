@@ -68,11 +68,7 @@ export default function AddressForm({
         </RequiredText>
       )}
 
-      <div
-        className={cn('grid w-full grid-cols-[248px_1fr] gap-x-3', {
-          'grid-cols-[290px_1fr]': onMyPage,
-        })}
-      >
+      <div className='grid w-full grid-cols-[1fr_auto] gap-x-3'>
         <TextField
           id='address'
           value={value.juso}

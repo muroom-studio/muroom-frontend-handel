@@ -52,7 +52,7 @@ const ToggleButton = ({
   };
 
   const baseStyle =
-    'rounded-4 inline-flex cursor-pointer items-center justify-center gap-x-1 whitespace-nowrap outline-none transition-all duration-200 disabled:cursor-default';
+    'rounded-4 inline-flex cursor-pointer shrink-0 items-center justify-center gap-x-1 whitespace-nowrap outline-none transition-all duration-200 disabled:cursor-default';
 
   const styles: Partial<
     Record<ToggleVariant, Partial<Record<ToggleSize | 'base', string>>>

@@ -48,8 +48,8 @@ export default function DesktopFaqList({
       </div>
 
       {items.length === 0 && !isLoading ? (
-        <div className='py-20 text-center text-gray-500'>
-          검색 결과가 없습니다.
+        <div className='py-25 whitespace-pre-wrap text-center text-gray-400'>
+          {`검색하신 내역이 없습니다. \n매물에 대한 궁금한 사항이 있다면 1:1 문의를 이용해주세요`}
         </div>
       ) : (
         <Accordion className='w-full'>

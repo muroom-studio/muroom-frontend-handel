@@ -21,7 +21,7 @@ export interface InquiryItem {
   };
   images: {
     id: number;
-    imageKey: string;
+    imageFileUrl: string;
   }[];
   createdAt: string;
   updatedAt: string;
@@ -45,23 +45,15 @@ export interface InquiriesInquiryIdResponseProps {}
 /* 1:1 문의 등록 사진 등록 (s3 버킷용) */
 
 // 요청 dto
-export interface InquiryImagePayload {
+export interface InquiriesPresignedUrlRequestProps {
   fileName: string;
-  categoryId: number;
   contentType: string;
 }
 
-export interface InquiriesPresignedUrlRequestProps {
-  inquiryImages: InquiryImagePayload[];
-}
-
 // 응답 dto
-export interface PresignedUrlItem {
-  url: string;
-  fileKey: string;
-}
 export interface InquiriesPresignedUrlResponseProps {
-  presignedUrls: PresignedUrlItem[];
+  presignedPutUrl: string;
+  fileKey: string;
 }
 
 /* 1:1 문의 등록 */

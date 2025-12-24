@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import { Tag } from '@muroom/components';
 import { RightArrowIcon } from '@muroom/icons';
@@ -9,8 +9,11 @@ import { cn } from '@muroom/lib';
 import Loading from '@/app/loading';
 import PageWrapper from '@/components/common/page-wrapper';
 import { useMusicianMeQuery } from '@/hooks/api/musician/useQueries';
+import { usePrepareModal } from '@/hooks/usePrepareModal.tsx';
 
 export default function Page() {
+  const router = useRouter();
+
   const { data: musicianBaseData, isLoading: isMusicianBaseLoading } =
     useMusicianMeQuery();
 
@@ -19,7 +22,13 @@ export default function Page() {
   }
 
   return (
-    <PageWrapper isMobile isFooter>
+    <PageWrapper
+      isMobile
+      isHeader={{ title: '마이페이지', onBackClick: () => router.back() }}
+      contentClassName='px-0 pt-0'
+      isFooter
+      footerClassName='pb-[64px]'
+    >
       <ColItem
         nameSlot='내 프로필'
         sub={
@@ -32,11 +41,10 @@ export default function Page() {
                 {musicianBaseData?.nickname}
               </span>
             </div>
-            <Link href='/mypage/profile' className='cursor-pointer'>
-              <RightArrowIcon className='size-6' />
-            </Link>
+            <RightArrowIcon className='size-6 cursor-pointer' />
           </div>
         }
+        url='/mypage/profile'
       />
       <div className='h-2 bg-gray-200' />
 
@@ -50,11 +58,16 @@ export default function Page() {
             </Tag>
           </div>
         }
+        url='/studio-boasts'
       />
       <div className='h-2 bg-gray-200' />
 
       <ColItem nameSlot='리뷰내역' className='border-b border-b-gray-200' />
-      <ColItem nameSlot='고객센터' className='border-b border-b-gray-200' />
+      <ColItem
+        nameSlot='고객센터'
+        className='border-b border-b-gray-200'
+        url='/mypage/cs'
+      />
       <ColItem nameSlot='신고내역' />
       <div className='h-2 bg-gray-200' />
 
@@ -76,15 +89,35 @@ const ColItem = ({
   nameSlot,
   className,
   sub,
+  url,
 }: {
   nameSlot: React.ReactNode;
   className?: string;
   sub?: React.ReactNode;
+  url?: string;
 }) => {
+  const router = useRouter();
+
+  const { open, PrepareModal } = usePrepareModal();
+
+  const handleClick = () => {
+    if (url) {
+      router.push(url);
+    } else {
+      open();
+    }
+  };
+
   return (
-    <div className={cn('mx-5 flex flex-col gap-y-5 py-6', className)}>
-      <div className='text-base-exl-18-2 text-gray-900'>{nameSlot}</div>
-      {sub}
-    </div>
+    <>
+      <div
+        className={cn('mx-5 flex flex-col gap-y-5 py-6', className)}
+        onClick={handleClick}
+      >
+        <div className='text-base-exl-18-2 text-gray-900'>{nameSlot}</div>
+        {sub}
+      </div>
+      {PrepareModal}
+    </>
   );
 };

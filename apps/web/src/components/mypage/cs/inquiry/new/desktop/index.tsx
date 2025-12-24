@@ -1,12 +1,14 @@
 import { Dispatch, SetStateAction } from 'react';
 
-import { useRouter } from 'next/navigation';
-
 import { Button } from '@muroom/components';
 
 import PageWrapper from '@/components/common/page-wrapper';
-import { InquiryCategoryItem, PresignedUrlItem } from '@/types/inquiries';
+import {
+  InquiriesPresignedUrlResponseProps,
+  InquiryCategoryItem,
+} from '@/types/inquiries';
 
+import CancelAlert from '../cancel-alert';
 import MypageCsInquiryNewCommonForm from '../common-form';
 
 interface Props {
@@ -17,7 +19,11 @@ interface Props {
   setValue: Dispatch<SetStateAction<{ title: string; content: string }>>;
   imageKeys: string[];
   setImageKeys: Dispatch<SetStateAction<string[]>>;
-  handleUploadImages: (files: File[]) => Promise<PresignedUrlItem[]>;
+  handleUploadImages: (
+    files: File[],
+  ) => Promise<InquiriesPresignedUrlResponseProps[]>;
+  showCancelAlert: boolean;
+  setShowCancelAlert: Dispatch<SetStateAction<boolean>>;
   submitHandler: () => void;
   isFormValid: boolean;
 }
@@ -31,11 +37,11 @@ export default function DesktopMypageCsInquiryNewPage({
   imageKeys,
   setImageKeys,
   handleUploadImages,
+  showCancelAlert,
+  setShowCancelAlert,
   submitHandler,
   isFormValid,
 }: Props) {
-  const router = useRouter();
-
   return (
     <PageWrapper title='1:1 문의하기'>
       <div className='flex flex-col gap-y-10'>
@@ -52,7 +58,11 @@ export default function DesktopMypageCsInquiryNewPage({
         />
 
         <div className='grid grid-cols-2 gap-x-3 border-t border-t-gray-200 p-5'>
-          <Button variant='outline' size='xl' onClick={() => router.back()}>
+          <Button
+            variant='outline'
+            size='xl'
+            onClick={() => setShowCancelAlert(true)}
+          >
             취소하기
           </Button>
           <Button
@@ -65,6 +75,12 @@ export default function DesktopMypageCsInquiryNewPage({
           </Button>
         </div>
       </div>
+      {showCancelAlert && (
+        <CancelAlert
+          isOpen={showCancelAlert}
+          onClose={() => setShowCancelAlert(false)}
+        />
+      )}
     </PageWrapper>
   );
 }

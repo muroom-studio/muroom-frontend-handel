@@ -121,7 +121,7 @@ export default function NicknameEditAlert({
         description='변경할 닉네임을 입력해주세요'
       >
         <div className='flex flex-col gap-y-2'>
-          <div className='relative grid grid-cols-[1fr_75px] gap-x-3'>
+          <div className='relative grid grid-cols-[1fr_auto] gap-x-3'>
             <TextField
               value={nickname}
               onChange={handleChange}

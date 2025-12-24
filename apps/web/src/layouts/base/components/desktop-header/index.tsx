@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { Tag } from '@muroom/components';
 import BaseLogo from '@muroom/ui/assets/base-logo.svg';
 
 import SearchBar from '@/components/common/search-bar';
@@ -18,7 +19,17 @@ export default function BaseDesktopHeader() {
           <SearchBar />
         </div> */}
       </div>
-      <AuthSection />
+      <div className='flex-center gap-x-15'>
+        <Link href='/studio-boasts'>
+          <div className='flex items-center gap-x-1'>
+            <span className='text-base-l-16-2'>작업실 자랑하기</span>
+            <Tag variant='musician' className='bg-primary-50 !text-primary-500'>
+              이벤트
+            </Tag>
+          </div>
+        </Link>
+        <AuthSection />
+      </div>
     </header>
   );
 }

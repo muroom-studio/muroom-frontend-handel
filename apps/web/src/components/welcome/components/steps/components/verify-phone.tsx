@@ -125,13 +125,9 @@ export default function VerifyPhone({
 
   return (
     <div className='flex flex-col gap-y-3'>
-      <div className='flex flex-col gap-y-[9px]'>
+      <div className='gap-y-2.25 flex flex-col'>
         {!onMyPage && <RequiredText htmlFor={id}>전화번호</RequiredText>}
-        <div
-          className={cn('grid grid-cols-[244px_1fr] gap-x-3', {
-            'grid-cols-[293px_1fr]': onMyPage,
-          })}
-        >
+        <div className={cn('grid w-full grid-cols-[1fr_auto] gap-x-3')}>
           <TextField
             id={id}
             name={name}
@@ -162,11 +158,7 @@ export default function VerifyPhone({
 
       {isSent && (
         <div className='flex flex-col gap-y-2'>
-          <div
-            className={cn('grid grid-cols-[244px_1fr] gap-3', {
-              'grid-cols-[293px_1fr]': onMyPage,
-            })}
-          >
+          <div className='grid grid-cols-[1fr_auto] gap-3'>
             <div className={isVerified ? 'pointer-events-none opacity-50' : ''}>
               <OtpGroup length={6} value={otp} onChange={setOtp} />
             </div>

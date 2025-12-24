@@ -32,7 +32,7 @@ export default function Page() {
 
     params.set(currentId, 'true');
 
-    router.push(`${pathname}?${params.toString()}`);
+    router.replace(`${pathname}?${params.toString()}`);
   };
 
   const MainContent = (

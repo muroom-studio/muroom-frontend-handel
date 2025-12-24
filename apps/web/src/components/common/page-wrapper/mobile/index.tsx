@@ -1,6 +1,12 @@
 'use client';
 
-import { ComponentProps, useCallback, useState } from 'react';
+import {
+  ComponentProps,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -16,6 +22,7 @@ export interface Props {
   children: React.ReactNode;
   className?: string;
   contentClassName?: string;
+  footerClassName?: string;
   isModal?: boolean;
   onClose?: () => void;
 }
@@ -27,10 +34,15 @@ const MobilePageWrapper = ({
   children,
   className,
   contentClassName,
+  footerClassName,
   isModal = false,
   onClose,
 }: Props) => {
   const [isVisible, setIsVisible] = useState(true);
+
+  // 스크롤 감지 상태
+  const [showBottomSlot, setShowBottomSlot] = useState(false);
+  const mainRef = useRef<HTMLDivElement>(null);
 
   const handleCloseAnimation = useCallback(() => {
     setIsVisible(false);
@@ -41,6 +53,20 @@ const MobilePageWrapper = ({
     if (onClose) onClose();
   };
 
+  const handleScroll = () => {
+    if (!mainRef.current) return;
+
+    const { scrollTop, scrollHeight, clientHeight } = mainRef.current;
+    // 오차범위 20px 내로 바닥에 도달했는지 체크
+    const isBottom = scrollTop + clientHeight >= scrollHeight - 20;
+
+    setShowBottomSlot(isBottom);
+  };
+
+  useEffect(() => {
+    handleScroll();
+  }, [children]);
+
   const modalHeaderProps =
     isModal && isHeader
       ? {
@@ -49,12 +75,10 @@ const MobilePageWrapper = ({
         }
       : isHeader;
 
-  // --- [Content] 공통 렌더링 함수 ---
   const renderContent = (
     headerProps: ComponentProps<typeof Header> | undefined,
   ) => (
     <>
-      {/* 1. 헤더 (고정) */}
       {headerProps && (
         <Header
           {...headerProps}
@@ -65,8 +89,9 @@ const MobilePageWrapper = ({
         />
       )}
 
-      {/* 2. 메인 컨텐츠 & 푸터 (스크롤 영역) */}
       <main
+        ref={mainRef}
+        onScroll={handleScroll}
         className={cn(
           'scrollbar-hide w-full flex-1 overflow-y-auto',
           {
@@ -77,14 +102,32 @@ const MobilePageWrapper = ({
       >
         {children}
 
-        {isFooter && <Footer isMobile />}
+        {isFooter && (
+          <div className={cn('pt-20', footerClassName)}>
+            <Footer isMobile />
+          </div>
+        )}
+
+        {bottomSlot && <div className='h-36 w-full flex-none' />}
       </main>
 
-      {bottomSlot && (
-        <div className='w-full flex-none bg-white'>
-          <div className='px-5 pb-9'>{bottomSlot}</div>
-        </div>
-      )}
+      <AnimatePresence>
+        {bottomSlot && showBottomSlot && (
+          <motion.div
+            initial={{ y: '100%', opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: '100%', opacity: 0 }}
+            transition={{
+              type: 'spring',
+              stiffness: 300,
+              damping: 30,
+            }}
+            className='absolute bottom-0 z-50 w-full bg-white'
+          >
+            <div className='px-5 pb-9 pt-3'>{bottomSlot}</div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 
@@ -105,7 +148,7 @@ const MobilePageWrapper = ({
               mass: 0.8,
             }}
             className={cn(
-              'absolute inset-0 z-50 flex h-dvh w-full flex-col overflow-hidden bg-white',
+              'absolute relative inset-0 z-50 flex h-dvh w-full flex-col overflow-hidden bg-white',
               className,
             )}
           >
@@ -116,10 +159,11 @@ const MobilePageWrapper = ({
     );
   }
 
+  // --- [Render 2] 일반 모드 ---
   return (
     <div
       className={cn(
-        'flex h-dvh w-full flex-col overflow-hidden bg-white',
+        'relative flex h-dvh w-full flex-col overflow-hidden bg-white',
         className,
       )}
     >

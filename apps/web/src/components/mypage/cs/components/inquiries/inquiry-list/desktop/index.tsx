@@ -68,8 +68,8 @@ export default function DesktopInquiryList({
       </div>
 
       {items.length === 0 && !isLoading ? (
-        <div className='py-20 text-center text-gray-500'>
-          검색 결과가 없습니다.
+        <div className='py-25 whitespace-pre-wrap text-center text-gray-400'>
+          {`문의하신 내역이 없습니다. \n매물에 대한 궁금한 상사항이 있다면 언제든 문의해주세요`}
         </div>
       ) : (
         <Accordion className='w-full'>
@@ -110,11 +110,7 @@ export default function DesktopInquiryList({
                     {inquiry.images.map((img) => (
                       <div key={img.id} className='size-27.25 relative'>
                         <Image
-                          src={
-                            img.imageKey
-                              ? `${S3_BUCKET_URL}/${img.imageKey}`
-                              : ''
-                          }
+                          src={img.imageFileUrl}
                           alt='이미지'
                           fill
                           sizes='109px'

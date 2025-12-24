@@ -142,7 +142,7 @@ const AlertWrapper = ({
   return (
     <motion.div
       className={cn(
-        'rounded-4 z-9999 fixed left-1/2 top-1/2 w-[420px] bg-white shadow-xl',
+        'rounded-4 z-9999 w-105 fixed left-1/2 top-1/2 bg-white shadow-xl',
         className,
       )}
       initial={{

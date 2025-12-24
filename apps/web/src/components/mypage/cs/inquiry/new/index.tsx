@@ -12,7 +12,7 @@ import {
   useInquiriesPresignedUrlMutation,
 } from '@/hooks/api/inquiries/useMutations';
 import { useInquiryCategories } from '@/hooks/api/inquiries/useQueries';
-import { PresignedUrlItem } from '@/types/inquiries';
+import { InquiriesPresignedUrlResponseProps } from '@/types/inquiries';
 
 import DesktopMypageCsInquiryNewPage from './desktop';
 import MobileMypageCsInquiryNewPage from './mobile';
@@ -24,11 +24,11 @@ interface Props {
 export default function MypageCsInquiryNewPage({ isMobile }: Props) {
   const router = useRouter();
 
+  const [showCancelAlert, setShowCancelAlert] = useState(false);
+
   const { data: inquiryCategoriesData, isLoading } = useInquiryCategories();
 
-  const [categoryId, setCategoryId] = useState(
-    inquiryCategoriesData?.[0]?.id || 0,
-  );
+  const [categoryId, setCategoryId] = useState(0);
 
   const [value, setValue] = useState({
     title: '',
@@ -36,26 +36,32 @@ export default function MypageCsInquiryNewPage({ isMobile }: Props) {
   });
   const [imageKeys, setImageKeys] = useState<string[]>([]);
 
-  const { mutateAsync: getPresignedUrls } = useInquiriesPresignedUrlMutation();
+  const { mutateAsync: getPresignedUrl } = useInquiriesPresignedUrlMutation();
   const { mutate: inquiriesMutate } = useInquiriesMutation();
 
   const handleUploadImages = async (
     files: File[],
-  ): Promise<PresignedUrlItem[]> => {
-    const requestPayload = {
-      inquiryImages: files.map((file) => ({
-        fileName: file.name,
-        categoryId,
-        contentType: file.type,
-      })),
-    };
+  ): Promise<InquiriesPresignedUrlResponseProps[]> => {
+    try {
+      const uploadPromises = files.map(async (file) => {
+        const requestPayload = {
+          fileName: file.name,
+          contentType: file.type,
+        };
 
-    const response = await getPresignedUrls(requestPayload);
+        const response = await getPresignedUrl(requestPayload);
 
-    return response.presignedUrls.map((item) => ({
-      fileKey: item.fileKey,
-      url: item.url,
-    }));
+        return {
+          fileKey: response.fileKey,
+          presignedPutUrl: response.presignedPutUrl,
+        };
+      });
+
+      return await Promise.all(uploadPromises);
+    } catch (error) {
+      console.error('Presigned URL 발급 실패:', error);
+      throw error;
+    }
   };
 
   const submitHandler = () => {
@@ -69,7 +75,7 @@ export default function MypageCsInquiryNewPage({ isMobile }: Props) {
       {
         onSuccess: () => {
           toast.success('문의 등록이 성공적으로 완료되었습니다.');
-          router.replace('/mypage/cs');
+          router.replace('/mypage/cs?inquiry=true');
         },
         onError: () => {
           toast.error('문의 등록이 실패했습니다.');
@@ -79,7 +85,10 @@ export default function MypageCsInquiryNewPage({ isMobile }: Props) {
   };
 
   const isFormValid =
-    value.title !== '' && value.content !== '' && imageKeys.length > 0;
+    categoryId !== 0 &&
+    value.title !== '' &&
+    value.content !== '' &&
+    imageKeys.length > 0;
 
   if (isLoading || !inquiryCategoriesData) {
     return <Loading />;
@@ -94,6 +103,8 @@ export default function MypageCsInquiryNewPage({ isMobile }: Props) {
     imageKeys,
     setImageKeys,
     handleUploadImages,
+    showCancelAlert,
+    setShowCancelAlert,
     submitHandler,
     isFormValid,
   };

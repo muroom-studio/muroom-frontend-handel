@@ -10,14 +10,14 @@ import { Spinner } from '@muroom/components';
 import { CloseIcon, PlusIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 
-import { PresignedUrlItem } from '@/types/inquiries';
+import { InquiriesPresignedUrlResponseProps } from '@/types/inquiries';
 
 interface ImageUploaderProps {
   label?: string;
   showImageCount?: boolean;
   wrapperClassName?: string;
   maxImages?: number;
-  uploadFn: (files: File[]) => Promise<PresignedUrlItem[]>;
+  uploadFn: (files: File[]) => Promise<InquiriesPresignedUrlResponseProps[]>;
   onImagesChange: (imageKeys: string[]) => void;
   isMobile?: boolean;
 }
@@ -72,16 +72,23 @@ export default function ImageUploader({
     try {
       const presignedDataList = await uploadFn(newFiles);
 
-      const uploadPromises = newFiles.map((file, index) => {
+      const uploadPromises = newFiles.map(async (file, index) => {
         const data = presignedDataList[index];
-        if (!data || !data.url)
+        if (!data || !data.presignedPutUrl) {
           throw new Error(`${file.name}의 업로드 URL을 받지 못했습니다.`);
+        }
 
-        return fetch(data.url, {
+        const response = await fetch(data.presignedPutUrl, {
           method: 'PUT',
           body: file,
           headers: { 'Content-Type': file.type },
         });
+
+        if (!response.ok) {
+          throw new Error(`S3 업로드 실패: ${response.statusText}`);
+        }
+
+        return response;
       });
 
       await Promise.all(uploadPromises);
@@ -101,7 +108,8 @@ export default function ImageUploader({
         return updated;
       });
     } catch (error) {
-      toast.error('이미지 업로드 중 오류가 발생했습니다.');
+      console.error('Image Upload Error:', error);
+      toast.error('이미지 업로드에 실패했습니다. (CORS 또는 네트워크 확인)');
       setImages((prev) => prev.slice(0, prev.length - placeholders.length));
     }
 

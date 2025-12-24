@@ -6,6 +6,7 @@ import { TextField, ToggleButton } from '@muroom/components';
 import { SearchIcon } from '@muroom/icons';
 
 import Loading from '@/app/loading';
+import DraggableCarousel from '@/components/common/draggable-carousel';
 import {
   useFaqCategoriesQuery,
   useFaqsQuery,
@@ -72,21 +73,22 @@ export default function FaqBoard({ isMobile = false }: Props) {
   return (
     <div className='w-full'>
       <div className={isMobile ? 'flex-center-col gap-y-6' : 'flex-between'}>
-        <div className='scrollbar-hide flex items-center gap-x-3 overflow-x-auto'>
+        <DraggableCarousel containerClassName='gap-x-3' className='w-full'>
           {faqCategoriesData?.map((category) => (
-            <ToggleButton
-              key={category.id}
-              variant={isMobile ? 'outline' : 'text'}
-              size='m'
-              selected={category.id === categoryId}
-              onSelectedChange={(isSelected) => {
-                if (isSelected) setCategoryId(category.id);
-              }}
-            >
-              {category.name}
-            </ToggleButton>
+            <div key={category.id}>
+              <ToggleButton
+                variant={isMobile ? 'outline' : 'text'}
+                size='m'
+                selected={category.id === categoryId}
+                onSelectedChange={(isSelected) => {
+                  if (isSelected) setCategoryId(category.id);
+                }}
+              >
+                {category.name}
+              </ToggleButton>
+            </div>
           ))}
-        </div>
+        </DraggableCarousel>
 
         <TextField
           value={keyword}

@@ -19,6 +19,7 @@ const TABS: TabItem[] = [
 
 export default function Layout({ children }: Props) {
   const { isMobile } = useResponsiveLayout();
+
   const router = useRouter();
   const pathname = usePathname();
 

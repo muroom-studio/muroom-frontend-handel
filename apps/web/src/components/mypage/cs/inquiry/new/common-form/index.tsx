@@ -6,7 +6,10 @@ import { TextBox, TextField, ToggleButton } from '@muroom/components';
 import { updateObjectProperty } from '@muroom/util';
 
 import ImageUploader from '@/components/common/image-uploader';
-import { InquiryCategoryItem, PresignedUrlItem } from '@/types/inquiries';
+import {
+  InquiriesPresignedUrlResponseProps,
+  InquiryCategoryItem,
+} from '@/types/inquiries';
 
 interface InquiryFormValue {
   title: string;
@@ -24,7 +27,10 @@ interface Props {
   setValue: Dispatch<SetStateAction<InquiryFormValue>>;
   imageKeys: string[];
   setImageKeys: Dispatch<SetStateAction<string[]>>;
-  handleUploadImages: (files: File[]) => Promise<PresignedUrlItem[]>;
+  // [수정] 반환 타입 업데이트
+  handleUploadImages: (
+    files: File[],
+  ) => Promise<InquiriesPresignedUrlResponseProps[]>;
 }
 
 export default function MypageCsInquiryNewCommonForm({

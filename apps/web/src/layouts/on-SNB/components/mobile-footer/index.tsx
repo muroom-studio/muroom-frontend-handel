@@ -19,7 +19,7 @@ import { usePrepareModal } from '@/hooks/usePrepareModal.tsx';
 export default function OnSNBMobileFooter() {
   const router = useRouter();
   const pathname = usePathname();
-  const { open, Modal } = usePrepareModal();
+  const { open, PrepareModal } = usePrepareModal();
 
   const handleMenuClick = (url?: string) => {
     if (url) {
@@ -79,7 +79,7 @@ export default function OnSNBMobileFooter() {
         );
       })}
 
-      <Modal />
+      {PrepareModal}
     </footer>
   );
 }
