@@ -12,6 +12,7 @@ export { default as FilterIcon } from './Filter';
 export { default as HeartOutlineIcon } from './HeartOutline';
 export { default as HeartIcon } from './Heart';
 export { default as InfoIcon } from './Info';
+export { default as InstagramIcon } from './Instagram';
 export { default as LeftarrowIcon } from './Leftarrow';
 export { default as LocationIcon } from './Location';
 export { default as MailIcon } from './Mail';

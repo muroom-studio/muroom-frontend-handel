@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 import { AnimatePresence, PanInfo, motion } from 'framer-motion';
 
@@ -28,13 +29,18 @@ const ModalBottomSheet = ({
   topMargin = 60,
   footerBtns,
 }: ModalBottomSheetProps) => {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   const handleDragEnd = (event: any, info: PanInfo) => {
     if (info.offset.y > 100 || info.velocity.y > 500) {
       onClose();
     }
   };
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <>
@@ -92,12 +98,13 @@ const ModalBottomSheet = ({
               {footerBtns && (
                 <div className='w-full px-2.5 py-3'>{footerBtns}</div>
               )}
-              <div className='h-[34px]' />
+              <div className='h-8.5' />
             </div>
           </motion.div>
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   );
 };
 

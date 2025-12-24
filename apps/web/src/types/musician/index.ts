@@ -55,3 +55,34 @@ export interface MusicianMeResponseDto {
   profileImageUrl: string;
   musicianInstrument: MusicianInstrument;
 }
+
+// ==================================================
+// ==================================================
+// 내 정보 -> 프로필 -> 프로필 조회
+// 응답 DTO
+export interface MusicianMeDetailResponseDto {
+  musicianId: number;
+  nickname: string;
+  phone: string;
+  musicianInstrument: MusicianInstrument;
+  myStudio: {
+    name: string;
+    roadAddress: string;
+    detailAddress: string;
+  };
+  snsAccount: {
+    code: string;
+    description: string;
+  };
+}
+
+// 내 정보 -> 프로필 -> 프로필 수정
+// 요청 dto
+export interface MusicianMeDetailRequestDto {
+  nickname?: string;
+  instrumentId?: number;
+  phone?: string;
+  studioName?: string;
+  roadAddress?: string;
+  detailAddress?: string;
+}

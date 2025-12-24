@@ -39,10 +39,10 @@ const Button = ({
   > = {
     primary: {
       base: `
-          !text-white bg-primary-600 border-primary-line
+          !text-white bg-primary-600 border-none
           hover:bg-primary-700
           active:bg-primary-800
-          disabled:bg-gray-200 disabled:text-gray-400
+          disabled:bg-gray-200 disabled:!text-gray-400
         `,
       xl: 'px-4 py-[18px] text-base-l-16-2',
       l: 'p-3 text-base-l-16-2',
@@ -65,7 +65,7 @@ const Button = ({
           active:bg-gray-200
           disabled:bg-gray-200 disabled:text-gray-400
         `,
-      xl: 'px-7 py-[18px] text-base-l-16-2',
+      xl: 'px-4 py-[18px] text-base-l-16-2',
       l: 'p-3 text-base-l-16-2',
       m: 'px-3 py-[9px] text-base-m-14-2',
       s: 'px-3 py-[5px] text-base-m-14-1',

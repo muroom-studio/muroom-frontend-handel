@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-import { HelperMessage, Tag } from '@muroom/components';
+import { Tag } from '@muroom/components';
 import { ResetIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 import { getFormattedDate } from '@muroom/util';
@@ -37,7 +37,7 @@ export default function RoomInfoSection({
   );
 
   const selectedRoom = roomData.rooms?.find(
-    (room) => room.roomId === selectedRoomId,
+    (room) => room.roomId == selectedRoomId,
   );
 
   const [unit, setUnit] = useState<'cm' | 'mm'>('mm');

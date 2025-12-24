@@ -306,18 +306,17 @@ const PopoverContent = ({
 };
 
 const PopoverMenuContainer = ({ children }: { children: React.ReactNode }) => (
-  <div className='flex-center-col rounded-L shadow-modal-s w-full gap-y-2 border border-white/60 bg-white p-2'>
+  <div className='rounded-4 shadow-level-0 flex w-full flex-col overflow-hidden border border-gray-300 bg-white'>
     {children}
   </div>
 );
 
 const PopoverMenuItem = ({ children }: { children: React.ReactNode }) => {
   const commonClasses =
-    'rounded-L hover:bg-text-box text-text-body-l1 w-[180] p-4 text-left';
+    'w-full text-base-m-14-1 px-3 py-[9px] border-b border-b-gray-300 last:border-b-none text-left';
 
   return <div className={cn(commonClasses, 'cursor-pointer')}>{children}</div>;
 };
-
 // ----------------------------------------------------------------------
 // Exports
 // ----------------------------------------------------------------------

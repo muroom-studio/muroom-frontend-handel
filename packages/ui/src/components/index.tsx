@@ -7,7 +7,7 @@ export { default as ToggleButton } from './ToggleButton';
 export { default as Badge } from './Badge';
 export { default as Spinner } from './Spinner';
 export { default as Header } from './Header';
-export { default as TabBar } from './TabBar';
+export { default as TabBar, type TabItem } from './TabBar';
 export { default as ToggleSlider } from './ToggleSlider';
 export { default as Modal } from './Modal';
 export { default as Snackbar } from './Snackbar';
@@ -19,7 +19,8 @@ export { default as RequiredText } from './RequiredText';
 export { default as OtpGroup } from './OtpGroup';
 export { default as HelperMessage } from './HelperMessage';
 export { default as Pagination } from './Pagination';
-export { default as PageWrapper } from './PageWrapper';
+export { default as Alert } from './Alert';
+export { default as TextBox } from './TextBox';
 
 export {
   Dropdown,
@@ -34,3 +35,10 @@ export {
   TooltipContent,
   TooltipProvider,
 } from './Tooltip';
+
+export {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from './Accordion';

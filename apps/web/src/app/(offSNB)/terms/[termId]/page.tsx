@@ -1,4 +1,3 @@
-// app/terms/[termId]/page.tsx (경로는 예시입니다)
 import {
   HydrationBoundary,
   QueryClient,

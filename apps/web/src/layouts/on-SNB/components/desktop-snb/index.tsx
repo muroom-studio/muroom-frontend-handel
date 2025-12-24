@@ -12,7 +12,7 @@ import { cn } from '@muroom/lib';
 import { usePrepareModal } from '@/hooks/usePrepareModal.tsx';
 
 export default function OnSNBDesktopSnb() {
-  const { open, Modal } = usePrepareModal();
+  const { open, PrepareModal } = usePrepareModal();
 
   const handleMenuClick = (id: number) => {
     if (id !== 1) {
@@ -65,7 +65,7 @@ export default function OnSNBDesktopSnb() {
         ))}
       </div>
 
-      <Modal />
+      {PrepareModal}
     </aside>
   );
 }

@@ -217,7 +217,6 @@ function DropdownTrigger({
       className={finalClassName}
       {...props}
     >
-      {/* selectedValue가 있으면 selectedLabel(우리가 주입한 값)을 보여줌 */}
       {selectedValue ? selectedLabel : placeholder || '선택...'}
       <DownArrowIcon className='rotate size-5 transition-transform duration-200 group-data-[state=open]:rotate-180' />
     </button>
@@ -236,7 +235,6 @@ function DropdownContent({
 }: React.ComponentPropsWithRef<'div'>) {
   const { isOpen, contentRef, triggerRef, setIsOpen } = useDropdown();
 
-  // 1. width -> minWidth로 변경하여 상태 관리
   const [coords, setCoords] = useState({ top: 0, left: 0, minWidth: 0 });
 
   const composedRef = (el: HTMLDivElement) => {

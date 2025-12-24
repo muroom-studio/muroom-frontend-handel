@@ -13,24 +13,61 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
     remotePatterns: [
+      // -------------------------------------------------------
+      // [개발 환경 스토리지]
+      // -------------------------------------------------------
       {
         protocol: 'https',
-        hostname: 'placehold.co',
+        hostname: 'mr-dev-private-storage.s3.ap-northeast-2.amazonaws.com',
         pathname: '/**',
       },
       {
         protocol: 'https',
-        hostname: 'example.com',
+        hostname: 'mr-dev-public-storage.s3.ap-northeast-2.amazonaws.com',
         pathname: '/**',
       },
       {
         protocol: 'https',
-        hostname: 'muroom-storage.s3.ap-northeast-2.amazonaws.com',
+        hostname: 'muroom-dev-private-storage.s3.ap-northeast-2.amazonaws.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'muroom-dev-public-storage.s3.ap-northeast-2.amazonaws.com',
         pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'muroom-bach-dev-storage.s3.ap-northeast-2.amazonaws.com',
+        pathname: '/**',
+      },
+
+      // -------------------------------------------------------
+      // [운영 환경 스토리지]
+      // -------------------------------------------------------
+      {
+        protocol: 'https',
+        hostname: 'mr-prod-private-storage.s3.ap-northeast-2.amazonaws.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'mr-prod-public-storage.s3.ap-northeast-2.amazonaws.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'muroom-prod-private-storage.s3.ap-northeast-2.amazonaws.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'muroom-prod-public-storage.s3.ap-northeast-2.amazonaws.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'muroom-storage.s3.ap-northeast-2.amazonaws.com',
         pathname: '/**',
       },
     ],
