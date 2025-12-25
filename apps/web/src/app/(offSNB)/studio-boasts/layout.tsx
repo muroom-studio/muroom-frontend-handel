@@ -8,6 +8,8 @@ import { PlusIcon } from '@muroom/icons';
 import BoastBanner from '@muroom/ui/assets/boast-banner.svg';
 
 import PageWrapper from '@/components/common/page-wrapper';
+import { useAuthCheck } from '@/hooks/auth/useAuthCheck';
+import { useSaveRedirectUrl } from '@/hooks/auth/useAuthRedirect';
 import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
 
 interface Props {
@@ -26,17 +28,29 @@ export default function Layout({ children }: Props) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  const { isLoggedIn } = useAuthCheck();
+  const { saveCurrentUrl } = useSaveRedirectUrl();
+
   const isFullPage = pathname.includes('/studio-boasts/new');
 
-  const activeTabId = searchParams.get('my') === 'true' ? 'my' : 'all';
+  const currentTabId = searchParams.get('my') === 'true' ? 'my' : 'all';
 
-  const handleTabChange = (currentId: string) => {
+  const handleTabChange = (targetId: string) => {
+    if (targetId === 'my' && !isLoggedIn) {
+      saveCurrentUrl();
+
+      const queryString = searchParams.toString();
+      const href = queryString ? `/welcome?${queryString}` : '/welcome';
+
+      router.push(href);
+      return;
+    }
+
+    // 2. 정상적인 탭 이동 로직
     const params = new URLSearchParams(searchParams.toString());
-
-    params.delete('all');
     params.delete('my');
 
-    if (currentId === 'my') {
+    if (targetId === 'my') {
       params.set('my', 'true');
     }
 
@@ -63,7 +77,8 @@ export default function Layout({ children }: Props) {
         />
       }
       tabs={TABS}
-      initialActiveTabId={activeTabId}
+      initialActiveTabId={currentTabId}
+      activeTabId={currentTabId}
       onTabChange={handleTabChange}
       rightSlot={
         <Button

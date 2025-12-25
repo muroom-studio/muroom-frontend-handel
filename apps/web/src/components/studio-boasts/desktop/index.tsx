@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useSearchParams } from 'next/navigation';
 
@@ -11,6 +11,7 @@ import ListSortFilter, {
   SortOption,
 } from '@/components/common/list-sort-filter';
 import { useStudioBoastsQuery } from '@/hooks/api/studio-boasts/useQueries';
+import { useScrollToTop } from '@/hooks/common/useScrollToTop';
 import {
   StudioBoastsItemProps,
   StudioBoastsRequestProps,
@@ -26,10 +27,21 @@ const STUDIO_SORT_OPTIONS: SortOption[] = [
 ];
 
 export default function DesktopStudioBoastsPage() {
+  const searchParams = useSearchParams();
+
+  // 1. URL 쿼리 파라미터에서 'my' 값을 확인하여 탭 상태 결정
+  const isMyTab = searchParams.get('my') === 'true';
+
   const [sort, setSort] = useState<StudioBoastsRequestProps['sort'] | ''>('');
   const [page, setPage] = useState(1);
 
-  const searchParams = useSearchParams();
+  // 2. [UX 보정] 탭(isMyTab)이 바뀔 때마다 페이지를 1로 초기화
+  useEffect(() => {
+    setPage(1);
+  }, [isMyTab]);
+
+  // 페이지 변경 시 스크롤 상단 이동
+  useScrollToTop(page, 'page-scroll-container');
 
   const { data: studioBoastsData, isLoading: isStudioBoastsLoading } =
     useStudioBoastsQuery(
@@ -38,6 +50,7 @@ export default function DesktopStudioBoastsPage() {
         page,
         size: 12,
         isMobile: false,
+        isMyList: isMyTab, // 3. 훅에 '내 글 모드' 여부 전달
       },
     );
 
@@ -66,7 +79,8 @@ export default function DesktopStudioBoastsPage() {
         {studioBoastList.map((item) => (
           <BoastThumnailCard
             key={item.id}
-            thumbnailSrcUrl={item?.imageFileUrls?.[0] || ''}
+            targetedId={item.id}
+            thumbnailSrcUrl={item.thumbnailImageFileUrl}
             isLike={item.isLikedByRequestUser}
           />
         ))}

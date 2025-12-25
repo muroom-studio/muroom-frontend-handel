@@ -46,6 +46,7 @@ export default function Layout({ children }: Props) {
       title='내 정보'
       tabs={TABS}
       initialActiveTabId={activeTabId}
+      activeTabId={activeTabId}
       onTabChange={handleTabChange}
     >
       {children}

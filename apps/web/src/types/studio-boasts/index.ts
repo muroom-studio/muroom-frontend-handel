@@ -40,6 +40,7 @@ export interface UnknownStudioInfoDto {
 export interface StudioBoastsItemProps {
   id: string; // Feed ID
   content: string; // 게시글 본문
+  thumbnailImageFileUrl: string;
   imageFileUrls: string[]; // 첨부 이미지 URL 리스트
   isLikedByRequestUser: boolean; // 조회한 유저의 좋아요 여부
   likeCount: number; // 좋아요 개수
@@ -67,6 +68,16 @@ export type StudioBoastsResponseProps =
   PaginatedResponse<StudioBoastsItemProps>;
 
 {
+  /* 내가 쓴 매물 자랑 목록 조회 */
+}
+
+// 요청 dto
+export type StudioBoastsMyRequestProps = StudioBoastsRequestProps;
+
+// 응답 dto
+export type StudioBoastsMyResponseProps = StudioBoastsResponseProps;
+
+{
   /* 매물 자랑 등록 */
 }
 
@@ -81,4 +92,12 @@ export interface CreateStudioBoastsRequestProps {
   agreedToEventTerms: boolean;
   studioId?: number;
   imageFileKeys: string[];
+}
+
+{
+  /* 매물 자랑 게시글 좋아요 */
+}
+
+export interface StudioBoastsLikesRequestProps {
+  studioBoastId: number;
 }
