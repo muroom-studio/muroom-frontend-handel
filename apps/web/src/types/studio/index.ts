@@ -3,6 +3,15 @@ export interface StudioDetailRequestProps {
   studioId: string;
 }
 
+export interface NearestSubwayStationDto {
+  stationName: string;
+  lines: {
+    lineName: string;
+    lineColor: string;
+  }[];
+  distanceInMeters: number;
+}
+
 export interface StudioBaseInfo {
   studioId: number;
   studioName: string;
@@ -12,14 +21,7 @@ export interface StudioBaseInfo {
   studioMinPrice: number;
   studioMaxPrice: number;
   depositAmount: number; // [이동됨] 건물 정보 -> 기본 정보로 이동
-  nearbySubwayStations: {
-    stationName: string;
-    lines: {
-      lineName: string;
-      lineColor: string;
-    }[];
-    distanceInMeters: number;
-  }[];
+  nearbySubwayStations: NearestSubwayStationDto[];
 }
 
 export interface StudioBuildingInfo {

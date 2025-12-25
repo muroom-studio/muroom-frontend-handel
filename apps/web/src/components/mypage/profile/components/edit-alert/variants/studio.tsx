@@ -83,9 +83,13 @@ export default function StudioEditAlert({ isMobile, isOpen, onClose }: Props) {
           </div>
         ) : (
           <AddressForm
-            // isMobile={isMobile}
             value={studioJuso}
             setValue={setStudioJuso}
+            fieldMap={{
+              address: 'juso',
+              detailAddress: 'detailJuso',
+              name: 'studioName',
+            }}
             onMyPage
           />
         )}

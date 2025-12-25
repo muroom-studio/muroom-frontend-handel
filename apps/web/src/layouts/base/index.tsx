@@ -1,6 +1,6 @@
 'use client';
 
-import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
+import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
 
 import BaseDesktopLayout from './desktop';
 import BaseMobileLayout from './mobile';

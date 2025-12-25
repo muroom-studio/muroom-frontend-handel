@@ -1,7 +1,7 @@
 'use client';
 
+import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
 import { useWelcomeMode } from '@/hooks/nuqs/welcome/useWelcomeMode';
-import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 
 import JoinPage from './join';
 import LoginPage from './login';

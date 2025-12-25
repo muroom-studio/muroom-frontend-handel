@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { TextField } from '@muroom/components';
 import { CloseIcon, RightArrowIcon } from '@muroom/icons';
 
-import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
+import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
 import { useRecentSearchStore } from '@/store/useRecentKeywordStore';
 
 export default function SearchPage() {

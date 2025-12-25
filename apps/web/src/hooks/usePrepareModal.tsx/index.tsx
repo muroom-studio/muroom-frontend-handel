@@ -8,7 +8,7 @@ import { Button, Modal, ModalBottomSheet } from '@muroom/components';
 import { cn } from '@muroom/lib';
 import PrepareImage from '@muroom/ui/assets/prepare-modal.svg';
 
-import { useResponsiveLayout } from '../useResponsiveLayout';
+import { useResponsiveLayout } from '../common/useResponsiveLayout';
 
 export const usePrepareModal = () => {
   const { isMobile } = useResponsiveLayout();

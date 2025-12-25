@@ -5,10 +5,8 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@muroom/components';
 
 import PageWrapper from '@/components/common/page-wrapper';
-import {
-  InquiriesPresignedUrlResponseProps,
-  InquiryCategoryItem,
-} from '@/types/inquiries';
+import { CommonImageUploadResponseProps } from '@/types/api';
+import { InquiryCategoryItem } from '@/types/inquiries';
 
 import CancelAlert from '../cancel-alert';
 import MypageCsInquiryNewCommonForm from '../common-form';
@@ -24,7 +22,7 @@ interface Props {
   // [수정] 반환 타입 업데이트
   handleUploadImages: (
     files: File[],
-  ) => Promise<InquiriesPresignedUrlResponseProps[]>;
+  ) => Promise<CommonImageUploadResponseProps[]>;
   showCancelAlert: boolean;
   setShowCancelAlert: Dispatch<SetStateAction<boolean>>;
   submitHandler: () => void;
@@ -51,6 +49,7 @@ export default function MobileMypageCsInquiryNewPage({
     <PageWrapper
       isMobile
       isHeader={{ title: '1:1 문의하기', onBackClick: () => router.back() }}
+      contentClassName='pt-6'
       bottomSlot={
         <div className='grid grid-cols-2 gap-x-3'>
           <Button
@@ -84,13 +83,11 @@ export default function MobileMypageCsInquiryNewPage({
         setImageKeys={setImageKeys}
         handleUploadImages={handleUploadImages}
       />
-      {showCancelAlert && (
-        <CancelAlert
-          isMobile
-          isOpen={showCancelAlert}
-          onClose={() => setShowCancelAlert(false)}
-        />
-      )}
+      <CancelAlert
+        isMobile
+        isOpen={showCancelAlert}
+        onClose={() => setShowCancelAlert(false)}
+      />
     </PageWrapper>
   );
 }

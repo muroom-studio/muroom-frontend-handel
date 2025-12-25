@@ -6,7 +6,7 @@ import { Button, Modal, ModalBottomSheet } from '@muroom/components';
 import { cn } from '@muroom/lib';
 
 import StaticMap from '@/components/common/static-map';
-import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
+import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
 
 interface ParkingLocationInfo {
   parkingLocationName: string;

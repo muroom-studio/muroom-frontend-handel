@@ -18,7 +18,7 @@ import { getFormattedDate } from '@muroom/util';
 
 import DraggableCarousel from '@/components/common/draggable-carousel';
 import OptionItem from '@/components/common/option-item';
-import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
+import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
 import { StudioRoomItem } from '@/types/studio';
 
 interface Props {

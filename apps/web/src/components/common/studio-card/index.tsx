@@ -4,8 +4,8 @@ import { Badge } from '@muroom/components';
 import { cn } from '@muroom/lib';
 import VacantThumnail from '@muroom/ui/assets/vacant-thumnail.svg';
 
+import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
 import { MapState } from '@/hooks/nuqs/home/useMapState';
-import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 import { StudiosMapListItem } from '@/types/studios';
 
 interface Props {

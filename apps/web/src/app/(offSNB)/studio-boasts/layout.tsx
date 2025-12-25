@@ -8,7 +8,7 @@ import { PlusIcon } from '@muroom/icons';
 import BoastBanner from '@muroom/ui/assets/boast-banner.svg';
 
 import PageWrapper from '@/components/common/page-wrapper';
-import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
+import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
 
 interface Props {
   children: React.ReactNode;
@@ -26,6 +26,8 @@ export default function Layout({ children }: Props) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  const isFullPage = pathname.includes('/studio-boasts/new');
+
   const activeTabId = searchParams.get('my') === 'true' ? 'my' : 'all';
 
   const handleTabChange = (currentId: string) => {
@@ -38,10 +40,14 @@ export default function Layout({ children }: Props) {
       params.set('my', 'true');
     }
 
-    router.push(`${pathname}?${params.toString()}`);
+    router.replace(`${pathname}?${params.toString()}`);
   };
 
   if (isMobile) {
+    return <>{children}</>;
+  }
+
+  if (isFullPage) {
     return <>{children}</>;
   }
 
@@ -60,7 +66,11 @@ export default function Layout({ children }: Props) {
       initialActiveTabId={activeTabId}
       onTabChange={handleTabChange}
       rightSlot={
-        <Button variant='primary' size='xl'>
+        <Button
+          variant='primary'
+          size='xl'
+          onClick={() => router.push('/studio-boasts/new')}
+        >
           <div className='flex-center gap-x-1'>
             <PlusIcon className='size-6 text-white' />
             글쓰기

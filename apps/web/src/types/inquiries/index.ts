@@ -42,20 +42,6 @@ export interface InquiriesInquiryIdRequestProps {
 //응답 dto
 export interface InquiriesInquiryIdResponseProps {}
 
-/* 1:1 문의 등록 사진 등록 (s3 버킷용) */
-
-// 요청 dto
-export interface InquiriesPresignedUrlRequestProps {
-  fileName: string;
-  contentType: string;
-}
-
-// 응답 dto
-export interface InquiriesPresignedUrlResponseProps {
-  presignedPutUrl: string;
-  fileKey: string;
-}
-
 /* 1:1 문의 등록 */
 export interface InquiriesRequestProps {
   categoryId: number;

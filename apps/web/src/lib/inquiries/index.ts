@@ -1,10 +1,12 @@
 import { createQueryString } from '@muroom/util';
 
-import { PageRequestProps } from '@/types/api';
+import {
+  CommonImageUploadRequestProps,
+  CommonImageUploadResponseProps,
+  PageRequestProps,
+} from '@/types/api';
 import {
   InquiriesMyResponseProps,
-  InquiriesPresignedUrlRequestProps,
-  InquiriesPresignedUrlResponseProps,
   InquiriesRequestProps,
   InquiryCategoryResponseProps,
 } from '@/types/inquiries';
@@ -35,9 +37,9 @@ export const getInquiriesMy = async (params: PageRequestProps) => {
 };
 
 export const postInquiriesPresignedUrl = async (
-  dto: InquiriesPresignedUrlRequestProps,
+  dto: CommonImageUploadRequestProps,
 ) => {
-  const responseData = await customFetch<InquiriesPresignedUrlResponseProps>(
+  const responseData = await customFetch<CommonImageUploadResponseProps>(
     '/inquiries/presigned-url',
     {
       method: 'POST',

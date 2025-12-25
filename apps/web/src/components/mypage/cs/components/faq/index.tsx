@@ -11,6 +11,8 @@ import {
   useFaqCategoriesQuery,
   useFaqsQuery,
 } from '@/hooks/api/faqs/useQueries';
+import { FaqItem } from '@/types/faqs';
+import { extractInfiniteData } from '@/utils/query';
 
 import FaqList from './faq-list';
 
@@ -42,6 +44,11 @@ export default function FaqBoard({ isMobile = false }: Props) {
     { page, size: 10, isMobile },
   );
 
+  const { content: faqList, pagination } = extractInfiniteData<FaqItem>(
+    faqsData,
+    isMobile,
+  );
+
   useEffect(() => {
     setPage(1);
   }, [categoryId, keyword]);
@@ -61,12 +68,6 @@ export default function FaqBoard({ isMobile = false }: Props) {
     if (observerRef.current) observer.observe(observerRef.current);
     return () => observer.disconnect();
   }, [isMobile, hasNextPage, fetchNextPage]);
-
-  const faqList = isMobile
-    ? faqsData?.pages.flatMap((page) => page.content) || []
-    : faqsData?.pages[0]?.content || [];
-
-  const paginationInfo = faqsData?.pages[0]?.pagination;
 
   if (isFaqCategoriesLoading) return <Loading />;
 
@@ -107,10 +108,10 @@ export default function FaqBoard({ isMobile = false }: Props) {
         isLoading={isFaqsLoading}
         // Desktop 전용 Props
         pagination={
-          !isMobile && paginationInfo
+          !isMobile && pagination
             ? {
                 currentPage: page,
-                totalPages: paginationInfo.totalPages,
+                totalPages: pagination.totalPages,
                 onPageChange: setPage,
               }
             : undefined

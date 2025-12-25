@@ -19,7 +19,7 @@ import {
 import EditableField from '@/components/mypage/profile/components/editable-field';
 import QuitAlert from '@/components/mypage/profile/components/quit-alert';
 import { useMusicianMeDetailQuery } from '@/hooks/api/musician/useQueries';
-import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
+import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
 
 type AlertKey = 'NICKNAME' | 'INSTRUMENT' | 'PHONE' | 'STUDIO' | 'QUIT';
 

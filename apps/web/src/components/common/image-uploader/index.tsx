@@ -10,14 +10,14 @@ import { Spinner } from '@muroom/components';
 import { CloseIcon, PlusIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 
-import { InquiriesPresignedUrlResponseProps } from '@/types/inquiries';
+import { CommonImageUploadResponseProps } from '@/types/api';
 
 interface ImageUploaderProps {
   label?: string;
   showImageCount?: boolean;
   wrapperClassName?: string;
   maxImages?: number;
-  uploadFn: (files: File[]) => Promise<InquiriesPresignedUrlResponseProps[]>;
+  uploadFn: (files: File[]) => Promise<CommonImageUploadResponseProps[]>;
   onImagesChange: (imageKeys: string[]) => void;
   isMobile?: boolean;
 }

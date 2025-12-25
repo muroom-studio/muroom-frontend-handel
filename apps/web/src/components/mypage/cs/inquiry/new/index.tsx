@@ -12,7 +12,7 @@ import {
   useInquiriesPresignedUrlMutation,
 } from '@/hooks/api/inquiries/useMutations';
 import { useInquiryCategories } from '@/hooks/api/inquiries/useQueries';
-import { InquiriesPresignedUrlResponseProps } from '@/types/inquiries';
+import { useImageUpload } from '@/hooks/common/useImageUpload';
 
 import DesktopMypageCsInquiryNewPage from './desktop';
 import MobileMypageCsInquiryNewPage from './mobile';
@@ -37,32 +37,10 @@ export default function MypageCsInquiryNewPage({ isMobile }: Props) {
   const [imageKeys, setImageKeys] = useState<string[]>([]);
 
   const { mutateAsync: getPresignedUrl } = useInquiriesPresignedUrlMutation();
+
+  const { handleUploadImages } = useImageUpload(getPresignedUrl);
+
   const { mutate: inquiriesMutate } = useInquiriesMutation();
-
-  const handleUploadImages = async (
-    files: File[],
-  ): Promise<InquiriesPresignedUrlResponseProps[]> => {
-    try {
-      const uploadPromises = files.map(async (file) => {
-        const requestPayload = {
-          fileName: file.name,
-          contentType: file.type,
-        };
-
-        const response = await getPresignedUrl(requestPayload);
-
-        return {
-          fileKey: response.fileKey,
-          presignedPutUrl: response.presignedPutUrl,
-        };
-      });
-
-      return await Promise.all(uploadPromises);
-    } catch (error) {
-      console.error('Presigned URL 발급 실패:', error);
-      throw error;
-    }
-  };
 
   const submitHandler = () => {
     inquiriesMutate(
