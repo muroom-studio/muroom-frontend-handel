@@ -6,10 +6,8 @@ import { TextBox, TextField, ToggleButton } from '@muroom/components';
 import { updateObjectProperty } from '@muroom/util';
 
 import ImageUploader from '@/components/common/image-uploader';
-import {
-  InquiriesPresignedUrlResponseProps,
-  InquiryCategoryItem,
-} from '@/types/inquiries';
+import { CommonImageUploadResponseProps } from '@/types/api';
+import { InquiryCategoryItem } from '@/types/inquiries';
 
 interface InquiryFormValue {
   title: string;
@@ -30,7 +28,7 @@ interface Props {
   // [수정] 반환 타입 업데이트
   handleUploadImages: (
     files: File[],
-  ) => Promise<InquiriesPresignedUrlResponseProps[]>;
+  ) => Promise<CommonImageUploadResponseProps[]>;
 }
 
 export default function MypageCsInquiryNewCommonForm({

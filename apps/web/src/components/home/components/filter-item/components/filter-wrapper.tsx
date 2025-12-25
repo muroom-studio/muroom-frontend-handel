@@ -2,7 +2,7 @@ import { Button } from '@muroom/components';
 import { ResetIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 
-import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
+import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
 
 const FilterWrapper = ({
   title,

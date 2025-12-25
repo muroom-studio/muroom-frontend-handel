@@ -6,15 +6,15 @@ import {
 
 import { postInquiries, postInquiriesPresignedUrl } from '@/lib/inquiries';
 import {
-  InquiriesPresignedUrlRequestProps,
-  InquiriesPresignedUrlResponseProps,
-  InquiriesRequestProps,
-} from '@/types/inquiries';
+  CommonImageUploadRequestProps,
+  CommonImageUploadResponseProps,
+} from '@/types/api';
+import { InquiriesRequestProps } from '@/types/inquiries';
 
 const useInquiriesPresignedUrlMutation = (): UseMutationResult<
-  InquiriesPresignedUrlResponseProps,
+  CommonImageUploadResponseProps,
   Error,
-  InquiriesPresignedUrlRequestProps
+  CommonImageUploadRequestProps
 > => {
   return useMutation({
     mutationFn: postInquiriesPresignedUrl,

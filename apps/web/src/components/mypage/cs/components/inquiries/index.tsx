@@ -8,6 +8,8 @@ import { Button, TextField } from '@muroom/components';
 import { SearchIcon } from '@muroom/icons';
 
 import { useInquiriesMyQuery } from '@/hooks/api/inquiries/useQueries';
+import { InquiryItem } from '@/types/inquiries';
+import { extractInfiniteData } from '@/utils/query';
 
 import InquiryList from './inquiry-list';
 
@@ -33,9 +35,10 @@ export default function InquiriesBoard({ isMobile = false }: Props) {
     isMobile,
   });
 
-  // useEffect(() => {
-  //     setPage(1);
-  //   }, [categoryId, keyword]);
+  const { content: inquiryList, pagination } = extractInfiniteData<InquiryItem>(
+    inquiriesMyData,
+    isMobile,
+  );
 
   useEffect(() => {
     if (!isMobile) return;
@@ -52,12 +55,6 @@ export default function InquiriesBoard({ isMobile = false }: Props) {
     if (observerRef.current) observer.observe(observerRef.current);
     return () => observer.disconnect();
   }, [isMobile, hasNextPage, fetchNextPage]);
-
-  const inquiryList = isMobile
-    ? inquiriesMyData?.pages.flatMap((page) => page.content) || []
-    : inquiriesMyData?.pages[0]?.content || [];
-
-  const paginationInfo = inquiriesMyData?.pages[0]?.pagination;
 
   return (
     <div className='w-full'>
@@ -83,17 +80,15 @@ export default function InquiriesBoard({ isMobile = false }: Props) {
         isMobile={isMobile}
         items={inquiryList}
         isLoading={isInquiriesMyLoading}
-        // Desktop 전용 Props
         pagination={
-          !isMobile && paginationInfo
+          !isMobile && pagination
             ? {
                 currentPage: page,
-                totalPages: paginationInfo.totalPages,
+                totalPages: pagination.totalPages,
                 onPageChange: setPage,
               }
             : undefined
         }
-        // Mobile 전용 Props
         infiniteScroll={
           isMobile
             ? {

@@ -2,7 +2,7 @@
 
 import { Toaster } from 'sonner';
 
-import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
+import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
 
 function SonnerProvider() {
   const { isMobile } = useResponsiveLayout();

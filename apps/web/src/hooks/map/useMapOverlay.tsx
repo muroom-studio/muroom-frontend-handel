@@ -7,8 +7,8 @@ import CustomMarker from '@/components/common/map/ui/custom-marker';
 import { MarkerSize, StudiosMapSearchItem } from '@/types/studios';
 import { createMarkerWithReactRoot } from '@/utils/map/marker';
 
+import { useResponsiveLayout } from '../common/useResponsiveLayout';
 import { DEFAULT_ZOOM } from '../nuqs/home/useMapState';
-import { useResponsiveLayout } from '../useResponsiveLayout';
 
 function getMarkerSize(zoom: number, data: StudiosMapSearchItem): MarkerSize {
   const hasPrice = data.minPrice != null && data.maxPrice != null;

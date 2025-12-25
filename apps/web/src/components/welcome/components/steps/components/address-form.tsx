@@ -10,25 +10,39 @@ import {
   TextField,
 } from '@muroom/components';
 import { CloseIcon } from '@muroom/icons';
-import { cn } from '@muroom/lib';
-import { updateObjectProperty } from '@muroom/util';
 
-import { StudioJuso } from '../third-step';
-
-interface Props {
-  isMobile?: boolean;
-  value: StudioJuso;
-  setValue: React.Dispatch<React.SetStateAction<StudioJuso>>;
-  onMyPage?: boolean;
+export interface AddressFieldMap<T> {
+  address: keyof T;
+  detailAddress: keyof T;
+  jibunAddress?: keyof T;
+  name?: keyof T;
 }
 
-export default function AddressForm({
+interface Props<T> {
+  isMobile?: boolean;
+  value: T;
+  setValue: React.Dispatch<React.SetStateAction<T>>;
+  onMyPage?: boolean;
+  fieldMap: AddressFieldMap<T>;
+  label?: string;
+}
+
+export default function AddressForm<T>({
   isMobile = false,
   value,
   setValue,
   onMyPage = false,
-}: Props) {
+  fieldMap,
+  label = '내 작업실',
+}: Props<T>) {
   const [isOpen, setIsOpen] = useState(false);
+
+  const updateField = (key: keyof T, newValue: any) => {
+    setValue((prev) => ({
+      ...prev,
+      [key]: newValue,
+    }));
+  };
 
   const handleComplete = (data: any) => {
     let fullAddress = data.roadAddress || data.autoRoadAddress || data.address;
@@ -46,10 +60,22 @@ export default function AddressForm({
       fullAddress += ` (${extraAddress})`;
     }
 
-    setValue((prev) => ({
-      ...prev,
-      juso: fullAddress,
-    }));
+    const lotNumberAddress = data.jibunAddress || data.autoJibunAddress || '';
+
+    setValue((prev) => {
+      const updates = {} as Partial<T>;
+
+      updates[fieldMap.address] = fullAddress as any;
+
+      if (fieldMap.jibunAddress) {
+        updates[fieldMap.jibunAddress] = lotNumberAddress as any;
+      }
+
+      return {
+        ...prev,
+        ...updates,
+      };
+    });
 
     setIsOpen(false);
   };
@@ -64,15 +90,15 @@ export default function AddressForm({
     <div className='flex flex-col gap-y-[9px]'>
       {!onMyPage && (
         <RequiredText htmlFor='address' required={false}>
-          내 작업실
+          {label}
         </RequiredText>
       )}
 
       <div className='grid w-full grid-cols-[1fr_auto] gap-x-3'>
         <TextField
           id='address'
-          value={value.juso}
-          placeholder='작업실 찾기'
+          value={String(value[fieldMap.address] || '')}
+          placeholder='주소 찾기'
           readOnly
           disabled
           onClick={toggleModal}
@@ -91,30 +117,20 @@ export default function AddressForm({
 
       <TextField
         placeholder='상세주소를 입력해주세요'
-        value={value.detailJuso}
-        onChange={(e) =>
-          setValue((prev) =>
-            updateObjectProperty(prev, 'detailJuso', e.target.value),
-          )
-        }
-        onClear={() =>
-          setValue((prev) => updateObjectProperty(prev, 'detailJuso', ''))
-        }
-        disabled={!value.juso}
+        value={String(value[fieldMap.detailAddress] || '')}
+        onChange={(e) => updateField(fieldMap.detailAddress, e.target.value)}
+        onClear={() => updateField(fieldMap.detailAddress, '')}
+        disabled={!value[fieldMap.address]}
       />
 
-      <TextField
-        placeholder='작업실 이름을 입력해주세요'
-        value={value.studioName}
-        onChange={(e) =>
-          setValue((prev) =>
-            updateObjectProperty(prev, 'studioName', e.target.value),
-          )
-        }
-        onClear={() =>
-          setValue((prev) => updateObjectProperty(prev, 'studioName', ''))
-        }
-      />
+      {fieldMap.name && (
+        <TextField
+          placeholder='작업실 이름을 입력해주세요'
+          value={String(value[fieldMap.name] || '')}
+          onChange={(e) => updateField(fieldMap.name!, e.target.value)}
+          onClear={() => updateField(fieldMap.name!, '')}
+        />
+      )}
 
       {isMobile && (
         <ModalBottomSheet

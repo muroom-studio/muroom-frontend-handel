@@ -9,7 +9,7 @@ import { CheckSmallIcon, DownArrowIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 
 import { useTermsMusicianSignupQuery } from '@/hooks/api/term/useQueries';
-import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
+import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
 import { useMusicianStore } from '@/store/useMusicianStore';
 
 interface Props {

@@ -3,10 +3,8 @@ import { Dispatch, SetStateAction } from 'react';
 import { Button } from '@muroom/components';
 
 import PageWrapper from '@/components/common/page-wrapper';
-import {
-  InquiriesPresignedUrlResponseProps,
-  InquiryCategoryItem,
-} from '@/types/inquiries';
+import { CommonImageUploadResponseProps } from '@/types/api';
+import { InquiryCategoryItem } from '@/types/inquiries';
 
 import CancelAlert from '../cancel-alert';
 import MypageCsInquiryNewCommonForm from '../common-form';
@@ -21,7 +19,7 @@ interface Props {
   setImageKeys: Dispatch<SetStateAction<string[]>>;
   handleUploadImages: (
     files: File[],
-  ) => Promise<InquiriesPresignedUrlResponseProps[]>;
+  ) => Promise<CommonImageUploadResponseProps[]>;
   showCancelAlert: boolean;
   setShowCancelAlert: Dispatch<SetStateAction<boolean>>;
   submitHandler: () => void;
@@ -75,12 +73,11 @@ export default function DesktopMypageCsInquiryNewPage({
           </Button>
         </div>
       </div>
-      {showCancelAlert && (
-        <CancelAlert
-          isOpen={showCancelAlert}
-          onClose={() => setShowCancelAlert(false)}
-        />
-      )}
+
+      <CancelAlert
+        isOpen={showCancelAlert}
+        onClose={() => setShowCancelAlert(false)}
+      />
     </PageWrapper>
   );
 }

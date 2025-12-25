@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { TabItem } from '@muroom/components';
 
 import PageWrapper from '@/components/common/page-wrapper';
-import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
+import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
 
 interface Props {
   children: React.ReactNode;

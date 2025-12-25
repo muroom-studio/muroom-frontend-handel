@@ -7,7 +7,7 @@ import { parseAsBoolean, useQueryState } from 'nuqs';
 import { Header } from '@muroom/components';
 import { CloseIcon } from '@muroom/icons';
 
-import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
+import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
 import { useAuthRedirectStore } from '@/store/useAuthRedirectStore';
 
 interface Props {

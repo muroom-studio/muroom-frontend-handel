@@ -8,7 +8,7 @@ import { Button, TabBar, TabItem } from '@muroom/components';
 import PageWrapper from '@/components/common/page-wrapper';
 import FaqBoard from '@/components/mypage/cs/components/faq';
 import InquiriesBoard from '@/components/mypage/cs/components/inquiries';
-import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
+import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
 
 const tabs: TabItem[] = [
   { id: 'faq', label: 'FAQ' },
