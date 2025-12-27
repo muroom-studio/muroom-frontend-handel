@@ -31,8 +31,6 @@ export default function RoomImageGroup({ roomImgs, controller }: Props) {
           <div
             key={index}
             className='relative h-[109px] w-[109px] flex-none cursor-pointer transition-opacity hover:opacity-90'
-            // [핵심] DraggableCarousel이 드래그 시 클릭 이벤트를 자동으로 막아주므로
-            // 여기서는 안심하고 그냥 onClick을 사용하면 됩니다.
             onClick={() => controller.openSingle('room', index)}
           >
             <Image

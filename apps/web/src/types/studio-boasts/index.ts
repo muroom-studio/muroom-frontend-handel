@@ -78,6 +78,18 @@ export type StudioBoastsMyRequestProps = StudioBoastsRequestProps;
 export type StudioBoastsMyResponseProps = StudioBoastsResponseProps;
 
 {
+  /* 내가 쓴 매물 자랑 상세 조회 */
+}
+
+// 요청 dto
+export interface StudioBoastsDetailRequestProps {
+  studioBoastId: string;
+}
+
+// 응답 dto
+export type StudioBoastsDetailResponseProps = StudioBoastsItemProps;
+
+{
   /* 매물 자랑 등록 */
 }
 
@@ -99,5 +111,16 @@ export interface CreateStudioBoastsRequestProps {
 }
 
 export interface StudioBoastsLikesRequestProps {
-  studioBoastId: number;
+  studioBoastId: string;
+}
+
+{
+  /* 매물 자랑 게시글 신고하기 */
+}
+
+// 요청 Dto
+export interface StudioBoastsReportRequestProps {
+  studioBoastId: string;
+  reportReasonId: number;
+  description: string;
 }

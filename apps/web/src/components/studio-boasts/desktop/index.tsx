@@ -29,18 +29,15 @@ const STUDIO_SORT_OPTIONS: SortOption[] = [
 export default function DesktopStudioBoastsPage() {
   const searchParams = useSearchParams();
 
-  // 1. URL 쿼리 파라미터에서 'my' 값을 확인하여 탭 상태 결정
   const isMyTab = searchParams.get('my') === 'true';
 
   const [sort, setSort] = useState<StudioBoastsRequestProps['sort'] | ''>('');
   const [page, setPage] = useState(1);
 
-  // 2. [UX 보정] 탭(isMyTab)이 바뀔 때마다 페이지를 1로 초기화
   useEffect(() => {
     setPage(1);
-  }, [isMyTab]);
+  }, [isMyTab, sort]);
 
-  // 페이지 변경 시 스크롤 상단 이동
   useScrollToTop(page, 'page-scroll-container');
 
   const { data: studioBoastsData, isLoading: isStudioBoastsLoading } =
@@ -50,7 +47,7 @@ export default function DesktopStudioBoastsPage() {
         page,
         size: 12,
         isMobile: false,
-        isMyList: isMyTab, // 3. 훅에 '내 글 모드' 여부 전달
+        isMyList: isMyTab,
       },
     );
 

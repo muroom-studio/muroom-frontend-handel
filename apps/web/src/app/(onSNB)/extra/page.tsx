@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
-import { Tag } from '@muroom/components';
+import { Tag, UserBaseInfoLabel } from '@muroom/components';
 import { RightArrowIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 
@@ -33,14 +33,12 @@ export default function Page() {
         nameSlot='내 프로필'
         sub={
           <div className='flex-between'>
-            <div className='flex items-center gap-2'>
-              <Tag variant='musician'>
-                {musicianBaseData?.musicianInstrument.description}
-              </Tag>
-              <span className='text-base-l-16-2 text-black'>
-                {musicianBaseData?.nickname}
-              </span>
-            </div>
+            <UserBaseInfoLabel
+              instrumentDescription={
+                musicianBaseData?.musicianInstrument.description || ''
+              }
+              nickname={musicianBaseData?.nickname || ''}
+            />
             <RightArrowIcon className='size-6 cursor-pointer' />
           </div>
         }

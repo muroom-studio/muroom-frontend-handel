@@ -2,62 +2,57 @@ import Image from 'next/image';
 
 import { Badge } from '@muroom/components';
 import { cn } from '@muroom/lib';
-import VacantThumnail from '@muroom/ui/assets/vacant-thumnail.svg';
 
 import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
-import { MapState } from '@/hooks/nuqs/home/useMapState';
-import { StudiosMapListItem } from '@/types/studios';
+import { NearestSubwayStationDto } from '@/types/studio';
 
 interface Props {
-  data: StudiosMapListItem;
-  currentStudioId: string;
-  setMapValue: (newState: MapState | ((prev: MapState) => MapState)) => void;
+  id: string;
+  title: string;
+  minPrice?: number;
+  maxPrice?: number;
+  thumbnailUrl?: string | null;
+  subwayInfo: NearestSubwayStationDto;
+  isActive?: boolean;
+  onClick?: () => void;
+  wrapperClassName?: string;
 }
 
 export default function CommonStudioCard({
-  data,
-  currentStudioId,
-  setMapValue,
+  id,
+  title,
+  minPrice,
+  maxPrice,
+  thumbnailUrl,
+  subwayInfo,
+  isActive,
+  onClick,
+  wrapperClassName,
 }: Props) {
   const { isMobile } = useResponsiveLayout();
-  const {
-    studioId: numericStudioId,
-    studioName,
-    minPrice,
-    maxPrice,
-    nearbySubwayStationInfo,
-    thumbnailImageUrl,
-  } = data as StudiosMapListItem;
 
-  const studioId = String(numericStudioId);
-
-  const lineInfo = nearbySubwayStationInfo.lines;
+  const { stationName, distanceInMeters, lines } = subwayInfo;
 
   return (
     <div
       className={cn(
         'flex cursor-pointer gap-x-3 border-b border-b-gray-300 px-4 py-6 transition-colors hover:bg-gray-100',
         {
-          'bg-primary-50 hover:bg-primary-50': currentStudioId == studioId,
+          'bg-primary-50 hover:bg-primary-50': isActive,
         },
         {
           'px-0': isMobile,
         },
+        wrapperClassName,
       )}
-      onClick={() =>
-        setMapValue((prev) => ({
-          ...prev,
-          studioId: prev.studioId === studioId ? null : studioId,
-        }))
-      }
+      onClick={onClick}
     >
-      <StudioImg
-        thumbnailImageUrl={thumbnailImageUrl}
-        alt={`${studioId} 스튜디오 이미지`}
-        // isAd={isAd}
-        // isNew={isNew}
-        // isWished={isWished}
-      />
+      {thumbnailUrl ? (
+        <StudioImg thumbnailUrl={thumbnailUrl} alt={`${id} 스튜디오 이미지`} />
+      ) : (
+        <div className='size-[140px] shrink-0' />
+      )}
+
       <div className='flex flex-col justify-between'>
         <div className='flex flex-col gap-y-3'>
           <div className='flex-between'>
@@ -66,24 +61,17 @@ export default function CommonStudioCard({
                 ? `${minPrice / 10000}~${maxPrice / 10000}만원`
                 : '가격문의'}
             </span>
-            {/* <div className='flex items-center'>
-              <StarIcon />
-              <p className='text-base-m-14-1 flex items-center gap-x-px'>
-                <span>{rating}</span>
-                <span className='text-gray-400'>({reviewCount})</span>
-              </p>
-            </div> */}
           </div>
 
           <div
             className={cn('flex', {
-              'flex-col items-start gap-y-1': lineInfo.length >= 2,
-              'items-center gap-x-1': lineInfo.length < 2,
+              'flex-col items-start gap-y-1': lines.length >= 2,
+              'items-center gap-x-1': lines.length < 2,
             })}
           >
             <div className='flex items-center gap-x-1'>
-              {Array.isArray(lineInfo) &&
-                lineInfo.map((line) => (
+              {Array.isArray(lines) &&
+                lines.map((line) => (
                   <Badge
                     key={line.lineName}
                     variant='subway'
@@ -94,21 +82,14 @@ export default function CommonStudioCard({
             </div>
 
             <p className='text-base-m-14-1'>
-              {`${nearbySubwayStationInfo.stationName}역에서 ${nearbySubwayStationInfo.distanceInMeters.toLocaleString()}m`}
+              {`${stationName}역에서 ${distanceInMeters.toLocaleString()}m`}
             </p>
           </div>
         </div>
 
         <div className='flex items-center gap-x-1'>
-          {/* {vacancy ? (
-            <Tag variant='blue'>{vacancy}개 남음</Tag>
-          ) : (
-            <Tag variant='neutral' className='h-7'>
-              방 없음
-            </Tag>
-          )} */}
           <p className='text-base-m-14-1 max-w-[130px] truncate text-gray-500'>
-            {studioName}
+            {title}
           </p>
         </div>
       </div>
@@ -117,59 +98,21 @@ export default function CommonStudioCard({
 }
 
 const StudioImg = ({
-  thumbnailImageUrl,
+  thumbnailUrl,
   alt,
-  // isAd,
-  // isNew,
-  // isWished,
-}: Pick<StudiosMapListItem, 'thumbnailImageUrl'> & {
+}: {
+  thumbnailUrl: string;
   alt: string;
 }) => {
-  // const [wish, setWish] = useState(isWished);
-
   return (
     <div className='relative h-[140px] w-[140px] shrink-0'>
-      {/* <div className='flex-between absolute top-2 w-full px-2'>
-        <div className='flex items-center gap-x-1'>
-          {isNew && (
-            <Tag variant='primary' size='s' className='text-base-exs-10-1'>
-              NEW
-            </Tag>
-          )}
-          {isAd && (
-            <Tag variant='secondary' size='s' className='text-base-exs-10-1'>
-              AD
-            </Tag>
-          )}
-        </div>
-        <ToggleButton
-          variant='outline_icon'
-          selected={wish}
-          onSelectedChange={setWish}
-          className={`${wish ? 'bg-primary-400' : 'bg-gray-300'} rounded-1000 size-6 border-none text-white`}
-        >
-          <HeartIcon />
-        </ToggleButton>
-      </div> */}
-      {thumbnailImageUrl ? (
-        <Image
-          src={thumbnailImageUrl}
-          alt={alt}
-          width={140}
-          height={140}
-          className='rounded-4 h-[140px] min-h-[140px] w-[140px] min-w-[140px] shrink-0 object-cover'
-        />
-      ) : (
-        <div className='flex-center rounded-4 border border-gray-300 bg-white px-[39px] py-[45px]'>
-          <Image
-            src={VacantThumnail}
-            alt={'빈 이미지'}
-            width={62}
-            height={50}
-            className='rounded-4 object-cover'
-          />
-        </div>
-      )}
+      <Image
+        src={thumbnailUrl}
+        alt={alt}
+        width={140}
+        height={140}
+        className='rounded-4 h-[140px] min-h-[140px] w-[140px] min-w-[140px] shrink-0 object-cover'
+      />
     </div>
   );
 };

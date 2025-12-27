@@ -33,20 +33,19 @@ export default function Layout({ children }: Props) {
 
   const isFullPage = pathname.includes('/studio-boasts/new');
 
+  const isListPage = pathname === '/studio-boasts';
+
   const currentTabId = searchParams.get('my') === 'true' ? 'my' : 'all';
 
   const handleTabChange = (targetId: string) => {
     if (targetId === 'my' && !isLoggedIn) {
       saveCurrentUrl();
-
       const queryString = searchParams.toString();
       const href = queryString ? `/welcome?${queryString}` : '/welcome';
-
       router.push(href);
       return;
     }
 
-    // 2. 정상적인 탭 이동 로직
     const params = new URLSearchParams(searchParams.toString());
     params.delete('my');
 
@@ -69,14 +68,16 @@ export default function Layout({ children }: Props) {
     <PageWrapper
       title='작업실 자랑하기'
       thumbnail={
-        <Image
-          src={BoastBanner}
-          alt='매물자랑배너'
-          className='h-auto w-full object-cover'
-          priority
-        />
+        isListPage ? (
+          <Image
+            src={BoastBanner}
+            alt='매물자랑배너'
+            className='h-auto w-full object-cover'
+            priority
+          />
+        ) : undefined
       }
-      tabs={TABS}
+      tabs={isListPage ? TABS : undefined}
       initialActiveTabId={currentTabId}
       activeTabId={currentTabId}
       onTabChange={handleTabChange}

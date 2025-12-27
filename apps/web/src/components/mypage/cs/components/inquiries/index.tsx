@@ -6,8 +6,9 @@ import Link from 'next/link';
 
 import { Button, TextField } from '@muroom/components';
 import { SearchIcon } from '@muroom/icons';
+import { useDebounce } from '@muroom/util';
 
-import { useInquiriesMyQuery } from '@/hooks/api/inquiries/useQueries';
+import { useInquiriesListQuery } from '@/hooks/api/inquiries/useQueries';
 import { InquiryItem } from '@/types/inquiries';
 import { extractInfiniteData } from '@/utils/query';
 
@@ -21,22 +22,26 @@ export default function InquiriesBoard({ isMobile = false }: Props) {
   const [keyword, setKeyword] = useState('');
   const [page, setPage] = useState(1);
 
+  const debouncedKeyword = useDebounce(keyword, 500);
+
   const observerRef = useRef<HTMLDivElement>(null);
 
-  const {
-    data: inquiriesMyData,
-    isLoading: isInquiriesMyLoading,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useInquiriesMyQuery({
-    page,
-    size: 10,
-    isMobile,
-  });
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedKeyword]);
+
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInquiriesListQuery(
+      { keyword: debouncedKeyword },
+      {
+        page,
+        size: 10,
+        isMobile,
+      },
+    );
 
   const { content: inquiryList, pagination } = extractInfiniteData<InquiryItem>(
-    inquiriesMyData,
+    data,
     isMobile,
   );
 
@@ -79,7 +84,7 @@ export default function InquiriesBoard({ isMobile = false }: Props) {
       <InquiryList
         isMobile={isMobile}
         items={inquiryList}
-        isLoading={isInquiriesMyLoading}
+        isLoading={isLoading}
         pagination={
           !isMobile && pagination
             ? {

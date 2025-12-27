@@ -68,8 +68,8 @@ const ToggleButton = ({
     },
     outline_icon: {
       base: `
-        w-9 h-9 border border-gray-300 bg-white hover:bg-gray-100
-        ${isSelected && 'bg-primary-50 border-primary-600 hover:!border-gray-300 hover:!bg-primary-100 text-primary-600'}
+        w-9 h-9 border border-gray-300 bg-white
+        ${isSelected && 'bg-primary-50 border-primary-600 text-primary-600'}
       `,
     },
     text: {

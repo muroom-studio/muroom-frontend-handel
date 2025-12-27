@@ -1,16 +1,27 @@
-import { keepPreviousData, useInfiniteQuery } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useInfiniteQuery,
+  useQuery,
+} from '@tanstack/react-query';
 
-import { getStudioBoasts, getStudioBoastsMy } from '@/lib/studio-boasts';
-import { StudioBoastsRequestProps } from '@/types/studio-boasts';
+import {
+  getStudioBoasts,
+  getStudioBoastsDetail,
+  getStudioBoastsMy,
+} from '@/lib/studio-boasts';
+import {
+  StudioBoastsDetailRequestProps,
+  StudioBoastsRequestProps,
+} from '@/types/studio-boasts';
 
 interface UseStudioBoastsQueryConfig {
   page: number;
   size: number;
   isMobile: boolean;
-  isMyList?: boolean; // [추가] 내 글 조회 모드 (기본값 false)
+  isMyList?: boolean;
 }
 
-export const useStudioBoastsQuery = (
+const useStudioBoastsQuery = (
   params: Omit<StudioBoastsRequestProps, 'page' | 'size'> | undefined,
   config: UseStudioBoastsQueryConfig,
 ) => {
@@ -46,3 +57,12 @@ export const useStudioBoastsQuery = (
     placeholderData: keepPreviousData,
   });
 };
+
+const useStudioBoastsDetailQuery = (params: StudioBoastsDetailRequestProps) => {
+  return useQuery({
+    queryKey: ['studio-boasts', params.studioBoastId],
+    queryFn: () => getStudioBoastsDetail(params),
+  });
+};
+
+export { useStudioBoastsQuery, useStudioBoastsDetailQuery };

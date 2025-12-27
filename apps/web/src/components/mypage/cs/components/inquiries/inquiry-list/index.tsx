@@ -9,15 +9,11 @@ interface Props {
   isMobile?: boolean;
   items: InquiryItem[];
   isLoading: boolean;
-
-  // Desktop Props
   pagination?: {
     currentPage: number;
     totalPages: number;
     onPageChange: (page: number) => void;
   };
-
-  // Mobile Props
   infiniteScroll?: {
     observerRef: RefObject<HTMLDivElement | null>;
     isFetchingNextPage: boolean;

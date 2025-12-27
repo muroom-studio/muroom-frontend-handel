@@ -9,6 +9,7 @@ import {
   postStudioBoasts,
   postStudioBoastsLikes,
   postStudioBoastsPresignedUrl,
+  postStudioBoastsReport,
 } from '@/lib/studio-boasts';
 import {
   CommonImageUploadRequestProps,
@@ -17,6 +18,7 @@ import {
 import {
   CreateStudioBoastsRequestProps,
   StudioBoastsLikesRequestProps,
+  StudioBoastsReportRequestProps,
 } from '@/types/studio-boasts';
 
 // 1. Presigned URL 발급
@@ -48,7 +50,6 @@ const useStudioBoastsMutation = (): UseMutationResult<
   });
 };
 
-// 3. 좋아요 등록 (POST)
 const useStudioBoastsLikeMutation = (): UseMutationResult<
   any,
   Error,
@@ -58,15 +59,17 @@ const useStudioBoastsLikeMutation = (): UseMutationResult<
 
   return useMutation({
     mutationFn: postStudioBoastsLikes,
-    onSettled: () => {
+    onSettled: (data, error, variables) => {
       queryClient.invalidateQueries({
         queryKey: ['studio-boasts'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['studio-boasts', variables.studioBoastId],
       });
     },
   });
 };
 
-// 4. 좋아요 취소 (DELETE)
 const useStudioBoastsUnlikeMutation = (): UseMutationResult<
   any,
   Error,
@@ -76,11 +79,24 @@ const useStudioBoastsUnlikeMutation = (): UseMutationResult<
 
   return useMutation({
     mutationFn: deleteStudioBoastsLikes,
-    onSettled: () => {
+    onSettled: (data, error, variables) => {
       queryClient.invalidateQueries({
         queryKey: ['studio-boasts'],
       });
+      queryClient.invalidateQueries({
+        queryKey: ['studio-boasts', variables.studioBoastId],
+      });
     },
+  });
+};
+
+const useStudioBoastsReportMutation = (): UseMutationResult<
+  any,
+  Error,
+  StudioBoastsReportRequestProps
+> => {
+  return useMutation({
+    mutationFn: postStudioBoastsReport,
   });
 };
 
@@ -89,4 +105,5 @@ export {
   useStudioBoastsMutation,
   useStudioBoastsLikeMutation,
   useStudioBoastsUnlikeMutation,
+  useStudioBoastsReportMutation,
 };

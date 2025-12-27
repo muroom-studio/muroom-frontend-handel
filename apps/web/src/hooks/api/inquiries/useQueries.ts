@@ -4,8 +4,17 @@ import {
   useQuery,
 } from '@tanstack/react-query';
 
-import { getInquiriesMy, getInquiryCategories } from '@/lib/inquiries';
+import {
+  getInquiriesDetail,
+  getInquiriesMy,
+  getInquiriesSearch,
+  getInquiryCategories,
+} from '@/lib/inquiries';
 import { PageRequestProps } from '@/types/api';
+import {
+  InquiriesDetailRequestProps,
+  InquiriesSearchRequestProps,
+} from '@/types/inquiries';
 
 const useInquiryCategories = () => {
   return useQuery({
@@ -16,32 +25,57 @@ const useInquiryCategories = () => {
   });
 };
 
-const useInquiriesMyQuery = (config: {
-  page: number;
-  size: number;
-  isMobile: boolean;
-}) => {
+const useInquiriesListQuery = (
+  params: InquiriesSearchRequestProps,
+  config: {
+    page: number;
+    size: number;
+    isMobile: boolean;
+  },
+) => {
+  const { keyword } = params;
+  const { page, size, isMobile } = config;
+
   return useInfiniteQuery({
     queryKey: [
       'inquiries',
-      'my',
-      config.isMobile ? 'mobile' : { page: config.page, type: 'pc' },
+      keyword ? 'search' : 'my',
+      { keyword },
+      isMobile ? 'mobile' : { page, type: 'pc' },
     ],
 
     queryFn: ({ pageParam }) => {
-      return getInquiriesMy({
+      const commonParams = {
         page: pageParam,
-        size: config.size,
-      } as PageRequestProps);
+        size: size,
+      } as PageRequestProps;
+
+      if (keyword) {
+        return getInquiriesSearch({
+          ...commonParams,
+          keyword: keyword,
+        });
+      } else {
+        return getInquiriesMy(commonParams);
+      }
     },
 
-    initialPageParam: config.isMobile ? 0 : config.page - 1,
+    initialPageParam: isMobile ? 0 : page - 1,
+
     getNextPageParam: (lastPage) => {
       if (lastPage.pagination.isLast) return undefined;
       return lastPage.pagination.pageNumber + 1;
     },
+
     placeholderData: keepPreviousData,
   });
 };
 
-export { useInquiryCategories, useInquiriesMyQuery };
+const useInquiriesDetailQuery = (params: InquiriesDetailRequestProps) => {
+  return useQuery({
+    queryKey: ['inquiries', 'detail', params.inquiryId],
+    queryFn: () => getInquiriesDetail(params),
+  });
+};
+
+export { useInquiryCategories, useInquiriesListQuery, useInquiriesDetailQuery };

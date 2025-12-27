@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import { ToggleButton } from '@muroom/components';
 import { HeartIcon } from '@muroom/icons';
@@ -23,6 +24,7 @@ export default function BoastThumbnailCard({
   thumbnailSrcUrl,
   isLike = false,
 }: Props) {
+  const router = useRouter();
   const { isLoggedIn } = useAuthCheck();
 
   const { mutate: likeBoast } = useStudioBoastsLikeMutation();
@@ -30,14 +32,17 @@ export default function BoastThumbnailCard({
 
   const handleToggleLike = (newState: boolean) => {
     if (newState) {
-      likeBoast({ studioBoastId: Number(targetedId) });
+      likeBoast({ studioBoastId: targetedId });
     } else {
-      unlikeBoast({ studioBoastId: Number(targetedId) });
+      unlikeBoast({ studioBoastId: targetedId });
     }
   };
 
   return (
-    <div className='relative aspect-square w-full cursor-pointer overflow-hidden transition-all hover:scale-105'>
+    <div
+      onClick={() => router.push(`/studio-boasts/${targetedId}`)}
+      className='relative aspect-square w-full cursor-pointer overflow-hidden transition-all hover:scale-105'
+    >
       <Image
         src={thumbnailSrcUrl}
         alt={`${thumbnailSrcUrl}-썸네일`}

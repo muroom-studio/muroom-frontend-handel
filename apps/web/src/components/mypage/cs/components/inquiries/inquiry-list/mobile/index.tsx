@@ -53,7 +53,7 @@ export default function MobileInquiryList({
     }
   };
 
-  const [targetedId, setTargetedId] = useState(0);
+  const [targetedId, setTargetedId] = useState('');
 
   return (
     <div className='mt-6 flex flex-col'>
@@ -77,10 +77,10 @@ export default function MobileInquiryList({
       ) : (
         <Accordion
           className='w-full'
-          onValueChange={(inquiryId) => setTargetedId(Number(inquiryId))}
+          onValueChange={(inquiryId) => setTargetedId(inquiryId)}
         >
           {items.map((inquiry) => (
-            <AccordionItem key={inquiry.id} value={String(inquiry.id)}>
+            <AccordionItem key={inquiry.id} value={inquiry.id}>
               <AccordionTrigger
                 className='py-0 hover:bg-gray-50'
                 iconClassName='rotate-0'
@@ -110,7 +110,28 @@ export default function MobileInquiryList({
       </div>
 
       {Boolean(targetedId) && (
-        <InquiryDetail onClose={() => setTargetedId(0)} />
+        <InquiryDetail
+          targetedId={targetedId}
+          onClose={() => setTargetedId('')}
+          contentHeader={(inquiry) => (
+            <div
+              className={cn('border-b border-b-gray-200', itemContentGridClass)}
+            >
+              <div className={cn(cellClass, 'py-4.5')}>
+                {conditionedTag(inquiry.status)}
+              </div>
+              <div className='flex h-full flex-col justify-center gap-y-1'>
+                <span className='text-base-l-16-2'>{inquiry.title}</span>
+                <p className='text-base-m-14-1 flex items-center gap-x-2 text-gray-400'>
+                  <span>{inquiry.category.name}</span>•
+                  <span>
+                    {getFormattedDate(inquiry.createdAt, 'yy.MM.dd HH:mm')}
+                  </span>
+                </p>
+              </div>
+            </div>
+          )}
+        />
       )}
     </div>
   );
