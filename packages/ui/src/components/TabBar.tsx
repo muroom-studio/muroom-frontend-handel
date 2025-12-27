@@ -16,6 +16,7 @@ interface TabBarProps {
   onTabChange: (id: string) => void;
   className?: string;
   btnClassName?: string;
+  activeId?: string;
 }
 
 export default function TabBar({
@@ -25,15 +26,21 @@ export default function TabBar({
   onTabChange,
   className,
   btnClassName,
+  activeId,
 }: TabBarProps) {
-  const [activeTabId, setActiveTabId] = useState(initialActiveTabId);
+  const [internalActiveTabId, setInternalActiveTabId] =
+    useState(initialActiveTabId);
+
+  const currentActiveId = activeId ?? internalActiveTabId;
 
   useEffect(() => {
-    setActiveTabId(initialActiveTabId);
+    setInternalActiveTabId(initialActiveTabId);
   }, [initialActiveTabId]);
 
   const handleTabChange = (id: string) => {
-    setActiveTabId(id);
+    if (activeId === undefined) {
+      setInternalActiveTabId(id);
+    }
     onTabChange(id);
   };
 
@@ -50,7 +57,7 @@ export default function TabBar({
       )}
     >
       {tabs.map((tab) => {
-        const isActive = activeTabId === tab.id;
+        const isActive = currentActiveId === tab.id;
 
         return (
           <button

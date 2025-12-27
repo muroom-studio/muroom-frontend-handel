@@ -1,4 +1,7 @@
+'use client';
+
 import { TabBar, TabItem } from '@muroom/components';
+// 경로 확인
 import { cn } from '@muroom/lib';
 
 import Footer from '../../footer';
@@ -10,6 +13,7 @@ export interface Props {
   className?: string;
   tabs?: TabItem[];
   initialActiveTabId?: string;
+  activeTabId?: string;
   onTabChange?: (id: string) => void;
   rightSlot?: React.ReactNode;
 }
@@ -21,13 +25,17 @@ const DesktopPageWrapper = ({
   className,
   tabs,
   initialActiveTabId,
+  activeTabId,
   onTabChange,
   rightSlot,
 }: Props) => {
   const hasTabs = tabs && tabs.length > 0 && initialActiveTabId && onTabChange;
 
   return (
-    <div className='flex h-full w-full flex-col overflow-y-auto bg-white'>
+    <div
+      id='page-scroll-container'
+      className='flex h-full w-full flex-col overflow-y-auto bg-white'
+    >
       <header
         className={cn(
           'sticky top-0 z-50 w-full border-b-[0.5px] border-gray-400 bg-white transition-all',
@@ -48,6 +56,7 @@ const DesktopPageWrapper = ({
                 level={3}
                 tabs={tabs}
                 initialActiveTabId={initialActiveTabId}
+                activeId={activeTabId}
                 onTabChange={onTabChange}
                 className='flex w-full justify-start gap-x-6'
                 btnClassName='flex-none'

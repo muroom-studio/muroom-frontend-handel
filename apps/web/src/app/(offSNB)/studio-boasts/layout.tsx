@@ -8,6 +8,8 @@ import { PlusIcon } from '@muroom/icons';
 import BoastBanner from '@muroom/ui/assets/boast-banner.svg';
 
 import PageWrapper from '@/components/common/page-wrapper';
+import { useAuthCheck } from '@/hooks/auth/useAuthCheck';
+import { useSaveRedirectUrl } from '@/hooks/auth/useAuthRedirect';
 import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
 
 interface Props {
@@ -26,17 +28,28 @@ export default function Layout({ children }: Props) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  const { isLoggedIn } = useAuthCheck();
+  const { saveCurrentUrl } = useSaveRedirectUrl();
+
   const isFullPage = pathname.includes('/studio-boasts/new');
 
-  const activeTabId = searchParams.get('my') === 'true' ? 'my' : 'all';
+  const isListPage = pathname === '/studio-boasts';
 
-  const handleTabChange = (currentId: string) => {
+  const currentTabId = searchParams.get('my') === 'true' ? 'my' : 'all';
+
+  const handleTabChange = (targetId: string) => {
+    if (targetId === 'my' && !isLoggedIn) {
+      saveCurrentUrl();
+      const queryString = searchParams.toString();
+      const href = queryString ? `/welcome?${queryString}` : '/welcome';
+      router.push(href);
+      return;
+    }
+
     const params = new URLSearchParams(searchParams.toString());
-
-    params.delete('all');
     params.delete('my');
 
-    if (currentId === 'my') {
+    if (targetId === 'my') {
       params.set('my', 'true');
     }
 
@@ -55,15 +68,18 @@ export default function Layout({ children }: Props) {
     <PageWrapper
       title='작업실 자랑하기'
       thumbnail={
-        <Image
-          src={BoastBanner}
-          alt='매물자랑배너'
-          className='h-auto w-full object-cover'
-          priority
-        />
+        isListPage ? (
+          <Image
+            src={BoastBanner}
+            alt='매물자랑배너'
+            className='h-auto w-full object-cover'
+            priority
+          />
+        ) : undefined
       }
-      tabs={TABS}
-      initialActiveTabId={activeTabId}
+      tabs={isListPage ? TABS : undefined}
+      initialActiveTabId={currentTabId}
+      activeTabId={currentTabId}
       onTabChange={handleTabChange}
       rightSlot={
         <Button

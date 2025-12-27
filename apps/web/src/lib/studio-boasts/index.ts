@@ -6,6 +6,12 @@ import {
 } from '@/types/api';
 import {
   CreateStudioBoastsRequestProps,
+  StudioBoastsDetailRequestProps,
+  StudioBoastsDetailResponseProps,
+  StudioBoastsLikesRequestProps,
+  StudioBoastsMyRequestProps,
+  StudioBoastsMyResponseProps,
+  StudioBoastsReportRequestProps,
   StudioBoastsRequestProps,
   StudioBoastsResponseProps,
 } from '@/types/studio-boasts';
@@ -16,6 +22,32 @@ export const getStudioBoasts = async (params: StudioBoastsRequestProps) => {
 
   const responseData = await customFetch<StudioBoastsResponseProps>(
     `/studio-boasts?${queryString}`,
+    {
+      method: 'GET',
+    },
+  );
+
+  return responseData;
+};
+
+export const getStudioBoastsMy = async (params: StudioBoastsMyRequestProps) => {
+  const queryString = createQueryString(params);
+
+  const responseData = await customFetch<StudioBoastsMyResponseProps>(
+    `/studio-boasts/my?${queryString}`,
+    {
+      method: 'GET',
+    },
+  );
+
+  return responseData;
+};
+
+export const getStudioBoastsDetail = async (
+  params: StudioBoastsDetailRequestProps,
+) => {
+  const responseData = await customFetch<StudioBoastsDetailResponseProps>(
+    `/studio-boasts/${params.studioBoastId}`,
     {
       method: 'GET',
     },
@@ -43,6 +75,48 @@ export const postStudioBoasts = async (dto: CreateStudioBoastsRequestProps) => {
     method: 'POST',
     body: JSON.stringify(dto),
   });
+
+  return responseData;
+};
+
+export const postStudioBoastsLikes = async (
+  params: StudioBoastsLikesRequestProps,
+) => {
+  const responseData = await customFetch(
+    `/studio-boasts/${params.studioBoastId}/likes`,
+    {
+      method: 'POST',
+    },
+  );
+
+  return responseData;
+};
+
+export const deleteStudioBoastsLikes = async (
+  params: StudioBoastsLikesRequestProps,
+) => {
+  const responseData = await customFetch(
+    `/studio-boasts/${params.studioBoastId}/likes`,
+    {
+      method: 'DELETE',
+    },
+  );
+
+  return responseData;
+};
+
+export const postStudioBoastsReport = async (
+  params: StudioBoastsReportRequestProps,
+) => {
+  const { studioBoastId, ...requestBody } = params;
+
+  const responseData = await customFetch(
+    `/studio-boasts/${studioBoastId}/report`,
+    {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+    },
+  );
 
   return responseData;
 };

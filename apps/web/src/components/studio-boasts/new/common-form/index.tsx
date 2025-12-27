@@ -61,7 +61,7 @@ export default function StudioBoastsNewCommonForm({
 
       <div className='flex flex-col gap-y-4'>
         <label htmlFor='CONTENT'>
-          <span className='text-title-s-22-1'>문의내용</span>
+          <span className='text-title-s-22-1'>내용 작성</span>
         </label>
         <TextBox
           id='CONTENT'

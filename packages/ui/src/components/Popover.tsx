@@ -11,6 +11,8 @@ import React, {
 } from 'react';
 import { createPortal } from 'react-dom';
 
+import { AnimatePresence, Variants, motion } from 'framer-motion';
+
 import { cn } from '../lib/utils';
 
 // ----------------------------------------------------------------------
@@ -21,7 +23,7 @@ interface PopoverContextProps {
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
   triggerRef: React.RefObject<HTMLElement | null>;
-  contentRef: React.RefObject<HTMLDivElement | null>;
+  contentRef: React.RefObject<HTMLElement | null>; // [추가] 컨텐츠 Ref 공유
 }
 
 interface PopoverProps {
@@ -42,6 +44,11 @@ interface PopoverContentProps {
   side?: 'top' | 'right' | 'bottom' | 'left';
 }
 
+interface PopoverMenuItemProps extends React.HTMLAttributes<HTMLDivElement> {
+  children: React.ReactNode;
+  closeOnSelect?: boolean;
+}
+
 // ----------------------------------------------------------------------
 // Context & Hooks
 // ----------------------------------------------------------------------
@@ -50,7 +57,6 @@ const PopoverContext = createContext<PopoverContextProps | null>(null);
 
 const usePopover = () => {
   const popoverContext = useContext(PopoverContext);
-
   if (!popoverContext) {
     throw new Error(
       'popover를 사용하기 위해선 무조건 popover provider로 감싸줘야합니다.',
@@ -70,7 +76,7 @@ const Popover = ({
 }: PopoverProps) => {
   const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
   const triggerRef = useRef<HTMLElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLElement>(null); // [수정] 부모에서 contentRef 생성
 
   const isControlled = controlledOpen !== undefined;
   const isOpen = isControlled ? controlledOpen : uncontrolledOpen;
@@ -89,35 +95,33 @@ const Popover = ({
   // Outside Click 감지
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (!event.target || !document.contains(event.target as Node)) {
-        return;
-      }
+      if (!isOpen) return;
+      const target = event.target as Node;
+      if (!target || !document.contains(target)) return;
 
-      if (
-        triggerRef.current &&
-        !triggerRef.current.contains(event.target as Node) &&
-        contentRef.current &&
-        !contentRef.current.contains(event.target as Node)
-      ) {
+      // [핵심 수정] 트리거 바깥이고 "동시에" 컨텐츠 바깥일 때만 닫음
+      const isOutsideTrigger =
+        triggerRef.current && !triggerRef.current.contains(target);
+      const isOutsideContent =
+        contentRef.current && !contentRef.current.contains(target);
+
+      if (isOutsideTrigger && isOutsideContent) {
         setIsOpen(false);
       }
     };
 
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isOpen, setIsOpen]);
+  }, [isOpen, setIsOpen]); // triggerRef, contentRef는 ref라 디펜던시 불필요
 
   const contextValue = useMemo(
     () => ({
       isOpen,
       setIsOpen,
       triggerRef,
-      contentRef,
+      contentRef, // [추가] Provider로 전달
     }),
     [isOpen, setIsOpen],
   );
@@ -142,11 +146,18 @@ const PopoverTrigger = ({ children }: PopoverTriggerProps) => {
       onClick={handleClick}
       aria-expanded={isOpen}
       aria-haspopup='dialog'
-      style={{ cursor: 'pointer' }}
+      style={{ cursor: 'pointer', display: 'inline-block' }}
     >
       {children}
     </div>
   );
+};
+
+// Framer Motion Variants
+const popoverVariants: Variants = {
+  initial: { opacity: 0, scale: 0.95 },
+  animate: { opacity: 1, scale: 1 },
+  exit: { opacity: 0, scale: 0.95 },
 };
 
 const PopoverContent = ({
@@ -156,24 +167,22 @@ const PopoverContent = ({
   align = 'center',
   side = 'bottom',
 }: PopoverContentProps) => {
+  // [수정] usePopover에서 contentRef를 가져옴 (내부 useRef 삭제)
   const { isOpen, triggerRef, contentRef } = usePopover();
 
-  // [수정] maxHeight를 포함한 스타일 상태 관리
   const [style, setStyle] = useState<{
     top: number;
     left: number;
     maxHeight?: number;
+    transformOrigin: string;
   }>({
     top: 0,
     left: 0,
+    transformOrigin: 'center',
   });
-  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  useEffect(() => {
+    // contentRef.current가 null일 수도 있으니 체크
     if (isOpen && triggerRef.current && contentRef.current) {
       const triggerRect = triggerRef.current.getBoundingClientRect();
       const contentRect = contentRef.current.getBoundingClientRect();
@@ -181,20 +190,15 @@ const PopoverContent = ({
       const viewportHeight = window.innerHeight;
 
       let top = 0,
-        left = 0;
-
-      // [핵심] 뷰포트 높이 기반 Max Height 계산을 위한 변수
-      // 기본적으로 화면 전체 높이를 사용하되, 아래 로직에서 가용 공간으로 덮어씌움
+        left = 0,
+        transformOrigin = 'center';
       let calculatedMaxHeight = viewportHeight;
 
-      // --- Side 계산 (위치 및 높이 제한) ---
       if (side === 'bottom') {
         top = triggerRect.bottom + window.scrollY + sideOffset;
-
-        // [Bottom일 때] Trigger 아래쪽 남은 공간 계산 (하단 여백 16px 확보)
-        const availableSpace =
+        transformOrigin = 'top';
+        calculatedMaxHeight =
           viewportHeight - triggerRect.bottom - sideOffset - 16;
-        calculatedMaxHeight = availableSpace;
 
         if (align === 'center') {
           left =
@@ -204,16 +208,16 @@ const PopoverContent = ({
             contentRect.width / 2;
         } else if (align === 'start') {
           left = triggerRect.left + window.scrollX;
+          transformOrigin = 'top left';
         } else {
           left = triggerRect.right + window.scrollX - contentRect.width;
+          transformOrigin = 'top right';
         }
       } else if (side === 'top') {
         top =
           triggerRect.top + window.scrollY - contentRect.height - sideOffset;
-
-        // [Top일 때] Trigger 위쪽 남은 공간 계산
-        const availableSpace = triggerRect.top - sideOffset - 16;
-        calculatedMaxHeight = availableSpace;
+        transformOrigin = 'bottom';
+        calculatedMaxHeight = triggerRect.top - sideOffset - 16;
 
         if (align === 'center') {
           left =
@@ -223,11 +227,15 @@ const PopoverContent = ({
             contentRect.width / 2;
         } else if (align === 'start') {
           left = triggerRect.left + window.scrollX;
+          transformOrigin = 'bottom left';
         } else {
           left = triggerRect.right + window.scrollX - contentRect.width;
+          transformOrigin = 'bottom right';
         }
       } else if (side === 'right') {
         left = triggerRect.right + window.scrollX + sideOffset;
+        transformOrigin = 'left';
+
         if (align === 'center') {
           top =
             triggerRect.top +
@@ -236,12 +244,16 @@ const PopoverContent = ({
             contentRect.height / 2;
         } else if (align === 'start') {
           top = triggerRect.top + window.scrollY;
+          transformOrigin = 'top left';
         } else {
           top = triggerRect.bottom + window.scrollY - contentRect.height;
+          transformOrigin = 'bottom left';
         }
       } else if (side === 'left') {
         left =
           triggerRect.left + window.scrollX - contentRect.width - sideOffset;
+        transformOrigin = 'right';
+
         if (align === 'center') {
           top =
             triggerRect.top +
@@ -250,57 +262,48 @@ const PopoverContent = ({
             contentRect.height / 2;
         } else if (align === 'start') {
           top = triggerRect.top + window.scrollY;
+          transformOrigin = 'top right';
         } else {
           top = triggerRect.bottom + window.scrollY - contentRect.height;
+          transformOrigin = 'bottom right';
         }
       }
 
-      // --- 가로축(Left) 화면 충돌 방지 ---
-      if (left < 8) {
-        left = 8;
-      }
+      if (left < 8) left = 8;
       if (left + contentRect.width > viewportWidth - 8) {
         left = viewportWidth - contentRect.width - 8;
       }
 
-      // [수정] 세로축 강제 이동 로직 제거
-      // 높이 부족 시 위치를 옮기는 대신 maxHeight로 스크롤을 유도합니다.
-
-      // 최소 높이 안전장치 (너무 좁아도 최소 150px은 확보하거나, 상황에 맞게 조정)
-      if (calculatedMaxHeight < 150) {
-        // 공간이 너무 협소할 경우에 대한 정책이 필요하면 여기서 처리
-        // 예: calculatedMaxHeight = 150;
-      }
-
-      setStyle({ top, left, maxHeight: calculatedMaxHeight });
+      setStyle({ top, left, maxHeight: calculatedMaxHeight, transformOrigin });
     }
   }, [isOpen, triggerRef, contentRef, sideOffset, align, side]);
 
-  if (!isMounted || !isOpen) {
-    return null;
-  }
-
   return createPortal(
-    <div
-      ref={contentRef}
-      // [수정] flex, flex-col, overflow-y-auto 추가
-      // maxHeight를 넘어가는 컨텐츠는 스크롤 처리됨
-      className={cn(
-        'z-9999 absolute flex flex-col overflow-y-auto',
-        'data-[state=open]:animate-in data-[state=closed]:animate-out',
-        className,
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          ref={contentRef as React.RefObject<HTMLDivElement>} // Context의 ref 연결
+          variants={popoverVariants}
+          initial='initial'
+          animate='animate'
+          exit='exit'
+          transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+          className={cn(
+            'absolute z-[9999] flex flex-col overflow-y-auto',
+            className,
+          )}
+          style={{
+            top: `${style.top}px`,
+            left: `${style.left}px`,
+            maxHeight: style.maxHeight ? `${style.maxHeight}px` : undefined,
+            transformOrigin: style.transformOrigin,
+          }}
+          role='dialog'
+        >
+          {children}
+        </motion.div>
       )}
-      style={{
-        top: `${style.top}px`,
-        left: `${style.left}px`,
-        // [수정] 계산된 maxHeight 적용
-        maxHeight: style.maxHeight ? `${style.maxHeight}px` : undefined,
-      }}
-      data-state={isOpen ? 'open' : 'closed'}
-      role='dialog'
-    >
-      {children}
-    </div>,
+    </AnimatePresence>,
     document.body,
   );
 };
@@ -311,12 +314,37 @@ const PopoverMenuContainer = ({ children }: { children: React.ReactNode }) => (
   </div>
 );
 
-const PopoverMenuItem = ({ children }: { children: React.ReactNode }) => {
-  const commonClasses =
-    'w-full text-base-m-14-1 px-3 py-[9px] border-b border-b-gray-300 last:border-b-none text-left';
+const PopoverMenuItem = ({
+  children,
+  className,
+  onClick,
+  closeOnSelect = true,
+  ...props
+}: PopoverMenuItemProps) => {
+  const { setIsOpen } = usePopover();
 
-  return <div className={cn(commonClasses, 'cursor-pointer')}>{children}</div>;
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    onClick?.(e);
+    if (closeOnSelect) {
+      setIsOpen(false);
+    }
+  };
+
+  const commonClasses =
+    'w-full text-base-m-14-1 px-3 py-[9px] border-b border-b-gray-300 last:border-b-none text-left transition-colors hover:bg-gray-50';
+
+  return (
+    <div
+      role='menuitem'
+      onClick={handleClick}
+      className={cn(commonClasses, 'cursor-pointer', className)}
+      {...props}
+    >
+      {children}
+    </div>
+  );
 };
+
 // ----------------------------------------------------------------------
 // Exports
 // ----------------------------------------------------------------------

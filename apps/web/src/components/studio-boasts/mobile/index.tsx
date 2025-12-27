@@ -1,14 +1,70 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useEffect, useRef } from 'react';
 
-import { Button } from '@muroom/components';
-import { PlusIcon } from '@muroom/icons';
+import { useRouter, useSearchParams } from 'next/navigation';
 
+import { Spinner } from '@muroom/components';
+
+import Loading from '@/app/loading';
 import PageWrapper from '@/components/common/page-wrapper';
+import { useStudioBoastsQuery } from '@/hooks/api/studio-boasts/useQueries';
+import { StudioBoastsItemProps } from '@/types/studio-boasts';
+import { extractInfiniteData } from '@/utils/query';
+
+import DetailBoastList from './detail-boast-list';
+import FloatingPostButton from './floating-post-button';
+import MobileStudioBoastsTabBar from './mobile-tabBar';
 
 export default function MobileStudioBoastsPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const isMyTab = searchParams.get('my') === 'true';
+
+  const observerRef = useRef<HTMLDivElement>(null);
+
+  const {
+    data: studioBoastsData,
+    isLoading: isStudioBoastsLoading,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+  } = useStudioBoastsQuery(
+    { sort: undefined },
+    {
+      page: 1,
+      size: 12,
+      isMobile: true,
+      isMyList: isMyTab,
+    },
+  );
+
+  const { content: studioBoastList } =
+    extractInfiniteData<StudioBoastsItemProps>(studioBoastsData, true);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 0.5 },
+    );
+
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  if (isStudioBoastsLoading) {
+    return <Loading />;
+  }
 
   return (
     <PageWrapper
@@ -19,16 +75,17 @@ export default function MobileStudioBoastsPage() {
       }}
       contentClassName='px-0 pt-0'
     >
-      모바일 자랑
-      <Button
-        variant='primary'
-        size='xl'
-        className='shadow-level-2 absolute bottom-5 right-5'
-        onClick={() => router.push('/studio-boasts/new')}
-      >
-        <PlusIcon className='size-6 text-white' />
-        글쓰기
-      </Button>
+      <div className='flex flex-col pb-20'>
+        <MobileStudioBoastsTabBar />
+        <div className='h-6' />
+        <DetailBoastList items={studioBoastList} />
+
+        <div ref={observerRef} className='flex-center h-10 w-full py-4'>
+          {isFetchingNextPage && <Spinner variant='component' />}
+        </div>
+      </div>
+
+      <FloatingPostButton />
     </PageWrapper>
   );
 }

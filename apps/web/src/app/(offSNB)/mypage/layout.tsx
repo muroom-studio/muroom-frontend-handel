@@ -14,7 +14,6 @@ interface Props {
 const TABS: TabItem[] = [
   { id: '/mypage/profile', label: '프로필' },
   { id: '/mypage/cs', label: '고객센터' },
-  { id: '/mypage/reports', label: '신고내역' },
 ];
 
 export default function Layout({ children }: Props) {
@@ -46,6 +45,7 @@ export default function Layout({ children }: Props) {
       title='내 정보'
       tabs={TABS}
       initialActiveTabId={activeTabId}
+      activeTabId={activeTabId}
       onTabChange={handleTabChange}
     >
       {children}

@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import Link from 'next/link';
 
-import { Button, Popover, Tag } from '@muroom/components';
+import { Button, Popover, UserBaseInfoLabel } from '@muroom/components';
 
 import { useMusicianMeQuery } from '@/hooks/api/musician/useQueries';
 import { useAuthCheck } from '@/hooks/auth/useAuthCheck';
@@ -33,14 +33,14 @@ export default function AuthSection() {
         aria-haspopup='menu'
         aria-expanded={isOpen}
         onClick={() => setIsOpen((prev) => !prev)}
-        className='flex cursor-pointer items-center gap-2'
       >
-        <Tag variant='musician'>
-          {musicianBaseData.musicianInstrument.description}
-        </Tag>
-        <span className='text-base-l-16-2 text-black'>
-          {musicianBaseData.nickname}
-        </span>
+        <UserBaseInfoLabel
+          className='cursor-pointer'
+          instrumentDescription={
+            musicianBaseData.musicianInstrument.description || ''
+          }
+          nickname={musicianBaseData.nickname || ''}
+        />
       </div>
     );
 

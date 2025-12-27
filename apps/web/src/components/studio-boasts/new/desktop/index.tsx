@@ -39,7 +39,7 @@ export default function DesktopStudioBoastsNewPage({
             size='xl'
             disabled={!isFormValid}
           >
-            문의하기
+            등록하기
           </Button>
         </div>
       </div>

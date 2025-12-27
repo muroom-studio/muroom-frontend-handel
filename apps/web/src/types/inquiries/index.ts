@@ -11,7 +11,7 @@ export type InquiryCategoryResponseProps = InquiryCategoryItem[];
 
 /* 내 1:1 문의 목록 조회 */
 export interface InquiryItem {
-  id: number;
+  id: string;
   title: string;
   content: string;
   status: 'PROCESSING' | 'COMPLETED';
@@ -23,6 +23,14 @@ export interface InquiryItem {
     id: number;
     imageFileUrl: string;
   }[];
+  reply: {
+    id: string;
+    content: string;
+    imageUrls: {
+      id: string;
+      imageFileUrl: string;
+    }[];
+  } | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -33,14 +41,26 @@ export interface InquiriesMyResponseProps {
   pagination: PaginationInfo;
 }
 
+/* 내 1:1 문의 목록 검색 */
+// 요청 dto
+export interface InquiriesSearchRequestProps {
+  keyword: string;
+}
+
+// 응답 dto
+export interface InquiriesSearchResponseProps {
+  content: InquiryItem[];
+  pagination: PaginationInfo;
+}
+
 /* 1:1 문의 상세 조회 */
 // 요청 dto
-export interface InquiriesInquiryIdRequestProps {
-  inquiryId: number;
+export interface InquiriesDetailRequestProps {
+  inquiryId: string;
 }
 
 //응답 dto
-export interface InquiriesInquiryIdResponseProps {}
+export type InquiriesDetailResponseProps = InquiryItem;
 
 /* 1:1 문의 등록 */
 export interface InquiriesRequestProps {

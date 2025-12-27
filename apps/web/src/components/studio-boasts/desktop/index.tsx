@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useSearchParams } from 'next/navigation';
 
@@ -11,6 +11,7 @@ import ListSortFilter, {
   SortOption,
 } from '@/components/common/list-sort-filter';
 import { useStudioBoastsQuery } from '@/hooks/api/studio-boasts/useQueries';
+import { useScrollToTop } from '@/hooks/common/useScrollToTop';
 import {
   StudioBoastsItemProps,
   StudioBoastsRequestProps,
@@ -26,10 +27,18 @@ const STUDIO_SORT_OPTIONS: SortOption[] = [
 ];
 
 export default function DesktopStudioBoastsPage() {
+  const searchParams = useSearchParams();
+
+  const isMyTab = searchParams.get('my') === 'true';
+
   const [sort, setSort] = useState<StudioBoastsRequestProps['sort'] | ''>('');
   const [page, setPage] = useState(1);
 
-  const searchParams = useSearchParams();
+  useEffect(() => {
+    setPage(1);
+  }, [isMyTab, sort]);
+
+  useScrollToTop(page, 'page-scroll-container');
 
   const { data: studioBoastsData, isLoading: isStudioBoastsLoading } =
     useStudioBoastsQuery(
@@ -38,6 +47,7 @@ export default function DesktopStudioBoastsPage() {
         page,
         size: 12,
         isMobile: false,
+        isMyList: isMyTab,
       },
     );
 
@@ -66,7 +76,8 @@ export default function DesktopStudioBoastsPage() {
         {studioBoastList.map((item) => (
           <BoastThumnailCard
             key={item.id}
-            thumbnailSrcUrl={item?.imageFileUrls?.[0] || ''}
+            targetedId={item.id}
+            thumbnailSrcUrl={item.thumbnailImageFileUrl}
             isLike={item.isLikedByRequestUser}
           />
         ))}

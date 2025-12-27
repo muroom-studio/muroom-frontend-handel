@@ -11,7 +11,6 @@ import {
 import { cn } from '@muroom/lib';
 import { getFormattedDate } from '@muroom/util';
 
-import { S3_BUCKET_URL } from '@/config/constants';
 import { InquiryItem } from '@/types/inquiries';
 
 interface Props {
@@ -47,7 +46,6 @@ export default function DesktopInquiryList({
 
   return (
     <div className='mt-10 flex flex-col'>
-      {/* 1. Desktop Header Row */}
       <div className={headerGridClass}>
         <div
           className={cn(cellClass, 'text-base-l-16-1 text-left text-gray-400')}
@@ -77,15 +75,12 @@ export default function DesktopInquiryList({
             <AccordionItem key={inquiry.id} value={String(inquiry.id)}>
               <AccordionTrigger className='py-0 hover:bg-gray-50' hideIcon>
                 <div className={itemContentGridClass}>
-                  {/* 카테고리 컬럼 */}
                   <div className={cn(cellClass, 'text-base-l-16-2 text-left')}>
                     {inquiry.category.name}
                   </div>
-                  {/* 문의내용 컬럼 */}
                   <div className={cn(cellClass, 'text-base-l-16-2 text-left')}>
                     {inquiry.title}
                   </div>
-                  {/* 문의시간 컬럼 */}
                   <div
                     className={cn(
                       cellClass,
@@ -97,7 +92,6 @@ export default function DesktopInquiryList({
                     </span>
                     <span>{getFormattedDate(inquiry.createdAt, 'HH:mm')}</span>
                   </div>
-                  {/* 상태 컬럼 */}
                   <div className='flex-center'>
                     {conditionedTag(inquiry.status)}
                   </div>
@@ -119,9 +113,39 @@ export default function DesktopInquiryList({
                       </div>
                     ))}
                   </div>
+
                   <p className='whitespace-pre-wrap leading-relaxed'>
                     {inquiry.content}
                   </p>
+
+                  {inquiry.reply && (
+                    <div className='mt-2 flex flex-col gap-y-3'>
+                      <Tag variant='primary' className='w-fit'>
+                        답변 완료
+                      </Tag>
+
+                      {inquiry.reply.imageUrls &&
+                        inquiry.reply.imageUrls.length > 0 && (
+                          <div className='flex flex-wrap gap-x-1'>
+                            {inquiry.reply.imageUrls.map((img) => (
+                              <div key={img.id} className='size-27.25 relative'>
+                                <Image
+                                  src={img.imageFileUrl}
+                                  alt='답변 이미지'
+                                  fill
+                                  sizes='109px'
+                                  className='object-cover'
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                      <p className='whitespace-pre-wrap leading-relaxed'>
+                        {inquiry.reply.content}
+                      </p>
+                    </div>
+                  )}
                 </div>
               </AccordionContent>
             </AccordionItem>
