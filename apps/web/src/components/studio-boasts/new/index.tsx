@@ -9,13 +9,13 @@ import { toast } from 'sonner';
 import { updateObjectProperty } from '@muroom/util';
 
 import {
-  useStudioBoastsMutation,
+  usePostStudioBoastsMutation,
   useStudioBoastsPresignedUrlMutation,
 } from '@/hooks/api/studio-boasts/useMutations';
 import { useImageUpload } from '@/hooks/common/useImageUpload';
 import { CreateStudioBoastsRequestProps } from '@/types/studio-boasts';
 
-import StudioBoastsNewCommonForm from './common-form';
+import StudioBoastsNewCommonForm from '../components/common-form';
 import DesktopStudioBoastsNewPage from './desktop';
 import MobileStudioBoastsNewPage from './mobile';
 
@@ -37,7 +37,7 @@ export default function StudioBoastsNewPage({ isMobile = false }: Props) {
     roadNameAddress: '',
     lotNumberAddress: '',
     detailedAddress: '',
-    studioId: 0,
+    studioId: '',
     studioName: '',
     instagramAccount: '',
     agreedToEventTerms: false,
@@ -48,7 +48,7 @@ export default function StudioBoastsNewPage({ isMobile = false }: Props) {
 
   const { handleUploadImages } = useImageUpload(getPresignedUrl);
 
-  const { mutate: studioBoastsMutate } = useStudioBoastsMutation();
+  const { mutate: studioBoastsMutate } = usePostStudioBoastsMutation();
 
   const mutationOptions = {
     onSuccess: () => {
@@ -70,7 +70,7 @@ export default function StudioBoastsNewPage({ isMobile = false }: Props) {
       {
         ...dto,
         imageFileKeys,
-        studioId: dto.studioId !== 0 ? dto.studioId : undefined,
+        studioId: dto.studioId !== '' ? dto.studioId : undefined,
         instagramAccount: dto.instagramAccount || undefined,
       },
       mutationOptions,
@@ -85,7 +85,7 @@ export default function StudioBoastsNewPage({ isMobile = false }: Props) {
         ...dto,
         agreedToEventTerms: true,
         imageFileKeys,
-        studioId: dto.studioId !== 0 ? dto.studioId : undefined,
+        studioId: dto.studioId !== '' ? dto.studioId : undefined,
         instagramAccount: dto.instagramAccount || undefined,
       },
       mutationOptions,

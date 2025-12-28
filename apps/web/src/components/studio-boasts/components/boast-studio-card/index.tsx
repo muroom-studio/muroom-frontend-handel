@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 
 import { Badge } from '@muroom/components';
@@ -9,7 +11,7 @@ interface Props {
   variant: 'known' | 'unknown';
   id: string;
   title: string;
-  subwayInfo: NearestSubwayStationDto;
+  subwayInfo?: NearestSubwayStationDto;
   minPrice?: number;
   maxPrice?: number;
   thumbnailUrl?: string | null;
@@ -32,23 +34,7 @@ export default function BoastStudioCard({
   onClick,
   wrapperClassName,
 }: Props) {
-  const { stationName, distanceInMeters, lines } = subwayInfo;
-
-  const SubwayInfo = (
-    <div className='flex items-center gap-x-1'>
-      {Array.isArray(lines) && lines.length > 0 && (
-        <Badge
-          key={lines[0]?.lineName}
-          variant='subway'
-          lineName={lines[0]?.lineName || ''}
-          lineColor={lines[0]?.lineColor || ''}
-        />
-      )}
-      <p className='text-base-m-14-1'>
-        {`${stationName}역에서 ${distanceInMeters.toLocaleString()}m`}
-      </p>
-    </div>
-  );
+  const { stationName, distanceInMeters, lines } = subwayInfo || {};
 
   return (
     <div
@@ -86,7 +72,21 @@ export default function BoastStudioCard({
             <span className='text-title-s-22-2'>{title}</span>
           )}
 
-          {SubwayInfo}
+          {subwayInfo && (
+            <div className='flex items-center gap-x-1'>
+              {Array.isArray(lines) && lines.length > 0 && lines[0] && (
+                <Badge
+                  key={lines[0].lineName}
+                  variant='subway'
+                  lineName={lines[0].lineName}
+                  lineColor={lines[0].lineColor}
+                />
+              )}
+              <p className='text-base-m-14-1'>
+                {`${stationName}역에서 ${distanceInMeters?.toLocaleString() ?? 0}m`}
+              </p>
+            </div>
+          )}
         </div>
 
         <div className='mt-auto'>

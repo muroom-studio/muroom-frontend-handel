@@ -12,6 +12,13 @@ import { cn } from '@muroom/lib';
 
 import { CommonImageUploadResponseProps } from '@/types/api';
 
+export interface ImageItem {
+  id: string;
+  url?: string;
+  fileKey?: string;
+  isLoading: boolean;
+}
+
 interface ImageUploaderProps {
   label?: string;
   showImageCount?: boolean;
@@ -20,13 +27,7 @@ interface ImageUploaderProps {
   uploadFn: (files: File[]) => Promise<CommonImageUploadResponseProps[]>;
   onImagesChange: (imageKeys: string[]) => void;
   isMobile?: boolean;
-}
-
-interface ImageItem {
-  id: string;
-  url?: string;
-  fileKey?: string;
-  isLoading: boolean;
+  initialImages?: ImageItem[];
 }
 
 export default function ImageUploader({
@@ -37,9 +38,17 @@ export default function ImageUploader({
   uploadFn,
   onImagesChange,
   isMobile = false,
+  initialImages = [],
 }: ImageUploaderProps) {
-  const [images, setImages] = useState<ImageItem[]>([]);
+  const [images, setImages] = useState<ImageItem[]>(initialImages);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (initialImages.length > 0 && images.length === 0) {
+      setImages(initialImages);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialImages]);
 
   useEffect(() => {
     const validKeys = images

@@ -5,11 +5,13 @@ import {
 } from '@tanstack/react-query';
 
 import {
+  deleteStudioBoasts,
   deleteStudioBoastsLikes,
   postStudioBoasts,
   postStudioBoastsLikes,
   postStudioBoastsPresignedUrl,
   postStudioBoastsReport,
+  putStudioBoasts,
 } from '@/lib/studio-boasts';
 import {
   CommonImageUploadRequestProps,
@@ -17,11 +19,13 @@ import {
 } from '@/types/api';
 import {
   CreateStudioBoastsRequestProps,
+  DeleteStudioBoastsRequestProps,
+  EditStudioBoastsRequestProps,
   StudioBoastsLikesRequestProps,
   StudioBoastsReportRequestProps,
 } from '@/types/studio-boasts';
 
-// 1. Presigned URL 발급
+// Presigned URL 발급
 const useStudioBoastsPresignedUrlMutation = (): UseMutationResult<
   CommonImageUploadResponseProps,
   Error,
@@ -32,8 +36,8 @@ const useStudioBoastsPresignedUrlMutation = (): UseMutationResult<
   });
 };
 
-// 2. 게시글 작성
-const useStudioBoastsMutation = (): UseMutationResult<
+// 매물 등록
+const usePostStudioBoastsMutation = (): UseMutationResult<
   any,
   Error,
   CreateStudioBoastsRequestProps
@@ -50,6 +54,48 @@ const useStudioBoastsMutation = (): UseMutationResult<
   });
 };
 
+// 매물 수정
+const usePutStudioBoastsMutation = (): UseMutationResult<
+  any,
+  Error,
+  EditStudioBoastsRequestProps
+> => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: putStudioBoasts,
+    onSettled: (data, error, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ['studio-boasts'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['studio-boasts', variables.studioBoastId],
+      });
+    },
+  });
+};
+
+// 매물 삭제
+const useDeleteStudioBoastsMutation = (): UseMutationResult<
+  any,
+  Error,
+  DeleteStudioBoastsRequestProps
+> => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteStudioBoasts,
+    onSettled: (data, error, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ['studio-boasts'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['studio-boasts', variables.studioBoastId],
+      });
+    },
+  });
+};
+// 매물 좋아요
 const useStudioBoastsLikeMutation = (): UseMutationResult<
   any,
   Error,
@@ -70,6 +116,7 @@ const useStudioBoastsLikeMutation = (): UseMutationResult<
   });
 };
 
+// 매물 좋아요 취소
 const useStudioBoastsUnlikeMutation = (): UseMutationResult<
   any,
   Error,
@@ -90,6 +137,7 @@ const useStudioBoastsUnlikeMutation = (): UseMutationResult<
   });
 };
 
+// 매물 신고
 const useStudioBoastsReportMutation = (): UseMutationResult<
   any,
   Error,
@@ -102,7 +150,9 @@ const useStudioBoastsReportMutation = (): UseMutationResult<
 
 export {
   useStudioBoastsPresignedUrlMutation,
-  useStudioBoastsMutation,
+  usePostStudioBoastsMutation,
+  usePutStudioBoastsMutation,
+  useDeleteStudioBoastsMutation,
   useStudioBoastsLikeMutation,
   useStudioBoastsUnlikeMutation,
   useStudioBoastsReportMutation,
