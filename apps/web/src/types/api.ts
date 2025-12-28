@@ -59,3 +59,13 @@ export interface PaginatedResponse<T> {
   content: T[];
   pagination: PaginationInfo;
 }
+
+export interface CommonImageUploadRequestProps {
+  fileName: string;
+  contentType: string;
+}
+
+export interface CommonImageUploadResponseProps {
+  presignedPutUrl: string;
+  fileKey: string;
+}

@@ -21,12 +21,12 @@ import {
   OptionFilter,
 } from '@/components/home/components/filter-item/variants';
 import { useStudioFilterOptionsQuery } from '@/hooks/api/studios/useQueries';
+import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
 import { useMapOverlays } from '@/hooks/map/useMapOverlay';
 import { useNaverMap } from '@/hooks/map/useNaverMap';
 import { useSearch } from '@/hooks/nuqs/common/useSearch';
 import { useFilters } from '@/hooks/nuqs/home/useFilters';
 import { MAX_ZOOM, MIN_ZOOM, MapState } from '@/hooks/nuqs/home/useMapState';
-import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 import { useRecentSearchStore } from '@/store/useRecentKeywordStore';
 import { StudiosMapSearchItem } from '@/types/studios';
 

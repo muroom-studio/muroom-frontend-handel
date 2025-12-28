@@ -1,7 +1,9 @@
+import OffSNBLayout from '@/layouts/off-SNB';
+
 interface Props {
   children: React.ReactNode;
 }
 
 export default function Layout({ children }: Props) {
-  return <>{children}</>;
+  return <OffSNBLayout>{children}</OffSNBLayout>;
 }

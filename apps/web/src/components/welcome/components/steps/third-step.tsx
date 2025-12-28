@@ -6,7 +6,7 @@ import { RequiredText } from '@muroom/components';
 
 import OptionItem from '@/components/common/option-item';
 import { useInstrumentsQuery } from '@/hooks/api/instruments/useQueries';
-import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
+import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
 import { useMusicianStore } from '@/store/useMusicianStore';
 
 import AddressForm from './components/address-form';
@@ -98,6 +98,11 @@ export default function JoinThirdStep({ onValidChange }: Props) {
           isMobile={isMobile}
           value={studioJuso}
           setValue={setStudioJuso}
+          fieldMap={{
+            address: 'juso',
+            detailAddress: 'detailJuso',
+            name: 'studioName',
+          }}
         />
       </div>
     </div>

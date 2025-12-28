@@ -2,9 +2,9 @@
 
 import parse from 'html-react-parser';
 
-import { PageWrapper } from '@muroom/components';
-
 import { useTermsTermIdQuery } from '@/hooks/api/term/useQueries';
+
+import PageWrapper from '../common/page-wrapper';
 
 interface Props {
   termId: number;

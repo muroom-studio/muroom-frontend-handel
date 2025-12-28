@@ -1,21 +1,18 @@
 'use client';
 
-import { useState } from 'react';
-
-import { Popover } from '@muroom/components';
-import { BottomDotIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 
-import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
+import ListSortFilter, {
+  SortOption,
+} from '@/components/common/list-sort-filter';
+import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
 
-export const SORT_MAP: Record<string, string> = {
-  '': '선택',
-  'latest,desc': '최신순',
-  'price,desc': '높은가격순',
-  'price,asc': '낮은가격순',
-};
-
-const SORT_CODES = Object.keys(SORT_MAP);
+const STUDIO_SORT_OPTIONS: SortOption[] = [
+  { label: '선택', value: '' },
+  { label: '최신순', value: 'latest,desc' },
+  { label: '높은가격순', value: 'price,desc' },
+  { label: '낮은가격순', value: 'price,asc' },
+];
 
 interface Props {
   studioNum: number;
@@ -30,10 +27,6 @@ export default function ListFilter({
 }: Props) {
   const { isMobile } = useResponsiveLayout();
 
-  const [isOpen, setIsOpen] = useState(false);
-
-  const currentLabel = currentSort ? SORT_MAP[currentSort] : SORT_MAP[''];
-
   return (
     <div
       className={cn('flex-between h-14 p-4', {
@@ -42,57 +35,14 @@ export default function ListFilter({
       })}
     >
       <span className='text-base-exl-18-2 text-black'>{studioNum}개</span>
-      <Popover open={isOpen} onOpenChange={setIsOpen}>
-        <Popover.Trigger>
-          <button
-            type='button'
-            data-state={isOpen ? 'open' : 'closed'}
-            aria-haspopup='menu'
-            aria-expanded={isOpen}
-            onClick={() => setIsOpen((prev) => !prev)}
-            className={cn(
-              'group',
-              'flex-center rounded-4 text-base-l-16-1 w-full max-w-[202px] cursor-pointer gap-x-1 truncate p-1 transition-all',
-              {
-                'bg-gray-100': isOpen,
-                'text-base-l-16-2': currentSort,
-              },
-            )}
-          >
-            <span>{currentLabel}</span>
-            <BottomDotIcon className='size-5 rotate-0 transition-transform duration-200 group-data-[state=open]:rotate-180' />
-          </button>
-        </Popover.Trigger>
-        <Popover.Content align='end'>
-          <div className='rounded-4 shadow-level-0 overflow-hidden border border-gray-300 bg-white'>
-            {SORT_CODES.map((code) => {
-              const isSelected =
-                (currentSort === null && code === '') || code === currentSort;
 
-              return (
-                <button
-                  key={code}
-                  onClick={() => {
-                    onSortChange(code === '' ? null : code);
-                    setIsOpen(false);
-                  }}
-                  className={cn(
-                    'text-base-m-14-1 relative flex w-full cursor-pointer select-none items-center border-b border-gray-200 bg-white px-3 py-[9px] outline-none transition-all',
-                    'hover:bg-gray-100',
-                    {
-                      '!text-primary-600 text-base-m-14-2 hover:bg-gray-50':
-                        isSelected,
-                    },
-                    'last:border-b-0',
-                  )}
-                >
-                  {SORT_MAP[code]}
-                </button>
-              );
-            })}
-          </div>
-        </Popover.Content>
-      </Popover>
+      <ListSortFilter
+        currentSort={currentSort}
+        options={STUDIO_SORT_OPTIONS}
+        onSortChange={(val) => {
+          onSortChange(val === '' ? null : val);
+        }}
+      />
     </div>
   );
 }

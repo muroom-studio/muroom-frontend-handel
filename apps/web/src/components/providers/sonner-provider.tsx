@@ -2,7 +2,7 @@
 
 import { Toaster } from 'sonner';
 
-import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
+import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
 
 function SonnerProvider() {
   const { isMobile } = useResponsiveLayout();
@@ -12,7 +12,7 @@ function SonnerProvider() {
       position={isMobile ? 'bottom-center' : 'bottom-right'}
       expand={true}
       gap={8}
-      offset={isMobile ? 24 : 16}
+      offset={isMobile ? 0 : 16}
       style={{ zIndex: 99999 }}
       toastOptions={{
         className: `
@@ -25,8 +25,13 @@ function SonnerProvider() {
           !justify-start
           !gap-3
           !text-base-m-14-1
-          ${isMobile ? '!w-[calc(100vw-32px)]' : '!w-[360px]'}
           !mx-auto
+          
+          ${
+            isMobile
+              ? '!fixed !bottom-6 !left-1/2 !-translate-x-1/2 !w-[calc(100vw-32px)]'
+              : '!w-[360px]'
+          }
         `,
         classNames: {
           icon: '!hidden',

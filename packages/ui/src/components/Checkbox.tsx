@@ -5,8 +5,10 @@ import { InputHTMLAttributes } from 'react';
 import { CheckSmallIcon } from '../icons-generated';
 import { cn } from '../lib/utils';
 
-export interface CheckboxProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
+export interface CheckboxProps extends Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  'type'
+> {
   label?: React.ReactNode;
 }
 
@@ -45,10 +47,7 @@ const Checkbox = ({ label, className, checked, ...props }: CheckboxProps) => {
         <>
           {isTextLabel ? (
             <span
-              className={cn(
-                'text-body-s2 select-none transition-colors',
-                checked ? 'text-primary-box font-medium' : 'text-text1',
-              )}
+              className={cn('text-base-l-16-2 select-none transition-colors')}
             >
               {label}
             </span>

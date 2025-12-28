@@ -52,7 +52,7 @@ const ToggleButton = ({
   };
 
   const baseStyle =
-    'rounded-4 inline-flex cursor-pointer items-center justify-center gap-x-1 whitespace-nowrap outline-none transition-all duration-200 disabled:cursor-default';
+    'rounded-4 inline-flex cursor-pointer shrink-0 items-center justify-center gap-x-1 whitespace-nowrap outline-none transition-all duration-200 disabled:cursor-default';
 
   const styles: Partial<
     Record<ToggleVariant, Partial<Record<ToggleSize | 'base', string>>>
@@ -68,14 +68,13 @@ const ToggleButton = ({
     },
     outline_icon: {
       base: `
-        w-9 h-9 border border-gray-300 bg-white hover:bg-gray-100
-        ${isSelected && 'bg-primary-50 border-primary-600 hover:!border-gray-300 hover:!bg-primary-100 text-primary-600'}
+        w-9 h-9 border border-gray-300 bg-white
+        ${isSelected && 'bg-primary-50 border-primary-600 text-primary-600'}
       `,
     },
     text: {
       base: `
-        text-gray-400
-        ${isSelected && 'text-gray-800'}
+        ${isSelected ? '!text-gray-800' : '!text-gray-400'}
       `,
       m: `${isSelected ? 'text-base-l-16-2' : 'text-base-l-16-1'}`,
       s: `${isSelected ? 'text-base-l-14-2' : 'text-base-l-14-1'}`,

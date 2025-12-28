@@ -9,7 +9,7 @@ import { Header } from '@muroom/components';
 import { CloseIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 
-import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
+import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
 
 import GroupImageSection from './group-view';
 import SingleImageSection from './single-view';

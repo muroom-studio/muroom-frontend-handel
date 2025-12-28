@@ -29,7 +29,7 @@ const Pagination = ({
   );
 
   const arrowButtonClass =
-    'flex-center size-8 p-1 rounded-4 text-gray-700 transition-all hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-30 cursor-pointer';
+    'flex-center size-8 p-1 rounded-4 border border-gray-300 text-gray-700 transition-all hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-30 cursor-pointer';
 
   const numberButtonClass =
     'flex-center size-8 rounded-4 border border-transparent bg-white text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-800 cursor-pointer';

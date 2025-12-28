@@ -1,3 +1,5 @@
+import { createQueryString } from '@muroom/util';
+
 import { StudioDetailResponseProps } from '@/types/studio';
 import {
   StudioFilterOptionsResponseProps,
@@ -24,16 +26,7 @@ export const getStudioFilterOptions = async () => {
 export const getStudiosMapSearch = async (
   params: StudiosMapSearchRequestProps,
 ) => {
-  const queryParams = new URLSearchParams();
-
-  Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== null) {
-      queryParams.append(key, value.toString());
-    }
-  });
-
-  const queryString = queryParams.toString();
-
+  const queryString = createQueryString(params);
   const responseData = await customFetch<StudiosMapSearchResponseProps>(
     `/studios/map-search?${queryString}`,
     {

@@ -1,15 +1,15 @@
 import React from 'react';
 
 interface ToggleSliderProps {
-  flag: boolean;
-  setter: (newFlag: boolean) => void;
+  flag?: boolean;
+  setter?: (newFlag: boolean) => void;
   label: string;
   className?: string;
   disabled?: boolean;
 }
 
 const ToggleSlider = ({
-  flag,
+  flag = false,
   setter,
   label,
   className,
@@ -31,7 +31,7 @@ const ToggleSlider = ({
           className='peer sr-only'
           checked={flag}
           disabled={disabled}
-          onChange={(e) => setter(e.target.checked)}
+          onChange={(e) => setter?.(e.target.checked)}
         />
 
         <div

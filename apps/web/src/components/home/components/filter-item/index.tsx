@@ -7,8 +7,8 @@ import { DownArrowIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 
 import { useStudioFilterOptionsQuery } from '@/hooks/api/studios/useQueries';
+import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
 import { useFilters } from '@/hooks/nuqs/home/useFilters';
-import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 import { getFilterLabel } from '@/utils/filters/getFilterLabel';
 
 import {

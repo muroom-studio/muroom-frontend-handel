@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getMusicianMe } from '@/lib/musician';
+import { getMusicianMe, getMusicianMeDetail } from '@/lib/musician';
 
 const useMusicianMeQuery = () => {
   return useQuery({
@@ -9,4 +9,11 @@ const useMusicianMeQuery = () => {
   });
 };
 
-export { useMusicianMeQuery };
+const useMusicianMeDetailQuery = () => {
+  return useQuery({
+    queryKey: ['musician', 'me', 'detail'],
+    queryFn: getMusicianMeDetail,
+  });
+};
+
+export { useMusicianMeQuery, useMusicianMeDetailQuery };

@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 
 import { cn } from '@muroom/lib';
 
-import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
+import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
 import WelcomeLayout from '@/layouts/welcome';
 import { useAuthRedirectStore } from '@/store/useAuthRedirectStore';
 

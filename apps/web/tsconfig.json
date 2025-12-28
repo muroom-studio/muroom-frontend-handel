@@ -1,6 +1,10 @@
 {
   "extends": "@muroom/typescript-config/nextjs.json",
   "compilerOptions": {
+    "skipLibCheck": true,
+    "incremental": true,
+    "tsBuildInfoFile": ".next/tsbuildinfo",
+
     "plugins": [
       {
         "name": "next"
@@ -13,14 +17,14 @@
       "@muroom/lib": ["../../packages/ui/src/lib/utils.ts"],
       "@muroom/icons": ["../../packages/ui/src/icons-generated/index.ts"]
     },
-    "ignoreDeprecations": "6.0"
+    "ignoreDeprecations": "5.0"
   },
   "include": [
-    "**/*.ts",
-    "**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
     "next-env.d.ts",
     "next.config.ts",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", ".next", "dist", "build", ".turbo", "coverage"]
 }

@@ -77,14 +77,29 @@ export default function ListView({
         <NoDataSection isMobile={isMobile} />
       ) : (
         <>
-          {studios.map((studio) => (
-            <CommonStudioCard
-              key={studio.studioId}
-              data={studio}
-              currentStudioId={mapValue.studioId || ''}
-              setMapValue={setMapValue}
-            />
-          ))}
+          {studios.map((studio) => {
+            const currentIdStr = String(studio.studioId);
+
+            return (
+              <CommonStudioCard
+                key={studio.studioId}
+                id={currentIdStr}
+                title={studio.studioName}
+                minPrice={studio.minPrice}
+                maxPrice={studio.maxPrice}
+                thumbnailUrl={studio.thumbnailImageUrl}
+                subwayInfo={studio.nearbySubwayStationInfo}
+                isActive={mapValue.studioId === currentIdStr}
+                onClick={() =>
+                  setMapValue((prev) => ({
+                    ...prev,
+                    studioId:
+                      prev.studioId === currentIdStr ? null : currentIdStr,
+                  }))
+                }
+              />
+            );
+          })}
         </>
       )}
 

@@ -13,16 +13,19 @@ import { useSearch } from '@/hooks/nuqs/common/useSearch';
 import { useFilters } from '@/hooks/nuqs/home/useFilters';
 import { useMapState } from '@/hooks/nuqs/home/useMapState';
 import { useSort } from '@/hooks/nuqs/home/useSort';
+import { StudiosMapListItem } from '@/types/studios';
+import { extractInfiniteData } from '@/utils/query';
 
 interface Props {
   isMobile: boolean;
 }
 
 export default function HomePage({ isMobile }: Props) {
+  // [State] 페이지네이션 (Desktop용)
   const [page, setPage] = useState(1);
+  const listRef = useRef<HTMLDivElement>(null);
 
-  const listRef = useRef<HTMLDivElement>(null); // 페이지 change하면 최상단으로 올리기 위한 ref
-
+  // [NUQS] URL 상태 관리 훅
   const [keyword] = useSearch();
 
   const initCenter = { lat: 37.553993, lng: 126.9243517 };
@@ -32,15 +35,15 @@ export default function HomePage({ isMobile }: Props) {
   });
 
   const { filters, setFilters, clearFilters } = useFilters();
-
   const { sort, setSort } = useSort();
 
+  // [Effect] 필터/검색어/정렬 변경 시 페이지 초기화 및 스크롤 상단 이동
   useEffect(() => {
     setPage(1);
-
     listRef.current?.scrollTo({ top: 0 });
   }, [filters, keyword, sort]);
 
+  // [Params] API 요청용 파라미터 생성
   const searchParams = mapValue.bounds
     ? {
         keyword: keyword ?? undefined,
@@ -53,19 +56,14 @@ export default function HomePage({ isMobile }: Props) {
         maxRoomWidth: filters.maxRoomWidth ?? undefined,
         minRoomHeight: filters.minRoomHeight ?? undefined,
         maxRoomHeight: filters.maxRoomHeight ?? undefined,
-
         commonOptionCodes: filters.commonOptionCodes ?? undefined,
         individualOptionCodes: filters.individualOptionCodes ?? undefined,
-
         floorTypes: filters.floorTypes ?? undefined,
         restroomTypes: filters.restroomTypes ?? undefined,
-
         isParkingAvailable: filters.isParkingAvailable ?? undefined,
         isLodgingAvailable: filters.isLodgingAvailable ?? undefined,
         hasFireInsurance: filters.hasFireInsurance ?? undefined,
-
         forbiddenInstrumentCodes: filters.forbiddenInstrumentCodes ?? undefined,
-
         minLatitude: mapValue.bounds.minLat,
         maxLatitude: mapValue.bounds.maxLat,
         minLongitude: mapValue.bounds.minLng,
@@ -73,67 +71,63 @@ export default function HomePage({ isMobile }: Props) {
       }
     : undefined;
 
+  // 1. 지도 마커 데이터 조회
   const { data: markersData, isLoading: isMarkersLoading } =
     useStudiosMapSearchQuery(searchParams);
 
-  // ------------------------------------------------------------------
-  // [리스트 조회 쿼리] (무한스크롤 & 페이지네이션 통합)
-  // - size: 10개로 통일
-  // - 로딩 상태: isListLoading으로 따로 관리 (필요 시 UI에 별도 표시)
-  // ------------------------------------------------------------------
+  // 2. 리스트 데이터 조회 (Infinite Query로 통합)
   const {
     data: listData,
-    isLoading: isListLoading, // 리스트 데이터가 아예 없을 때의 초기 로딩
+    isLoading: isListLoading,
     hasNextPage,
     fetchNextPage,
-    isFetchingNextPage, // (모바일) 추가 데이터 불러오는 중
+    isFetchingNextPage,
   } = useStudiosMapListInfiniteQuery(searchParams, {
     page: page,
-    size: 10, // 요청하신 대로 10개 통일
+    size: 10,
     isMobile: isMobile,
   });
-  // 5. 데이터 가공
-  // 통합된 스튜디오 리스트 (모바일은 누적, PC는 교체됨)
-  const studios = listData?.pages.flatMap((page) => page.content) || [];
-  const totalElements = listData?.pages[0]?.pagination.totalElements || 0;
+
+  const { content: studios, pagination } =
+    extractInfiniteData<StudiosMapListItem>(listData, isMobile);
+
+  const totalElements = pagination?.totalElements || 0;
 
   const { data: detailStudio, isLoading: isDetailLoading } =
     useStudioDetailQuery(mapValue.studioId);
 
-  // 6. Props 구성
   const commonProps = {
     mapValue,
     setMapValue,
     filters,
     setFilters,
+    clearFilters,
     sort,
     setSort,
-    clearFilters,
-    studios,
-    listRef,
-    totalElements,
-    detailStudio,
-    isDetailLoading,
+
+    // 데이터
+    studios, // 타입: StudiosMapListItem[]
     markersData: markersData ?? [],
+    detailStudio,
+    totalElements,
 
-    // [수정됨] 전체 로딩 상태는 '마커 데이터' 기준입니다.
-    // 리스트 로딩 중이어도 지도는 보여야 하기 때문입니다.
-    // PC 페이지네이션 이동 시에는 keepPreviousData 덕분에 이 값이 true가 되지 않아 깜빡임이 없습니다.
-    isLoading: isMarkersLoading,
-    isListLoading: isListLoading,
+    // Refs & Loading
+    listRef,
+    isLoading: isMarkersLoading, // 전체 로딩(지도 기준)
+    isListLoading, // 리스트 로딩
+    isDetailLoading, // 상세 로딩
 
-    // [PC] 페이지네이션 정보
+    // [Desktop] 페이지네이션 설정
     pagination: {
       currentPage: page,
-      // 데이터가 없으면 0, 있으면 첫 페이지의 메타데이터 사용
-      totalPages: listData?.pages[0]?.pagination.totalPages || 0,
+      totalPages: pagination?.totalPages || 0,
       onPageChange: (newPage: number) => {
         setPage(newPage);
         listRef.current?.scrollTo({ top: 0 });
       },
     },
 
-    // [Mobile] 무한스크롤 정보
+    // [Mobile] 무한 스크롤 설정
     infiniteScroll: {
       hasNextPage: !!hasNextPage,
       isFetchingNextPage: isFetchingNextPage,
