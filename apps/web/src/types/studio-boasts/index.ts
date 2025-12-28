@@ -42,6 +42,7 @@ export interface StudioBoastsItemProps {
   content: string; // 게시글 본문
   thumbnailImageFileUrl: string;
   imageFileUrls: string[]; // 첨부 이미지 URL 리스트
+  isWrittenByRequestUser: boolean; // 요청한 사용자가 작성한 글인지 여부
   isLikedByRequestUser: boolean; // 조회한 유저의 좋아요 여부
   likeCount: number; // 좋아요 개수
   commentCount: number; // 댓글 개수
@@ -92,7 +93,6 @@ export type StudioBoastsDetailResponseProps = StudioBoastsItemProps;
 {
   /* 매물 자랑 등록 */
 }
-
 // 요청 dto
 export interface CreateStudioBoastsRequestProps {
   content: string;
@@ -102,14 +102,29 @@ export interface CreateStudioBoastsRequestProps {
   detailedAddress: string;
   instagramAccount?: string;
   agreedToEventTerms: boolean;
-  studioId?: number;
+  studioId?: string;
   imageFileKeys: string[];
+}
+
+{
+  /* 매물 자랑 수정 */
+}
+// 요청 dto
+export interface EditStudioBoastsRequestProps extends CreateStudioBoastsRequestProps {
+  studioBoastId: string;
+}
+
+{
+  /* 매물 자랑 삭제 */
+}
+// 요청 dto
+export interface DeleteStudioBoastsRequestProps {
+  studioBoastId: string;
 }
 
 {
   /* 매물 자랑 게시글 좋아요 */
 }
-
 export interface StudioBoastsLikesRequestProps {
   studioBoastId: string;
 }
@@ -117,10 +132,24 @@ export interface StudioBoastsLikesRequestProps {
 {
   /* 매물 자랑 게시글 신고하기 */
 }
-
 // 요청 Dto
 export interface StudioBoastsReportRequestProps {
   studioBoastId: string;
   reportReasonId: number;
   description: string;
 }
+
+{
+  /* 매물 자랑 작업실 간단정보 호출하기 */
+}
+// 요청 dto
+export type StudioBoastsSimpleRequestProps = StudioBoastsRequestProps;
+
+export interface StudioBoastsSimpleItemDto {
+  id: string;
+  thumbnailImageFileUrl: string;
+}
+
+// 응답 dto
+export type StudioBoastsSimpleResponseProps =
+  PaginatedResponse<StudioBoastsSimpleItemDto>;

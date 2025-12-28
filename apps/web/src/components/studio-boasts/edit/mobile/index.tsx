@@ -9,27 +9,22 @@ import { Button } from '@muroom/components';
 import PageWrapper from '@/components/common/page-wrapper';
 
 import CancelAlert from '../../components/cancel-alert';
+import { StudioBoastsLayoutProps } from '../../components/editor-form';
 
-interface Props {
-  submitHandler: () => void;
-  isFormValid: boolean;
-  children: React.ReactNode;
-}
-
-export default function MobileStudioBoastsNewPage({
+export default function MobileStudioBoastsEditPage({
   submitHandler,
   isFormValid,
   children,
-}: Props) {
+  isLoading,
+}: StudioBoastsLayoutProps) {
   const router = useRouter();
-
   const [showCancelAlert, setShowCancelAlert] = useState(false);
 
   return (
     <>
       <PageWrapper
         isMobile
-        isHeader={{ title: '글쓰기', onBackClick: () => router.back() }}
+        isHeader={{ title: '수정하기', onBackClick: () => router.back() }}
         contentClassName='pt-6'
         bottomSlot={
           <div className='grid grid-cols-2 gap-x-3 border-t border-t-gray-200 p-5'>
@@ -44,9 +39,9 @@ export default function MobileStudioBoastsNewPage({
               onClick={submitHandler}
               variant='primary'
               size='xl'
-              disabled={!isFormValid}
+              disabled={!isFormValid || isLoading}
             >
-              등록하기
+              수정완료
             </Button>
           </div>
         }
@@ -57,6 +52,7 @@ export default function MobileStudioBoastsNewPage({
         isMobile
         isOpen={showCancelAlert}
         onClose={() => setShowCancelAlert(false)}
+        mode='edit'
       />
     </>
   );

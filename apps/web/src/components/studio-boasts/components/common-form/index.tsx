@@ -1,10 +1,12 @@
+'use client';
+
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { TextBox, TextField } from '@muroom/components';
 import { cn } from '@muroom/lib';
 import { updateObjectProperty } from '@muroom/util';
 
-import ImageUploader from '@/components/common/image-uploader';
+import ImageUploader, { ImageItem } from '@/components/common/image-uploader';
 import AddressForm from '@/components/welcome/components/steps/components/address-form';
 import { CommonImageUploadResponseProps } from '@/types/api';
 import { CreateStudioBoastsRequestProps } from '@/types/studio-boasts';
@@ -24,6 +26,7 @@ interface Props {
   showConfirmCheckModal: boolean;
   setShowConfirmCheckModal: React.Dispatch<React.SetStateAction<boolean>>;
   onRegister?: () => void;
+  initialImages?: ImageItem[];
 }
 
 export default function StudioBoastsNewCommonForm({
@@ -35,6 +38,7 @@ export default function StudioBoastsNewCommonForm({
   showConfirmCheckModal,
   setShowConfirmCheckModal,
   onRegister,
+  initialImages,
 }: Props) {
   return (
     <div
@@ -57,6 +61,7 @@ export default function StudioBoastsNewCommonForm({
         uploadFn={handleUploadImages}
         onImagesChange={setImageKeys}
         maxImages={3}
+        initialImages={initialImages}
       />
 
       <div className='flex flex-col gap-y-4'>
@@ -78,8 +83,8 @@ export default function StudioBoastsNewCommonForm({
 
       <AddressForm
         isMobile={isMobile}
-        value={value}
-        setValue={setValue}
+        value={value as any}
+        setValue={setValue as any}
         onMyPage={true}
         fieldMap={{
           address: 'roadNameAddress',
@@ -108,6 +113,11 @@ export default function StudioBoastsNewCommonForm({
               updateObjectProperty(prev, 'instagramAccount', e.target.value),
             )
           }
+          onClear={() =>
+            setValue((prev) =>
+              updateObjectProperty(prev, 'instagramAccount', ''),
+            )
+          }
         />
         <AnimatePresence initial={false}>
           {value.instagramAccount && (
@@ -121,8 +131,8 @@ export default function StudioBoastsNewCommonForm({
             >
               <InstaAgreement
                 isMobile={isMobile}
-                value={value}
-                setValue={setValue}
+                value={value as any}
+                setValue={setValue as any}
                 showConfirmCheckModal={showConfirmCheckModal}
                 setShowConfirmCheckModal={setShowConfirmCheckModal}
                 onRegister={onRegister}

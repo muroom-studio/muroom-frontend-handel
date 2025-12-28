@@ -6,6 +6,8 @@ import {
 } from '@/types/api';
 import {
   CreateStudioBoastsRequestProps,
+  DeleteStudioBoastsRequestProps,
+  EditStudioBoastsRequestProps,
   StudioBoastsDetailRequestProps,
   StudioBoastsDetailResponseProps,
   StudioBoastsLikesRequestProps,
@@ -14,6 +16,8 @@ import {
   StudioBoastsReportRequestProps,
   StudioBoastsRequestProps,
   StudioBoastsResponseProps,
+  StudioBoastsSimpleRequestProps,
+  StudioBoastsSimpleResponseProps,
 } from '@/types/studio-boasts';
 import { customFetch } from '@/utils/customFetch';
 
@@ -35,6 +39,21 @@ export const getStudioBoastsMy = async (params: StudioBoastsMyRequestProps) => {
 
   const responseData = await customFetch<StudioBoastsMyResponseProps>(
     `/studio-boasts/my?${queryString}`,
+    {
+      method: 'GET',
+    },
+  );
+
+  return responseData;
+};
+
+export const getStudioBoastsSimple = async (
+  params: StudioBoastsSimpleRequestProps,
+) => {
+  const queryString = createQueryString(params);
+
+  const responseData = await customFetch<StudioBoastsSimpleResponseProps>(
+    `/studio-boasts/simple?${queryString}`,
     {
       method: 'GET',
     },
@@ -75,6 +94,30 @@ export const postStudioBoasts = async (dto: CreateStudioBoastsRequestProps) => {
     method: 'POST',
     body: JSON.stringify(dto),
   });
+
+  return responseData;
+};
+
+export const putStudioBoasts = async (params: EditStudioBoastsRequestProps) => {
+  const { studioBoastId, ...dto } = params;
+
+  const responseData = await customFetch(`/studio-boasts/${studioBoastId}`, {
+    method: 'PUT',
+    body: JSON.stringify(dto),
+  });
+
+  return responseData;
+};
+
+export const deleteStudioBoasts = async (
+  dto: DeleteStudioBoastsRequestProps,
+) => {
+  const responseData = await customFetch(
+    `/studio-boasts/${dto.studioBoastId}`,
+    {
+      method: 'DELETE',
+    },
+  );
 
   return responseData;
 };

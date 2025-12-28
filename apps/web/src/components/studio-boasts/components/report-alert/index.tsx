@@ -85,6 +85,7 @@ export default function ReportAlert({
       onDescriptionChange: setDescription,
     },
   };
+  console.log(selectedReason.name);
 
   // 6. 렌더링 분기
   if (isMobile) {
