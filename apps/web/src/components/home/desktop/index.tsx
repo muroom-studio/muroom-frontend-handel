@@ -12,6 +12,7 @@ import FilterItem, { Variant } from '@/components/home/components/filter-item';
 import { useFilters } from '@/hooks/nuqs/home/useFilters';
 import { MapState } from '@/hooks/nuqs/home/useMapState';
 import { useSort } from '@/hooks/nuqs/home/useSort';
+import { useEventModal } from '@/hooks/useEventModal.tsx';
 import { StudioDetailResponseProps } from '@/types/studio';
 import { StudiosMapListItem, StudiosMapSearchItem } from '@/types/studios';
 
@@ -87,12 +88,15 @@ export default function DesktopHomePage({
     };
   }, []);
 
+  const { EventModal } = useEventModal();
+
   if (isLoading) {
     return <Loading />;
   }
 
   return (
     <div className='flex h-screen flex-1 flex-col'>
+      {EventModal}
       <div className='flex h-full flex-col'>
         <div className='flex shrink-0 items-center gap-x-4 border-b border-b-gray-300 bg-white p-4'>
           {FILTER_VARIANTS.map((variant) => (

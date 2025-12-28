@@ -14,7 +14,6 @@ import {
   StudioBoastsCommentDto,
   StudioBoastsReplyDto,
 } from '@/types/studio-boasts/comments';
-import BoastCommentsReplyForm from '@/types/studio-boasts/comments/reply-form';
 
 import {
   StudioBoastsCommentButton,
@@ -22,6 +21,7 @@ import {
   StudioBoastsMoreButton,
 } from '../../buttons';
 import CommentTextBox from '../../comment-text-box';
+import BoastCommentsReplyForm from './reply-form';
 
 interface Props {
   isMobile?: boolean;
@@ -137,7 +137,6 @@ export default function BoastCommentCard({
           />
           <StudioBoastsMoreButton
             isComment
-            // ✅ [수정] isMobile prop을 더보기 버튼에도 전달 (혹시 모를 동작 차이 방지)
             isMobile={isMobile}
             onSelf={commentData.isWrittenByRequestUser}
             studioBoastId={studioBoastId}

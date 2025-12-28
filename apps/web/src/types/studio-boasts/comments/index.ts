@@ -87,3 +87,14 @@ export interface StudioBoastsCommentsLikesRequestProps {
   studioBoastId: string;
   commentId: string;
 }
+
+{
+  /* 댓글 신고 */
+}
+// 요청 dto
+export interface StudioBoastsCommentsReportRequestProps {
+  studioBoastId: string;
+  commentId: string;
+  reportReasonId: string;
+  description: string;
+}

@@ -65,7 +65,6 @@ export default function BoastCommentsReplyForm({
       <div className='flex-1'>
         <CommentTextBox
           isMobile={isMobile}
-          placeholder={`@${taggedUserNickname} 님에게 답글 달기...`}
           content={content}
           onContentChange={setContent}
           isSecret={isSecret}

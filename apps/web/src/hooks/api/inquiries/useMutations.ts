@@ -1,7 +1,7 @@
 import {
-  QueryClient,
   UseMutationResult,
   useMutation,
+  useQueryClient,
 } from '@tanstack/react-query';
 
 import { postInquiries, postInquiriesPresignedUrl } from '@/lib/inquiries';
@@ -26,13 +26,13 @@ const useInquiriesMutation = (): UseMutationResult<
   Error,
   InquiriesRequestProps
 > => {
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: postInquiries,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['inquiries', 'my'],
+        queryKey: ['inquiries'],
       });
     },
   });

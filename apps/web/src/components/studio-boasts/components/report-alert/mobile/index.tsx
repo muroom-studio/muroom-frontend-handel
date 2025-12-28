@@ -38,7 +38,6 @@ export default function MobileReportAlert({
 
   return (
     <>
-      {/* 1단계: 입력 페이지 */}
       {!isConfirmOpen && (
         <PageWrapper
           isMobile
