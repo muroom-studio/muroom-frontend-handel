@@ -1,6 +1,10 @@
 {
   "extends": "@muroom/typescript-config/nextjs.json",
   "compilerOptions": {
+    "skipLibCheck": true,
+    "incremental": true,
+    "tsBuildInfoFile": ".next/tsbuildinfo",
+
     "plugins": [
       {
         "name": "next"
@@ -22,5 +26,5 @@
     "next.config.ts",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules", ".next"]
+  "exclude": ["node_modules", ".next", "dist", "build", ".turbo", "coverage"]
 }
