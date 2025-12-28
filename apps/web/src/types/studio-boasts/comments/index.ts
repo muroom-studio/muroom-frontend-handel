@@ -12,9 +12,11 @@ export interface StudioBoastsCommentsRequestProps extends PageRequestProps {
 export interface CreatorUserInfoDto {
   id: string;
   nickname: string;
-  instrument: string;
-  agreedToEventTerms: boolean;
-  instagramAccount: string;
+  instrumentInfo: {
+    id: string;
+    code: string;
+    description: string;
+  };
 }
 
 export interface TaggedUserInfoDto {
@@ -65,6 +67,7 @@ export interface StudioBoastsEditCommentsRequestProps {
   studioBoastId: string;
   commentId: string;
   content: string;
+  isSecret: boolean;
 }
 
 {

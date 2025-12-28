@@ -13,6 +13,7 @@ import { useStudioBoastsDetailQuery } from '@/hooks/api/studio-boasts/useQueries
 import { useAuthCheck } from '@/hooks/auth/useAuthCheck';
 import { LoginLink } from '@/hooks/auth/useAuthRedirect';
 
+import BoastCommentList from '../components/boast-comment-list';
 import BoastDetailImageCarousel from '../components/boast-image-carousel';
 import BoastSimpleCarousel from '../components/boast-simple-carousel';
 import BoastStudioCard from '../components/boast-studio-card';
@@ -45,6 +46,17 @@ export default function StudioBoastsDetailPage({ targetedId }: Props) {
     return <Loading />;
   }
 
+  const handleScrollToComments = () => {
+    const element = document.getElementById('BOAST_COMMENT_SECTION');
+
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      const textarea = document.getElementById('COMMENT_CONTENT');
+      textarea?.focus();
+    }
+  };
+
   return (
     <div className='gap-y-15 flex w-full flex-col'>
       <div className='gap-y-15 relative flex flex-col px-[calc(124px+56px)]'>
@@ -56,6 +68,7 @@ export default function StudioBoastsDetailPage({ targetedId }: Props) {
           />
           <StudioBoastsCommentButton
             commentCount={studioBoastsDetailData?.commentCount || 0}
+            onClick={handleScrollToComments}
           />
           <StudioBoastsShareButton />
           <StudioBoastsMoreButton
@@ -119,6 +132,9 @@ export default function StudioBoastsDetailPage({ targetedId }: Props) {
               address={`${unknownStudioInfo.roadNameAddress || unknownStudioInfo.lotNumberAddress || ''} ${unknownStudioInfo.detailedAddress || ''}`}
             />
           ) : null}
+        </div>
+        <div id='BOAST_COMMENT_SECTION'>
+          <BoastCommentList studioBoastId={studioBoastsDetailData?.id || ''} />
         </div>
       </div>
 

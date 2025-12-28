@@ -101,7 +101,7 @@ export default function MypageCsInquiryNewCommonForm({
 
       <div className='text-base-l-16-1 flex flex-col gap-y-2 text-gray-500'>
         <span>
-          문의 내역은 내정보 &gt; 고객센터 &gt; 1:1 문의내역 메뉴에서 확인하실
+          문의 내역은 내정보 {'>'} 고객센터 {'>'} 1:1 문의내역 메뉴에서 확인하실
           수 있습니다.
         </span>
         <span>모든 문의는 접수된 순서대로 빠짐없이 확인 중입니다.</span>

@@ -23,6 +23,7 @@ export interface Props {
   className?: string;
   contentClassName?: string;
   footerClassName?: string;
+  bottomSlotClassName?: string;
   isModal?: boolean;
   onClose?: () => void;
 }
@@ -35,6 +36,7 @@ const MobilePageWrapper = ({
   className,
   contentClassName,
   footerClassName,
+  bottomSlotClassName,
   isModal = false,
   onClose,
 }: Props) => {
@@ -124,7 +126,9 @@ const MobilePageWrapper = ({
             }}
             className='absolute bottom-0 z-50 w-full bg-white'
           >
-            <div className='px-5 pb-9 pt-3'>{bottomSlot}</div>
+            <div className={cn('px-5 pb-9 pt-3', bottomSlotClassName)}>
+              {bottomSlot}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

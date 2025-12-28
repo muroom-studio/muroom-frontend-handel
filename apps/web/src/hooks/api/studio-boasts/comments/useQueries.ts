@@ -1,10 +1,7 @@
 import { keepPreviousData, useInfiniteQuery } from '@tanstack/react-query';
 
 import { getStudioBoastsComments } from '@/lib/studio-boasts/comments';
-import {
-  StudioBoastsCommentsRequestProps,
-  StudioBoastsCommentsResponseProps,
-} from '@/types/studio-boasts/comments';
+import { StudioBoastsCommentsRequestProps } from '@/types/studio-boasts/comments';
 
 interface UseStudioBoastsCommentQueryConfig {
   page: number;
@@ -19,16 +16,7 @@ const useStudioBoastsCommentsQuery = (
   const { isMobile = false, page, size } = config;
   const { studioBoastId } = params;
 
-  return useInfiniteQuery<
-    StudioBoastsCommentsResponseProps,
-    Error,
-    StudioBoastsCommentsRequestProps,
-    readonly [
-      string,
-      string,
-      { page?: number; size?: number; type: string } | string,
-    ]
-  >({
+  return useInfiniteQuery({
     queryKey: [
       'studio-boasts-comments',
       studioBoastId,
