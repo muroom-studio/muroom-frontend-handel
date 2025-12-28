@@ -117,7 +117,7 @@ export default function NicknameEditAlert({
     return (
       <ContentWrapper
         isMobile
-        title='닉네임 변경'
+        title={isMobile ? '닉네임 변경' : ''}
         description='변경할 닉네임을 입력해주세요'
       >
         <div className='flex flex-col gap-y-2'>

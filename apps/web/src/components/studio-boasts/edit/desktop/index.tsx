@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { Button } from '@muroom/components';
+import { Button, Spinner } from '@muroom/components';
 
 import PageWrapper from '@/components/common/page-wrapper';
 
@@ -35,7 +35,7 @@ export default function DesktopStudioBoastsEditPage({
             size='xl'
             disabled={!isFormValid || isLoading}
           >
-            수정완료
+            {isLoading ? <Spinner variant='component' /> : '수정완료'}
           </Button>
         </div>
       </div>

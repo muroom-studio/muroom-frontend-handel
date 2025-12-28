@@ -57,7 +57,7 @@ export default function Page() {
         isMobile
         isHeader={{ title: '고객센터', onBackClick: () => router.back() }}
         contentClassName='px-0 pt-0'
-        bottomSlot={
+        bottomFixedSlot={
           activeTabId === 'inquiry' ? (
             <Link href='/mypage/cs/inquiry/new'>
               <Button variant='outline' size='l' className='w-full'>

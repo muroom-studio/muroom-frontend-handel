@@ -41,10 +41,10 @@ function RQProvider({ children }: Props) {
         },
         onError: (error, _variables, _context, mutation) => {
           const meta = mutation.options.meta as
-            | { ignoreErrorToast?: boolean }
+            | { showErrorToast?: boolean }
             | undefined;
 
-          if (meta?.ignoreErrorToast) {
+          if (!meta?.showErrorToast) {
             return;
           }
 

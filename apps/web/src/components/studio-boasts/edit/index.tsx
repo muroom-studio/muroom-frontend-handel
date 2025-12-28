@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 
 import { toast } from 'sonner';
 
+import Loading from '@/app/loading';
 import { ImageItem } from '@/components/common/image-uploader';
 import { usePutStudioBoastsMutation } from '@/hooks/api/studio-boasts/useMutations';
 import { useStudioBoastsDetailQuery } from '@/hooks/api/studio-boasts/useQueries';
@@ -76,7 +77,9 @@ export default function StudioBoastsEditPage({
     });
   };
 
-  if (isLoading || !boastData) return null;
+  if (isLoading) return <Loading />;
+
+  if (!boastData) return null;
 
   return (
     <StudioBoastsEditorForm

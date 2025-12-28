@@ -19,7 +19,7 @@ interface Props {
 }
 
 export default function StudioEditAlert({ isMobile, isOpen, onClose }: Props) {
-  const [keyword, setKeyword] = useState('');
+  // const [keyword, setKeyword] = useState('');
 
   const [studioJuso, setStudioJuso] = useState<StudioJuso>({
     juso: '',
@@ -27,7 +27,7 @@ export default function StudioEditAlert({ isMobile, isOpen, onClose }: Props) {
     studioName: '',
   });
 
-  const [isSelfSelect, setIsSelfSelct] = useState(false);
+  // const [isSelfSelect, setIsSelfSelct] = useState(false);
 
   const { mutate: musicianMeDetailMutate } = useMusicianMeDetailMutation();
 
@@ -59,10 +59,10 @@ export default function StudioEditAlert({ isMobile, isOpen, onClose }: Props) {
     return (
       <ContentWrapper
         isMobile
-        title='내 작업실 변경'
+        title={isMobile ? '내 작업실 변경' : ''}
         description='변경할 작업실을 추가해주세요'
       >
-        {!isSelfSelect ? (
+        {/* {!isSelfSelect ? (
           <div className='flex flex-col gap-y-4'>
             <SearchBar
               variant='not-home'
@@ -81,18 +81,19 @@ export default function StudioEditAlert({ isMobile, isOpen, onClose }: Props) {
               </Button>
             </div>
           </div>
-        ) : (
-          <AddressForm
-            value={studioJuso}
-            setValue={setStudioJuso}
-            fieldMap={{
-              address: 'juso',
-              detailAddress: 'detailJuso',
-              name: 'studioName',
-            }}
-            onMyPage
-          />
-        )}
+        ) : ( */}
+        <AddressForm
+          isMobile={isMobile}
+          value={studioJuso}
+          setValue={setStudioJuso}
+          fieldMap={{
+            address: 'juso',
+            detailAddress: 'detailJuso',
+            name: 'studioName',
+          }}
+          onMyPage
+        />
+        {/* )} */}
       </ContentWrapper>
     );
   };

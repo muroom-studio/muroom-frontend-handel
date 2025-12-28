@@ -123,7 +123,7 @@ const MobilePageWrapper = ({
       {bottomFixedSlot && (
         <div
           className={cn(
-            'z-50 w-full flex-none bg-white',
+            'z-50 w-full flex-none bg-white px-5 pb-9',
             bottomFixedSlotClassName,
           )}
         >

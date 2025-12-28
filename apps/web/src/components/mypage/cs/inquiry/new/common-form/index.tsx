@@ -72,6 +72,9 @@ export default function MypageCsInquiryNewCommonForm({
             updateObjectProperty(prev, 'title', e.target.value),
           )
         }
+        onClear={() =>
+          setValue((prev) => updateObjectProperty(prev, 'title', ''))
+        }
       />
 
       <div className='flex flex-col gap-y-4'>

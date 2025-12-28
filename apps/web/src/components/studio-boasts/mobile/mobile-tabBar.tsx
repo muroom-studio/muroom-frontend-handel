@@ -105,7 +105,7 @@ export default function MobileStudioBoastsTabBar() {
         'shadow-level-0',
         {
           '-translate-y-full': !isVisible,
-          'translate-y-0': isVisible,
+          '-translate-y-0.5': isVisible,
         },
       )}
     >
@@ -115,7 +115,8 @@ export default function MobileStudioBoastsTabBar() {
         initialActiveTabId={currentTabId}
         activeId={currentTabId}
         onTabChange={handleTabChange}
-        className='flex w-full justify-start gap-x-6 px-5 pb-2 pt-2'
+        // border-y-[0.5px]가 이미 있다면 위쪽 보더가 헤더 보더와 겹쳐서 자연스러워질 것입니다.
+        className='flex w-full justify-start gap-x-6 border-y-[0.5px] border-y-gray-300 px-5'
         btnClassName='flex-none'
       />
     </div>

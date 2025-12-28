@@ -51,7 +51,7 @@ export default function BoastCommentsReplyForm({
           setIsSecret(false);
           onSuccess();
         },
-        onError: (err) => toast.error(err.message),
+        onError: (err) => console.error(err.message),
       },
     );
   };

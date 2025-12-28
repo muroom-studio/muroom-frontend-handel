@@ -20,8 +20,7 @@ export default function AuthSection() {
   const menuItems = [
     { id: 'm1', label: '프로필', url: '/mypage/profile' },
     { id: 'm2', label: '고객센터', url: '/mypage/cs' },
-    { id: 'm3', label: '신고내역', url: '/mypage/reports' },
-    { id: 'm4', label: '로그아웃', url: '/logout' },
+    { id: 'm3', label: '로그아웃', url: '/logout' },
   ];
 
   const showProfile = isLoggedIn && !!musicianBaseData;

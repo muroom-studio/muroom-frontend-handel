@@ -11,6 +11,7 @@ interface DesktopProps {
   isOpen: boolean;
   onClose: () => void;
   onFinalSubmit: () => void;
+  isLoading: boolean;
   isValid: boolean;
   formProps: any;
 }
@@ -19,6 +20,7 @@ export default function DesktopReportAlert({
   isOpen,
   onClose,
   onFinalSubmit,
+  isLoading,
   isValid,
   formProps,
 }: DesktopProps) {
@@ -60,6 +62,7 @@ export default function DesktopReportAlert({
           setIsAgreed(false);
         }}
         onConfirm={onFinalSubmit}
+        isLoading={isLoading}
         variant='negative'
         title='신고하기'
         content={
