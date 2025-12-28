@@ -18,12 +18,14 @@ import Footer from '../../footer';
 export interface Props {
   isHeader?: ComponentProps<typeof Header>;
   bottomSlot?: React.ReactNode;
+  bottomFixedSlot?: React.ReactNode;
   isFooter?: boolean;
   children: React.ReactNode;
   className?: string;
   contentClassName?: string;
   footerClassName?: string;
   bottomSlotClassName?: string;
+  bottomFixedSlotClassName?: string;
   isModal?: boolean;
   onClose?: () => void;
 }
@@ -31,18 +33,19 @@ export interface Props {
 const MobilePageWrapper = ({
   isHeader,
   bottomSlot,
+  bottomFixedSlot,
   isFooter,
   children,
   className,
   contentClassName,
   footerClassName,
   bottomSlotClassName,
+  bottomFixedSlotClassName,
   isModal = false,
   onClose,
 }: Props) => {
   const [isVisible, setIsVisible] = useState(true);
 
-  // 스크롤 감지 상태
   const [showBottomSlot, setShowBottomSlot] = useState(false);
   const mainRef = useRef<HTMLDivElement>(null);
 
@@ -56,18 +59,17 @@ const MobilePageWrapper = ({
   };
 
   const handleScroll = () => {
-    if (!mainRef.current) return;
+    if (!bottomSlot || !mainRef.current) return;
 
     const { scrollTop, scrollHeight, clientHeight } = mainRef.current;
-    // 오차범위 20px 내로 바닥에 도달했는지 체크
     const isBottom = scrollTop + clientHeight >= scrollHeight - 20;
-
     setShowBottomSlot(isBottom);
   };
 
   useEffect(() => {
-    handleScroll();
-  }, [children]);
+    if (bottomSlot) handleScroll();
+  }, [children, bottomSlot]);
+  // -----------------------------------------------------------
 
   const modalHeaderProps =
     isModal && isHeader
@@ -81,6 +83,7 @@ const MobilePageWrapper = ({
     headerProps: ComponentProps<typeof Header> | undefined,
   ) => (
     <>
+      {/* 1. Header (Sticky or Static) */}
       {headerProps && (
         <Header
           {...headerProps}
@@ -91,14 +94,12 @@ const MobilePageWrapper = ({
         />
       )}
 
+      {/* 2. Main Content (Scrollable Area) */}
       <main
         ref={mainRef}
         onScroll={handleScroll}
         className={cn(
           'scrollbar-hide w-full flex-1 overflow-y-auto',
-          {
-            'px-5 pt-10': headerProps,
-          },
           contentClassName,
         )}
       >
@@ -113,6 +114,18 @@ const MobilePageWrapper = ({
         {bottomSlot && <div className='h-36 w-full flex-none' />}
       </main>
 
+      {bottomFixedSlot && (
+        <div
+          className={cn(
+            'z-50 w-full flex-none bg-white',
+            bottomFixedSlotClassName,
+          )}
+        >
+          {bottomFixedSlot}
+        </div>
+      )}
+
+      {/* [기존] Bottom Slot (Absolute Position - 스크롤 감지용) */}
       <AnimatePresence>
         {bottomSlot && showBottomSlot && (
           <motion.div
@@ -151,8 +164,9 @@ const MobilePageWrapper = ({
               stiffness: 300,
               mass: 0.8,
             }}
+            // h-dvh: 모바일 브라우저 동적 뷰포트 대응
             className={cn(
-              'absolute relative inset-0 z-50 flex h-dvh w-full flex-col overflow-hidden bg-white',
+              'fixed inset-0 z-50 flex h-dvh w-full flex-col overflow-hidden bg-white',
               className,
             )}
           >
