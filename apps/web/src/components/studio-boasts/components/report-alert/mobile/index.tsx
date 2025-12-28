@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import { Button, ModalBottomSheet } from '@muroom/components';
+import { Button, ModalBottomSheet, Spinner } from '@muroom/components';
 
 import PageWrapper from '@/components/common/page-wrapper';
 
@@ -13,6 +13,7 @@ interface MobileProps {
   isOpen: boolean;
   onClose: () => void;
   onFinalSubmit: () => void;
+  isLoading: boolean;
   isValid: boolean;
   formProps: any;
 }
@@ -21,6 +22,7 @@ export default function MobileReportAlert({
   isOpen,
   onClose,
   onFinalSubmit,
+  isLoading,
   isValid,
   formProps,
 }: MobileProps) {
@@ -79,7 +81,7 @@ export default function MobileReportAlert({
               disabled={!isAgreed}
               onClick={onFinalSubmit}
             >
-              신고하기
+              {isLoading ? <Spinner variant='component' /> : '신고하기'}
             </Button>
           </div>
         }
@@ -87,7 +89,6 @@ export default function MobileReportAlert({
         <div className='flex flex-col gap-y-5'>
           <p className='text-base-exl-18-2 text-red-600'>신고하기</p>
           <CheckContent
-            isMobile
             isAgreed={isAgreed}
             onToggleAgree={() => setIsAgreed(!isAgreed)}
           />

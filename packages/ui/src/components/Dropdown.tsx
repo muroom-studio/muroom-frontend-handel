@@ -58,7 +58,7 @@ function Dropdown({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [internalValue, setInternalValue] = useState(defaultValue);
-  const [selectedLabel, setSelectedLabel] = useState<React.ReactNode>(''); // 내부 라벨 상태
+  const [selectedLabel, setSelectedLabel] = useState<React.ReactNode>('');
 
   const isControlled = controlledValue !== undefined;
   const value = isControlled ? controlledValue : internalValue;
@@ -115,7 +115,6 @@ function Dropdown({
       isOpen,
       setIsOpen,
       selectedValue: value,
-      // ⭐️ 3. 결정된 currentLabel을 Context로 전달
       selectedLabel: currentLabel,
       setSelected,
       placeholder,
@@ -168,7 +167,7 @@ function DropdownTrigger({
   };
 
   const baseStyle =
-    'group flex-center gap-x-1 w-full cursor-pointer transition-all rounded-4 max-w-[202px] truncate';
+    'group flex items-center justify-between text-left gap-x-1 w-full cursor-pointer transition-all rounded-4 max-w-[202px] truncate';
 
   const styles: Record<
     DropdownVariant,
@@ -217,8 +216,10 @@ function DropdownTrigger({
       className={finalClassName}
       {...props}
     >
-      {selectedValue ? selectedLabel : placeholder || '선택...'}
-      <DownArrowIcon className='rotate size-5 transition-transform duration-200 group-data-[state=open]:rotate-180' />
+      <span className='truncate'>
+        {selectedValue ? selectedLabel : placeholder || '선택...'}
+      </span>
+      <DownArrowIcon className='rotate size-5 shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-180' />
     </button>
   );
 }
@@ -325,7 +326,7 @@ function DropdownItem({
       data-selected={isSelected ? 'true' : undefined}
       onClick={() => setSelected(value, children)}
       className={cn(
-        'text-base-m-14-1 relative flex w-full cursor-pointer select-none items-center border-b border-gray-200 bg-white px-3 py-[9px] outline-none transition-all',
+        'text-base-m-14-1 relative flex w-full cursor-pointer select-none items-center justify-start border-b border-gray-200 bg-white px-3 py-[9px] text-left outline-none transition-all',
         'hover:bg-gray-100 disabled:cursor-default disabled:text-gray-300',
         {
           '!text-primary-600 text-base-m-14-2 hover:bg-gray-50': isSelected,

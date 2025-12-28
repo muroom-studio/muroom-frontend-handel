@@ -63,10 +63,7 @@ export default function MypageCsInquiryNewPage({ isMobile }: Props) {
   };
 
   const isFormValid =
-    categoryId !== 0 &&
-    value.title !== '' &&
-    value.content !== '' &&
-    imageKeys.length > 0;
+    categoryId !== 0 && value.title !== '' && value.content !== '';
 
   if (isLoading || !inquiryCategoriesData) {
     return <Loading />;

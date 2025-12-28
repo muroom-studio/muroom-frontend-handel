@@ -7,6 +7,7 @@ import { AnimatePresence, HTMLMotionProps, motion } from 'framer-motion';
 
 import { cn } from '../lib/utils';
 import Button from './Button';
+import Spinner from './Spinner';
 
 type AlertVariant = 'positive' | 'negative' | 'neutral';
 
@@ -14,6 +15,7 @@ interface AlertProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
+  isLoading?: boolean;
   title: string;
   content?: React.ReactNode;
   variant?: AlertVariant;
@@ -26,6 +28,7 @@ export default function Alert({
   isOpen,
   onClose,
   onConfirm,
+  isLoading = false,
   title,
   content,
   variant = 'neutral',
@@ -112,7 +115,11 @@ export default function Alert({
                     variant='danger'
                     disabled={confirmDisabled}
                   >
-                    {finalConfirmLabel}
+                    {isLoading ? (
+                      <Spinner variant='component' />
+                    ) : (
+                      finalConfirmLabel
+                    )}
                   </Button>
                 ) : (
                   <Button
@@ -121,7 +128,11 @@ export default function Alert({
                     size='xl'
                     disabled={confirmDisabled}
                   >
-                    {finalConfirmLabel}
+                    {isLoading ? (
+                      <Spinner variant='component' />
+                    ) : (
+                      finalConfirmLabel
+                    )}
                   </Button>
                 )}
               </div>

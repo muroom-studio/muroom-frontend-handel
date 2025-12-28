@@ -44,11 +44,8 @@ export default function CommentTextBox({
       setTimeout(() => {
         inputRef.current?.focus();
       }, 100);
-    } else if (!content) {
-      setIsFocused(false);
-      inputRef.current?.blur();
     }
-  }, [forceExpand, content]);
+  }, [forceExpand]);
 
   const showBottom = isFocused || content.length > 0 || forceExpand;
 
@@ -75,6 +72,7 @@ export default function CommentTextBox({
             onContentChange('');
             onSecretChange(false);
             if (onCancel) onCancel();
+            inputRef.current?.blur();
           }}
           className='w-full'
         />
@@ -131,7 +129,7 @@ export default function CommentTextBox({
     );
   }
 
-  // 데스크톱 렌더링
+  // 데스크톱 렌더링 (기존 유지)
   return (
     <TextBox
       id='COMMENT_CONTENT'

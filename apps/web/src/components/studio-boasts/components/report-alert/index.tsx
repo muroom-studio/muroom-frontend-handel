@@ -40,9 +40,14 @@ export default function ReportAlert({
 
   const { data: reportReasonData } = useReportReasonQuery();
 
-  const { mutate: studioBoastsReportMutate } = useStudioBoastsReportMutation();
-  const { mutate: studioBoastsCommentsReportMutate } =
-    useStudioBoastsCommentsReportMutation();
+  const {
+    mutate: studioBoastsReportMutate,
+    isPending: isStudioBoastsReportPending,
+  } = useStudioBoastsReportMutation();
+  const {
+    mutate: studioBoastsCommentsReportMutate,
+    isPending: isStudioBoastsCommentsReportPending,
+  } = useStudioBoastsCommentsReportMutation();
 
   const handleResetAndClose = () => {
     setSelectedReason({ id: '', name: '' });
@@ -118,6 +123,8 @@ export default function ReportAlert({
         setSelectedReason({ id, name }),
       onDescriptionChange: setDescription,
     },
+    isLoading:
+      isStudioBoastsCommentsReportPending || isStudioBoastsReportPending,
   };
 
   if (isMobile) {
