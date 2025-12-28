@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 import { useReportReasonQuery } from '@/hooks/api/report/useQueries';
+import { useStudioBoastsCommentsReportMutation } from '@/hooks/api/studio-boasts/comments/useMutations';
 import { useStudioBoastsReportMutation } from '@/hooks/api/studio-boasts/useMutations';
 
 import DesktopReportAlert from './desktop';
@@ -19,6 +20,8 @@ interface Props {
   studioBoastId: string;
   instrumentDescription: string;
   nickname: string;
+  isComment?: boolean;
+  commentId?: string;
 }
 
 export default function ReportAlert({
@@ -28,13 +31,18 @@ export default function ReportAlert({
   studioBoastId,
   instrumentDescription,
   nickname,
+  isComment = false,
+  commentId,
 }: Props) {
   const router = useRouter();
   const [selectedReason, setSelectedReason] = useState({ id: '', name: '' });
   const [description, setDescription] = useState('');
 
   const { data: reportReasonData } = useReportReasonQuery();
+
   const { mutate: studioBoastsReportMutate } = useStudioBoastsReportMutation();
+  const { mutate: studioBoastsCommentsReportMutate } =
+    useStudioBoastsCommentsReportMutation();
 
   const handleResetAndClose = () => {
     setSelectedReason({ id: '', name: '' });
@@ -43,6 +51,29 @@ export default function ReportAlert({
   };
 
   const handleFinalSubmit = () => {
+    if (isComment && commentId) {
+      studioBoastsCommentsReportMutate(
+        {
+          studioBoastId,
+          commentId,
+          reportReasonId: selectedReason.id,
+          description,
+        },
+        {
+          onSuccess: () => {
+            toast.success('해당 댓글이 신고처리되었습니다.');
+            handleResetAndClose();
+          },
+          onError: (error) => {
+            console.error(error);
+            toast.error('댓글 신고처리가 실패했습니다.');
+            handleResetAndClose();
+          },
+        },
+      );
+      return;
+    }
+
     studioBoastsReportMutate(
       {
         studioBoastId,
@@ -67,7 +98,10 @@ export default function ReportAlert({
   };
 
   const isValid =
-    studioBoastId !== '' && selectedReason.id !== '' && description !== '';
+    studioBoastId !== '' &&
+    selectedReason.id !== '' &&
+    description !== '' &&
+    (!isComment || (isComment && !!commentId));
 
   const commonProps = {
     isOpen,
@@ -85,9 +119,7 @@ export default function ReportAlert({
       onDescriptionChange: setDescription,
     },
   };
-  console.log(selectedReason.name);
 
-  // 6. 렌더링 분기
   if (isMobile) {
     return <MobileReportAlert {...commonProps} />;
   }

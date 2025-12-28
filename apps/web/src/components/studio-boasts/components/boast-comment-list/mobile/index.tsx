@@ -173,12 +173,6 @@ export default function MobileBoastCommentList({
     return () => element && observer.unobserve(element);
   }, [fetchNextPage, hasNextPage, isFetchingNextPage, isOpen]);
 
-  const getPlaceholder = () => {
-    if (mode === 'reply') return `@${target?.nickname} 님에게 답글 남기기`;
-    if (mode === 'edit') return '댓글 수정하기...';
-    return '공감이 된다면 같이 이야기 해볼까요?';
-  };
-
   if (!isOpen) return null;
 
   return (
@@ -189,41 +183,21 @@ export default function MobileBoastCommentList({
         onBackClick: onClose,
       }}
       className='fixed inset-0 z-[9999] bg-white'
-      contentClassName='pt-6' // 하단 패딩은 필요없음 (Flex 구조라 안 겹침)
+      contentClassName='py-6 px-5'
       isModal
-      // ✅ [중요] bottomFixedSlot 사용
       bottomFixedSlotClassName='p-0'
       bottomFixedSlot={
-        <div className='bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]'>
-          {mode !== 'create' && (
-            <div className='flex items-center justify-between border-t border-gray-100 bg-gray-50 px-5 py-2 text-xs text-gray-500'>
-              <span>
-                {mode === 'reply'
-                  ? `'${target?.nickname}'님께 답글 작성 중`
-                  : '댓글 수정 중'}
-              </span>
-              <button
-                onClick={handleResetMode}
-                className='font-medium text-gray-800 underline'
-              >
-                취소
-              </button>
-            </div>
-          )}
-
-          <CommentTextBox
-            isMobile
-            content={content}
-            onContentChange={setContent}
-            isSecret={isSecret}
-            onSecretChange={setIsSecret}
-            onSubmit={handleSubmit}
-            isPending={isCreating || isEditing}
-            placeholder={getPlaceholder()}
-            onCancel={handleResetMode}
-            forceExpand={mode !== 'create'}
-          />
-        </div>
+        <CommentTextBox
+          isMobile
+          content={content}
+          onContentChange={setContent}
+          isSecret={isSecret}
+          onSecretChange={setIsSecret}
+          onSubmit={handleSubmit}
+          isPending={isCreating || isEditing}
+          onCancel={handleResetMode}
+          forceExpand={mode !== 'create'}
+        />
       }
     >
       <ul className='flex flex-col gap-y-10'>

@@ -138,6 +138,8 @@ export default function StudioBoastsMoreButton({
         studioBoastId={studioBoastId}
         instrumentDescription={instrumentDescription}
         nickname={nickname}
+        isComment={isComment}
+        commentId={commentId}
       />
     </>
   );

@@ -38,7 +38,6 @@ export default function Page() {
           provider: provider,
           providerId: code,
         });
-        console.log(result, '이것만 보자');
 
         const { type, accessToken, refreshToken, signupToken } = result;
 

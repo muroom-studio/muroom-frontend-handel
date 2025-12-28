@@ -9,10 +9,12 @@ import {
   deleteStudioBoastsCommentsLikes,
   postStudioBoastsComments,
   postStudioBoastsCommentsLikes,
+  postStudioBoastsCommentsReport,
   putStudioBoastsComments,
 } from '@/lib/studio-boasts/comments';
 import {
   StudioBoastsCommentsLikesRequestProps,
+  StudioBoastsCommentsReportRequestProps,
   StudioBoastsCreateCommentsRequestProps,
   StudioBoastsDeleteCommentsRequestProps,
   StudioBoastsEditCommentsRequestProps,
@@ -120,10 +122,22 @@ const useStudioBoastsCommentsUnlikeMutation = (): UseMutationResult<
   });
 };
 
+// 댓글 신고
+const useStudioBoastsCommentsReportMutation = (): UseMutationResult<
+  any,
+  Error,
+  StudioBoastsCommentsReportRequestProps
+> => {
+  return useMutation({
+    mutationFn: postStudioBoastsCommentsReport,
+  });
+};
+
 export {
   useCreateStudioBoastsCommentsMutation,
   useEditStudioBoastsCommentsMutation,
   useDeleteStudioBoastsCommentsMutation,
   useStudioBoastsCommentsLikeMutation,
   useStudioBoastsCommentsUnlikeMutation,
+  useStudioBoastsCommentsReportMutation,
 };

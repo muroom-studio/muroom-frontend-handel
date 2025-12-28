@@ -38,11 +38,9 @@ export default function CommentTextBox({
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // ✅ forceExpand 변경 시 자동 포커스
   useEffect(() => {
     if (forceExpand) {
       setIsFocused(true);
-      // ✅ [수정] 100ms로 늘려 확실하게 포커스 잡기
       setTimeout(() => {
         inputRef.current?.focus();
       }, 100);
@@ -73,7 +71,11 @@ export default function CommentTextBox({
           onBlur={() => {
             if (content.length === 0 && !forceExpand) setIsFocused(false);
           }}
-          hideClearButton
+          onClear={() => {
+            onContentChange('');
+            onSecretChange(false);
+            if (onCancel) onCancel();
+          }}
           className='w-full'
         />
 

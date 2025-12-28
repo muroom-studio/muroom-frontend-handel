@@ -26,9 +26,6 @@ export default function CustomMarker({
   onClick,
   onHoverChange,
 }: CustomMarkerProps) {
-  // 디버깅용 로그: 이제 isHovered 상태도 함께 확인해보세요.
-  // console.log(`[${name}] Selected: ${isSelected}, Hovered: ${isHovered}`);
-
   const HOVER_ACTION_TIME = 300;
   const [isHovered, setIsHovered] = useState(false);
 

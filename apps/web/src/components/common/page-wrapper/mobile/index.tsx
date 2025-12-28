@@ -46,6 +46,7 @@ const MobilePageWrapper = ({
 }: Props) => {
   const [isVisible, setIsVisible] = useState(true);
 
+  // --- [Case A] 스크롤 감지 로직 ---
   const [showBottomSlot, setShowBottomSlot] = useState(false);
   const mainRef = useRef<HTMLDivElement>(null);
 
@@ -62,6 +63,9 @@ const MobilePageWrapper = ({
     if (!bottomSlot || !mainRef.current) return;
 
     const { scrollTop, scrollHeight, clientHeight } = mainRef.current;
+
+    // ✅ [수정] 강제 노출 로직 제거. 오직 스크롤 위치 계산만 수행
+    // 오차범위 20px 내로 바닥에 도달했는지 체크
     const isBottom = scrollTop + clientHeight >= scrollHeight - 20;
     setShowBottomSlot(isBottom);
   };
@@ -83,7 +87,7 @@ const MobilePageWrapper = ({
     headerProps: ComponentProps<typeof Header> | undefined,
   ) => (
     <>
-      {/* 1. Header (Sticky or Static) */}
+      {/* 1. Header */}
       {headerProps && (
         <Header
           {...headerProps}
@@ -94,12 +98,12 @@ const MobilePageWrapper = ({
         />
       )}
 
-      {/* 2. Main Content (Scrollable Area) */}
+      {/* 2. Main Content */}
       <main
         ref={mainRef}
         onScroll={handleScroll}
         className={cn(
-          'scrollbar-hide w-full flex-1 overflow-y-auto',
+          'scrollbar-hide w-full flex-1 overflow-y-auto px-5 pt-10',
           contentClassName,
         )}
       >
@@ -111,9 +115,11 @@ const MobilePageWrapper = ({
           </div>
         )}
 
+        {/* [Case A] bottomSlot 사용 시 스페이서 */}
         {bottomSlot && <div className='h-36 w-full flex-none' />}
       </main>
 
+      {/* 3. [Case B] Bottom Fixed Slot (댓글창용, 키보드 대응) */}
       {bottomFixedSlot && (
         <div
           className={cn(
@@ -125,7 +131,7 @@ const MobilePageWrapper = ({
         </div>
       )}
 
-      {/* [기존] Bottom Slot (Absolute Position - 스크롤 감지용) */}
+      {/* 4. [Case A] Bottom Slot (스크롤 감지) */}
       <AnimatePresence>
         {bottomSlot && showBottomSlot && (
           <motion.div
@@ -164,7 +170,6 @@ const MobilePageWrapper = ({
               stiffness: 300,
               mass: 0.8,
             }}
-            // h-dvh: 모바일 브라우저 동적 뷰포트 대응
             className={cn(
               'fixed inset-0 z-50 flex h-dvh w-full flex-col overflow-hidden bg-white',
               className,

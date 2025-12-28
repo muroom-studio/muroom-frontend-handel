@@ -2,6 +2,7 @@ import { createQueryString } from '@muroom/util';
 
 import {
   StudioBoastsCommentsLikesRequestProps,
+  StudioBoastsCommentsReportRequestProps,
   StudioBoastsCommentsRequestProps,
   StudioBoastsCommentsResponseProps,
   StudioBoastsCreateCommentsRequestProps,
@@ -97,6 +98,22 @@ export const deleteStudioBoastsCommentsLikes = async (
     `/studio-boasts/${studioBoastId}/comments/${commentId}/likes`,
     {
       method: 'DELETE',
+    },
+  );
+
+  return responseData;
+};
+
+export const postStudioBoastsCommentsReport = async (
+  params: StudioBoastsCommentsReportRequestProps,
+) => {
+  const { studioBoastId, commentId, ...dto } = params;
+
+  const responseData = await customFetch(
+    `/studio-boasts/${studioBoastId}/comments/${commentId}/report`,
+    {
+      method: 'POST',
+      body: JSON.stringify(dto),
     },
   );
 
