@@ -17,7 +17,7 @@
       "@muroom/lib": ["../../packages/ui/src/lib/utils.ts"],
       "@muroom/icons": ["../../packages/ui/src/icons-generated/index.ts"]
     },
-    "ignoreDeprecations": "5.0"
+    "ignoreDeprecations": "6.0"
   },
   "include": [
     "src/**/*.ts",

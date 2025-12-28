@@ -33,7 +33,6 @@ const TextBox = ({
   ...props
 }: TextBoxProps) => {
   const [isFocused, setIsFocused] = useState(false);
-
   const [isMinLengthError, setIsMinLengthError] = useState(false);
 
   const isControlled = value !== undefined;
@@ -91,6 +90,7 @@ const TextBox = ({
           'border-gray-300',
           'hover:shadow-level-0',
           isFocused && 'border-gray-600',
+          'h-full',
         )}
       >
         <textarea
@@ -106,12 +106,13 @@ const TextBox = ({
             'w-full resize-none bg-transparent px-4 py-5',
             'min-h-44',
             'text-base-l-16-1 placeholder:text-gray-400 focus:outline-none',
+            'flex-1',
             textareaClassName,
           )}
           {...props}
         />
 
-        <div className='flex flex-col gap-y-2 px-4 pb-5 pt-2'>
+        <div className={cn('flex flex-col gap-y-2 px-4 pb-5 pt-2', 'shrink-0')}>
           <div className='text-base-s-12-1 flex justify-end text-gray-400'>
             <span
               className={cn(

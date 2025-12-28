@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
@@ -9,6 +9,7 @@ import { getFormattedDate } from '@muroom/util';
 
 import { StudioBoastsItemProps } from '@/types/studio-boasts';
 
+import BoastCommentList from '../components/boast-comment-list';
 import BoastDetailImageCarousel from '../components/boast-image-carousel';
 import BoastSimpleCarousel from '../components/boast-simple-carousel';
 import BoastStudioCard from '../components/boast-studio-card';
@@ -24,6 +25,11 @@ interface Props {
 
 export default function DetailBoastList({ items }: Props) {
   const router = useRouter();
+
+  const [openCommenstModalAndId, setOpenCommentsModalAndId] = useState({
+    targetedId: '',
+    isOpen: false,
+  });
 
   return (
     <div className='flex flex-col gap-y-10'>
@@ -92,6 +98,12 @@ export default function DetailBoastList({ items }: Props) {
               <StudioBoastsCommentButton
                 isMobile
                 commentCount={item?.commentCount || 0}
+                onClick={() =>
+                  setOpenCommentsModalAndId({
+                    targetedId: item.id,
+                    isOpen: true,
+                  })
+                }
               />
             </div>
           </div>
@@ -105,6 +117,20 @@ export default function DetailBoastList({ items }: Props) {
           )}
         </React.Fragment>
       ))}
+
+      {openCommenstModalAndId.targetedId && (
+        <BoastCommentList
+          isMobile
+          studioBoastId={openCommenstModalAndId.targetedId}
+          isOpen={openCommenstModalAndId.isOpen}
+          onClose={() =>
+            setOpenCommentsModalAndId(() => ({
+              targetedId: '',
+              isOpen: false,
+            }))
+          }
+        />
+      )}
     </div>
   );
 }
