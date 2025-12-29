@@ -6,6 +6,8 @@ import { Pagination } from '@muroom/components';
 
 import { useCreateStudioBoastsCommentsMutation } from '@/hooks/api/studio-boasts/comments/useMutations';
 import { useStudioBoastsCommentsQuery } from '@/hooks/api/studio-boasts/comments/useQueries';
+import { useAuthCheck } from '@/hooks/auth/useAuthCheck';
+import { LoginLink } from '@/hooks/auth/useAuthRedirect';
 import { StudioBoastsCommentDto } from '@/types/studio-boasts/comments';
 import { extractInfiniteData } from '@/utils/query';
 
@@ -65,6 +67,8 @@ export default function DesktopBoastCommentList({ studioBoastId }: Props) {
       false,
     );
 
+  const { isLoggedIn } = useAuthCheck(); // 임시 로그인 감싸기 위함
+
   return (
     <div className='flex flex-col gap-y-10'>
       <div className='flex flex-col gap-y-6'>
@@ -74,14 +78,27 @@ export default function DesktopBoastCommentList({ studioBoastId }: Props) {
             {pagination?.totalElements ?? 0}
           </span>
         </p>
-        <CommentTextBox
-          content={content}
-          onContentChange={setContent}
-          isSecret={isSecret}
-          onSecretChange={setIsSecret}
-          onSubmit={handleSubmit}
-          isPending={isCreating}
-        />
+        {isLoggedIn ? (
+          <CommentTextBox
+            content={content}
+            onContentChange={setContent}
+            isSecret={isSecret}
+            onSecretChange={setIsSecret}
+            onSubmit={handleSubmit}
+            isPending={isCreating}
+          />
+        ) : (
+          <LoginLink>
+            <CommentTextBox
+              content={content}
+              onContentChange={setContent}
+              isSecret={isSecret}
+              onSecretChange={setIsSecret}
+              onSubmit={handleSubmit}
+              isPending={isCreating}
+            />
+          </LoginLink>
+        )}
       </div>
 
       <ul className='flex flex-col gap-y-10'>
@@ -101,7 +118,7 @@ export default function DesktopBoastCommentList({ studioBoastId }: Props) {
         )}
       </ul>
 
-      {pagination && pagination.totalPages > 0 && (
+      {pagination && pagination.totalElements > 5 && (
         <div className='mt-4'>
           <Pagination
             currentPage={page}

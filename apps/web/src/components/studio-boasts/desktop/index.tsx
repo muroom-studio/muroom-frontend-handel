@@ -84,7 +84,7 @@ export default function DesktopStudioBoastsPage() {
       </div>
 
       <div className='flex-center mt-20'>
-        {pagination && pagination.totalPages > 0 && (
+        {pagination && pagination.totalElements > 12 && (
           <Pagination
             currentPage={page}
             totalPages={pagination.totalPages}
