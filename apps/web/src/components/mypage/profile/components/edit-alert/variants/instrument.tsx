@@ -47,7 +47,7 @@ export default function InstrumentEditAlert({
     return (
       <ContentWrapper
         isMobile
-        title='악기 변경'
+        title={isMobile ? '악기 변경' : ''}
         description='변경할 악기를 선택해주세요'
       >
         <div className='flex flex-wrap gap-2'>
