@@ -2,8 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-import { motion } from 'framer-motion';
-
 import { cn } from '../lib/utils';
 
 interface TruncatedTextProps {
@@ -35,14 +33,11 @@ const ExpandedParagraph = ({
   };
 
   return (
-    <motion.p
-      layout
+    <p
       ref={textRef}
       onClick={handleExpand}
-      initial={false}
-      transition={{ duration: 0.3, ease: 'easeOut' }}
       className={cn(
-        'text-base-l-16-1 whitespace-pre-wrap',
+        'text-base-l-16-1 whitespace-pre-wrap break-all',
         {
           'line-clamp-2': !isExpanded && lines === 2,
           'line-clamp-3': !isExpanded && lines === 3,
@@ -52,7 +47,7 @@ const ExpandedParagraph = ({
       )}
     >
       {children}
-    </motion.p>
+    </p>
   );
 };
 

@@ -20,6 +20,7 @@ interface CommentTextBoxProps {
   onCancel?: () => void;
   isMobile?: boolean;
   forceExpand?: boolean;
+  focusTrigger?: number;
 }
 
 export default function CommentTextBox({
@@ -34,6 +35,7 @@ export default function CommentTextBox({
   onCancel,
   isMobile = false,
   forceExpand = false,
+  focusTrigger = 0,
 }: CommentTextBoxProps) {
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -46,6 +48,15 @@ export default function CommentTextBox({
       }, 100);
     }
   }, [forceExpand]);
+
+  useEffect(() => {
+    if (focusTrigger > 0) {
+      setIsFocused(true);
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
+    }
+  }, [focusTrigger]);
 
   const showBottom = isFocused || content.length > 0 || forceExpand;
 

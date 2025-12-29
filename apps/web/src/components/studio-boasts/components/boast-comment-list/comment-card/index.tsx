@@ -4,8 +4,8 @@ import { useState } from 'react';
 
 import { toast } from 'sonner';
 
-import { Button, UserBaseInfoLabel } from '@muroom/components';
-import { ReplyArrowIcon } from '@muroom/icons';
+import { UserBaseInfoLabel } from '@muroom/components';
+import { LockOnIcon, ReplyArrowIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 import { getFormattedDate } from '@muroom/util';
 
@@ -54,10 +54,8 @@ export default function BoastCommentCard({
   const { mutate: updateComment, isPending: isUpdating } =
     useEditStudioBoastsCommentsMutation();
 
-  // 수정 버튼 클릭 핸들러
   const handleStartEdit = () => {
     if (isMobile) {
-      // ✅ 모바일이면 부모에게 요청 (여기서 onEditClick이 호출되어야 함)
       onEditClick?.(commentData.id, commentData.content, commentData.isSecret);
     } else {
       setEditContent(commentData.content);
@@ -97,7 +95,7 @@ export default function BoastCommentCard({
   };
 
   const renderCardContent = () => {
-    if (!creatorUserInfo) {
+    if (!creatorUserInfo || !commentData.isVisible) {
       return (
         <div className='flex w-full flex-col gap-y-2 py-2'>
           <p className='text-base-l-16-1 text-gray-500'>비밀 댓글입니다.</p>
@@ -149,6 +147,13 @@ export default function BoastCommentCard({
           />
         </div>
 
+        {commentData.isSecret && (
+          <p className='text-base-s-12-2 flex items-center gap-x-1 text-gray-400'>
+            <LockOnIcon className='size-4' />
+            상대방에게만 보이는 비밀댓글입니다.
+          </p>
+        )}
+
         <div className='flex flex-col gap-y-2'>
           <p className='text-base-l-16-1 whitespace-pre-wrap'>
             {commentData.content}
@@ -161,25 +166,19 @@ export default function BoastCommentCard({
         </div>
 
         <div className='flex items-center gap-x-3'>
-          {isReply ? (
-            <Button variant='outline' size='xs' onClick={handleReplyToggle}>
-              답글쓰기
-            </Button>
-          ) : (
-            <>
-              <StudioBoastsLikeButton
-                isComment
-                commentId={commentData.id}
-                studioBoastId={studioBoastId}
-                likeCount={commentData.likeCount}
-                onLikeSelf={commentData.isLikedByRequestUser}
-              />
-              <StudioBoastsCommentButton
-                isComment
-                commentCount={replies.length}
-                onClick={handleReplyToggle}
-              />
-            </>
+          <StudioBoastsLikeButton
+            isComment
+            commentId={commentData.id}
+            studioBoastId={studioBoastId}
+            likeCount={commentData.likeCount}
+            onLikeSelf={commentData.isLikedByRequestUser}
+          />
+          {!isReply && (
+            <StudioBoastsCommentButton
+              isComment
+              commentCount={replies?.length || 0}
+              onClick={handleReplyToggle}
+            />
           )}
         </div>
       </div>
@@ -209,7 +208,6 @@ export default function BoastCommentCard({
         />
       )}
 
-      {/* ✅ [수정] 대댓글 리스트에도 ID wrapper 추가 (스크롤 타겟팅용) */}
       {!isReply && replies.length > 0 && (
         <div className='flex flex-col gap-y-6'>
           {replies.map((reply) => (

@@ -35,7 +35,7 @@ export default function MobileStudioBoastsPage() {
     { sort: undefined },
     {
       page: 1,
-      size: 12,
+      size: 2,
       isMobile: true,
       isMyList: isMyTab,
     },
