@@ -6,7 +6,10 @@ import StudioBoastsButtonWrapper from '../button-wrapper';
 
 export default function StudioBoastsShareButton() {
   return (
-    <StudioBoastsButtonWrapper onClick={handleCopyClipboard}>
+    <StudioBoastsButtonWrapper
+      requireAuth={false}
+      onClick={handleCopyClipboard}
+    >
       <ShareIcon className='size-6' />
     </StudioBoastsButtonWrapper>
   );
