@@ -1,11 +1,11 @@
 'use client';
 
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 import { ToggleButton } from '@muroom/components';
 import { HeartIcon } from '@muroom/icons';
 
+import CommonImage from '@/components/common/common-image';
 import {
   useStudioBoastsLikeMutation,
   useStudioBoastsUnlikeMutation,
@@ -43,7 +43,7 @@ export default function BoastThumbnailCard({
       onClick={() => router.push(`/studio-boasts/${targetedId}`)}
       className='relative aspect-square w-full cursor-pointer overflow-hidden transition-all hover:scale-105'
     >
-      <Image
+      <CommonImage
         src={thumbnailSrcUrl}
         alt={`${thumbnailSrcUrl}-썸네일`}
         fill

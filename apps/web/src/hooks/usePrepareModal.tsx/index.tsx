@@ -2,11 +2,11 @@
 
 import { useCallback, useState } from 'react';
 
-import Image from 'next/image';
-
 import { Button, Modal, ModalBottomSheet } from '@muroom/components';
 import { cn } from '@muroom/lib';
 import PrepareImage from '@muroom/ui/assets/prepare-modal.svg';
+
+import CommonImage from '@/components/common/common-image';
 
 import { useResponsiveLayout } from '../common/useResponsiveLayout';
 
@@ -20,7 +20,7 @@ export const usePrepareModal = () => {
   const content = (
     <div className='flex flex-col'>
       <div className='flex-center mb-6'>
-        <Image
+        <CommonImage
           src={PrepareImage}
           alt='준비로고'
           width={64}

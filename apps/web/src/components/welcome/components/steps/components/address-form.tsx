@@ -1,21 +1,28 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DaumPostcode from 'react-daum-postcode';
 
 import {
   Button,
+  Dropdown,
+  DropdownContent,
+  DropdownItem,
+  DropdownTrigger,
   ModalBottomSheet,
   RequiredText,
   TextField,
 } from '@muroom/components';
-import { CloseIcon } from '@muroom/icons';
+import { CloseIcon, DownArrowIcon } from '@muroom/icons';
+
+import { useStudiosSearchAddressQuery } from '@/hooks/api/studios/useQueries';
 
 export interface AddressFieldMap<T> {
   address: keyof T;
   detailAddress: keyof T;
   jibunAddress?: keyof T;
   name?: keyof T;
+  studioId?: keyof T; // ✅ [추가] 스튜디오 ID를 매핑할 키
 }
 
 interface Props<T> {
@@ -36,6 +43,21 @@ export default function AddressForm<T>({
   label = '내 작업실',
 }: Props<T>) {
   const [isOpen, setIsOpen] = useState(false);
+  const [searchAddress, setSearchAddress] = useState('');
+
+  const [isNameDropdownVisible, setIsNameDropdownVisible] = useState(false);
+  const [isDirectInputMode, setIsDirectInputMode] = useState(false);
+  const [dropdownDefaultOpen, setDropdownDefaultOpen] = useState(false);
+
+  const { data: searchResults } = useStudiosSearchAddressQuery({
+    roadNameAddress: searchAddress,
+  });
+
+  useEffect(() => {
+    if (searchResults && searchResults.length > 0) {
+      setIsNameDropdownVisible(true);
+    }
+  }, [searchResults]);
 
   const updateField = (key: keyof T, newValue: any) => {
     setValue((prev) => ({
@@ -45,36 +67,29 @@ export default function AddressForm<T>({
   };
 
   const handleComplete = (data: any) => {
-    let fullAddress = data.roadAddress || data.autoRoadAddress || data.address;
-    let extraAddress = '';
-
-    if (data.bname !== '') {
-      extraAddress += data.bname;
-    }
-    if (data.buildingName !== '') {
-      extraAddress +=
-        extraAddress !== '' ? `, ${data.buildingName}` : data.buildingName;
-    }
-
-    if (extraAddress !== '') {
-      fullAddress += ` (${extraAddress})`;
-    }
-
+    const basicAddress = data.address;
     const lotNumberAddress = data.jibunAddress || data.autoJibunAddress || '';
+
+    setSearchAddress(basicAddress);
+
+    setIsNameDropdownVisible(false);
+    setIsDirectInputMode(false);
+    setDropdownDefaultOpen(false);
 
     setValue((prev) => {
       const updates = {} as Partial<T>;
 
-      updates[fieldMap.address] = fullAddress as any;
+      updates[fieldMap.address] = basicAddress as any;
 
       if (fieldMap.jibunAddress) {
         updates[fieldMap.jibunAddress] = lotNumberAddress as any;
       }
 
-      return {
-        ...prev,
-        ...updates,
-      };
+      if (fieldMap.studioId) {
+        updates[fieldMap.studioId] = '' as any;
+      }
+
+      return { ...prev, ...updates };
     });
 
     setIsOpen(false);
@@ -124,12 +139,104 @@ export default function AddressForm<T>({
       />
 
       {fieldMap.name && (
-        <TextField
-          placeholder='작업실 이름을 입력해주세요'
-          value={String(value[fieldMap.name] || '')}
-          onChange={(e) => updateField(fieldMap.name!, e.target.value)}
-          onClear={() => updateField(fieldMap.name!, '')}
-        />
+        <>
+          {/* Case 1: 드롭다운 */}
+          {isNameDropdownVisible && searchResults && !isDirectInputMode ? (
+            <Dropdown
+              className='w-full'
+              defaultOpen={dropdownDefaultOpen}
+              label={String(value[fieldMap.name] || '')}
+              value={
+                searchResults.find(
+                  (s) => s.name === String(value[fieldMap.name!] || ''),
+                )?.id || ''
+              }
+              placeholder='작업실 이름을 선택해주세요'
+              onValueChange={(selectedId) => {
+                // 1. [직접입력] 선택 시
+                if (selectedId === 'direct-input') {
+                  setIsNameDropdownVisible(false);
+                  setIsDirectInputMode(true);
+                  setDropdownDefaultOpen(false);
+
+                  const directInputData = searchResults.find(
+                    (s) => s.id === 'direct-input',
+                  );
+
+                  if (directInputData) {
+                    setValue((prev) => ({
+                      ...prev,
+                      [fieldMap.name!]: '',
+                      [fieldMap.detailAddress]: directInputData.detailedAddress,
+                      // ✅ [추가] 직접입력 시 ID는 없음(혹은 초기화)
+                      ...(fieldMap.studioId && { [fieldMap.studioId]: '' }),
+                    }));
+                  }
+                  return;
+                }
+
+                // 2. [일반 작업실] 선택 시
+                const selectedStudio = searchResults.find(
+                  (s) => s.id === selectedId,
+                );
+                if (selectedStudio) {
+                  setValue((prev) => ({
+                    ...prev,
+                    [fieldMap.name!]: selectedStudio.name,
+                    [fieldMap.address]: selectedStudio.roadNameAddress,
+                    [fieldMap.detailAddress]: selectedStudio.detailedAddress,
+                    ...(fieldMap.jibunAddress && {
+                      [fieldMap.jibunAddress]: selectedStudio.lotNumberAddress,
+                    }),
+                    ...(fieldMap.studioId && {
+                      [fieldMap.studioId]: selectedStudio.id,
+                    }),
+                  }));
+                }
+              }}
+            >
+              <DropdownTrigger
+                variant='primary'
+                size='l'
+                className='max-w-full'
+              />
+              <DropdownContent className='max-h-[200px] w-[var(--radix-popper-anchor-width)] overflow-y-auto'>
+                {searchResults.map((studio) => (
+                  <DropdownItem key={studio.id} value={studio.id}>
+                    {studio.name}
+                  </DropdownItem>
+                ))}
+              </DropdownContent>
+            </Dropdown>
+          ) : isDirectInputMode ? (
+            // Case 2: [직접입력] 모드 TextField
+            <TextField
+              placeholder='작업실 이름을 입력해주세요'
+              value={String(value[fieldMap.name] || '')}
+              onChange={(e) => updateField(fieldMap.name!, e.target.value)}
+              rightIcon={
+                <DownArrowIcon
+                  className='size-5 shrink-0 cursor-pointer rounded transition-transform duration-200 hover:bg-gray-100'
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setDropdownDefaultOpen(true);
+                    setIsDirectInputMode(false);
+                    setIsNameDropdownVisible(true);
+                  }}
+                />
+              }
+              onClear={() => updateField(fieldMap.name!, '')}
+            />
+          ) : (
+            // Case 3: 기본 TextField
+            <TextField
+              placeholder='작업실 이름을 입력해주세요'
+              value={String(value[fieldMap.name] || '')}
+              onChange={(e) => updateField(fieldMap.name!, e.target.value)}
+              onClear={() => updateField(fieldMap.name!, '')}
+            />
+          )}
+        </>
       )}
 
       {isMobile && (

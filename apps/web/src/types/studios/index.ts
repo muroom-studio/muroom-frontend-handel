@@ -87,3 +87,21 @@ export interface StudiosMapListResponseProps {
   content: StudiosMapListItem[];
   pagination: PaginationInfo;
 }
+
+// studios/search/address
+// 도로명 주소로 스튜디오 검색
+// 요청 dto
+export interface StudiosSearchAddressRequestProps {
+  roadNameAddress: string;
+}
+
+export interface StudioSearchAddressItemProps {
+  id: string;
+  name: string;
+  roadNameAddress: string;
+  lotNumberAddress: string;
+  detailedAddress: string;
+}
+
+// 응답 dto
+export type StudiosSearchAddressResponseProps = StudioSearchAddressItemProps[];

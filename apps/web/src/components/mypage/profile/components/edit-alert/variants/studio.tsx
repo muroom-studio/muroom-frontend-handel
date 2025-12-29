@@ -19,15 +19,11 @@ interface Props {
 }
 
 export default function StudioEditAlert({ isMobile, isOpen, onClose }: Props) {
-  // const [keyword, setKeyword] = useState('');
-
   const [studioJuso, setStudioJuso] = useState<StudioJuso>({
     juso: '',
     detailJuso: '',
     studioName: '',
   });
-
-  // const [isSelfSelect, setIsSelfSelct] = useState(false);
 
   const { mutate: musicianMeDetailMutate } = useMusicianMeDetailMutation();
 
@@ -62,26 +58,6 @@ export default function StudioEditAlert({ isMobile, isOpen, onClose }: Props) {
         title={isMobile ? '내 작업실 변경' : ''}
         description='변경할 작업실을 추가해주세요'
       >
-        {/* {!isSelfSelect ? (
-          <div className='flex flex-col gap-y-4'>
-            <SearchBar
-              variant='not-home'
-              keyword={keyword}
-              onSearch={setKeyword}
-            />
-            <div className='flex-center'>
-              <Button
-                variant='outline'
-                size='s'
-                className='w-fit px-3 py-[13px]'
-                onClick={() => setIsSelfSelct(true)}
-              >
-                <PlusIcon className='size-4' />
-                직접 작업실 추가하기
-              </Button>
-            </div>
-          </div>
-        ) : ( */}
         <AddressForm
           isMobile={isMobile}
           value={studioJuso}
@@ -93,7 +69,6 @@ export default function StudioEditAlert({ isMobile, isOpen, onClose }: Props) {
           }}
           onMyPage
         />
-        {/* )} */}
       </ContentWrapper>
     );
   };

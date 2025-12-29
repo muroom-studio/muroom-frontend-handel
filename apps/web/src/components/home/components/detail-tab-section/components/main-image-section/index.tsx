@@ -1,8 +1,8 @@
 'use client';
 
-import Image from 'next/image';
-
 import VacantThumnail from '@muroom/ui/assets/vacant-thumnail.svg';
+
+import CommonImage from '@/components/common/common-image';
 
 import { useGalleryModal } from '../gallery-modal';
 
@@ -15,7 +15,12 @@ export default function MainImageSection({ roomImgs, controller }: Props) {
   if (!roomImgs || roomImgs.length === 0) {
     return (
       <div className='flex-center h-[250px] w-full border border-gray-300 bg-gray-50'>
-        <Image src={VacantThumnail} alt='빈 이미지' width={62} height={50} />
+        <CommonImage
+          src={VacantThumnail}
+          alt='빈 이미지'
+          width={62}
+          height={50}
+        />
       </div>
     );
   }
@@ -31,7 +36,7 @@ export default function MainImageSection({ roomImgs, controller }: Props) {
           className='relative h-[250px] w-full cursor-pointer overflow-hidden'
           onClick={() => controller.openSingle('main', 0)}
         >
-          <Image
+          <CommonImage
             src={roomImgs[0] as string}
             alt='room-img-0'
             fill
@@ -50,7 +55,7 @@ export default function MainImageSection({ roomImgs, controller }: Props) {
               className='relative h-full w-full cursor-pointer'
               onClick={() => controller.openSingle('main', idx)}
             >
-              <Image
+              <CommonImage
                 src={img}
                 alt={`room-img-${idx}`}
                 fill
@@ -69,7 +74,7 @@ export default function MainImageSection({ roomImgs, controller }: Props) {
             className='relative col-span-2 row-span-2 cursor-pointer'
             onClick={() => controller.openSingle('main', 0)}
           >
-            <Image
+            <CommonImage
               src={roomImgs[0] as string}
               alt='room-main'
               fill
@@ -83,7 +88,7 @@ export default function MainImageSection({ roomImgs, controller }: Props) {
             className='relative col-span-1 row-span-1 cursor-pointer'
             onClick={() => controller.openSingle('main', 1)}
           >
-            <Image
+            <CommonImage
               src={roomImgs[1] as string}
               alt='room-sub-1'
               fill
@@ -97,7 +102,7 @@ export default function MainImageSection({ roomImgs, controller }: Props) {
             className='relative col-span-1 row-span-1 cursor-pointer'
             onClick={() => controller.openSingle('main', 2)}
           >
-            <Image
+            <CommonImage
               src={roomImgs[2] as string}
               alt='room-sub-2'
               fill

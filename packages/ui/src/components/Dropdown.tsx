@@ -39,6 +39,10 @@ function useDropdown() {
   return context;
 }
 
+// ----------------------------------------------------------------------
+// 1. Dropdown (Root)
+// ----------------------------------------------------------------------
+
 function Dropdown({
   value: controlledValue,
   label: controlledLabel,
@@ -47,6 +51,7 @@ function Dropdown({
   placeholder,
   className,
   children,
+  defaultOpen = false,
 }: {
   value?: string;
   label?: React.ReactNode;
@@ -55,8 +60,10 @@ function Dropdown({
   placeholder?: string;
   className?: string;
   children: React.ReactNode;
+  defaultOpen?: boolean;
 }) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+
   const [internalValue, setInternalValue] = useState(defaultValue);
   const [selectedLabel, setSelectedLabel] = useState<React.ReactNode>('');
 
@@ -69,13 +76,19 @@ function Dropdown({
   const triggerRef = useRef<HTMLButtonElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    if (!value) {
+      setSelectedLabel('');
+    }
+  }, [value]);
+
   const setSelected = useCallback(
     (newValue: string, newLabel: React.ReactNode) => {
       if (value === newValue) {
         if (!isControlled) {
           setInternalValue('');
+          setSelectedLabel('');
         }
-        setSelectedLabel('');
         onValueChange?.('');
       } else {
         if (!isControlled) {

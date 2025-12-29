@@ -1,5 +1,4 @@
-import Image from 'next/image';
-
+import CommonImage from '@/components/common/common-image';
 import { S3_BUCKET_URL } from '@/config/constants';
 import { StudioOptionItem, StudioOptionsInfo } from '@/types/studio';
 
@@ -23,7 +22,7 @@ const RenderOptionList = ({ options }: { options: StudioOptionItem[] }) => {
           <OptionItem
             key={option.code}
             icon={
-              <Image
+              <CommonImage
                 src={`${S3_BUCKET_URL}${option.iconImageKey}`}
                 alt={`${option.code} 이미지`}
                 width={0}
@@ -39,7 +38,7 @@ const RenderOptionList = ({ options }: { options: StudioOptionItem[] }) => {
         <OptionItem
           key={'none'}
           icon={
-            <Image
+            <CommonImage
               src={NONE_IMAGE_URL}
               alt={'옵션 없음'}
               width={0}

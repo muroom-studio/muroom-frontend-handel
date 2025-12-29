@@ -12,10 +12,10 @@ export interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   customLabel?: React.ReactNode;
   className?: string;
   inputClassName?: string;
-  hideClearButton?: boolean; // 이미 존재하는 옵션 (true일 경우 닫기 버튼 숨김)
+  hideClearButton?: boolean;
   ref?: Ref<HTMLInputElement>;
   leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode; // [New] 우측 아이콘 추가
+  rightIcon?: React.ReactNode;
 }
 
 const TextField = ({

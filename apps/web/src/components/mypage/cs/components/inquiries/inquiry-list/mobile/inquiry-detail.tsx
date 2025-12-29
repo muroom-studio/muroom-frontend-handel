@@ -1,10 +1,9 @@
 'use client';
 
-import Image from 'next/image';
-
 import { Tag } from '@muroom/components';
 
 import Loading from '@/app/loading';
+import CommonImage from '@/components/common/common-image';
 import DraggableCarousel from '@/components/common/draggable-carousel';
 import PageWrapper from '@/components/common/page-wrapper';
 import { useInquiriesDetailQuery } from '@/hooks/api/inquiries/useQueries';
@@ -44,7 +43,7 @@ export default function InquiryDetail({
               key={`${image.id}-image`}
               className='relative h-[140px] w-[140px] flex-none cursor-pointer transition-opacity hover:opacity-90'
             >
-              <Image
+              <CommonImage
                 src={image.imageFileUrl}
                 alt={`${image.id}-image`}
                 fill
@@ -68,7 +67,7 @@ export default function InquiryDetail({
                 key={`${image.id}-image`}
                 className='relative h-[140px] w-[140px] flex-none cursor-pointer transition-opacity hover:opacity-90'
               >
-                <Image
+                <CommonImage
                   src={image.imageFileUrl}
                   alt={`${image.id}-image`}
                   fill

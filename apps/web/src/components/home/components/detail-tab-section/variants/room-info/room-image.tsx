@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 
-import Image from 'next/image';
-
 import {
   Dropdown,
   DropdownContent,
@@ -16,6 +14,7 @@ import { cn } from '@muroom/lib';
 import VacantThumnail from '@muroom/ui/assets/vacant-thumnail.svg';
 import { getFormattedDate } from '@muroom/util';
 
+import CommonImage from '@/components/common/common-image';
 import DraggableCarousel from '@/components/common/draggable-carousel';
 import OptionItem from '@/components/common/option-item';
 import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
@@ -182,7 +181,7 @@ export default function RoomImage({
         )}
       >
         {blueprintImg ? (
-          <Image
+          <CommonImage
             src={blueprintImg}
             alt={'도면 이미지'}
             fill
@@ -191,7 +190,7 @@ export default function RoomImage({
           />
         ) : (
           <div className='flex size-full items-center justify-center bg-gray-100'>
-            <Image
+            <CommonImage
               src={VacantThumnail}
               alt={'빈 이미지'}
               width={62}
