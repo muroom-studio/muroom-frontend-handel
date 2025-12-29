@@ -40,7 +40,7 @@ export default function PhoneEditAlert({ isMobile, isOpen, onClose }: Props) {
     return (
       <ContentWrapper
         isMobile
-        title='휴대폰 번호 변경'
+        title={isMobile ? '휴대폰 번호 변경' : ''}
         description='휴대폰 번호를 인증해주세요'
       >
         <VerifyPhone

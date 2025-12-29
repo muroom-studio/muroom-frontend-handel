@@ -12,6 +12,7 @@ import { useStudioBoastsQuery } from '@/hooks/api/studio-boasts/useQueries';
 import { StudioBoastsItemProps } from '@/types/studio-boasts';
 import { extractInfiniteData } from '@/utils/query';
 
+import BoastEventBanner from '../components/boast-event-banner';
 import DetailBoastList from './detail-boast-list';
 import FloatingPostButton from './floating-post-button';
 import MobileStudioBoastsTabBar from './mobile-tabBar';
@@ -77,7 +78,7 @@ export default function MobileStudioBoastsPage() {
     >
       <div className='flex flex-col pb-20'>
         <MobileStudioBoastsTabBar />
-        <div className='h-6' />
+        <BoastEventBanner isMobile />
         <DetailBoastList items={studioBoastList} />
 
         <div ref={observerRef} className='flex-center h-10 w-full py-4'>
