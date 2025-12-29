@@ -102,7 +102,6 @@ export default function MobileStudioBoastsTabBar() {
       ref={tabBarRef}
       className={cn(
         'sticky top-0 z-40 w-full bg-white transition-transform duration-300 ease-in-out',
-        'shadow-level-0',
         {
           '-translate-y-full': !isVisible,
           '-translate-y-0.5': isVisible,
