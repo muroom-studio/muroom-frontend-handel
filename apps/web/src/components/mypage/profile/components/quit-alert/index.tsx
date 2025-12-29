@@ -149,11 +149,7 @@ export default function QuitAlert({ isMobile, isOpen, onClose }: Props) {
               onClick={handleConfirm}
               variant='danger'
               size='xl'
-              disabled={
-                selectedReason.withdrawalReasonId === 0 ||
-                opinion.length === 0 ||
-                !isChecked
-              }
+              disabled={selectedReason.withdrawalReasonId === 0 || !isChecked}
             >
               탈퇴하기
             </Button>
@@ -174,11 +170,7 @@ export default function QuitAlert({ isMobile, isOpen, onClose }: Props) {
       title='서비스 탈퇴'
       content={AlertContent()}
       confirmLabel='탈퇴하기'
-      confirmDisabled={
-        selectedReason.withdrawalReasonId === 0 ||
-        opinion.length === 0 ||
-        !isChecked
-      }
+      confirmDisabled={selectedReason.withdrawalReasonId === 0 || !isChecked}
     />
   );
 }

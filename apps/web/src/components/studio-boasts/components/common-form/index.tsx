@@ -91,6 +91,7 @@ export default function StudioBoastsNewCommonForm({
           jibunAddress: 'lotNumberAddress',
           detailAddress: 'detailedAddress',
           name: 'studioName',
+          studioId: 'studioId',
         }}
       />
 

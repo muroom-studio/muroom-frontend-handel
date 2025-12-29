@@ -44,8 +44,13 @@ export default function ReportFormContent({
       <div className='flex flex-col gap-y-3'>
         <RequiredText className='text-base-l-16-2'>신고유형</RequiredText>
         <Dropdown
+          label={selectedReasonName || '신고유형을 선택해주세요'}
           value={selectedReasonName || ''}
           onValueChange={(val) => {
+            if (val === '') {
+              onReasonChange('', '');
+              return;
+            }
             const target = reasonData?.find((r) => r.name === val);
             if (target) onReasonChange(String(target.id), target.name);
           }}

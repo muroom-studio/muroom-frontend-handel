@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import CommonImage from '@/components/common/common-image';
 
 import { CATEGORY_TITLES, GalleryCategory, GalleryImages } from '../types';
 
@@ -27,7 +27,7 @@ export default function GroupImageSection({ images, onImageClick }: Props) {
               className='rounded-4 relative aspect-square cursor-pointer overflow-hidden'
               onClick={() => onImageClick(category, idx)}
             >
-              <Image
+              <CommonImage
                 src={img}
                 alt={`${category}-${idx}`}
                 fill

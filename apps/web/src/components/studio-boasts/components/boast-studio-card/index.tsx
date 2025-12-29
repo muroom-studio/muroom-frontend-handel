@@ -1,10 +1,9 @@
 'use client';
 
-import Image from 'next/image';
-
 import { Badge } from '@muroom/components';
 import { cn } from '@muroom/lib';
 
+import CommonImage from '@/components/common/common-image';
 import { NearestSubwayStationDto } from '@/types/studio';
 
 interface Props {
@@ -51,7 +50,7 @@ export default function BoastStudioCard({
     >
       {variant === 'known' && thumbnailUrl && (
         <div className='rounded-4 relative h-[140px] w-[140px] shrink-0 overflow-hidden'>
-          <Image
+          <CommonImage
             src={thumbnailUrl}
             alt={`${id}-${title}`}
             fill

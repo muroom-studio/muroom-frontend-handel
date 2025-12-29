@@ -1,9 +1,8 @@
 'use client';
 
-import Image from 'next/image';
-
 import BaseLogo from '@muroom/ui/assets/base-logo.svg';
 
+import CommonImage from '@/components/common/common-image';
 import { useWelcomeMode } from '@/hooks/nuqs/welcome/useWelcomeMode';
 
 import WelcomeHeader from '../../components/header';
@@ -17,7 +16,13 @@ export default function DesktopLoginPage() {
       <WelcomeHeader />
       <div className='pt-15 border-t-[0.5px] border-t-gray-300 px-10 pb-[42px]'>
         <div className='flex flex-col gap-y-2'>
-          <Image src={BaseLogo} alt='로고' width={154} height={37} priority />
+          <CommonImage
+            src={BaseLogo}
+            alt='로고'
+            width={154}
+            height={37}
+            priority
+          />
           <div className='flex items-center gap-x-2'>
             <span className='text-base-exl-18-1'>쉬운 음악 작업실 찾기!</span>
             <span className='text-base-exl-18-2'>뮤룸</span>

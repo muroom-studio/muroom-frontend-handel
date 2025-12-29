@@ -2,8 +2,6 @@
 
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 
-import Image from 'next/image';
-
 import { toast } from 'sonner';
 
 import { Spinner } from '@muroom/components';
@@ -11,6 +9,8 @@ import { CloseIcon, PlusIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 
 import { CommonImageUploadResponseProps } from '@/types/api';
+
+import CommonImage from '../common-image';
 
 export interface ImageItem {
   id: string;
@@ -198,7 +198,7 @@ export default function ImageUploader({
                     : 'h-[130px] w-[130px] shrink-0',
                 )}
               >
-                <Image
+                <CommonImage
                   src={img.url || ''}
                   alt='preview'
                   fill

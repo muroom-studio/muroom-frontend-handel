@@ -1,10 +1,10 @@
-import Image from 'next/image';
-
 import { Badge } from '@muroom/components';
 import { cn } from '@muroom/lib';
 
 import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
 import { NearestSubwayStationDto } from '@/types/studio';
+
+import CommonImage from '../common-image';
 
 interface Props {
   id: string;
@@ -106,7 +106,7 @@ const StudioImg = ({
 }) => {
   return (
     <div className='relative h-[140px] w-[140px] shrink-0'>
-      <Image
+      <CommonImage
         src={thumbnailUrl}
         alt={alt}
         width={140}

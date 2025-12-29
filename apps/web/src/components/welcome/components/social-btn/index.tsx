@@ -1,12 +1,12 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 
 import { cn } from '@muroom/lib';
 // import GoogleLogo from '@muroom/ui/assets/google-logo.svg';
 import KakaoLogo from '@muroom/ui/assets/kakao-logo.svg';
 
+import CommonImage from '@/components/common/common-image';
 // import NaverLogo from '@muroom/ui/assets/naver-logo.svg';
 
 import {
@@ -55,7 +55,12 @@ const SocialBtn = ({ social }: { social: SocialType }) => {
         )}
       >
         <div className='flex items-center gap-x-2'>
-          <Image src={Icon} alt={`${social} logo`} width={20} height={20} />
+          <CommonImage
+            src={Icon}
+            alt={`${social} logo`}
+            width={20}
+            height={20}
+          />
           <span>{label}</span>
         </div>
       </button>

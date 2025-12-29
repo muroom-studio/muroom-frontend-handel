@@ -2,11 +2,12 @@
 
 import { useCallback, useEffect, useState } from 'react';
 
-import Image from 'next/image';
 import Link from 'next/link';
 
 import { Button, Modal, ModalBottomSheet } from '@muroom/components';
 import EventLogo from '@muroom/ui/assets/event-logo.svg';
+
+import CommonImage from '@/components/common/common-image';
 
 import { useResponsiveLayout } from '../common/useResponsiveLayout';
 
@@ -36,7 +37,7 @@ export const useEventModal = () => {
 
   const content = (
     <Link href='/studio-boasts' className='block w-full'>
-      <Image
+      <CommonImage
         src={EventLogo}
         alt='이벤트 배너'
         width={420}

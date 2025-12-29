@@ -9,8 +9,13 @@ import {
   getStudioFilterOptions,
   getStudiosMapList,
   getStudiosMapSearch,
+  getStudiosSearchAddress,
 } from '@/lib/studios';
-import { StudiosMapSearchRequestProps } from '@/types/studios';
+import {
+  StudiosMapSearchRequestProps,
+  StudiosSearchAddressRequestProps,
+  StudiosSearchAddressResponseProps,
+} from '@/types/studios';
 
 // 1. 필터 옵션 조회 훅
 const useStudioFilterOptionsQuery = () => {
@@ -86,9 +91,36 @@ const useStudioDetailQuery = (studioId: string | null | undefined) => {
   });
 };
 
+// 5. 도로명 주소로 스튜디오 검색
+const useStudiosSearchAddressQuery = (
+  params: StudiosSearchAddressRequestProps,
+) => {
+  return useQuery({
+    queryKey: ['studios', 'search', 'address', params.roadNameAddress],
+    queryFn: () => getStudiosSearchAddress(params),
+    enabled: !!params.roadNameAddress,
+    select: (data) => {
+      if (data && data.length > 0) {
+        return [
+          ...data,
+          {
+            id: 'direct-input',
+            name: '직접입력',
+            roadNameAddress: '',
+            lotNumberAddress: '',
+            detailedAddress: '',
+          },
+        ];
+      }
+      return data;
+    },
+  });
+};
+
 export {
   useStudioFilterOptionsQuery,
   useStudiosMapSearchQuery,
   useStudiosMapListInfiniteQuery,
   useStudioDetailQuery,
+  useStudiosSearchAddressQuery,
 };

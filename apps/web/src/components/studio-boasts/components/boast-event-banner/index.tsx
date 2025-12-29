@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 
-import Image from 'next/image';
-
 import { Button, Modal, ModalBottomSheet } from '@muroom/components';
 import BoastBanner from '@muroom/ui/assets/boast-banner.svg';
 import BoastMobileBanner from '@muroom/ui/assets/boast-mobile-banner.svg';
+
+import CommonImage from '@/components/common/common-image';
 
 interface Props {
   isMobile?: boolean;
@@ -95,7 +95,7 @@ export default function BoastEventBanner({ isMobile = false }: Props) {
 
   return (
     <>
-      <Image
+      <CommonImage
         src={isMobile ? BoastMobileBanner : BoastBanner}
         alt='매물자랑배너'
         className='h-auto w-full cursor-pointer object-cover'

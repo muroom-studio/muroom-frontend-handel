@@ -1,5 +1,3 @@
-import Image from 'next/image';
-
 import {
   Accordion,
   AccordionContent,
@@ -11,6 +9,7 @@ import {
 import { cn } from '@muroom/lib';
 import { getFormattedDate } from '@muroom/util';
 
+import CommonImage from '@/components/common/common-image';
 import { InquiryItem } from '@/types/inquiries';
 
 interface Props {
@@ -103,7 +102,7 @@ export default function DesktopInquiryList({
                   <div className='flex flex-wrap gap-x-1'>
                     {inquiry.images.map((img) => (
                       <div key={img.id} className='size-27.25 relative'>
-                        <Image
+                        <CommonImage
                           src={img.imageFileUrl}
                           alt='이미지'
                           fill
@@ -129,7 +128,7 @@ export default function DesktopInquiryList({
                           <div className='flex flex-wrap gap-x-1'>
                             {inquiry.reply.imageUrls.map((img) => (
                               <div key={img.id} className='size-27.25 relative'>
-                                <Image
+                                <CommonImage
                                   src={img.imageFileUrl}
                                   alt='답변 이미지'
                                   fill

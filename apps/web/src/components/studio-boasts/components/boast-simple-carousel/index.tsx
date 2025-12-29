@@ -2,13 +2,13 @@
 
 import { MouseEvent, useCallback, useRef, useState } from 'react';
 
-import Image from 'next/image';
 import Link from 'next/link';
 
 import { Spinner } from '@muroom/components';
 import { RightArrowIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 
+import CommonImage from '@/components/common/common-image';
 import { useStudioBoastsSimpleQuery } from '@/hooks/api/studio-boasts/useQueries';
 import { StudioBoastsSimpleItemDto } from '@/types/studio-boasts';
 import { extractInfiniteData } from '@/utils/query';
@@ -200,7 +200,7 @@ export default function BoastSimpleCarousel({
                   onDragStart={(e) => e.preventDefault()}
                   className={itemClassName}
                 >
-                  <Image
+                  <CommonImage
                     src={item.thumbnailImageFileUrl}
                     alt='작업실 이미지'
                     fill
@@ -218,7 +218,7 @@ export default function BoastSimpleCarousel({
                 onDragStart={(e) => e.preventDefault()}
                 className={itemClassName}
               >
-                <Image
+                <CommonImage
                   src={item.thumbnailImageFileUrl}
                   alt='작업실 이미지'
                   fill
