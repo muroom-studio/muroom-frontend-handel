@@ -49,6 +49,8 @@ export default function MobileBoastCommentList({
   const [content, setContent] = useState('');
   const [isSecret, setIsSecret] = useState(false);
 
+  const [focusTrigger, setFocusTrigger] = useState(0);
+
   // --- [Queries] ---
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useStudioBoastsCommentsQuery(
@@ -85,6 +87,16 @@ export default function MobileBoastCommentList({
     setTarget(null);
     setContent('');
     setIsSecret(false);
+
+    // ✅ 모바일 키보드 닫기 (등록 완료 시 포커스 강제 해제)
+    setTimeout(() => {
+      if (
+        typeof window !== 'undefined' &&
+        document.activeElement instanceof HTMLElement
+      ) {
+        document.activeElement.blur();
+      }
+    }, 0);
   };
 
   const handleReplyClick = (commentId: string, nickname: string) => {
@@ -92,6 +104,8 @@ export default function MobileBoastCommentList({
     setTarget({ id: commentId, nickname });
     setContent('');
     setIsSecret(false);
+
+    setFocusTrigger((prev) => prev + 1);
     scrollToTarget(commentId);
   };
 
@@ -104,6 +118,8 @@ export default function MobileBoastCommentList({
     setTarget({ id: commentId, content: prevContent, isSecret: prevSecret });
     setContent(prevContent);
     setIsSecret(prevSecret);
+
+    setFocusTrigger((prev) => prev + 1);
     scrollToTarget(commentId);
   };
 
@@ -197,6 +213,7 @@ export default function MobileBoastCommentList({
           isPending={isCreating || isEditing}
           onCancel={handleResetMode}
           forceExpand={mode !== 'create'}
+          focusTrigger={focusTrigger}
         />
       }
     >
