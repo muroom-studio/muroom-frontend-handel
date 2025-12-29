@@ -79,6 +79,7 @@ export default function MobileStudioBoastsPage() {
       <div className='flex flex-col pb-20'>
         <MobileStudioBoastsTabBar />
         <BoastEventBanner isMobile />
+        <div className='h-6' />
         <DetailBoastList items={studioBoastList} />
 
         <div ref={observerRef} className='flex-center h-10 w-full py-4'>
