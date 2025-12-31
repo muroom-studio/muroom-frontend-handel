@@ -67,10 +67,6 @@ export default function DetailBoastList({ items }: Props) {
                   minPrice={item.studioInfo.minPrice}
                   maxPrice={item.studioInfo.maxPrice}
                   subwayInfo={item.studioInfo.nearestSubwayStation}
-                  wrapperClassName='cursor-pointer'
-                  onClick={() =>
-                    router.push(`/home?studioId=${item?.studioInfo?.id}`)
-                  }
                 />
               ) : item.unknownStudioInfo ? (
                 <BoastStudioCard

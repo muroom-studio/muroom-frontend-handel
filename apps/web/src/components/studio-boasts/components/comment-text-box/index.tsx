@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useImperativeHandle, useRef, useState } from 'react';
 
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -8,7 +8,13 @@ import { Button, Spinner, TextBox, TextField } from '@muroom/components';
 import { LockOffIcon, LockOnIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 
+export interface CommentTextBoxHandle {
+  focus: () => void;
+}
+
 interface CommentTextBoxProps {
+  ref?: React.Ref<CommentTextBoxHandle>;
+  taggedUserNickname?: string;
   content: string;
   onContentChange: (value: string) => void;
   isSecret: boolean;
@@ -20,10 +26,11 @@ interface CommentTextBoxProps {
   onCancel?: () => void;
   isMobile?: boolean;
   forceExpand?: boolean;
-  focusTrigger?: number;
 }
 
 export default function CommentTextBox({
+  ref,
+  taggedUserNickname,
   content,
   onContentChange,
   isSecret,
@@ -35,10 +42,18 @@ export default function CommentTextBox({
   onCancel,
   isMobile = false,
   forceExpand = false,
-  focusTrigger = 0,
 }: CommentTextBoxProps) {
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useImperativeHandle(ref, () => ({
+    focus: () => {
+      setIsFocused(true);
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 50);
+    },
+  }));
 
   useEffect(() => {
     if (forceExpand) {
@@ -48,15 +63,6 @@ export default function CommentTextBox({
       }, 100);
     }
   }, [forceExpand]);
-
-  useEffect(() => {
-    if (focusTrigger > 0) {
-      setIsFocused(true);
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 100);
-    }
-  }, [focusTrigger]);
 
   const showBottom = isFocused || content.length > 0 || forceExpand;
 
@@ -140,11 +146,16 @@ export default function CommentTextBox({
     );
   }
 
-  // 데스크톱 렌더링 (기존 유지)
+  // 데스크톱 렌더링
   return (
     <TextBox
       id='COMMENT_CONTENT'
       placeholder={placeholder}
+      topContent={
+        <span className='text-base-l-16-1 text-primary-500'>
+          {taggedUserNickname}
+        </span>
+      }
       value={content}
       onChange={(e) => onContentChange(e.target.value)}
       containerClassName='h-40'

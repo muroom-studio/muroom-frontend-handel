@@ -11,6 +11,7 @@ import { cn } from '../lib/utils';
 import HelperMessage from './HelperMessage';
 
 interface TextBoxProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+  topContent?: React.ReactNode;
   bottomContent?: React.ReactNode;
   helperMessage?: ComponentProps<typeof HelperMessage>;
   containerClassName?: string;
@@ -22,6 +23,7 @@ const TextBox = ({
   className,
   containerClassName,
   textareaClassName,
+  topContent,
   bottomContent,
   helperMessage,
   disabled,
@@ -93,6 +95,10 @@ const TextBox = ({
           'h-full',
         )}
       >
+        {topContent && (
+          <div className='w-full px-4 pb-1 pt-4'>{topContent}</div>
+        )}
+
         <textarea
           id={id}
           value={currentValue}
@@ -103,7 +109,8 @@ const TextBox = ({
           onFocus={handleFocus}
           onBlur={handleBlur}
           className={cn(
-            'w-full resize-none bg-transparent px-4 py-5',
+            'w-full resize-none bg-transparent px-4',
+            topContent ? 'pb-5 pt-0' : 'py-5',
             'min-h-44',
             'text-base-l-16-1 placeholder:text-gray-400 focus:outline-none',
             'flex-1',

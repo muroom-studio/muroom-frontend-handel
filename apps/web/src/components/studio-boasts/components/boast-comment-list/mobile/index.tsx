@@ -15,7 +15,7 @@ import { useStudioBoastsCommentsQuery } from '@/hooks/api/studio-boasts/comments
 import { StudioBoastsCommentDto } from '@/types/studio-boasts/comments';
 import { extractInfiniteData } from '@/utils/query';
 
-import CommentTextBox from '../../comment-text-box';
+import CommentTextBox, { CommentTextBoxHandle } from '../../comment-text-box';
 import BoastCommentCard from '../comment-card';
 
 interface Props {
@@ -42,23 +42,20 @@ export default function MobileBoastCommentList({
 }: Props) {
   const observerRef = useRef<HTMLDivElement>(null);
 
-  // --- [State] ---
+  const textBoxRef = useRef<CommentTextBoxHandle>(null);
+
   const [mode, setMode] = useState<InputMode>('create');
   const [target, setTarget] = useState<TargetData | null>(null);
 
   const [content, setContent] = useState('');
   const [isSecret, setIsSecret] = useState(false);
 
-  const [focusTrigger, setFocusTrigger] = useState(0);
-
-  // --- [Queries] ---
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useStudioBoastsCommentsQuery(
       { studioBoastId },
       { page: 1, size: MOBILE_PAGE_SIZE, isMobile: true },
     );
 
-  // --- [Mutations] ---
   const { mutate: createComment, isPending: isCreating } =
     useCreateStudioBoastsCommentsMutation();
   const { mutate: editComment, isPending: isEditing } =
@@ -67,7 +64,6 @@ export default function MobileBoastCommentList({
   const { content: commentList, pagination } =
     extractInfiniteData<StudioBoastsCommentDto>(data, true);
 
-  // --- [Scroll Helper] ---
   const scrollToTarget = (targetId?: string) => {
     setTimeout(() => {
       if (!targetId) {
@@ -81,14 +77,12 @@ export default function MobileBoastCommentList({
     }, 100);
   };
 
-  // --- [Handlers] ---
   const handleResetMode = () => {
     setMode('create');
     setTarget(null);
     setContent('');
     setIsSecret(false);
 
-    // ✅ 모바일 키보드 닫기 (등록 완료 시 포커스 강제 해제)
     setTimeout(() => {
       if (
         typeof window !== 'undefined' &&
@@ -105,7 +99,7 @@ export default function MobileBoastCommentList({
     setContent('');
     setIsSecret(false);
 
-    setFocusTrigger((prev) => prev + 1);
+    textBoxRef.current?.focus();
     scrollToTarget(commentId);
   };
 
@@ -119,11 +113,10 @@ export default function MobileBoastCommentList({
     setContent(prevContent);
     setIsSecret(prevSecret);
 
-    setFocusTrigger((prev) => prev + 1);
+    textBoxRef.current?.focus();
     scrollToTarget(commentId);
   };
 
-  // --- [Submit Handler] ---
   const handleSubmit = () => {
     if (!content.trim()) return;
 
@@ -204,6 +197,7 @@ export default function MobileBoastCommentList({
       bottomFixedSlotClassName='p-0'
       bottomFixedSlot={
         <CommentTextBox
+          ref={textBoxRef}
           isMobile
           content={content}
           onContentChange={setContent}
@@ -213,7 +207,6 @@ export default function MobileBoastCommentList({
           isPending={isCreating || isEditing}
           onCancel={handleResetMode}
           forceExpand={mode !== 'create'}
-          focusTrigger={focusTrigger}
         />
       }
     >
