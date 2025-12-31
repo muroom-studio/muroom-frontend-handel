@@ -48,10 +48,10 @@ export default function CommentTextBox({
 
   useImperativeHandle(ref, () => ({
     focus: () => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
       setIsFocused(true);
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 50);
     },
   }));
 
@@ -66,6 +66,7 @@ export default function CommentTextBox({
 
   const showBottom = isFocused || content.length > 0 || forceExpand;
 
+  // --- [모바일 렌더링] ---
   if (isMobile) {
     return (
       <motion.div
@@ -146,15 +147,17 @@ export default function CommentTextBox({
     );
   }
 
-  // 데스크톱 렌더링
+  // --- [데스크톱 렌더링] ---
   return (
     <TextBox
       id='COMMENT_CONTENT'
       placeholder={placeholder}
       topContent={
-        <span className='text-base-l-16-1 text-primary-500'>
-          {taggedUserNickname}
-        </span>
+        taggedUserNickname && (
+          <span className='text-base-l-16-1 text-primary-500'>
+            @{taggedUserNickname}
+          </span>
+        )
       }
       value={content}
       onChange={(e) => onContentChange(e.target.value)}

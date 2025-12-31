@@ -2,8 +2,6 @@
 
 import React, { useState } from 'react';
 
-import { useRouter } from 'next/navigation';
-
 import { ExpandedParagraph, UserBaseInfoLabel } from '@muroom/components';
 import { getFormattedDate } from '@muroom/util';
 
@@ -24,8 +22,6 @@ interface Props {
 }
 
 export default function DetailBoastList({ items }: Props) {
-  const router = useRouter();
-
   const [openCommenstModalAndId, setOpenCommentsModalAndId] = useState({
     targetedId: '',
     isOpen: false,
