@@ -43,7 +43,7 @@ export const useEventModal = () => {
         width={420}
         height={384}
         className='h-auto w-full'
-        priority
+        priority={!isMobile}
       />
     </Link>
   );
