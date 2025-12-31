@@ -39,12 +39,12 @@ export default function BoastStudioCard({
     <div
       onClick={onClick}
       className={cn(
-        'rounded-4 h-[188px] w-full bg-gray-50 px-4 py-6 transition-colors',
+        'rounded-4 w-full bg-gray-50 px-4 py-6 transition-colors',
         wrapperClassName,
         {
-          'grid grid-cols-[140px_1fr] gap-x-3':
+          'h-47 grid grid-cols-[140px_1fr] gap-x-3':
             variant === 'known' && !isMobile,
-          'flex flex-col': variant === 'unknown' || isMobile,
+          'h-26 flex flex-col': variant === 'unknown' || isMobile,
         },
       )}
     >
@@ -68,7 +68,7 @@ export default function BoastStudioCard({
                 : '가격문의'}
             </span>
           ) : (
-            <span className='text-title-s-22-2'>{title}</span>
+            <span className='text-title-s-22-2 text-gray-500'>{title}</span>
           )}
 
           {subwayInfo && (

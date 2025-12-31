@@ -22,6 +22,7 @@ export { default as MailIcon } from './Mail';
 export { default as MinusIcon } from './Minus';
 export { default as MoreDotIcon } from './MoreDot';
 export { default as PlusIcon } from './Plus';
+export { default as QuestionFillIcon } from './QuestionFill';
 export { default as ReplyArrowIcon } from './ReplyArrow';
 export { default as ResetIcon } from './Reset';
 export { default as RightArrowIcon } from './RightArrow';

@@ -66,7 +66,6 @@ export default function DetailBoastList({ items }: Props) {
                   title={item.studioInfo.name}
                   minPrice={item.studioInfo.minPrice}
                   maxPrice={item.studioInfo.maxPrice}
-                  thumbnailUrl={item.studioInfo.thumbnailImageFileUrl}
                   subwayInfo={item.studioInfo.nearestSubwayStation}
                   wrapperClassName='cursor-pointer'
                   onClick={() =>
