@@ -37,13 +37,11 @@ export const useEventModal = () => {
 
   const content = (
     <Link href='/studio-boasts' className='block w-full'>
-      <CommonImage
-        src={EventLogo}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={EventLogo.src}
         alt='이벤트 배너'
-        width={420}
-        height={384}
-        className='h-auto w-full'
-        priority
+        className='h-auto w-full object-contain'
       />
     </Link>
   );

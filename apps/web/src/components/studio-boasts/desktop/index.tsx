@@ -72,6 +72,13 @@ export default function DesktopStudioBoastsPage() {
           }}
         />
       </div>
+
+      {studioBoastList.length === 0 && (
+        <div className='flex-center my-25'>
+          <p className='text-base-l-16-1 whitespace-pre-wrap text-center text-gray-400'>{`현재 작성된 글이 없습니다. \n첫 글을 작성해볼까요?`}</p>
+        </div>
+      )}
+
       <div className='grid grid-cols-3 gap-6'>
         {studioBoastList.map((item) => (
           <BoastThumnailCard

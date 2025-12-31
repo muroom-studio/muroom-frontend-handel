@@ -3,12 +3,19 @@ import type { NextRequest } from 'next/server';
 
 const GUEST_ONLY_PATHS = ['/welcome', '/login', '/join'];
 
-const PUBLIC_PATHS = ['/home', '/search', '/terms', '/', '/studio-boasts'];
+const PUBLIC_PATHS = [
+  '/home',
+  '/search',
+  '/terms',
+  '/',
+  '/studio-boasts',
+  '/extra',
+];
 
 const AUTH_REQUIRED_PATHS = [
   '/logout',
-  '/mypage',
-  '/extra',
+  '/mypage/profile',
+  '/mypage/cs/inquiry',
   '/studio-boasts/new',
 ];
 

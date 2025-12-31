@@ -8,6 +8,7 @@ import { Button, TabBar, TabItem } from '@muroom/components';
 import PageWrapper from '@/components/common/page-wrapper';
 import FaqBoard from '@/components/mypage/cs/components/faq';
 import InquiriesBoard from '@/components/mypage/cs/components/inquiries';
+import { useAuthCheck } from '@/hooks/auth/useAuthCheck';
 import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
 
 const tabs: TabItem[] = [
@@ -16,6 +17,8 @@ const tabs: TabItem[] = [
 ];
 
 export default function Page() {
+  const { isLoggedIn } = useAuthCheck();
+
   const { isMobile } = useResponsiveLayout();
   const router = useRouter();
   const pathname = usePathname();
@@ -50,6 +53,26 @@ export default function Page() {
       </div>
     </div>
   );
+
+  if (!isLoggedIn) {
+    return (
+      <PageWrapper title='FAQ'>
+        <FaqBoard />
+      </PageWrapper>
+    );
+  }
+
+  if (isMobile && !isLoggedIn) {
+    return (
+      <PageWrapper
+        isMobile
+        isHeader={{ title: 'FAQ', onBackClick: () => router.back() }}
+        contentClassName='px-5 pt-6'
+      >
+        <FaqBoard isMobile={isMobile} />
+      </PageWrapper>
+    );
+  }
 
   if (isMobile) {
     return (

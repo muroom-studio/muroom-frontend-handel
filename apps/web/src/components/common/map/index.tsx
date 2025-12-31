@@ -32,6 +32,7 @@ import { StudiosMapSearchItem } from '@/types/studios';
 
 import CompareBtn from './ui/compare-btn';
 import CurrentLocationBtn from './ui/current-location-btn';
+import FaqButton from './ui/faq-btn';
 import LocationTag from './ui/location-tag';
 import ZoomControls from './ui/zoom-control-btn';
 
@@ -211,13 +212,10 @@ export default function CommonMap({
           {sheetY && (
             <motion.div
               className='pointer-events-none absolute left-0 top-0 z-50 w-full px-4'
-              // [수정됨] sheetY 대신 제한된 uiY 사용
               style={{ y: uiY }}
             >
               <div
                 className={
-                  // -translate-y-full: 자신의 높이만큼 위로 올려 바텀시트 상단에 붙임
-                  // pb-4: 바텀시트와의 간격 16px 확보
                   'relative flex w-full -translate-y-full flex-col pb-4'
                 }
               >
@@ -258,7 +256,7 @@ export default function CommonMap({
           className='absolute bottom-10 left-1/2 z-50 -translate-x-1/2'
         />
 
-        {/* <CompareBtn className='absolute bottom-12 right-10 z-50' /> */}
+        <FaqButton className='absolute bottom-12 right-10 z-50' />
       </>
     );
   };

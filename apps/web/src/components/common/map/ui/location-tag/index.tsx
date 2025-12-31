@@ -1,5 +1,6 @@
 'use client';
 
+import { Spinner } from '@muroom/components';
 import { LocationIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 
@@ -28,7 +29,7 @@ export default function LocationTag({
       )}
     >
       <LocationIcon className='size-5' />
-      <span>{regionName || '로딩중'}</span>
+      {regionName ? <span>{regionName}</span> : <Spinner variant='component' />}
     </div>
   );
 }

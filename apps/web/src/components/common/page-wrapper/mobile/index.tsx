@@ -46,10 +46,29 @@ const MobilePageWrapper = ({
 }: Props) => {
   const [isVisible, setIsVisible] = useState(true);
 
-  // --- [Case A] 스크롤 감지 로직 ---
+  // --- [Case 1] 스크롤 감지 슬롯 (bottomSlot) 로직 ---
   const [showBottomSlot, setShowBottomSlot] = useState(false);
-  const mainRef = useRef<HTMLDivElement>(null);
 
+  // 스크롤이 발생하는 컨테이너를 참조해야 함
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = () => {
+    if (!bottomSlot || !scrollContainerRef.current) return;
+
+    const { scrollTop, scrollHeight, clientHeight } =
+      scrollContainerRef.current;
+
+    // 오차범위 10px 내로 바닥에 도달했는지 체크
+    const isBottom = scrollTop + clientHeight >= scrollHeight - 10;
+    setShowBottomSlot(isBottom);
+  };
+
+  useEffect(() => {
+    // 초기 렌더링 시 스크롤이 필요 없는 짧은 컨텐츠라면 바로 bottomSlot을 보여줄지 결정
+    if (bottomSlot) handleScroll();
+  }, [children, bottomSlot]);
+
+  // --- 모달 닫기 애니메이션 ---
   const handleCloseAnimation = useCallback(() => {
     setIsVisible(false);
   }, []);
@@ -59,22 +78,6 @@ const MobilePageWrapper = ({
     if (onClose) onClose();
   };
 
-  const handleScroll = () => {
-    if (!bottomSlot || !mainRef.current) return;
-
-    const { scrollTop, scrollHeight, clientHeight } = mainRef.current;
-
-    // ✅ [수정] 강제 노출 로직 제거. 오직 스크롤 위치 계산만 수행
-    // 오차범위 20px 내로 바닥에 도달했는지 체크
-    const isBottom = scrollTop + clientHeight >= scrollHeight - 20;
-    setShowBottomSlot(isBottom);
-  };
-
-  useEffect(() => {
-    if (bottomSlot) handleScroll();
-  }, [children, bottomSlot]);
-  // -----------------------------------------------------------
-
   const modalHeaderProps =
     isModal && isHeader
       ? {
@@ -83,11 +86,12 @@ const MobilePageWrapper = ({
         }
       : isHeader;
 
-  const renderContent = (
+  // --- 렌더링 레이아웃 구조 ---
+  const renderLayout = (
     headerProps: ComponentProps<typeof Header> | undefined,
   ) => (
     <>
-      {/* 1. Header */}
+      {/* 1. Header (최상단 고정) */}
       {headerProps && (
         <Header
           {...headerProps}
@@ -98,40 +102,52 @@ const MobilePageWrapper = ({
         />
       )}
 
-      {/* 2. Main Content */}
-      <main
-        ref={mainRef}
+      {/* 2. Scrollable Container (헤더 제외 나머지 영역) 
+          - flex-1: 남은 공간 모두 차지
+          - overflow-y-auto: 내용이 넘치면 여기서 스크롤 발생
+          - flex-col: 내부 컨텐츠와 푸터를 세로로 배치
+      */}
+      <div
+        ref={scrollContainerRef}
         onScroll={handleScroll}
-        className={cn(
-          'scrollbar-hide w-full flex-1 overflow-y-auto px-5 pt-10',
-          contentClassName,
-        )}
+        className='scrollbar-hide flex flex-1 flex-col overflow-y-auto bg-white'
       >
-        {children}
+        {/* 2-A. Main Content 
+            - flex-1: 컨텐츠가 짧아도 이 영역이 늘어나서 푸터를 바닥으로 밀어버림
+        */}
+        <main className={cn('w-full flex-1 px-5 pt-10', contentClassName)}>
+          {children}
+        </main>
 
-        {isFooter && (
-          <div className={cn('pt-20', footerClassName)}>
-            <Footer isMobile />
+        {/* 2-B. Footer & BottomFixedSlot Area 
+            - flex-none: 높이만큼만 공간 차지
+            - 스크롤 컨테이너 내부에 있으므로, 컨텐츠가 길면 스크롤 끝에 위치함
+        */}
+        {(isFooter || bottomFixedSlot) && (
+          <div className='z-40 w-full flex-none bg-white'>
+            {/* [Case 2] Bottom Fixed Slot */}
+            {bottomFixedSlot && (
+              <div className={cn('px-5 pb-9', bottomFixedSlotClassName)}>
+                {bottomFixedSlot}
+              </div>
+            )}
+
+            {/* [Case 3] Footer */}
+            {isFooter && (
+              <div className={cn('pt-4', footerClassName)}>
+                <Footer isMobile />
+              </div>
+            )}
+
+            {/* [Case 1 대응] bottomSlot이 존재할 경우 가려짐 방지용 여백 */}
+            {bottomSlot && <div className='h-20 w-full' />}
           </div>
         )}
+      </div>
 
-        {/* [Case A] bottomSlot 사용 시 스페이서 */}
-        {bottomSlot && <div className='h-36 w-full flex-none' />}
-      </main>
-
-      {/* 3. [Case B] Bottom Fixed Slot (댓글창용, 키보드 대응) */}
-      {bottomFixedSlot && (
-        <div
-          className={cn(
-            'z-50 w-full flex-none bg-white px-5 pb-9',
-            bottomFixedSlotClassName,
-          )}
-        >
-          {bottomFixedSlot}
-        </div>
-      )}
-
-      {/* 4. [Case A] Bottom Slot (스크롤 감지) */}
+      {/* 3. [Case 1] Scroll Triggered Bottom Slot (Absolute Overlay) 
+          - 스크롤 컨테이너 바깥(뷰포트 기준)에 배치하여 위에 뜸
+      */}
       <AnimatePresence>
         {bottomSlot && showBottomSlot && (
           <motion.div
@@ -143,7 +159,7 @@ const MobilePageWrapper = ({
               stiffness: 300,
               damping: 30,
             }}
-            className='absolute bottom-0 z-50 w-full bg-white'
+            className='absolute bottom-0 z-[60] w-full bg-white'
           >
             <div className={cn('px-5 pb-9 pt-3', bottomSlotClassName)}>
               {bottomSlot}
@@ -154,7 +170,7 @@ const MobilePageWrapper = ({
     </>
   );
 
-  // --- [Render 1] 모달 모드 ---
+  // --- [Render A] 모달 모드 ---
   if (isModal) {
     return (
       <AnimatePresence onExitComplete={onAnimationComplete}>
@@ -175,14 +191,14 @@ const MobilePageWrapper = ({
               className,
             )}
           >
-            {renderContent(modalHeaderProps)}
+            {renderLayout(modalHeaderProps)}
           </motion.div>
         )}
       </AnimatePresence>
     );
   }
 
-  // --- [Render 2] 일반 모드 ---
+  // --- [Render B] 일반 페이지 모드 ---
   return (
     <div
       className={cn(
@@ -190,7 +206,7 @@ const MobilePageWrapper = ({
         className,
       )}
     >
-      {renderContent(isHeader)}
+      {renderLayout(isHeader)}
     </div>
   );
 };
