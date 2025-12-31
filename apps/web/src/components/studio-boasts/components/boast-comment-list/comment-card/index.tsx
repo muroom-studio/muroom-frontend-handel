@@ -173,13 +173,11 @@ export default function BoastCommentCard({
             likeCount={commentData.likeCount}
             onLikeSelf={commentData.isLikedByRequestUser}
           />
-          {!isReply && (
-            <StudioBoastsCommentButton
-              isComment
-              commentCount={replies?.length || 0}
-              onClick={handleReplyToggle}
-            />
-          )}
+          <StudioBoastsCommentButton
+            isComment
+            commentCount={replies?.length || 0}
+            onClick={handleReplyToggle}
+          />
         </div>
       </div>
     );

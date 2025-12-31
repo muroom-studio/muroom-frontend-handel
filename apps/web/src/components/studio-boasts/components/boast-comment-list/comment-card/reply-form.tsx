@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 
-import { toast } from 'sonner';
-
 import { ReplyArrowIcon } from '@muroom/icons';
 
 import CommentTextBox from '@/components/studio-boasts/components/comment-text-box';
@@ -65,6 +63,7 @@ export default function BoastCommentsReplyForm({
       <div className='flex-1'>
         <CommentTextBox
           isMobile={isMobile}
+          taggedUserNickname={taggedUserNickname}
           content={content}
           onContentChange={setContent}
           isSecret={isSecret}

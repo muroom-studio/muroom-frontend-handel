@@ -120,8 +120,6 @@ export default function StudioBoastsDetailPage({ targetedId }: Props) {
               maxPrice={studioInfo.maxPrice}
               thumbnailUrl={studioInfo.thumbnailImageFileUrl}
               subwayInfo={studioInfo.nearestSubwayStation}
-              wrapperClassName='cursor-pointer'
-              onClick={() => router.push(`/home?studioId=${studioInfo.id}`)}
             />
           ) : unknownStudioInfo ? (
             <BoastStudioCard

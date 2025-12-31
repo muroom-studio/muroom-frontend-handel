@@ -1,5 +1,7 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
 import { Badge } from '@muroom/components';
 import { cn } from '@muroom/lib';
 
@@ -8,20 +10,19 @@ import { NearestSubwayStationDto } from '@/types/studio';
 
 interface Props {
   variant: 'known' | 'unknown';
-  id: string;
-  title: string;
-  subwayInfo?: NearestSubwayStationDto;
-  minPrice?: number;
-  maxPrice?: number;
-  thumbnailUrl?: string | null;
-  address?: string;
+  id: string; // Known 필수
+  title: string; // Common
+  subwayInfo?: NearestSubwayStationDto; // Known
+  minPrice?: number; // Known
+  maxPrice?: number; // Known
+  thumbnailUrl?: string | null; // Known (Desktop only)
+  address?: string; // Unknown
   isMobile?: boolean;
-  onClick?: () => void;
   wrapperClassName?: string;
 }
 
 export default function BoastStudioCard({
-  isMobile,
+  isMobile = false,
   variant,
   id,
   title,
@@ -30,26 +31,34 @@ export default function BoastStudioCard({
   thumbnailUrl,
   subwayInfo,
   address,
-  onClick,
   wrapperClassName,
 }: Props) {
+  const router = useRouter();
+
   const { stationName, distanceInMeters, lines } = subwayInfo || {};
+
+  const showThumbnail = !isMobile && variant === 'known' && thumbnailUrl;
+
+  const handleCardClick = () => {
+    if (variant === 'known') {
+      router.push(`/home?studioId=${id}`);
+    }
+    return;
+  };
 
   return (
     <div
-      onClick={onClick}
+      onClick={handleCardClick}
       className={cn(
         'rounded-4 w-full bg-gray-50 px-4 py-6 transition-colors',
         wrapperClassName,
-        {
-          'h-47 grid grid-cols-[140px_1fr] gap-x-3':
-            variant === 'known' && !isMobile,
-          'h-26 flex flex-col': variant === 'unknown' || isMobile,
-        },
+        showThumbnail ? 'grid grid-cols-[140px_1fr] gap-x-3' : 'flex flex-col',
+        variant === 'known' && 'h-47 cursor-pointer',
       )}
     >
-      {variant === 'known' && thumbnailUrl && (
-        <div className='rounded-4 relative h-[140px] w-[140px] shrink-0 overflow-hidden'>
+      {/* --- [A] 썸네일 영역 (Desktop & Known Only) --- */}
+      {showThumbnail && (
+        <div className='rounded-4 size-35 relative shrink-0 overflow-hidden'>
           <CommonImage
             src={thumbnailUrl}
             alt={`${id}-${title}`}
@@ -59,8 +68,10 @@ export default function BoastStudioCard({
         </div>
       )}
 
+      {/* --- [B] 정보 영역 --- */}
       <div className={cn('flex h-full flex-col justify-between')}>
         <div className='flex flex-col gap-y-3'>
+          {/* 1. 상단: 가격(Known) vs 타이틀(Unknown) */}
           {variant === 'known' ? (
             <span className='text-title-s-22-2'>
               {minPrice && maxPrice
@@ -71,7 +82,8 @@ export default function BoastStudioCard({
             <span className='text-title-s-22-2 text-gray-500'>{title}</span>
           )}
 
-          {subwayInfo && (
+          {/* 2. 중단: 지하철 정보 (Known Only) */}
+          {variant === 'known' && subwayInfo && (
             <div className='flex items-center gap-x-1'>
               {Array.isArray(lines) && lines.length > 0 && lines[0] && (
                 <Badge
@@ -86,19 +98,18 @@ export default function BoastStudioCard({
               </p>
             </div>
           )}
-        </div>
 
-        <div className='mt-auto'>
-          {variant === 'known' ? (
-            <div className='text-base-m-14-1 text-gray-500'>
-              <span>{title}</span>
-            </div>
-          ) : (
+          {variant === 'unknown' && (
             <p className='text-base-m-14-1 break-keep text-gray-500'>
               {address}
             </p>
           )}
         </div>
+
+        {/* 3. 하단: 타이틀(Known) vs 주소(Unknown) */}
+        {variant === 'known' && (
+          <p className='text-base-m-14-1 break-keep text-gray-500'>{title}</p>
+        )}
       </div>
     </div>
   );
