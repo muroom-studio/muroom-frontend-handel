@@ -5,9 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 
 import { Button, Modal, ModalBottomSheet } from '@muroom/components';
-import EventLogo from '@muroom/ui/assets/event-logo.svg';
-
-import CommonImage from '@/components/common/common-image';
+import EventLogo from '@muroom/ui/assets/event-logo.png';
 
 import { useResponsiveLayout } from '../common/useResponsiveLayout';
 
