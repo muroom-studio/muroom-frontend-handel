@@ -17,6 +17,7 @@ export default function BoastEventBanner({ isMobile = false }: Props) {
 
   const content = (
     <div className='text-base-m-14-1 flex flex-col'>
+      {isMobile && <span className='text-base-exl-18-2 mb-5'>이벤트 안내</span>}
       <p>이벤트 참여기간 : 2025.12.29(월)~2026.01.12(화)</p>
       <p>당첨자 발표 : 2026.01.13.(수)</p>
 
