@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import Script from 'next/script';
 
+import { GoogleAnalytics } from '@next/third-parties/google';
 import { NuqsAdapter } from 'nuqs/adapters/next';
 
 import MapProvider from '@/components/providers/map-provider';
@@ -22,13 +23,11 @@ const pretendard = localFont({
 export const metadata: Metadata = {
   title: '뮤룸 (Muroom) | 우리들의 음악 공간',
   description: '뮤룸에서 쉽고 빠르게 뮤지션을 위한 음악 작업실을 올려보세요.',
-
   openGraph: {
     title: '뮤룸 (Muroom) | 우리들의 음악 공간',
     description: '뮤룸에서 쉽고 빠르게 뮤지션을 위한 음악 작업실을 올려보세요.',
     url: 'https://muroom.kr',
     siteName: '뮤룸 (Muroom)',
-
     images: [
       {
         url: 'https://muroom.kr/images/screenshot.png',
@@ -42,6 +41,8 @@ export const metadata: Metadata = {
   },
 };
 
+const GA_ID = 'G-WX0PPKWV5W';
+
 export default function RootLayout({
   children,
   modal,
@@ -50,8 +51,14 @@ export default function RootLayout({
   modal: React.ReactNode;
 }) {
   return (
-    <html lang='en'>
+    <html lang='ko'>
       <body className={pretendard.className}>
+        <GoogleAnalytics gaId={GA_ID} />
+        <Script
+          strategy='afterInteractive'
+          src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${NCP_CLIENT_ID}`}
+        />
+
         <RQProvider>
           <NuqsAdapter>
             <MapProvider>
@@ -63,10 +70,6 @@ export default function RootLayout({
             </MapProvider>
           </NuqsAdapter>
         </RQProvider>
-        <Script
-          strategy='afterInteractive'
-          src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${NCP_CLIENT_ID}`}
-        />
       </body>
     </html>
   );
