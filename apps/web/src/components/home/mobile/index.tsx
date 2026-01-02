@@ -1,5 +1,7 @@
 'use client';
 
+import { notFound } from 'next/navigation';
+
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
 
 import { BottomSheet } from '@muroom/components';
@@ -24,6 +26,7 @@ interface Props {
   studios: StudiosMapListItem[];
   totalElements: number;
   detailStudio?: StudioDetailResponseProps;
+  isDetailLoading?: boolean;
   markersData: StudiosMapSearchItem[];
   isLoading: boolean;
 
@@ -50,6 +53,7 @@ export default function MobileHomePage({
   studios,
   totalElements,
   detailStudio,
+  isDetailLoading,
   markersData,
   isLoading,
   infiniteScroll,
@@ -60,6 +64,10 @@ export default function MobileHomePage({
 
   if (isLoading) {
     return <Loading />;
+  }
+
+  if (mapValue.studioId && !isDetailLoading && !detailStudio) {
+    return notFound();
   }
 
   return (

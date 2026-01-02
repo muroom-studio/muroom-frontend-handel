@@ -55,9 +55,6 @@ export default function QuitAlert({ isMobile, isOpen, onClose }: Props) {
           onClose();
           router.push('/logout');
         },
-        onError: () => {
-          toast.error('탈퇴 처리가 실패했습니다.');
-        },
       },
     );
   };

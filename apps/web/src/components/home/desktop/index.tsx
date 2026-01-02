@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from 'react';
 
+import { notFound } from 'next/navigation';
+
 import { Button, Spinner } from '@muroom/components';
 import { ResetIcon } from '@muroom/icons';
 
@@ -94,6 +96,10 @@ export default function DesktopHomePage({
     return <Loading />;
   }
 
+  if (mapValue.studioId && !isDetailLoading && !detailStudio) {
+    return notFound();
+  }
+
   return (
     <div className='flex h-screen flex-1 flex-col'>
       {EventModal}
@@ -121,7 +127,7 @@ export default function DesktopHomePage({
         </div>
 
         <div
-          className='mb-23 grid min-h-0 flex-1'
+          className='mb-20 grid min-h-0 flex-1'
           style={{
             gridTemplateColumns,
             transition: 'grid-template-columns 0.2s ease-in-out',

@@ -106,7 +106,6 @@ export default function NicknameEditAlert({
           onClose();
         },
         onError: () => {
-          toast.error('닉네임 변경이 실패했습니다.');
           setNickname('');
         },
       },

@@ -9,6 +9,7 @@ import {
   postMusicianLogin,
   postMusicianRegister,
 } from '@/lib/musician';
+import { ApiRequestError } from '@/types/api';
 import {
   MusicianLoginRequestProps,
   MusicianLoginResponseProps,
@@ -19,7 +20,7 @@ import {
 
 const useMusicianLoginMutation = (): UseMutationResult<
   MusicianLoginResponseProps,
-  Error,
+  ApiRequestError,
   MusicianLoginRequestProps
 > => {
   return useMutation({
@@ -29,7 +30,7 @@ const useMusicianLoginMutation = (): UseMutationResult<
 
 const useMusicianRegisterMutation = (): UseMutationResult<
   MusicianRegisterResponseProps,
-  Error,
+  ApiRequestError,
   MusicianRegisterRequestProps
 > => {
   return useMutation({
@@ -39,7 +40,7 @@ const useMusicianRegisterMutation = (): UseMutationResult<
 
 const useMusicianMeDetailMutation = (): UseMutationResult<
   any,
-  Error,
+  ApiRequestError,
   MusicianMeDetailRequestDto
 > => {
   const queryClient = useQueryClient();
@@ -52,10 +53,6 @@ const useMusicianMeDetailMutation = (): UseMutationResult<
       if (variables.nickname || variables.instrumentId) {
         queryClient.invalidateQueries({ queryKey: ['musician', 'me'] });
       }
-    },
-
-    onError: (error) => {
-      console.error('프로필 수정 실패:', error);
     },
   });
 };

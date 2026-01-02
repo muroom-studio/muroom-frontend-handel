@@ -36,7 +36,6 @@ export default function InstrumentEditAlert({
           onClose();
         },
         onError: () => {
-          toast.error('악기 변경이 실패했습니다.');
           setInstrumentId(0);
         },
       },

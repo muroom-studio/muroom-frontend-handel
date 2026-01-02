@@ -27,6 +27,12 @@ function RQProvider({ children }: Props) {
           refetchOnReconnect: false,
           retry: false,
           retryOnMount: true,
+          throwOnError: (error) => {
+            if (error instanceof ApiRequestError) {
+              return error.status >= 500;
+            }
+            return false;
+          },
         },
       },
       mutationCache: new MutationCache({
@@ -39,25 +45,10 @@ function RQProvider({ children }: Props) {
             toast.success(meta.successMessage);
           }
         },
-        onError: (error, _variables, _context, mutation) => {
-          const meta = mutation.options.meta as
-            | { showErrorToast?: boolean }
-            | undefined;
-
-          if (!meta?.showErrorToast) {
-            return;
-          }
-
+        onError: (error) => {
           if (error instanceof ApiRequestError) {
             toast.error(error.message);
-            return;
           }
-
-          const errorMessage =
-            error instanceof Error
-              ? error.message
-              : '알 수 없는 오류가 발생했습니다.';
-          toast.error(errorMessage);
         },
       }),
     }),

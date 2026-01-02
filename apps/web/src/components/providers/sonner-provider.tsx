@@ -34,6 +34,7 @@ function SonnerProvider() {
           }
         `,
         classNames: {
+          error: '!bg-[#FB2C36]',
           icon: '!hidden',
           actionButton:
             '!ml-auto !bg-transparent !text-white !text-base-m-14-2 !shrink-0 !cursor-pointer hover:!bg-gray-600',

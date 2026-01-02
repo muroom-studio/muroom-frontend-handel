@@ -1,13 +1,7 @@
 import { HttpErrorStatusCode, HttpSuccessStatusCode } from './http';
 
-export interface ApiErrorDetail {
-  field: string;
-  issue: string;
-}
-
 export interface ApiErrorData {
   code: string;
-  details?: ApiErrorDetail[];
 }
 
 type SuccessResponse<T> = {
@@ -29,11 +23,7 @@ export class ApiRequestError extends Error {
   code?: string;
 
   constructor(response: ErrorResponse) {
-    const detailedMessage = response.data?.details?.[0]?.issue;
-    const superMessage =
-      detailedMessage || response.message || '알 수 없는 오류가 발생했습니다.';
-
-    super(superMessage);
+    super(response.message);
 
     this.name = 'ApiRequestError';
     this.status = response.status;

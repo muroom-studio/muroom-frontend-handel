@@ -12,6 +12,7 @@ import {
   postStudioBoastsCommentsReport,
   putStudioBoastsComments,
 } from '@/lib/studio-boasts/comments';
+import { ApiRequestError } from '@/types/api';
 import {
   StudioBoastsCommentsLikesRequestProps,
   StudioBoastsCommentsReportRequestProps,
@@ -23,7 +24,7 @@ import {
 // 댓글/대댓글 생성
 const useCreateStudioBoastsCommentsMutation = (): UseMutationResult<
   any,
-  Error,
+  ApiRequestError,
   StudioBoastsCreateCommentsRequestProps
 > => {
   const queryClient = useQueryClient();
@@ -45,7 +46,7 @@ const useCreateStudioBoastsCommentsMutation = (): UseMutationResult<
 // 댓글 수정
 const useEditStudioBoastsCommentsMutation = (): UseMutationResult<
   any,
-  Error,
+  ApiRequestError,
   StudioBoastsEditCommentsRequestProps
 > => {
   const queryClient = useQueryClient();
@@ -67,7 +68,7 @@ const useEditStudioBoastsCommentsMutation = (): UseMutationResult<
 // 댓글 삭제
 const useDeleteStudioBoastsCommentsMutation = (): UseMutationResult<
   any,
-  Error,
+  ApiRequestError,
   StudioBoastsDeleteCommentsRequestProps
 > => {
   const queryClient = useQueryClient();
@@ -89,7 +90,7 @@ const useDeleteStudioBoastsCommentsMutation = (): UseMutationResult<
 // 댓글 좋아요
 const useStudioBoastsCommentsLikeMutation = (): UseMutationResult<
   any,
-  Error,
+  ApiRequestError,
   StudioBoastsCommentsLikesRequestProps
 > => {
   const queryClient = useQueryClient();
@@ -107,7 +108,7 @@ const useStudioBoastsCommentsLikeMutation = (): UseMutationResult<
 // 댓글 좋아요 취소
 const useStudioBoastsCommentsUnlikeMutation = (): UseMutationResult<
   any,
-  Error,
+  ApiRequestError,
   StudioBoastsCommentsLikesRequestProps
 > => {
   const queryClient = useQueryClient();
@@ -125,7 +126,7 @@ const useStudioBoastsCommentsUnlikeMutation = (): UseMutationResult<
 // 댓글 신고
 const useStudioBoastsCommentsReportMutation = (): UseMutationResult<
   any,
-  Error,
+  ApiRequestError,
   StudioBoastsCommentsReportRequestProps
 > => {
   return useMutation({
