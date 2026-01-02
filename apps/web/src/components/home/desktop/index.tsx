@@ -37,7 +37,6 @@ interface Props {
   markersData: StudiosMapSearchItem[];
   isLoading: boolean;
   isListLoading: boolean;
-  // --- 추가된 Pagination & Infinite Scroll Props ---
   pagination: {
     currentPage: number;
     totalPages: number;
@@ -92,13 +91,15 @@ export default function DesktopHomePage({
 
   const { EventModal } = useEventModal();
 
-  useEffect(() => {
-    if (mapValue.studioId && !isDetailLoading && !detailStudio) {
-      return notFound();
-    }
-  }, [detailStudio, isDetailLoading, mapValue.studioId]);
+  const isNotFound = !!mapValue.studioId && !isDetailLoading && !detailStudio;
 
-  if (isLoading) {
+  useEffect(() => {
+    if (isNotFound) {
+      notFound();
+    }
+  }, [isNotFound]);
+
+  if (isLoading || isNotFound) {
     return <Loading />;
   }
 

@@ -64,13 +64,15 @@ export default function MobileHomePage({
 
   const { EventModal } = useEventModal();
 
-  useEffect(() => {
-    if (mapValue.studioId && !isDetailLoading && !detailStudio) {
-      return notFound();
-    }
-  }, [detailStudio, isDetailLoading, mapValue.studioId]);
+  const isNotFound = !!mapValue.studioId && !isDetailLoading && !detailStudio;
 
-  if (isLoading) {
+  useEffect(() => {
+    if (isNotFound) {
+      notFound();
+    }
+  }, [isNotFound]);
+
+  if (isLoading || isNotFound) {
     return <Loading />;
   }
 

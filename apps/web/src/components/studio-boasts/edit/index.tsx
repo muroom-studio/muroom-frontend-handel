@@ -32,6 +32,18 @@ export default function StudioBoastsEditPage({
   });
   const { mutate: editMutate, isPending } = usePutStudioBoastsMutation();
 
+  const isNotFound = !!studioBoastId && !isLoading && !boastData;
+
+  useEffect(() => {
+    if (isNotFound) {
+      notFound();
+    }
+  }, [isNotFound]);
+
+  if (isLoading || isNotFound) {
+    return <Loading />;
+  }
+
   const handleEditSubmit = (
     dto: Omit<CreateStudioBoastsRequestProps, 'imageFileKeys'>,
     imageFileKeys: string[],
@@ -75,12 +87,6 @@ export default function StudioBoastsEditPage({
       };
     });
   };
-
-  useEffect(() => {
-    if (!isLoading && !boastData) return notFound();
-  }, [boastData, isLoading]);
-
-  if (isLoading) return <Loading />;
 
   return (
     <StudioBoastsEditorForm
