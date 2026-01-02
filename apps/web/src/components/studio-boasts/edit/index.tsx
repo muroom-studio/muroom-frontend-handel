@@ -7,6 +7,7 @@ import { notFound, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 import Loading from '@/app/loading';
+import NotFound from '@/app/not-found';
 import { ImageItem } from '@/components/common/image-uploader';
 import { usePutStudioBoastsMutation } from '@/hooks/api/studio-boasts/useMutations';
 import { useStudioBoastsDetailQuery } from '@/hooks/api/studio-boasts/useQueries';
@@ -32,16 +33,12 @@ export default function StudioBoastsEditPage({
   });
   const { mutate: editMutate, isPending } = usePutStudioBoastsMutation();
 
-  const isNotFound = !!studioBoastId && !isLoading && !boastData;
-
-  useEffect(() => {
-    if (isNotFound) {
-      notFound();
-    }
-  }, [isNotFound]);
-
-  if (isLoading || isNotFound) {
+  if (isLoading) {
     return <Loading />;
+  }
+
+  if (studioBoastId && !isLoading && !boastData) {
+    return <NotFound />;
   }
 
   const handleEditSubmit = (

@@ -9,6 +9,7 @@ import { Button, UserBaseInfoLabel } from '@muroom/components';
 import { getFormattedDate } from '@muroom/util';
 
 import Loading from '@/app/loading';
+import NotFound from '@/app/not-found';
 import { useStudioBoastsDetailQuery } from '@/hooks/api/studio-boasts/useQueries';
 import { useAuthCheck } from '@/hooks/auth/useAuthCheck';
 import { LoginLink } from '@/hooks/auth/useAuthRedirect';
@@ -37,17 +38,12 @@ export default function StudioBoastsDetailPage({ targetedId }: Props) {
     isLoading: isStudioBoastsDetailLoading,
   } = useStudioBoastsDetailQuery({ studioBoastId: targetedId });
 
-  const isNotFound =
-    !!targetedId && !isStudioBoastsDetailLoading && !studioBoastsDetailData;
-
-  useEffect(() => {
-    if (isNotFound) {
-      notFound();
-    }
-  }, [isNotFound]);
-
-  if (isStudioBoastsDetailLoading || isNotFound) {
+  if (isStudioBoastsDetailLoading) {
     return <Loading />;
+  }
+
+  if (targetedId && !isStudioBoastsDetailLoading && !studioBoastsDetailData) {
+    return <NotFound />;
   }
 
   const studioInfo = studioBoastsDetailData?.studioInfo;

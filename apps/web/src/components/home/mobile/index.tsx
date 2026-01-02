@@ -9,6 +9,7 @@ import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
 import { BottomSheet } from '@muroom/components';
 
 import Loading from '@/app/loading';
+import NotFound from '@/app/not-found';
 import CommonDetailStudio from '@/components/common/detail-studio';
 import CommonMap from '@/components/common/map';
 import { MapState } from '@/hooks/nuqs/home/useMapState';
@@ -64,16 +65,12 @@ export default function MobileHomePage({
 
   const { EventModal } = useEventModal();
 
-  const isNotFound = !!mapValue.studioId && !isDetailLoading && !detailStudio;
-
-  useEffect(() => {
-    if (isNotFound) {
-      notFound();
-    }
-  }, [isNotFound]);
-
-  if (isLoading || isNotFound) {
+  if (isLoading) {
     return <Loading />;
+  }
+
+  if (mapValue.studioId && !isDetailLoading && !detailStudio) {
+    return <NotFound />;
   }
 
   return (
