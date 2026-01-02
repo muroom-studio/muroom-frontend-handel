@@ -53,7 +53,6 @@ export default function StudioBoastsMoreButton({
         { studioBoastId, commentId },
         {
           onSuccess: () => toast.success('댓글이 삭제되었습니다.'),
-          onError: () => toast.error('댓글 삭제 실패'),
         },
       );
       return;
@@ -68,7 +67,6 @@ export default function StudioBoastsMoreButton({
             router.replace('/studio-boasts');
           }
         },
-        onError: () => toast.error('삭제 실패'),
       },
     );
   };

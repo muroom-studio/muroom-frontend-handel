@@ -49,7 +49,6 @@ export default function BoastCommentsReplyForm({
           setIsSecret(false);
           onSuccess();
         },
-        onError: (err) => console.error(err.message),
       },
     );
   };

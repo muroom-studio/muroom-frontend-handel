@@ -39,7 +39,7 @@ export default function CurrentLocationBtn({
       });
     },
     onError: (error) => {
-      alert('위치 탐색 중 에러 발생: ' + error.message);
+      console.error(error.message);
     },
   });
 

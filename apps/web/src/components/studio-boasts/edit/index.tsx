@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
 
 import { toast } from 'sonner';
 
@@ -53,9 +53,6 @@ export default function StudioBoastsEditPage({
             router.replace(`/studio-boasts/${studioBoastId}`);
           }
         },
-        onError: () => {
-          toast.error('매물 자랑 수정에 실패했습니다.');
-        },
       },
     );
   };
@@ -79,24 +76,35 @@ export default function StudioBoastsEditPage({
 
   if (isLoading) return <Loading />;
 
-  if (!boastData) return null;
+  if (!isLoading && !boastData) return notFound();
 
   return (
     <StudioBoastsEditorForm
       isMobile={isMobile}
       isPending={isPending}
       initialValues={{
-        content: boastData.content,
+        content: boastData?.content,
         studioName:
-          boastData.studioInfo?.name || boastData.unknownStudioInfo?.name || '',
-        roadNameAddress: boastData.unknownStudioInfo?.roadNameAddress || '',
-        lotNumberAddress: boastData.unknownStudioInfo?.lotNumberAddress || '',
-        detailedAddress: boastData.unknownStudioInfo?.detailedAddress || '',
-        studioId: boastData.studioInfo?.id || '',
-        instagramAccount: boastData.creatorUserInfo?.instagramAccount || '',
+          boastData?.studioInfo?.name ||
+          boastData?.unknownStudioInfo?.name ||
+          '',
+        roadNameAddress:
+          boastData?.studioInfo?.roadNameAddress ||
+          boastData?.unknownStudioInfo?.roadNameAddress ||
+          '',
+        lotNumberAddress:
+          boastData?.studioInfo?.lotNumberAddress ||
+          boastData?.unknownStudioInfo?.lotNumberAddress ||
+          '',
+        detailedAddress:
+          boastData?.studioInfo?.detailedAddress ||
+          boastData?.unknownStudioInfo?.detailedAddress ||
+          '',
+        studioId: boastData?.studioInfo?.id || '',
+        instagramAccount: boastData?.creatorUserInfo?.instagramAccount || '',
         agreedToEventTerms: true,
       }}
-      initialImages={convertUrlsToImageItems(boastData.imageFileUrls)}
+      initialImages={convertUrlsToImageItems(boastData?.imageFileUrls)}
       onSubmit={handleEditSubmit}
       MobileLayout={MobileStudioBoastsEditPage}
       DesktopLayout={DesktopStudioBoastsEditPage}

@@ -55,9 +55,6 @@ export default function StudioBoastsNewPage({ isMobile = false }: Props) {
       toast.success('매물 자랑 등록이 성공적으로 완료되었습니다.');
       router.replace('/studio-boasts');
     },
-    onError: () => {
-      toast.error('매물 자랑 등록이 실패했습니다.');
-    },
   };
 
   const submitHandler = () => {

@@ -29,7 +29,6 @@ export default function PhoneEditAlert({ isMobile, isOpen, onClose }: Props) {
           onClose();
         },
         onError: () => {
-          toast.error('전화번호 변경이 실패했습니다.');
           setVerifiedPhone('');
         },
       },

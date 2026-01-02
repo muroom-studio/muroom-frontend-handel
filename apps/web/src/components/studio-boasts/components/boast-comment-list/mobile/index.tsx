@@ -129,7 +129,6 @@ export default function MobileBoastCommentList({
             scrollToTarget();
             toast.success('댓글이 등록되었습니다.');
           },
-          onError: (err) => console.error(err.message),
         },
       );
       return;
@@ -145,7 +144,6 @@ export default function MobileBoastCommentList({
             scrollToTarget(parentId);
             toast.success('답글이 등록되었습니다.');
           },
-          onError: (err) => console.error(err.message),
         },
       );
       return;
@@ -161,7 +159,6 @@ export default function MobileBoastCommentList({
             scrollToTarget(targetId);
             toast.success('댓글이 수정되었습니다.');
           },
-          onError: (err) => console.error(err.message),
         },
       );
       return;

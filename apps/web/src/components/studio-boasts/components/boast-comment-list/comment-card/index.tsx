@@ -79,7 +79,6 @@ export default function BoastCommentCard({
           toast.success('수정되었습니다.');
           setIsEditing(false);
         },
-        onError: (err) => console.error(err.message),
       },
     );
   };

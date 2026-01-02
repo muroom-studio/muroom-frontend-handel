@@ -40,7 +40,6 @@ export default function StudioEditAlert({ isMobile, isOpen, onClose }: Props) {
           onClose();
         },
         onError: () => {
-          toast.error('작업실 변경이 실패했습니다.');
           setStudioJuso({
             juso: '',
             detailJuso: '',

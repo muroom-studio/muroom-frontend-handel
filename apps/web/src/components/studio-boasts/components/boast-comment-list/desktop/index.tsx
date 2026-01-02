@@ -54,9 +54,6 @@ export default function DesktopBoastCommentList({ studioBoastId }: Props) {
           setIsSecret(false);
           setPage(1);
         },
-        onError: (err) => {
-          alert('댓글 등록 실패: ' + err.message);
-        },
       },
     );
   };

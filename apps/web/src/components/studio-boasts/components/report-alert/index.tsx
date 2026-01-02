@@ -69,9 +69,7 @@ export default function ReportAlert({
             toast.success('해당 댓글이 신고처리되었습니다.');
             handleResetAndClose();
           },
-          onError: (error) => {
-            console.error(error);
-            toast.error('댓글 신고처리가 실패했습니다.');
+          onError: () => {
             handleResetAndClose();
           },
         },
@@ -95,7 +93,6 @@ export default function ReportAlert({
           }
         },
         onError: () => {
-          toast.error('신고처리가 실패했습니다.');
           handleResetAndClose();
         },
       },

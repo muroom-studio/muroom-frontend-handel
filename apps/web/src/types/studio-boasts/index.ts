@@ -22,6 +22,9 @@ interface CreatorUserInfoDto {
 export interface StudioInfoDto {
   id: string;
   name: string;
+  roadNameAddress: string;
+  lotNumberAddress: string;
+  detailedAddress: string;
   thumbnailImageFileUrl: string;
   nearestSubwayStation: NearestSubwayStationDto;
   minPrice: number;

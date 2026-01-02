@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { notFound } from 'next/navigation';
 
 import { Button, UserBaseInfoLabel } from '@muroom/components';
 import { getFormattedDate } from '@muroom/util';
@@ -30,8 +30,6 @@ interface Props {
 }
 
 export default function StudioBoastsDetailPage({ targetedId }: Props) {
-  const router = useRouter();
-
   const [openReportAlert, setOpenReportAlert] = useState(false);
 
   const {
@@ -42,8 +40,12 @@ export default function StudioBoastsDetailPage({ targetedId }: Props) {
   const studioInfo = studioBoastsDetailData?.studioInfo;
   const unknownStudioInfo = studioBoastsDetailData?.unknownStudioInfo;
 
-  if (isStudioBoastsDetailLoading && !studioBoastsDetailData) {
+  if (isStudioBoastsDetailLoading) {
     return <Loading />;
+  }
+
+  if (targetedId && !isStudioBoastsDetailLoading && !studioBoastsDetailData) {
+    return notFound();
   }
 
   const handleScrollToComments = () => {

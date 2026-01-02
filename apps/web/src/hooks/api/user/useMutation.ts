@@ -1,6 +1,7 @@
 import { UseMutationResult, useMutation } from '@tanstack/react-query';
 
 import { postSmsAuth, postSmsVerify } from '@/lib/user';
+import { ApiRequestError } from '@/types/api';
 import {
   UserSmsAuthRequestProps,
   UserSmsVerifyRequestProps,
@@ -8,7 +9,7 @@ import {
 
 const useUserSmsAuthMutation = (): UseMutationResult<
   any,
-  Error,
+  ApiRequestError,
   UserSmsAuthRequestProps
 > => {
   return useMutation({
@@ -18,7 +19,7 @@ const useUserSmsAuthMutation = (): UseMutationResult<
 
 const useUserSmsVerifyMutation = (): UseMutationResult<
   any,
-  Error,
+  ApiRequestError,
   UserSmsVerifyRequestProps
 > => {
   return useMutation({
