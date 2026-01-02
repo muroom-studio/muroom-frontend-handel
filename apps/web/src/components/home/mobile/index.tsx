@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect } from 'react';
+
 import { notFound } from 'next/navigation';
 
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
@@ -62,12 +64,14 @@ export default function MobileHomePage({
 
   const { EventModal } = useEventModal();
 
+  useEffect(() => {
+    if (mapValue.studioId && !isDetailLoading && !detailStudio) {
+      return notFound();
+    }
+  }, [detailStudio, isDetailLoading, mapValue.studioId]);
+
   if (isLoading) {
     return <Loading />;
-  }
-
-  if (mapValue.studioId && !isDetailLoading && !detailStudio) {
-    return notFound();
   }
 
   return (

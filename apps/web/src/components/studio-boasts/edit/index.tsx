@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect } from 'react';
+
 import { notFound, useRouter } from 'next/navigation';
 
 import { toast } from 'sonner';
@@ -74,9 +76,11 @@ export default function StudioBoastsEditPage({
     });
   };
 
-  if (isLoading) return <Loading />;
+  useEffect(() => {
+    if (!isLoading && !boastData) return notFound();
+  }, [boastData, isLoading]);
 
-  if (!isLoading && !boastData) return notFound();
+  if (isLoading) return <Loading />;
 
   return (
     <StudioBoastsEditorForm

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -40,12 +40,14 @@ export default function StudioBoastsDetailPage({ targetedId }: Props) {
   const studioInfo = studioBoastsDetailData?.studioInfo;
   const unknownStudioInfo = studioBoastsDetailData?.unknownStudioInfo;
 
+  useEffect(() => {
+    if (targetedId && !isStudioBoastsDetailLoading && !studioBoastsDetailData) {
+      return notFound();
+    }
+  }, [isStudioBoastsDetailLoading, studioBoastsDetailData, targetedId]);
+
   if (isStudioBoastsDetailLoading) {
     return <Loading />;
-  }
-
-  if (targetedId && !isStudioBoastsDetailLoading && !studioBoastsDetailData) {
-    return notFound();
   }
 
   const handleScrollToComments = () => {
