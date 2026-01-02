@@ -92,12 +92,14 @@ export default function DesktopHomePage({
 
   const { EventModal } = useEventModal();
 
+  useEffect(() => {
+    if (mapValue.studioId && !isDetailLoading && !detailStudio) {
+      return notFound();
+    }
+  }, [detailStudio, isDetailLoading, mapValue.studioId]);
+
   if (isLoading) {
     return <Loading />;
-  }
-
-  if (mapValue.studioId && !isDetailLoading && !detailStudio) {
-    return notFound();
   }
 
   return (
