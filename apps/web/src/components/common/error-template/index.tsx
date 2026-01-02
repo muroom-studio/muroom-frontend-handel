@@ -97,7 +97,7 @@ export default function ErrorTemplate({ status }: Props) {
         <Button
           variant='primary'
           size='xl'
-          onClick={() => router.push('/home')}
+          onClick={() => (window.location.href = '/home')}
         >
           메인으로 돌아가기
         </Button>
