@@ -2,12 +2,11 @@
 
 import { useEffect, useRef } from 'react';
 
-import { notFound } from 'next/navigation';
-
 import { Button, Spinner } from '@muroom/components';
 import { ResetIcon } from '@muroom/icons';
 
 import Loading from '@/app/loading';
+import NotFound from '@/app/not-found';
 import CommonDetailStudio from '@/components/common/detail-studio';
 import CommonMap from '@/components/common/map';
 import FilterItem, { Variant } from '@/components/home/components/filter-item';
@@ -37,6 +36,7 @@ interface Props {
   markersData: StudiosMapSearchItem[];
   isLoading: boolean;
   isListLoading: boolean;
+  // --- 추가된 Pagination & Infinite Scroll Props ---
   pagination: {
     currentPage: number;
     totalPages: number;
@@ -91,16 +91,12 @@ export default function DesktopHomePage({
 
   const { EventModal } = useEventModal();
 
-  const isNotFound = !!mapValue.studioId && !isDetailLoading && !detailStudio;
-
-  useEffect(() => {
-    if (isNotFound) {
-      notFound();
-    }
-  }, [isNotFound]);
-
-  if (isLoading || isNotFound) {
+  if (isLoading) {
     return <Loading />;
+  }
+
+  if (mapValue.studioId && !isDetailLoading && !detailStudio) {
+    return <NotFound />;
   }
 
   return (
