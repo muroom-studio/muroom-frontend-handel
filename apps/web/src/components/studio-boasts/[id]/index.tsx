@@ -37,18 +37,21 @@ export default function StudioBoastsDetailPage({ targetedId }: Props) {
     isLoading: isStudioBoastsDetailLoading,
   } = useStudioBoastsDetailQuery({ studioBoastId: targetedId });
 
-  const studioInfo = studioBoastsDetailData?.studioInfo;
-  const unknownStudioInfo = studioBoastsDetailData?.unknownStudioInfo;
+  const isNotFound =
+    !!targetedId && !isStudioBoastsDetailLoading && !studioBoastsDetailData;
 
   useEffect(() => {
-    if (targetedId && !isStudioBoastsDetailLoading && !studioBoastsDetailData) {
-      return notFound();
+    if (isNotFound) {
+      notFound();
     }
-  }, [isStudioBoastsDetailLoading, studioBoastsDetailData, targetedId]);
+  }, [isNotFound]);
 
-  if (isStudioBoastsDetailLoading) {
+  if (isStudioBoastsDetailLoading || isNotFound) {
     return <Loading />;
   }
+
+  const studioInfo = studioBoastsDetailData?.studioInfo;
+  const unknownStudioInfo = studioBoastsDetailData?.unknownStudioInfo;
 
   const handleScrollToComments = () => {
     const element = document.getElementById('BOAST_COMMENT_SECTION');

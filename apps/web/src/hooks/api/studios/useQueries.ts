@@ -14,7 +14,6 @@ import {
 import {
   StudiosMapSearchRequestProps,
   StudiosSearchAddressRequestProps,
-  StudiosSearchAddressResponseProps,
 } from '@/types/studios';
 
 // 1. 필터 옵션 조회 훅
