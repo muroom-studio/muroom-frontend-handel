@@ -18,9 +18,11 @@ interface Props {
 }
 
 export default function ErrorTemplate({ status }: Props) {
-  const { isMobile } = useResponsiveLayout();
+  const { isMobile: detectedIsMobile, isMounted } = useResponsiveLayout();
 
   const router = useRouter();
+
+  const isMobile = isMounted ? detectedIsMobile : false;
 
   const getErrorContent = () => {
     if (status === 404) {
@@ -36,7 +38,7 @@ export default function ErrorTemplate({ status }: Props) {
     return {
       title: isMobile
         ? `죄송합니다. \n현재 서버에 예기치 않은 오류가 발생해 \n요청하신 페이지를 표시할 수 없습니다.`
-        : '죄송합니다. 현재 서버에 예기치 않은 오류가 발생해 요청하신 페이지를 표시할 수 없습니다.',
+        : `죄송합니다. 현재 서버에 예기치 않은 오류가 발생해 \n요청하신 페이지를 표시할 수 없습니다.`,
       description:
         '이 오류는 서버 문제이며, 저희가 신속하게 확인하고 해결하고 있습니다.',
     };
