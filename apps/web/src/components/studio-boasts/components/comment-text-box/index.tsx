@@ -45,8 +45,6 @@ export default function CommentTextBox({
   isMobile = false,
   forceExpand = false,
 }: CommentTextBoxProps) {
-  console.log(taggedUserNickname);
-
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 

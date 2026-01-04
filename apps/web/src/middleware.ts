@@ -16,8 +16,8 @@ const AUTH_REQUIRED_PATHS = [
   '/logout',
   '/mypage/profile',
   '/mypage/cs/inquiry',
-  // '/studio-boasts/new',
-  // '/studio-boasts/edit',
+  '/studio-boasts/new',
+  '/studio-boasts/edit',
 ];
 
 export function middleware(request: NextRequest) {
