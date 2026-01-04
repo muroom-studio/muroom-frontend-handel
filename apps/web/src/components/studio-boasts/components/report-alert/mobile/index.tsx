@@ -36,15 +36,21 @@ export default function MobileReportAlert({
     }
   }, [isOpen]);
 
+  const handleBackToStepOne = () => {
+    setIsConfirmOpen(false);
+    setIsAgreed(false);
+  };
+
   if (!isOpen) return null;
 
   return (
     <>
+      {/* 1단계: 입력 폼 (2단계가 열려있지 않을 때만 보임) */}
       {!isConfirmOpen && (
         <PageWrapper
           isMobile
           isHeader={{ title: '신고하기', onBackClick: onClose }}
-          className='fixed inset-0 z-[9999] bg-white'
+          className='fixed inset-0 z-[50] bg-white'
           isModal
           bottomSlot={
             <div className='grid grid-cols-2 gap-x-3'>
@@ -69,16 +75,16 @@ export default function MobileReportAlert({
       {/* 2단계: 확인 바텀시트 */}
       <ModalBottomSheet
         isOpen={isConfirmOpen}
-        onClose={onClose}
+        onClose={handleBackToStepOne}
         footerBtns={
           <div className='grid grid-cols-2 gap-x-3'>
-            <Button variant='outline' size='xl' onClick={onClose}>
+            <Button variant='outline' size='xl' onClick={handleBackToStepOne}>
               취소하기
             </Button>
             <Button
               variant='danger'
               size='xl'
-              disabled={!isAgreed}
+              disabled={!isAgreed || isLoading}
               onClick={onFinalSubmit}
             >
               {isLoading ? <Spinner variant='component' /> : '신고하기'}

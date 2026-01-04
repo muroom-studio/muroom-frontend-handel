@@ -102,7 +102,7 @@ export default function NicknameEditAlert({
       { nickname },
       {
         onSuccess: () => {
-          toast.success('닉네임이 성공적으로 변경되었습니다.');
+          toast.success('닉네임이 변경되었습니다.');
           onClose();
         },
         onError: () => {

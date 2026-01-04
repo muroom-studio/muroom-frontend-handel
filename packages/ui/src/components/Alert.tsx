@@ -126,7 +126,7 @@ export default function Alert({
                     onClick={onConfirm}
                     variant='primary'
                     size='xl'
-                    disabled={confirmDisabled}
+                    disabled={confirmDisabled || isLoading}
                   >
                     {isLoading ? (
                       <Spinner variant='component' />

@@ -3,8 +3,10 @@
 import { Dispatch, SetStateAction } from 'react';
 
 import { TextBox, TextField, ToggleButton } from '@muroom/components';
+import { cn } from '@muroom/lib';
 import { updateObjectProperty } from '@muroom/util';
 
+import DraggableCarousel from '@/components/common/draggable-carousel';
 import ImageUploader from '@/components/common/image-uploader';
 import { CommonImageUploadResponseProps } from '@/types/api';
 import { InquiryCategoryItem } from '@/types/inquiries';
@@ -43,10 +45,14 @@ export default function MypageCsInquiryNewCommonForm({
   handleUploadImages,
 }: Props) {
   return (
-    <div className='flex w-full flex-col gap-y-10'>
+    <div
+      className={cn('flex w-full flex-col gap-y-10', {
+        'pb-10': isMobile,
+      })}
+    >
       <div className='flex flex-col gap-y-4'>
         <span className='text-title-s-22-1'>문의유형</span>
-        <div className='flex items-center gap-x-2'>
+        <DraggableCarousel containerClassName='gap-x-2'>
           {inquiryCategoriesData.map((category) => (
             <ToggleButton
               key={category.id}
@@ -60,7 +66,7 @@ export default function MypageCsInquiryNewCommonForm({
               {category.name}
             </ToggleButton>
           ))}
-        </div>
+        </DraggableCarousel>
       </div>
       <TextField
         className='flex flex-col gap-y-4'

@@ -15,6 +15,7 @@ export interface CommentTextBoxHandle {
 interface CommentTextBoxProps {
   ref?: React.Ref<CommentTextBoxHandle>;
   taggedUserNickname?: string;
+  setTaggedUserNickname?: (value: string) => void;
   content: string;
   onContentChange: (value: string) => void;
   isSecret: boolean;
@@ -31,6 +32,7 @@ interface CommentTextBoxProps {
 export default function CommentTextBox({
   ref,
   taggedUserNickname,
+  setTaggedUserNickname,
   content,
   onContentChange,
   isSecret,
@@ -43,6 +45,8 @@ export default function CommentTextBox({
   isMobile = false,
   forceExpand = false,
 }: CommentTextBoxProps) {
+  console.log(taggedUserNickname);
+
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -84,14 +88,25 @@ export default function CommentTextBox({
           placeholder={placeholder}
           onFocus={() => setIsFocused(true)}
           onBlur={() => {
-            if (content.length === 0 && !forceExpand) setIsFocused(false);
+            if (content.length === 0 && !forceExpand) {
+              setIsFocused(false);
+              setTaggedUserNickname?.('');
+            }
           }}
           onClear={() => {
             onContentChange('');
             onSecretChange(false);
             if (onCancel) onCancel();
             inputRef.current?.blur();
+            setTaggedUserNickname?.('');
           }}
+          inputPrefix={
+            taggedUserNickname ? (
+              <span className='text-base-l-16-1 text-primary-500'>
+                @{taggedUserNickname}
+              </span>
+            ) : undefined
+          }
           className='w-full'
         />
 

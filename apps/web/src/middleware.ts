@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const GUEST_ONLY_PATHS = ['/welcome', '/login', '/join'];
+const GUEST_ONLY_PATHS = ['/welcome', '/login', '/join', '/redirect'];
 
 const PUBLIC_PATHS = [
   '/home',
@@ -20,7 +20,6 @@ const AUTH_REQUIRED_PATHS = [
 ];
 
 export function middleware(request: NextRequest) {
-  // [수정] pathname과 함께 searchParams(쿼리 파라미터)를 가져옵니다.
   const { pathname } = request.nextUrl;
 
   if (pathname === '/') {

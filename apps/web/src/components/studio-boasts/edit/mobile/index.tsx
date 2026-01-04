@@ -26,7 +26,7 @@ export default function MobileStudioBoastsEditPage({
         isMobile
         isHeader={{ title: '수정하기', onBackClick: () => router.back() }}
         contentClassName='pt-6'
-        bottomSlot={
+        bottomFixedSlot={
           <div className='grid grid-cols-2 gap-x-3'>
             <Button
               variant='outline'

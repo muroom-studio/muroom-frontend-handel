@@ -153,7 +153,6 @@ export default function AddressForm<T>({
               }
               placeholder='작업실 이름을 선택해주세요'
               onValueChange={(selectedId) => {
-                // 1. [직접입력] 선택 시
                 if (selectedId === 'direct-input') {
                   setIsNameDropdownVisible(false);
                   setIsDirectInputMode(true);
@@ -168,14 +167,12 @@ export default function AddressForm<T>({
                       ...prev,
                       [fieldMap.name!]: '',
                       [fieldMap.detailAddress]: directInputData.detailedAddress,
-                      // ✅ [추가] 직접입력 시 ID는 없음(혹은 초기화)
                       ...(fieldMap.studioId && { [fieldMap.studioId]: '' }),
                     }));
                   }
                   return;
                 }
 
-                // 2. [일반 작업실] 선택 시
                 const selectedStudio = searchResults.find(
                   (s) => s.id === selectedId,
                 );

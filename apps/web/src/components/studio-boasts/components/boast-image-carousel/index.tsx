@@ -103,7 +103,7 @@ export default function BoastDetailImageCarousel({
 
           {isMobile && (
             <div
-              className='flex-center rounded-4 absolute bottom-5 right-5 z-50 gap-x-[2px] bg-white px-2 py-[5px]'
+              className='flex-center rounded-4 absolute bottom-5 right-5 z-10 gap-x-[2px] bg-white px-2 py-[5px]'
               style={{ transform: 'translateZ(0)' }}
             >
               <span className='text-base-m-14-2'>{currentIndex + 1}</span>

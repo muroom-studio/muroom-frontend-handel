@@ -3,14 +3,11 @@
 import BaseLogo from '@muroom/ui/assets/base-logo.svg';
 
 import CommonImage from '@/components/common/common-image';
-import { useWelcomeMode } from '@/hooks/nuqs/welcome/useWelcomeMode';
 
 import WelcomeHeader from '../../components/header';
 import SocialBtn, { SocialType } from '../../components/social-btn';
 
 export default function DesktopLoginPage() {
-  const { setJoin } = useWelcomeMode();
-
   return (
     <>
       <WelcomeHeader />
@@ -33,7 +30,7 @@ export default function DesktopLoginPage() {
           {/* {(['KAKAO', 'NAVER', 'GOOGLE'] as SocialType[]).map((social) => (
             <SocialBtn key={social} social={social} />
           ))} */}
-          {(['KAKAO'] as SocialType[]).map((social) => (
+          {(['KAKAO', 'GOOGLE'] as SocialType[]).map((social) => (
             <SocialBtn key={social} social={social} />
           ))}
         </div>

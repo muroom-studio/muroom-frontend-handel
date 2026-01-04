@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
 
 import { Button, UserBaseInfoLabel } from '@muroom/components';
 import { getFormattedDate } from '@muroom/util';

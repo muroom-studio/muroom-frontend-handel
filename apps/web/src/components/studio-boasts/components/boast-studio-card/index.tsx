@@ -10,13 +10,13 @@ import { NearestSubwayStationDto } from '@/types/studio';
 
 interface Props {
   variant: 'known' | 'unknown';
-  id: string; // Known 필수
-  title: string; // Common
-  subwayInfo?: NearestSubwayStationDto; // Known
-  minPrice?: number; // Known
-  maxPrice?: number; // Known
-  thumbnailUrl?: string | null; // Known (Desktop only)
-  address?: string; // Unknown
+  id: string;
+  title: string;
+  subwayInfo?: NearestSubwayStationDto;
+  minPrice?: number;
+  maxPrice?: number;
+  thumbnailUrl?: string | null;
+  address?: string;
   isMobile?: boolean;
   wrapperClassName?: string;
 }
@@ -56,7 +56,6 @@ export default function BoastStudioCard({
         variant === 'known' && 'h-47 cursor-pointer',
       )}
     >
-      {/* --- [A] 썸네일 영역 (Desktop & Known Only) --- */}
       {showThumbnail && (
         <div className='rounded-4 size-35 relative shrink-0 overflow-hidden'>
           <CommonImage
@@ -68,10 +67,8 @@ export default function BoastStudioCard({
         </div>
       )}
 
-      {/* --- [B] 정보 영역 --- */}
       <div className={cn('flex h-full flex-col justify-between')}>
         <div className='flex flex-col gap-y-3'>
-          {/* 1. 상단: 가격(Known) vs 타이틀(Unknown) */}
           {variant === 'known' ? (
             <span className='text-title-s-22-2'>
               {minPrice && maxPrice
@@ -82,7 +79,6 @@ export default function BoastStudioCard({
             <span className='text-title-s-22-2 text-gray-500'>{title}</span>
           )}
 
-          {/* 2. 중단: 지하철 정보 (Known Only) */}
           {variant === 'known' && subwayInfo && (
             <div className='flex items-center gap-x-1'>
               {Array.isArray(lines) && lines.length > 0 && lines[0] && (
@@ -100,15 +96,16 @@ export default function BoastStudioCard({
           )}
 
           {variant === 'unknown' && (
-            <p className='text-base-m-14-1 break-keep text-gray-500'>
+            <span className='text-base-m-14-1 break-keep text-gray-500'>
               {address}
-            </p>
+            </span>
           )}
         </div>
 
-        {/* 3. 하단: 타이틀(Known) vs 주소(Unknown) */}
         {variant === 'known' && (
-          <p className='text-base-m-14-1 break-keep text-gray-500'>{title}</p>
+          <span className='text-base-m-14-1 break-keep text-gray-500'>
+            {title}
+          </span>
         )}
       </div>
     </div>

@@ -10,6 +10,10 @@ import { Popover } from '@muroom/components';
 import { MoreDotIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 
+import {
+  TOAST_MOBILE_COMMENT,
+  TOAST_MOBILE_STUDIO_BOASTS,
+} from '@/config/toastOptions';
 import { useDeleteStudioBoastsCommentsMutation } from '@/hooks/api/studio-boasts/comments/useMutations';
 import { useDeleteStudioBoastsMutation } from '@/hooks/api/studio-boasts/useMutations';
 
@@ -52,7 +56,11 @@ export default function StudioBoastsMoreButton({
       await deleteCommentMutate(
         { studioBoastId, commentId },
         {
-          onSuccess: () => toast.success('댓글이 삭제되었습니다.'),
+          onSuccess: () =>
+            toast.success(
+              '댓글이 삭제되었습니다.',
+              isMobile ? TOAST_MOBILE_COMMENT : undefined,
+            ),
         },
       );
       return;
@@ -62,7 +70,10 @@ export default function StudioBoastsMoreButton({
       { studioBoastId },
       {
         onSuccess: () => {
-          toast.success('게시글이 삭제되었습니다.');
+          toast.success(
+            '게시글이 삭제되었습니다.',
+            isMobile ? TOAST_MOBILE_STUDIO_BOASTS : undefined,
+          );
           if (!isMobile) {
             router.replace('/studio-boasts');
           }

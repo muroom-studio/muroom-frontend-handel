@@ -159,7 +159,7 @@ const MobilePageWrapper = ({
               stiffness: 300,
               damping: 30,
             }}
-            className='absolute bottom-0 z-[60] w-full bg-white'
+            className='absolute bottom-0 z-40 w-full bg-white'
           >
             <div className={cn('px-5 pb-9 pt-3', bottomSlotClassName)}>
               {bottomSlot}
@@ -187,7 +187,7 @@ const MobilePageWrapper = ({
               mass: 0.8,
             }}
             className={cn(
-              'fixed inset-0 z-50 flex h-dvh w-full flex-col overflow-hidden bg-white',
+              'fixed inset-0 z-30 flex h-dvh w-full flex-col overflow-hidden bg-white',
               className,
             )}
           >

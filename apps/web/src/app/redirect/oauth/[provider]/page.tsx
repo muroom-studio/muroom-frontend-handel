@@ -2,12 +2,15 @@
 
 import { useEffect, useRef } from 'react';
 
+// useState 제거됨
+
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 
 import { toast } from 'sonner';
 
 import Loading from '@/app/loading';
 import { useMusicianLoginMutation } from '@/hooks/api/musician/useMutations';
+import { useThrowError } from '@/hooks/common/useThrowError';
 import { useAuthRedirectStore } from '@/store/useAuthRedirectStore';
 import { useMusicianStore } from '@/store/useMusicianStore';
 import { setToken } from '@/utils/cookie';
@@ -16,6 +19,8 @@ export default function Page() {
   const params = useParams();
   const searchParams = useSearchParams();
   const router = useRouter();
+
+  const throwError = useThrowError();
 
   const { mutateAsync: loginMutateAsync } = useMusicianLoginMutation();
 
@@ -56,12 +61,20 @@ export default function Page() {
           return;
         }
       } catch (error) {
-        // 일단은 에러처리는 안함
+        throwError(error);
       }
     };
 
     handleLogin();
-  }, [code, provider, router, loginMutateAsync]);
+  }, [
+    code,
+    provider,
+    router,
+    loginMutateAsync,
+    performRedirect,
+    setRegisterDTO,
+    throwError,
+  ]);
 
   return <Loading />;
 }

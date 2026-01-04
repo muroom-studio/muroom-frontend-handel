@@ -3,9 +3,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 import { Alert, Button, ModalBottomSheet } from '@muroom/components';
-import { PlusIcon } from '@muroom/icons';
 
-import SearchBar from '@/components/common/search-bar';
 import AddressForm from '@/components/welcome/components/steps/components/address-form';
 import { StudioJuso } from '@/components/welcome/components/steps/third-step';
 import { useMusicianMeDetailMutation } from '@/hooks/api/musician/useMutations';
@@ -36,7 +34,7 @@ export default function StudioEditAlert({ isMobile, isOpen, onClose }: Props) {
       },
       {
         onSuccess: () => {
-          toast.success('작업실이 성공적으로 변경되었습니다.');
+          toast.success('작업실이 변경되었습니다.');
           onClose();
         },
         onError: () => {
