@@ -30,7 +30,9 @@ export default function Layout({ children }: Props) {
   const { isLoggedIn } = useAuthCheck();
   const { saveCurrentUrl } = useSaveRedirectUrl();
 
-  const isFullPage = pathname.includes('/studio-boasts/new');
+  const isFullPage = ['/studio-boasts/new', '/studio-boasts/edit'].some(
+    (path) => pathname.includes(path),
+  );
 
   const isListPage = pathname === '/studio-boasts';
 

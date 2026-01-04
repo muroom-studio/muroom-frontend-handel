@@ -6,7 +6,7 @@ export const TOAST_WITH_BOTTOM_BTN = {
 
 export const TOAST_MOBILE_COMMENT = {
   style: {
-    '--mobile-offset': 'calc(111px + 8px)',
+    '--mobile-offset': 'calc(119px + 8px)',
   } as React.CSSProperties,
 };
 

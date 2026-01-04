@@ -83,7 +83,6 @@ export default function StudioBoastsNewCommonForm({
         isMobile={isMobile}
         value={value as any}
         setValue={setValue as any}
-        onMyPage={true}
         fieldMap={{
           address: 'roadNameAddress',
           jibunAddress: 'lotNumberAddress',

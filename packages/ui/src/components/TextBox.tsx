@@ -47,11 +47,18 @@ const TextBox = ({
   const currentLength = currentValue.length;
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    const newValue = e.target.value;
+    let newValue = e.target.value;
+
+    // ✅ [Fix] 한글 IME 입력 문제 해결: maxLength를 초과하면 강제로 잘라냄
+    if (maxLength && newValue.length > maxLength) {
+      newValue = newValue.slice(0, maxLength);
+      e.target.value = newValue; // DOM 요소의 값도 강제로 업데이트
+    }
 
     if (!isControlled) {
       setInternalValue(newValue);
     }
+
     onChange?.(e);
 
     if (isMinLengthError && minLength && newValue.length >= minLength) {
