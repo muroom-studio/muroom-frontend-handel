@@ -109,23 +109,20 @@ export default function AddressForm<T>({
         </RequiredText>
       )}
 
-      <div className='grid w-full grid-cols-[1fr_auto] gap-x-3'>
-        <TextField
-          id='address'
-          value={String(value[fieldMap.address] || '')}
-          placeholder='주소 찾기'
-          readOnly
-          disabled
-          onClick={toggleModal}
-          className='cursor-pointer'
-        />
-        <Button
-          type='button'
-          variant='outline'
-          size='l'
-          onClick={toggleModal}
-          className={onMyPage ? 'flex-none' : ''}
-        >
+      <div className='grid w-full grid-cols-[1fr_auto] items-center gap-x-3'>
+        <div className='min-w-0'>
+          <TextField
+            id='address'
+            value={String(value[fieldMap.address] || '')}
+            placeholder='주소 찾기'
+            readOnly
+            disabled
+            onClick={toggleModal}
+            className='w-full'
+          />
+        </div>
+
+        <Button type='button' variant='outline' size='l' onClick={toggleModal}>
           주소찾기
         </Button>
       </div>

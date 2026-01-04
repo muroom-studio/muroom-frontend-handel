@@ -104,7 +104,7 @@ const TextField = ({
           maxLength={maxLength}
           disabled={props.disabled}
           className={cn(
-            'text-base-l-16-1 flex-1 bg-transparent py-3 placeholder:text-gray-400 focus:outline-none',
+            'text-base-l-16-1 min-w-0 flex-1 bg-transparent py-3 placeholder:text-gray-400 focus:outline-none',
             props.disabled && 'cursor-not-allowed !text-gray-400',
             inputClassName,
           )}
