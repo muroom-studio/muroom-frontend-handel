@@ -46,7 +46,7 @@ export default function AuthSection() {
     return (
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <Popover.Trigger>{isAuthenticatedTriggerDiv}</Popover.Trigger>
-        <Popover.Content align='start' className='w-32'>
+        <Popover.Content align='start' matchTriggerWidth>
           <Popover.MenuContainer>
             {menuItems.map((item) => (
               <Link

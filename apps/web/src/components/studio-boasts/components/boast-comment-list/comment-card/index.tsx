@@ -174,7 +174,7 @@ export default function BoastCommentCard({
           />
           <StudioBoastsCommentButton
             isComment
-            commentCount={replies?.length || 0}
+            commentCount={isReply ? undefined : replies.length}
             onClick={handleReplyToggle}
           />
         </div>

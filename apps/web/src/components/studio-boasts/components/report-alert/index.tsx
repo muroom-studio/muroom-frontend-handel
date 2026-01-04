@@ -111,6 +111,7 @@ export default function ReportAlert({
     onFinalSubmit: handleFinalSubmit,
     isValid,
     formProps: {
+      isMobile,
       instrumentDescription,
       nickname,
       reasonData: reportReasonData,

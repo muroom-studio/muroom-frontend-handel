@@ -16,6 +16,7 @@ export interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   ref?: Ref<HTMLInputElement>;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
+  inputPrefix?: React.ReactNode;
 }
 
 const TextField = ({
@@ -28,7 +29,8 @@ const TextField = ({
   onChange,
   ref,
   leftIcon,
-  rightIcon, // [New] destructuring
+  rightIcon,
+  inputPrefix,
   label,
   customLabel,
   id,
@@ -43,12 +45,7 @@ const TextField = ({
   const [internalValue, setInternalValue] = useState(defaultValue ?? '');
   const displayValue = isControlled ? value : internalValue;
 
-  // 값이 있고, 비활성화 상태가 아니며, 숨김 옵션이 켜져있지 않을 때만 X버튼 노출
   const showClearIcon = !!displayValue && !props.disabled && !hideClearButton;
-
-  // 우측 요소 존재 여부 체크 (패딩 계산용)
-  const hasRightContent = showClearIcon || !!rightIcon;
-  const hasBothRightContent = showClearIcon && !!rightIcon;
 
   const handleClear = (e: any) => {
     if (onClear) {
@@ -57,24 +54,17 @@ const TextField = ({
       onClear();
     }
     if (!isControlled) {
-      e.preventDefault();
-      e.stopPropagation();
       setInternalValue('');
     }
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     let newValue = e.target.value;
-
     if (maxLength && newValue.length > maxLength) {
       newValue = newValue.slice(0, maxLength);
       e.target.value = newValue;
     }
-
-    if (!isControlled) {
-      setInternalValue(newValue);
-    }
-
+    if (!isControlled) setInternalValue(newValue);
     onChange?.(e);
   };
 
@@ -90,12 +80,19 @@ const TextField = ({
 
       {customLabel && <label htmlFor={inputId}>{customLabel}</label>}
 
-      <div className='relative'>
-        {/* [Left Icon] */}
+      <div
+        className={cn(
+          'rounded-4 relative flex items-center border bg-white px-3 transition-all',
+          'border-gray-300 focus-within:border-gray-800',
+          props.disabled && 'cursor-not-allowed border-gray-300 bg-gray-50',
+        )}
+      >
         {leftIcon && (
-          <div className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400'>
-            {leftIcon}
-          </div>
+          <div className='mr-2 shrink-0 text-gray-400'>{leftIcon}</div>
+        )}
+
+        {inputPrefix && (
+          <div className='mr-1.5 shrink-0 select-none'>{inputPrefix}</div>
         )}
 
         <input
@@ -107,28 +104,14 @@ const TextField = ({
           maxLength={maxLength}
           disabled={props.disabled}
           className={cn(
-            'rounded-4 w-full border border-gray-300 p-3 transition-all',
-            'text-base-l-16-1',
-            {
-              'pl-12': !!leftIcon, // 왼쪽 아이콘이 있으면 왼쪽 패딩 추가
-
-              // [Padding Logic] 오른쪽 요소 구성에 따른 패딩 조절
-              'pr-5': !hasRightContent, // 아무것도 없을 때 (기본)
-              'pr-12': hasRightContent && !hasBothRightContent, // 하나만 있을 때
-              'pr-20': hasBothRightContent, // 둘 다 있을 때 (여유 공간 확보)
-            },
-            'placeholder:text-gray-400',
-            'focus:border-gray-800 focus:outline-none',
-            {
-              'cursor-not-allowed border-gray-300 bg-gray-50 !text-gray-400':
-                props.disabled,
-            },
+            'text-base-l-16-1 flex-1 bg-transparent py-3 placeholder:text-gray-400 focus:outline-none',
+            props.disabled && 'cursor-not-allowed !text-gray-400',
             inputClassName,
           )}
           {...props}
         />
 
-        <div className='absolute right-4 top-1/2 flex -translate-y-1/2 items-center gap-x-2'>
+        <div className='ml-2 flex flex-shrink-0 items-center gap-x-2'>
           <button
             type='button'
             onClick={handleClear}

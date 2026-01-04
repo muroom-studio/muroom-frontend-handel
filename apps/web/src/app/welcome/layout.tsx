@@ -34,7 +34,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         createPortal(
           <div
             className={cn(
-              'z-99999 fixed inset-0',
+              'z-999 fixed inset-0',
               !isMobile && 'flex-center bg-black/20',
               isMobile && 'h-dvh bg-white pb-[env(safe-area-inset-bottom)]',
             )}

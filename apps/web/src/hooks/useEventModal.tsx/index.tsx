@@ -52,7 +52,7 @@ export const useEventModal = () => {
         onClick={closeDontShowToday}
         className='w-fit'
       >
-        오늘보지않기
+        오늘하루그만보기
       </Button>
       <Button variant='text' size='xs' onClick={close} className='w-fit'>
         닫기

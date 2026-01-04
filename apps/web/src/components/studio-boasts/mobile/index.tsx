@@ -35,7 +35,7 @@ export default function MobileStudioBoastsPage() {
     { sort: undefined },
     {
       page: 1,
-      size: 2,
+      size: 12,
       isMobile: true,
       isMyList: isMyTab,
     },
@@ -78,7 +78,7 @@ export default function MobileStudioBoastsPage() {
     >
       <div className='flex flex-col pb-20'>
         <MobileStudioBoastsTabBar />
-        <BoastEventBanner isMobile />
+        <BoastEventBanner isMobile className='-translate-y-0.5' />
         <div className='h-6' />
         <DetailBoastList items={studioBoastList} />
 

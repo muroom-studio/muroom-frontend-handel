@@ -3,13 +3,11 @@
 import BaseLogo from '@muroom/ui/assets/base-logo.svg';
 
 import CommonImage from '@/components/common/common-image';
-import { useWelcomeMode } from '@/hooks/nuqs/welcome/useWelcomeMode';
 
 import WelcomeHeader from '../../components/header';
 import SocialBtn, { SocialType } from '../../components/social-btn';
 
 export default function MobileLoginPage() {
-  const { setJoin } = useWelcomeMode();
   return (
     <div className='flex h-full flex-col'>
       <WelcomeHeader />
@@ -31,7 +29,7 @@ export default function MobileLoginPage() {
 
         <div className='flex-center-col gap-y-6'>
           <div className='flex w-full flex-col gap-y-3'>
-            {(['KAKAO'] as SocialType[]).map((social) => (
+            {(['KAKAO', 'GOOGLE'] as SocialType[]).map((social) => (
               <SocialBtn key={social} social={social} />
             ))}
           </div>

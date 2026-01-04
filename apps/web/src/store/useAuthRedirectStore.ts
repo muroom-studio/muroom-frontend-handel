@@ -20,7 +20,7 @@ export const useAuthRedirectStore = create<AuthRedirectState>()(
           window.location.href = redirectUrl;
           set({ redirectUrl: null });
         } else {
-          window.location.href = '/';
+          window.location.href = '/home';
         }
       },
     }),

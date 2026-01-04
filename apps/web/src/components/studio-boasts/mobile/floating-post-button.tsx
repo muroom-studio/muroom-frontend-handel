@@ -20,7 +20,7 @@ export default function FloatingPostButton() {
     <Button
       variant='primary'
       size='xl'
-      className='shadow-level-2 absolute bottom-5 right-5 z-50'
+      className='shadow-level-2 absolute bottom-5 right-5 z-20'
       onClick={handleWriteClick}
     >
       <PlusIcon className='size-6 text-white' />

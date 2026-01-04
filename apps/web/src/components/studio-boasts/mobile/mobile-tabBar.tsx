@@ -114,7 +114,6 @@ export default function MobileStudioBoastsTabBar() {
         initialActiveTabId={currentTabId}
         activeId={currentTabId}
         onTabChange={handleTabChange}
-        // border-y-[0.5px]가 이미 있다면 위쪽 보더가 헤더 보더와 겹쳐서 자연스러워질 것입니다.
         className='flex w-full justify-start gap-x-6 border-y-[0.5px] border-y-gray-300 px-5'
         btnClassName='flex-none'
       />

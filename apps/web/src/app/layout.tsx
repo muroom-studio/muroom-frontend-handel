@@ -39,6 +39,12 @@ export const metadata: Metadata = {
     locale: 'ko_KR',
     type: 'website',
   },
+  formatDetection: {
+    telephone: false,
+    date: false,
+    address: false,
+    email: false,
+  },
 };
 
 const GA_ID = 'G-WX0PPKWV5W';

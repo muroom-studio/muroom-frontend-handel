@@ -99,7 +99,7 @@ export default function DetailBoastList({ items }: Props) {
             </div>
           </div>
 
-          {index === 1 && (
+          {index === 0 && (
             <BoastSimpleCarousel
               isMobile
               sort='likes,desc'

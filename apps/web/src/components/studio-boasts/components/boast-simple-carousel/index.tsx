@@ -122,10 +122,20 @@ export default function BoastSimpleCarousel({
     });
   };
 
+  // ✅ [수정됨] scrollIntoView 대신 scrollLeft 직접 할당 (Nuclear Option)
+  // CSS scroll-smooth 클래스를 무시하고 즉시 이동시킵니다.
   const handleMobileClick = (id: string) => {
+    if (!scrollRef.current) return;
+
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // 해당 요소의 컨테이너 내 위치(offsetLeft)를 가져와서
+      // 컨테이너의 스크롤 위치에 바로 꽂아버립니다. (padding-left 16px 고려하여 -16 해도 됨)
+      const offset = element.offsetLeft;
+
+      // 모바일 패딩(px-4 = 16px)을 고려해 정확히 맨 앞으로 오게 하려면:
+      scrollRef.current.scrollLeft = offset - 16;
+      // 만약 그냥 요소 시작점 기준이면: scrollRef.current.scrollLeft = offset;
     }
   };
 
@@ -159,7 +169,6 @@ export default function BoastSimpleCarousel({
         {headerRightSlot && headerRightSlot}
       </div>
 
-      {/* 캐러셀 본문 */}
       <div className='group relative'>
         {!isMobile && (
           <button
@@ -186,7 +195,7 @@ export default function BoastSimpleCarousel({
           onScroll={handleScroll}
           className={cn(
             'scrollbar-hide flex w-full overflow-x-auto pb-4',
-            !isDragging && 'scroll-smooth',
+            !isDragging && 'scroll-smooth', // ⚠️ 이 클래스가 범인이었지만, scrollLeft 할당으로 무시 가능
             isDragging ? 'cursor-grabbing' : 'cursor-grab',
             isMobile ? 'gap-x-3 px-4' : 'gap-x-4 px-0',
           )}
@@ -196,6 +205,7 @@ export default function BoastSimpleCarousel({
               return (
                 <div
                   key={item.id}
+                  id={item.id}
                   onClick={() => handleMobileClick(item.id)}
                   onDragStart={(e) => e.preventDefault()}
                   className={itemClassName}
@@ -229,7 +239,6 @@ export default function BoastSimpleCarousel({
             );
           })}
 
-          {/* 로딩 스피너 */}
           {isFetchingNextPage && (
             <div
               className={cn(
@@ -244,7 +253,6 @@ export default function BoastSimpleCarousel({
           )}
         </div>
 
-        {/* Next Button */}
         {!isMobile && (
           <button
             onClick={() => scrollTo('right')}

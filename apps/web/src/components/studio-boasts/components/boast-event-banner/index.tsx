@@ -10,9 +10,13 @@ import CommonImage from '@/components/common/common-image';
 
 interface Props {
   isMobile?: boolean;
+  className?: string;
 }
 
-export default function BoastEventBanner({ isMobile = false }: Props) {
+export default function BoastEventBanner({
+  isMobile = false,
+  className,
+}: Props) {
   const [openEventModal, setOpenEventModal] = useState(false);
 
   const content = (
@@ -95,7 +99,7 @@ export default function BoastEventBanner({ isMobile = false }: Props) {
   );
 
   return (
-    <>
+    <div className={className}>
       <CommonImage
         src={isMobile ? BoastMobileBanner : BoastBanner}
         alt='매물자랑배너'
@@ -104,6 +108,6 @@ export default function BoastEventBanner({ isMobile = false }: Props) {
         priority
       />
       {modalElement}
-    </>
+    </div>
   );
 }

@@ -5,7 +5,7 @@ import StudioBoastsButtonWrapper from '../button-wrapper';
 interface Props {
   isMobile?: boolean;
   isComment?: boolean;
-  commentCount: number;
+  commentCount?: number;
   onClick?: () => void;
 }
 
@@ -22,7 +22,7 @@ export default function StudioBoastsCommentButton({
       onClick={onClick}
     >
       <CommentIcon className='size-6' />
-      <span className='text-base-m-14-1'>{commentCount}</span>
+      {commentCount && <span className='text-base-m-14-1'>{commentCount}</span>}
     </StudioBoastsButtonWrapper>
   );
 }

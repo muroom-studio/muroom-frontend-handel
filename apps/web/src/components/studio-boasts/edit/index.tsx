@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import Loading from '@/app/loading';
 import NotFound from '@/app/not-found';
 import { ImageItem } from '@/components/common/image-uploader';
+import { TOAST_MOBILE_STUDIO_BOASTS } from '@/config/toastOptions';
 import { usePutStudioBoastsMutation } from '@/hooks/api/studio-boasts/useMutations';
 import { useStudioBoastsDetailQuery } from '@/hooks/api/studio-boasts/useQueries';
 import { CreateStudioBoastsRequestProps } from '@/types/studio-boasts';
@@ -57,7 +58,10 @@ export default function StudioBoastsEditPage({
       },
       {
         onSuccess: () => {
-          toast.success('매물 자랑 수정이 완료되었습니다.');
+          toast.success(
+            '매물 자랑 수정이 완료되었습니다.',
+            isMobile ? TOAST_MOBILE_STUDIO_BOASTS : undefined,
+          );
           if (isMobile) {
             router.replace('/studio-boasts');
           } else {

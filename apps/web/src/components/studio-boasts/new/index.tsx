@@ -4,8 +4,6 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { toast } from 'sonner';
-
 import { updateObjectProperty } from '@muroom/util';
 
 import {
@@ -52,7 +50,6 @@ export default function StudioBoastsNewPage({ isMobile = false }: Props) {
 
   const mutationOptions = {
     onSuccess: () => {
-      toast.success('매물 자랑 등록이 성공적으로 완료되었습니다.');
       router.replace('/studio-boasts');
     },
   };

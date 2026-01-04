@@ -32,7 +32,7 @@ export default function InstrumentEditAlert({
       { instrumentId },
       {
         onSuccess: () => {
-          toast.success('악기가 성공적으로 변경되었습니다.');
+          toast.success('악기가 변경되었습니다.');
           onClose();
         },
         onError: () => {

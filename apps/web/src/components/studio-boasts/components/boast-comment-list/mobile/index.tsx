@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { Spinner } from '@muroom/components';
 
 import PageWrapper from '@/components/common/page-wrapper';
+import { TOAST_MOBILE_COMMENT } from '@/config/toastOptions';
 import {
   useCreateStudioBoastsCommentsMutation,
   useEditStudioBoastsCommentsMutation,
@@ -49,6 +50,8 @@ export default function MobileBoastCommentList({
 
   const [content, setContent] = useState('');
   const [isSecret, setIsSecret] = useState(false);
+
+  const [taggedUserNickname, setTaggedUserNickname] = useState('');
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useStudioBoastsCommentsQuery(
@@ -96,6 +99,7 @@ export default function MobileBoastCommentList({
   const handleReplyClick = (commentId: string, nickname: string) => {
     setMode('reply');
     setTarget({ id: commentId, nickname });
+    setTaggedUserNickname(nickname);
     setContent('');
     setIsSecret(false);
 
@@ -127,7 +131,7 @@ export default function MobileBoastCommentList({
           onSuccess: () => {
             handleResetMode();
             scrollToTarget();
-            toast.success('댓글이 등록되었습니다.');
+            toast.success('댓글이 등록되었습니다.', TOAST_MOBILE_COMMENT);
           },
         },
       );
@@ -142,7 +146,7 @@ export default function MobileBoastCommentList({
           onSuccess: () => {
             handleResetMode();
             scrollToTarget(parentId);
-            toast.success('답글이 등록되었습니다.');
+            toast.success('답글이 등록되었습니다.', TOAST_MOBILE_COMMENT);
           },
         },
       );
@@ -157,7 +161,7 @@ export default function MobileBoastCommentList({
           onSuccess: () => {
             handleResetMode();
             scrollToTarget(targetId);
-            toast.success('댓글이 수정되었습니다.');
+            toast.success('댓글이 수정되었습니다.', TOAST_MOBILE_COMMENT);
           },
         },
       );
@@ -195,6 +199,8 @@ export default function MobileBoastCommentList({
       bottomFixedSlot={
         <CommentTextBox
           ref={textBoxRef}
+          taggedUserNickname={taggedUserNickname}
+          setTaggedUserNickname={setTaggedUserNickname}
           isMobile
           content={content}
           onContentChange={setContent}
