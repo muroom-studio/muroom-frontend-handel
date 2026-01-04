@@ -79,8 +79,16 @@ export default function MobileStudioBoastsPage() {
       <div className='flex flex-col pb-20'>
         <MobileStudioBoastsTabBar />
         <BoastEventBanner isMobile className='-translate-y-0.5' />
-        <div className='h-6' />
-        <DetailBoastList items={studioBoastList} />
+        {studioBoastList.length === 0 ? (
+          <div className='flex-center my-25'>
+            <p className='text-base-l-16-1 whitespace-pre-wrap text-center text-gray-400'>{`현재 작성된 글이 없습니다. \n첫 글을 작성해볼까요?`}</p>
+          </div>
+        ) : (
+          <>
+            <div className='h-6' />
+            <DetailBoastList items={studioBoastList} />
+          </>
+        )}
 
         <div ref={observerRef} className='flex-center h-10 w-full py-4'>
           {isFetchingNextPage && <Spinner variant='component' />}

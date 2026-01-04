@@ -126,7 +126,10 @@ const ColItem = ({
   return (
     <>
       <div
-        className={cn('mx-5 flex flex-col gap-y-5 py-6', className)}
+        className={cn(
+          'mx-5 flex cursor-pointer flex-col gap-y-5 py-6',
+          className,
+        )}
         onClick={handleClick}
       >
         <div className='text-base-exl-18-2 text-gray-900'>{nameSlot}</div>
