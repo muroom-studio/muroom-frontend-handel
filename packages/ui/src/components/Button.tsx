@@ -97,7 +97,7 @@ const Button = ({
     },
     danger: {
       base: `
-        bg-red-400 text-base-l-16-2 !text-white px-4 py-[18px]
+        bg-red-400 !text-base-l-16-2 !text-white px-4 py-[18px]
         hover:bg-red-500
         active:bg-red-600
         disabled:bg-gray-200 text-gray-400

@@ -100,7 +100,7 @@ const ModalBottomSheet = ({
             >
               <div className={cn('p-5', bodyClassName)}>{children}</div>
               {footerBtns && (
-                <div className={cn('w-full px-2.5 py-3', footerClassName)}>
+                <div className={cn('w-full px-5 py-3', footerClassName)}>
                   {footerBtns}
                 </div>
               )}
