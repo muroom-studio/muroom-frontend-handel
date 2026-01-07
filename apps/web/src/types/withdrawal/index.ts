@@ -6,11 +6,11 @@ export interface ReasonOption {
   description: string;
 }
 
-export type WithdrawalReasonsResponseProps = ReasonOption[];
+export type WithdrawalReasonResponseProps = ReasonOption[];
 
 // 탈퇴신청
 // 요청 dto
-export interface WithdrawalMusiciansRequestProps {
+export interface WithdrawalMusicianRequestProps {
   withdrawalReasonId: number;
   opinion: string;
 }

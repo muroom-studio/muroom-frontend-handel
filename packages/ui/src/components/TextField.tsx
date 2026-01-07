@@ -11,6 +11,7 @@ export interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   customLabel?: React.ReactNode;
   className?: string;
+  inputWrapperClassName?: string;
   inputClassName?: string;
   hideClearButton?: boolean;
   ref?: Ref<HTMLInputElement>;
@@ -21,6 +22,7 @@ export interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
 
 const TextField = ({
   className,
+  inputWrapperClassName,
   inputClassName,
   hideClearButton = false,
   onClear,
@@ -82,9 +84,10 @@ const TextField = ({
 
       <div
         className={cn(
-          'rounded-4 relative flex items-center border bg-white px-3 transition-all',
+          'rounded-4 relative flex items-center border px-3 transition-all',
           'border-gray-300 focus-within:border-gray-800',
           props.disabled && 'cursor-not-allowed border-gray-300 bg-gray-50',
+          inputWrapperClassName,
         )}
       >
         {leftIcon && (

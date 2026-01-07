@@ -6,7 +6,7 @@ import { Alert, Button, ModalBottomSheet } from '@muroom/components';
 
 import AddressForm from '@/components/welcome/components/steps/components/address-form';
 import { StudioJuso } from '@/components/welcome/components/steps/third-step';
-import { useMusicianMeDetailMutation } from '@/hooks/api/musician/useMutations';
+import { useMusiciansMeDetailMutation } from '@/hooks/api/musicians/useMutations';
 
 import ContentWrapper from '../components/content-wrapper';
 
@@ -23,7 +23,7 @@ export default function StudioEditAlert({ isMobile, isOpen, onClose }: Props) {
     studioName: '',
   });
 
-  const { mutate: musicianMeDetailMutate } = useMusicianMeDetailMutation();
+  const { mutate: musicianMeDetailMutate } = useMusiciansMeDetailMutation();
 
   const handleConfirm = () => {
     musicianMeDetailMutate(

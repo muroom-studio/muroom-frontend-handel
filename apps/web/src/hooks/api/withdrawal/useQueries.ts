@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getWithdrawalReasons } from '@/lib/withdrawal';
+import { getWithdrawalReason } from '@/lib/withdrawal';
 
-const useWithdrawalReasonsQuery = () => {
+const useWithdrawalReasonQuery = () => {
   return useQuery({
     queryKey: ['withdrawal', 'reasons'],
-    queryFn: getWithdrawalReasons,
+    queryFn: getWithdrawalReason,
     staleTime: Infinity,
     gcTime: 1000 * 60 * 60,
     select: (data) => {
@@ -15,4 +15,4 @@ const useWithdrawalReasonsQuery = () => {
   });
 };
 
-export { useWithdrawalReasonsQuery };
+export { useWithdrawalReasonQuery };

@@ -1,12 +1,12 @@
 import {
-  WithdrawalMusiciansRequestProps,
-  WithdrawalReasonsResponseProps,
+  WithdrawalMusicianRequestProps,
+  WithdrawalReasonResponseProps,
 } from '@/types/withdrawal';
 import { customFetch } from '@/utils/customFetch';
 
-export const getWithdrawalReasons = async () => {
-  const responseData = await customFetch<WithdrawalReasonsResponseProps>(
-    '/withdrawal/reasons',
+export const getWithdrawalReason = async () => {
+  const responseData = await customFetch<WithdrawalReasonResponseProps>(
+    '/withdrawal-reasons',
     {
       method: 'GET',
     },
@@ -15,10 +15,10 @@ export const getWithdrawalReasons = async () => {
   return responseData;
 };
 
-export const postWithdrawalMusicians = async (
-  dto: WithdrawalMusiciansRequestProps,
+export const postWithdrawalMusician = async (
+  dto: WithdrawalMusicianRequestProps,
 ) => {
-  const responseData = await customFetch('/withdrawal/musicians', {
+  const responseData = await customFetch('/withdrawal/musician', {
     method: 'POST',
     body: JSON.stringify(dto),
   });

@@ -11,8 +11,8 @@ import {
   TextField,
 } from '@muroom/components';
 
-import { useMusicianMeDetailMutation } from '@/hooks/api/musician/useMutations';
-import { useUserNicknameCheckQuery } from '@/hooks/api/user/useQueries';
+import { useMusiciansMeDetailMutation } from '@/hooks/api/musicians/useMutations';
+import { useMusiciansNicknameCheckQuery } from '@/hooks/api/musicians/useQueries';
 
 import ContentWrapper from '../components/content-wrapper';
 
@@ -37,7 +37,7 @@ export default function NicknameEditAlert({
   const {
     refetch: userNicknameCheckRefetch,
     isLoading: isUserNicknameCheckLoading,
-  } = useUserNicknameCheckQuery({
+  } = useMusiciansNicknameCheckQuery({
     nickname,
   });
 
@@ -95,7 +95,7 @@ export default function NicknameEditAlert({
 
   const helperInfo = getHelperMessageInfo();
 
-  const { mutate: musicianMeDetailMutate } = useMusicianMeDetailMutation();
+  const { mutate: musicianMeDetailMutate } = useMusiciansMeDetailMutation();
 
   const handleConfirm = () => {
     musicianMeDetailMutate(

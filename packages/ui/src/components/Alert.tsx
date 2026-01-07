@@ -90,25 +90,19 @@ export default function Alert({
             transition={{ duration: 0.2 }}
           />
 
-          {/* Alert Modal */}
           <AlertWrapper>
             <div className='px-5 pb-5 pt-10'>
-              {/* Title */}
               <h2 className={currentStyle.title}>{title}</h2>
 
-              {/* Content */}
               <div className='text-base-l-16-1 whitespace-pre-wrap pb-10 pt-6'>
                 {content}
               </div>
 
-              {/* Buttons */}
               <div className='flex justify-end gap-x-2.5'>
-                {/* 취소 버튼 */}
                 <Button variant='outline' size='xl' onClick={onClose}>
                   {cancelLabel}
                 </Button>
 
-                {/* 확인 버튼 */}
                 {variant === 'negative' ? (
                   <Button
                     onClick={onConfirm}

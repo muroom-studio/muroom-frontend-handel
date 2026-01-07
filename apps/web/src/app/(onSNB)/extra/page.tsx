@@ -8,7 +8,7 @@ import { cn } from '@muroom/lib';
 
 import Loading from '@/app/loading';
 import PageWrapper from '@/components/common/page-wrapper';
-import { useMusicianMeQuery } from '@/hooks/api/musician/useQueries';
+import { useMusiciansMeQuery } from '@/hooks/api/musicians/useQueries';
 import { useAuthCheck } from '@/hooks/auth/useAuthCheck';
 import { LoginLink } from '@/hooks/auth/useAuthRedirect';
 import { usePrepareModal } from '@/hooks/usePrepareModal.tsx';
@@ -19,7 +19,7 @@ export default function Page() {
   const router = useRouter();
 
   const { data: musicianBaseData, isLoading: isMusicianBaseLoading } =
-    useMusicianMeQuery();
+    useMusiciansMeQuery();
 
   if (isMusicianBaseLoading) {
     return <Loading />;

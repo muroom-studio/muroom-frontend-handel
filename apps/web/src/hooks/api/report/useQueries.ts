@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getReportReason } from '@/lib/report';
+import { getReportReasons } from '@/lib/report';
 
-const useReportReasonQuery = () => {
+const useReportReasonsQuery = () => {
   return useQuery({
-    queryKey: ['report-reason'],
-    queryFn: getReportReason,
+    queryKey: ['report-reasons'],
+    queryFn: getReportReasons,
     staleTime: Infinity,
     gcTime: 1000 * 60 * 60,
   });
 };
 
-export { useReportReasonQuery };
+export { useReportReasonsQuery };

@@ -2,8 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import Link from 'next/link';
-
 import { MotionValue, motion, useTransform } from 'framer-motion';
 
 import {

@@ -1,17 +1,17 @@
 import { UseMutationResult, useMutation } from '@tanstack/react-query';
 
-import { postWithdrawalMusicians } from '@/lib/withdrawal';
+import { postWithdrawalMusician } from '@/lib/withdrawal';
 import { ApiRequestError } from '@/types/api';
-import { WithdrawalMusiciansRequestProps } from '@/types/withdrawal';
+import { WithdrawalMusicianRequestProps } from '@/types/withdrawal';
 
-const useWithdrawalMusiciansMutation = (): UseMutationResult<
+const useWithdrawalMusicianMutation = (): UseMutationResult<
   any,
   ApiRequestError,
-  WithdrawalMusiciansRequestProps
+  WithdrawalMusicianRequestProps
 > => {
   return useMutation({
-    mutationFn: postWithdrawalMusicians,
+    mutationFn: postWithdrawalMusician,
   });
 };
 
-export { useWithdrawalMusiciansMutation };
+export { useWithdrawalMusicianMutation };

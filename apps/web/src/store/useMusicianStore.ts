@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import { MusicianRegisterRequestProps } from '@/types/musician';
+import { MusicianRegisterRequestProps } from '@/types/auth/musician';
 
 interface MusicianStoreProps {
   dto: MusicianRegisterRequestProps;
