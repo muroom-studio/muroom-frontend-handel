@@ -57,6 +57,9 @@ export default function Page() {
             useAuthRedirectStore.getState().redirectUrl;
 
           const returnTarget = currentRedirectUrl || '/home';
+          console.log(returnTarget);
+
+          return;
           const separator = returnTarget.includes('?') ? '&' : '?';
 
           router.replace(`${returnTarget}${separator}trigger_join=true`);
