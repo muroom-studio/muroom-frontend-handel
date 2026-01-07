@@ -102,10 +102,9 @@ export default function MobileStudioBoastsTabBar() {
       ref={tabBarRef}
       className={cn(
         'sticky top-0 z-40 w-full bg-white transition-transform duration-300 ease-in-out',
-        'shadow-level-0',
         {
           '-translate-y-full': !isVisible,
-          'translate-y-0': isVisible,
+          '-translate-y-0.5': isVisible,
         },
       )}
     >
@@ -115,7 +114,7 @@ export default function MobileStudioBoastsTabBar() {
         initialActiveTabId={currentTabId}
         activeId={currentTabId}
         onTabChange={handleTabChange}
-        className='flex w-full justify-start gap-x-6 px-5 pb-2 pt-2'
+        className='flex w-full justify-start gap-x-6 border-y-[0.5px] border-y-gray-300 px-5'
         btnClassName='flex-none'
       />
     </div>

@@ -1,7 +1,5 @@
 'use client';
 
-import { AnimatePresence, motion } from 'framer-motion';
-
 import { TextBox, TextField } from '@muroom/components';
 import { cn } from '@muroom/lib';
 import { updateObjectProperty } from '@muroom/util';
@@ -85,12 +83,12 @@ export default function StudioBoastsNewCommonForm({
         isMobile={isMobile}
         value={value as any}
         setValue={setValue as any}
-        onMyPage={true}
         fieldMap={{
           address: 'roadNameAddress',
           jibunAddress: 'lotNumberAddress',
           detailAddress: 'detailedAddress',
           name: 'studioName',
+          studioId: 'studioId',
         }}
       />
 
@@ -119,27 +117,16 @@ export default function StudioBoastsNewCommonForm({
             )
           }
         />
-        <AnimatePresence initial={false}>
-          {value.instagramAccount && (
-            <motion.div
-              key='insta-agreement'
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
-              style={{ overflow: 'hidden' }}
-            >
-              <InstaAgreement
-                isMobile={isMobile}
-                value={value as any}
-                setValue={setValue as any}
-                showConfirmCheckModal={showConfirmCheckModal}
-                setShowConfirmCheckModal={setShowConfirmCheckModal}
-                onRegister={onRegister}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {value.instagramAccount && (
+          <InstaAgreement
+            isMobile={isMobile}
+            value={value as any}
+            setValue={setValue as any}
+            showConfirmCheckModal={showConfirmCheckModal}
+            setShowConfirmCheckModal={setShowConfirmCheckModal}
+            onRegister={onRegister}
+          />
+        )}
       </div>
     </div>
   );

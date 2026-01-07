@@ -47,7 +47,7 @@ export default function SearchPage() {
   if (!isMobile) return null;
 
   return (
-    <div className='z-9999 fixed inset-0 flex flex-col bg-white pb-[env(safe-area-inset-bottom)]'>
+    <div className='z-999 fixed inset-0 flex flex-col bg-white pb-[env(safe-area-inset-bottom)]'>
       <div className='flex items-center border-b border-gray-100'>
         <TextField
           ref={inputRef}

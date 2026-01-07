@@ -55,18 +55,12 @@ export default function MypageCsInquiryNewPage({ isMobile }: Props) {
           toast.success('문의 등록이 성공적으로 완료되었습니다.');
           router.replace('/mypage/cs?inquiry=true');
         },
-        onError: () => {
-          toast.error('문의 등록이 실패했습니다.');
-        },
       },
     );
   };
 
   const isFormValid =
-    categoryId !== 0 &&
-    value.title !== '' &&
-    value.content !== '' &&
-    imageKeys.length > 0;
+    categoryId !== 0 && value.title !== '' && value.content !== '';
 
   if (isLoading || !inquiryCategoriesData) {
     return <Loading />;

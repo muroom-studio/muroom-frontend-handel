@@ -8,6 +8,7 @@ import { Button, TabBar, TabItem } from '@muroom/components';
 import PageWrapper from '@/components/common/page-wrapper';
 import FaqBoard from '@/components/mypage/cs/components/faq';
 import InquiriesBoard from '@/components/mypage/cs/components/inquiries';
+import { useAuthCheck } from '@/hooks/auth/useAuthCheck';
 import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
 
 const tabs: TabItem[] = [
@@ -16,7 +17,9 @@ const tabs: TabItem[] = [
 ];
 
 export default function Page() {
+  const { isLoggedIn } = useAuthCheck();
   const { isMobile } = useResponsiveLayout();
+
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -51,13 +54,36 @@ export default function Page() {
     </div>
   );
 
+  // ✅ 1. [순서 변경] 모바일 + 비로그인 (가장 먼저 체크해야 함)
+  if (isMobile && !isLoggedIn) {
+    return (
+      <PageWrapper
+        isMobile
+        isHeader={{ title: 'FAQ', onBackClick: () => router.back() }}
+        contentClassName='px-5 pt-6'
+      >
+        <FaqBoard isMobile={isMobile} />
+      </PageWrapper>
+    );
+  }
+
+  // ✅ 2. 데스크톱 + 비로그인 (위에서 모바일은 걸러졌으므로 여기는 데스크톱만 해당)
+  if (!isLoggedIn) {
+    return (
+      <PageWrapper title='FAQ'>
+        <FaqBoard />
+      </PageWrapper>
+    );
+  }
+
+  // ✅ 3. 모바일 + 로그인 (위의 !isLoggedIn을 통과했으므로 로그인 상태)
   if (isMobile) {
     return (
       <PageWrapper
         isMobile
         isHeader={{ title: '고객센터', onBackClick: () => router.back() }}
         contentClassName='px-0 pt-0'
-        bottomSlot={
+        bottomFixedSlot={
           activeTabId === 'inquiry' ? (
             <Link href='/mypage/cs/inquiry/new'>
               <Button variant='outline' size='l' className='w-full'>
@@ -72,5 +98,6 @@ export default function Page() {
     );
   }
 
+  // ✅ 4. 데스크톱 + 로그인
   return MainContent;
 }

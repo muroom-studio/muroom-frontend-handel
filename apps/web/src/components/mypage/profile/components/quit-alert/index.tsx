@@ -12,13 +12,16 @@ import {
   DropdownContent,
   DropdownItem,
   DropdownTrigger,
+  ModalBottomSheet,
   RequiredText,
   TextBox,
 } from '@muroom/components';
+import { DownArrowIcon } from '@muroom/icons';
+import { cn } from '@muroom/lib';
 
 import PageWrapper from '@/components/common/page-wrapper';
-import { useWithdrawalMusiciansMutation } from '@/hooks/api/withdrawal/useMutations';
-import { useWithdrawalReasonsQuery } from '@/hooks/api/withdrawal/useQueries';
+import { useWithdrawalMusicianMutation } from '@/hooks/api/withdrawal/useMutations';
+import { useWithdrawalReasonQuery } from '@/hooks/api/withdrawal/useQueries';
 
 import ContentWrapper from '../edit-alert/components/content-wrapper';
 
@@ -31,17 +34,19 @@ interface Props {
 export default function QuitAlert({ isMobile, isOpen, onClose }: Props) {
   const router = useRouter();
 
+  const [isMobileModalSheetOpen, setIsMobileModalSheetOpen] = useState(false);
+
   const [selectedReason, setSelectedReason] = useState({
     withdrawalReasonId: 0,
     description: '',
   });
+
   const [opinion, setOpinion] = useState('');
   const [isChecked, setIsChecked] = useState(false);
 
-  const { data: withdrawalResonsData } = useWithdrawalReasonsQuery();
+  const { data: withdrawalResonsData } = useWithdrawalReasonQuery();
 
-  const { mutate: withdrawalMusiciansMutate } =
-    useWithdrawalMusiciansMutation();
+  const { mutate: withdrawalMusiciansMutate } = useWithdrawalMusicianMutation();
 
   const handleConfirm = () => {
     withdrawalMusiciansMutate(
@@ -54,9 +59,6 @@ export default function QuitAlert({ isMobile, isOpen, onClose }: Props) {
           toast.success('탈퇴 처리가 성공적으로 완료되었습니다.');
           onClose();
           router.push('/logout');
-        },
-        onError: () => {
-          toast.error('탈퇴 처리가 실패했습니다.');
         },
       },
     );
@@ -81,34 +83,105 @@ export default function QuitAlert({ isMobile, isOpen, onClose }: Props) {
           <div className='flex flex-col gap-y-3'>
             <RequiredText>탈퇴사유</RequiredText>
 
-            <Dropdown
-              value={
-                selectedReason.description === '선택'
-                  ? ''
-                  : selectedReason.description
-              }
-              onValueChange={(val) => {
-                const targetReason = withdrawalResonsData?.find(
-                  (reason) => reason.description === val,
-                );
-                setSelectedReason({
-                  withdrawalReasonId: targetReason?.id || 0,
-                  description: targetReason?.description || '',
-                });
-              }}
-              placeholder='탈퇴유형을 선택해주세요'
-              className='w-full'
-            >
-              <DropdownTrigger variant='primary' size='m' />
+            {isMobile ? (
+              <>
+                <button
+                  type='button'
+                  onClick={() => setIsMobileModalSheetOpen(true)}
+                  className={cn(
+                    'rounded-4 group flex h-9 w-fit shrink-0 cursor-pointer items-center gap-x-1 truncate border border-gray-300 bg-white px-3 py-[9px] text-start transition-all',
+                    'hover:bg-gray-50',
+                    {
+                      'border-primary-400 bg-primary-50 !text-primary-600':
+                        selectedReason.withdrawalReasonId !== 0,
+                    },
+                  )}
+                >
+                  <span className='text-base-m-14-1 truncate'>
+                    {selectedReason.withdrawalReasonId === 0
+                      ? '탈퇴유형을 선택해주세요'
+                      : selectedReason.description}
+                  </span>
+                  <DownArrowIcon
+                    className={cn(
+                      'size-5 transition-transform duration-200',
+                      isMobileModalSheetOpen && 'rotate-180',
+                    )}
+                  />
+                </button>
+                <ModalBottomSheet
+                  isOpen={isMobileModalSheetOpen}
+                  onClose={() => setIsMobileModalSheetOpen(false)}
+                  className='pb-safe'
+                >
+                  <div className='flex flex-col'>
+                    {withdrawalResonsData?.map((reason) => {
+                      const isSelected =
+                        selectedReason.withdrawalReasonId !== 0 &&
+                        selectedReason.description === reason.description;
 
-              <DropdownContent className='max-h-73.75 overflow-y-auto'>
-                {withdrawalResonsData?.map((reason) => (
-                  <DropdownItem key={reason.id} value={reason.description}>
-                    {reason.description}
-                  </DropdownItem>
-                ))}
-              </DropdownContent>
-            </Dropdown>
+                      return (
+                        <button
+                          key={reason.id}
+                          type='button'
+                          onClick={() => {
+                            if (isSelected) {
+                              setSelectedReason({
+                                withdrawalReasonId: 0,
+                                description: '',
+                              });
+                            } else {
+                              setSelectedReason({
+                                withdrawalReasonId: reason.id,
+                                description: reason.description,
+                              });
+                            }
+                            setIsMobileModalSheetOpen(false);
+                          }}
+                          className={cn(
+                            'flex w-full items-center justify-between border-b border-gray-100 py-4 text-left transition-colors last:border-none hover:bg-gray-50',
+                            isSelected && 'text-primary-600 font-medium',
+                          )}
+                        >
+                          <span className='text-base-l-16-1'>
+                            {reason.description}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </ModalBottomSheet>
+              </>
+            ) : (
+              <Dropdown
+                value={
+                  selectedReason.description === '선택'
+                    ? ''
+                    : selectedReason.description
+                }
+                onValueChange={(val) => {
+                  const targetReason = withdrawalResonsData?.find(
+                    (reason) => reason.description === val,
+                  );
+                  setSelectedReason({
+                    withdrawalReasonId: targetReason?.id || 0,
+                    description: targetReason?.description || '',
+                  });
+                }}
+                placeholder='탈퇴유형을 선택해주세요'
+                className='w-full'
+              >
+                <DropdownTrigger variant='primary' size='m' />
+
+                <DropdownContent className='max-h-73.75 overflow-y-auto'>
+                  {withdrawalResonsData?.map((reason) => (
+                    <DropdownItem key={reason.id} value={reason.description}>
+                      {reason.description}
+                    </DropdownItem>
+                  ))}
+                </DropdownContent>
+              </Dropdown>
+            )}
           </div>
 
           <div className='flex flex-col gap-y-3'>
@@ -138,9 +211,9 @@ export default function QuitAlert({ isMobile, isOpen, onClose }: Props) {
       <PageWrapper
         isMobile
         isHeader={{ title: '서비스 탈퇴', onBackClick: onClose }}
-        className='z-9999 fixed inset-0 bg-white'
+        className='fixed inset-0 z-50 bg-white'
         isModal
-        bottomSlot={
+        bottomFixedSlot={
           <div className='grid grid-cols-2 gap-x-3'>
             <Button variant='outline' size='xl' onClick={onClose}>
               취소하기
@@ -149,11 +222,7 @@ export default function QuitAlert({ isMobile, isOpen, onClose }: Props) {
               onClick={handleConfirm}
               variant='danger'
               size='xl'
-              disabled={
-                selectedReason.withdrawalReasonId === 0 ||
-                opinion.length === 0 ||
-                !isChecked
-              }
+              disabled={selectedReason.withdrawalReasonId === 0 || !isChecked}
             >
               탈퇴하기
             </Button>
@@ -174,11 +243,7 @@ export default function QuitAlert({ isMobile, isOpen, onClose }: Props) {
       title='서비스 탈퇴'
       content={AlertContent()}
       confirmLabel='탈퇴하기'
-      confirmDisabled={
-        selectedReason.withdrawalReasonId === 0 ||
-        opinion.length === 0 ||
-        !isChecked
-      }
+      confirmDisabled={selectedReason.withdrawalReasonId === 0 || !isChecked}
     />
   );
 }

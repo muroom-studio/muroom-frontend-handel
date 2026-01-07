@@ -2,13 +2,13 @@
 
 import { MouseEvent, useCallback, useRef, useState } from 'react';
 
-import Image from 'next/image';
 import Link from 'next/link';
 
 import { Spinner } from '@muroom/components';
 import { RightArrowIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 
+import CommonImage from '@/components/common/common-image';
 import { useStudioBoastsSimpleQuery } from '@/hooks/api/studio-boasts/useQueries';
 import { StudioBoastsSimpleItemDto } from '@/types/studio-boasts';
 import { extractInfiniteData } from '@/utils/query';
@@ -118,14 +118,14 @@ export default function BoastSimpleCarousel({
 
     scrollRef.current.scrollBy({
       left: direction === 'left' ? -scrollAmount : scrollAmount,
-      behavior: 'smooth',
+      behavior: 'instant',
     });
   };
 
   const handleMobileClick = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      element.scrollIntoView({ behavior: 'instant', block: 'start' });
     }
   };
 
@@ -186,7 +186,7 @@ export default function BoastSimpleCarousel({
           onScroll={handleScroll}
           className={cn(
             'scrollbar-hide flex w-full overflow-x-auto pb-4',
-            !isDragging && 'scroll-smooth',
+            !isDragging && 'scroll-auto',
             isDragging ? 'cursor-grabbing' : 'cursor-grab',
             isMobile ? 'gap-x-3 px-4' : 'gap-x-4 px-0',
           )}
@@ -200,7 +200,7 @@ export default function BoastSimpleCarousel({
                   onDragStart={(e) => e.preventDefault()}
                   className={itemClassName}
                 >
-                  <Image
+                  <CommonImage
                     src={item.thumbnailImageFileUrl}
                     alt='작업실 이미지'
                     fill
@@ -218,7 +218,7 @@ export default function BoastSimpleCarousel({
                 onDragStart={(e) => e.preventDefault()}
                 className={itemClassName}
               >
-                <Image
+                <CommonImage
                   src={item.thumbnailImageFileUrl}
                   alt='작업실 이미지'
                   fill

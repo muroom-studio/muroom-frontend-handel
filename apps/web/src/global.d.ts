@@ -1,6 +1,3 @@
-// .css 파일을 모듈로 선언합니다.
-declare module '*.css';
-
 export class Map {
   constructor(mapDiv: string | HTMLElement, mapOptions?: any);
   setCenter(latlng: LatLng): void;
@@ -38,5 +35,5 @@ export class Size {
   constructor(width: number, height: number);
 }
 
-export const Event: any;
-export const LatLngBounds: any;
+export declare const Event: any;
+export declare const LatLngBounds: any;

@@ -15,15 +15,11 @@ import { AnimatePresence, Variants, motion } from 'framer-motion';
 
 import { cn } from '../lib/utils';
 
-// ----------------------------------------------------------------------
-// Interfaces
-// ----------------------------------------------------------------------
-
 interface PopoverContextProps {
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
   triggerRef: React.RefObject<HTMLElement | null>;
-  contentRef: React.RefObject<HTMLElement | null>; // [추가] 컨텐츠 Ref 공유
+  contentRef: React.RefObject<HTMLElement | null>;
 }
 
 interface PopoverProps {
@@ -42,6 +38,7 @@ interface PopoverContentProps {
   sideOffset?: number;
   align?: 'center' | 'start' | 'end';
   side?: 'top' | 'right' | 'bottom' | 'left';
+  matchTriggerWidth?: boolean;
 }
 
 interface PopoverMenuItemProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -76,7 +73,7 @@ const Popover = ({
 }: PopoverProps) => {
   const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
   const triggerRef = useRef<HTMLElement>(null);
-  const contentRef = useRef<HTMLElement>(null); // [수정] 부모에서 contentRef 생성
+  const contentRef = useRef<HTMLElement>(null); // ✅ 부모에서 Ref 관리
 
   const isControlled = controlledOpen !== undefined;
   const isOpen = isControlled ? controlledOpen : uncontrolledOpen;
@@ -99,7 +96,7 @@ const Popover = ({
       const target = event.target as Node;
       if (!target || !document.contains(target)) return;
 
-      // [핵심 수정] 트리거 바깥이고 "동시에" 컨텐츠 바깥일 때만 닫음
+      // ✅ 트리거와 컨텐츠 둘 다 아닐 때만 닫기
       const isOutsideTrigger =
         triggerRef.current && !triggerRef.current.contains(target);
       const isOutsideContent =
@@ -114,14 +111,14 @@ const Popover = ({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isOpen, setIsOpen]); // triggerRef, contentRef는 ref라 디펜던시 불필요
+  }, [isOpen, setIsOpen]);
 
   const contextValue = useMemo(
     () => ({
       isOpen,
       setIsOpen,
       triggerRef,
-      contentRef, // [추가] Provider로 전달
+      contentRef,
     }),
     [isOpen, setIsOpen],
   );
@@ -166,13 +163,14 @@ const PopoverContent = ({
   sideOffset = 8,
   align = 'center',
   side = 'bottom',
+  matchTriggerWidth = false, // ✅ 기본값 false
 }: PopoverContentProps) => {
-  // [수정] usePopover에서 contentRef를 가져옴 (내부 useRef 삭제)
   const { isOpen, triggerRef, contentRef } = usePopover();
 
   const [style, setStyle] = useState<{
     top: number;
     left: number;
+    width?: number; // ✅ 너비 상태 추가
     maxHeight?: number;
     transformOrigin: string;
   }>({
@@ -182,7 +180,6 @@ const PopoverContent = ({
   });
 
   useEffect(() => {
-    // contentRef.current가 null일 수도 있으니 체크
     if (isOpen && triggerRef.current && contentRef.current) {
       const triggerRect = triggerRef.current.getBoundingClientRect();
       const contentRect = contentRef.current.getBoundingClientRect();
@@ -193,6 +190,12 @@ const PopoverContent = ({
         left = 0,
         transformOrigin = 'center';
       let calculatedMaxHeight = viewportHeight;
+
+      // ✅ matchTriggerWidth 옵션이 켜져있으면 트리거 너비 사용
+      let calculatedWidth: number | undefined = undefined;
+      if (matchTriggerWidth) {
+        calculatedWidth = triggerRect.width;
+      }
 
       if (side === 'bottom') {
         top = triggerRect.bottom + window.scrollY + sideOffset;
@@ -269,20 +272,36 @@ const PopoverContent = ({
         }
       }
 
+      // 화면 밖으로 나가는 것 방지
       if (left < 8) left = 8;
-      if (left + contentRect.width > viewportWidth - 8) {
+      // matchTriggerWidth가 아닐 때만 우측 넘침 체크 (너비 고정이면 어차피 트리거 따라감)
+      if (!matchTriggerWidth && left + contentRect.width > viewportWidth - 8) {
         left = viewportWidth - contentRect.width - 8;
       }
 
-      setStyle({ top, left, maxHeight: calculatedMaxHeight, transformOrigin });
+      setStyle({
+        top,
+        left,
+        width: calculatedWidth,
+        maxHeight: calculatedMaxHeight,
+        transformOrigin,
+      });
     }
-  }, [isOpen, triggerRef, contentRef, sideOffset, align, side]);
+  }, [
+    isOpen,
+    triggerRef,
+    contentRef,
+    sideOffset,
+    align,
+    side,
+    matchTriggerWidth,
+  ]);
 
   return createPortal(
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          ref={contentRef as React.RefObject<HTMLDivElement>} // Context의 ref 연결
+          ref={contentRef as React.RefObject<HTMLDivElement>}
           variants={popoverVariants}
           initial='initial'
           animate='animate'
@@ -290,11 +309,14 @@ const PopoverContent = ({
           transition={{ type: 'spring', damping: 20, stiffness: 300 }}
           className={cn(
             'absolute z-[9999] flex flex-col overflow-y-auto',
+            // matchTriggerWidth가 아닐 때는 내용물만큼만 차지하게 (w-full 제거)
+            !matchTriggerWidth && 'w-auto',
             className,
           )}
           style={{
             top: `${style.top}px`,
             left: `${style.left}px`,
+            width: style.width ? `${style.width}px` : undefined, // ✅ 계산된 너비 적용
             maxHeight: style.maxHeight ? `${style.maxHeight}px` : undefined,
             transformOrigin: style.transformOrigin,
           }}

@@ -7,6 +7,8 @@ import {
   StudiosMapListResponseProps,
   StudiosMapSearchRequestProps,
   StudiosMapSearchResponseProps,
+  StudiosSearchAddressRequestProps,
+  StudiosSearchAddressResponseProps,
 } from '@/types/studios';
 import { customFetch } from '@/utils/customFetch';
 
@@ -67,6 +69,22 @@ export const getStudiosMapList = async (params: StudiosMapListRequestProps) => {
 export const getStudioDetail = async (studioId: string) => {
   const responseData = await customFetch<StudioDetailResponseProps>(
     `/studios/${studioId}`,
+    {
+      method: 'GET',
+    },
+  );
+
+  return responseData;
+};
+
+// 도로명 주소로 스튜디오 검색
+export const getStudiosSearchAddress = async (
+  params: StudiosSearchAddressRequestProps,
+) => {
+  const queryString = createQueryString(params);
+
+  const responseData = await customFetch<StudiosSearchAddressResponseProps>(
+    `/studios/search/address?${queryString}`,
     {
       method: 'GET',
     },

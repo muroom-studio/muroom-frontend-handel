@@ -12,9 +12,11 @@ export interface StudioBoastsCommentsRequestProps extends PageRequestProps {
 export interface CreatorUserInfoDto {
   id: string;
   nickname: string;
-  instrument: string;
-  agreedToEventTerms: boolean;
-  instagramAccount: string;
+  instrumentInfo: {
+    id: string;
+    code: string;
+    description: string;
+  };
 }
 
 export interface TaggedUserInfoDto {
@@ -65,6 +67,7 @@ export interface StudioBoastsEditCommentsRequestProps {
   studioBoastId: string;
   commentId: string;
   content: string;
+  isSecret: boolean;
 }
 
 {
@@ -83,4 +86,15 @@ export interface StudioBoastsDeleteCommentsRequestProps {
 export interface StudioBoastsCommentsLikesRequestProps {
   studioBoastId: string;
   commentId: string;
+}
+
+{
+  /* 댓글 신고 */
+}
+// 요청 dto
+export interface StudioBoastsCommentsReportRequestProps {
+  studioBoastId: string;
+  commentId: string;
+  reportReasonId: string;
+  description: string;
 }

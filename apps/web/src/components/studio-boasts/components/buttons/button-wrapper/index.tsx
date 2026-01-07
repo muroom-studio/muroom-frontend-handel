@@ -7,7 +7,7 @@ import { LoginLink } from '@/hooks/auth/useAuthRedirect';
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   isMobile?: boolean;
-  variant?: 'outline' | 'fill';
+  variant?: 'outline' | 'fill' | 'comment';
   active?: boolean;
   requireAuth?: boolean;
   children: React.ReactNode;
@@ -30,14 +30,15 @@ export default function StudioBoastsButtonWrapper({
     <div
       className={cn(
         'cursor-pointer transition-all',
-        !isMobile && [
-          'flex-center-col rounded-4 size-16 gap-y-1',
-          'shadow-level-0 hover:shadow-level-1',
-          variant === 'outline' && 'border border-gray-300 bg-white',
-          variant === 'fill' && 'bg-gray-50 hover:bg-gray-100',
-          variant === 'fill' && active && 'shadow-level-1 bg-gray-100',
-        ],
-        isMobile && [
+        !isMobile &&
+          variant !== 'comment' && [
+            'flex-center-col rounded-4 size-16 gap-y-1',
+            'shadow-level-0 hover:shadow-level-1',
+            variant === 'outline' && 'border border-gray-300 bg-white',
+            variant === 'fill' && 'bg-gray-50 hover:bg-gray-100',
+            variant === 'fill' && active && 'shadow-level-1 bg-gray-100',
+          ],
+        (isMobile || variant === 'comment') && [
           'flex items-center gap-x-1',
           'size-fit',
           'border-none bg-transparent shadow-none',

@@ -1,10 +1,11 @@
 'use client';
 
-import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import { Badge } from '@muroom/components';
 import { cn } from '@muroom/lib';
 
+import CommonImage from '@/components/common/common-image';
 import { NearestSubwayStationDto } from '@/types/studio';
 
 interface Props {
@@ -17,12 +18,11 @@ interface Props {
   thumbnailUrl?: string | null;
   address?: string;
   isMobile?: boolean;
-  onClick?: () => void;
   wrapperClassName?: string;
 }
 
 export default function BoastStudioCard({
-  isMobile,
+  isMobile = false,
   variant,
   id,
   title,
@@ -31,27 +31,34 @@ export default function BoastStudioCard({
   thumbnailUrl,
   subwayInfo,
   address,
-  onClick,
   wrapperClassName,
 }: Props) {
+  const router = useRouter();
+
   const { stationName, distanceInMeters, lines } = subwayInfo || {};
+
+  const showThumbnail = !isMobile && variant === 'known' && thumbnailUrl;
+
+  const handleCardClick = () => {
+    if (variant === 'known') {
+      router.push(`/home?studioId=${id}`);
+    }
+    return;
+  };
 
   return (
     <div
-      onClick={onClick}
+      onClick={handleCardClick}
       className={cn(
-        'rounded-4 h-[188px] w-full bg-gray-50 px-4 py-6 transition-colors',
+        'rounded-4 w-full bg-gray-50 px-4 py-6 transition-colors',
         wrapperClassName,
-        {
-          'grid grid-cols-[140px_1fr] gap-x-3':
-            variant === 'known' && !isMobile,
-          'flex flex-col': variant === 'unknown' || isMobile,
-        },
+        showThumbnail ? 'grid grid-cols-[140px_1fr] gap-x-3' : 'flex flex-col',
+        variant === 'known' && 'h-47 cursor-pointer',
       )}
     >
-      {variant === 'known' && thumbnailUrl && (
-        <div className='rounded-4 relative h-[140px] w-[140px] shrink-0 overflow-hidden'>
-          <Image
+      {showThumbnail && (
+        <div className='rounded-4 size-35 relative shrink-0 overflow-hidden'>
+          <CommonImage
             src={thumbnailUrl}
             alt={`${id}-${title}`}
             fill
@@ -69,10 +76,10 @@ export default function BoastStudioCard({
                 : '가격문의'}
             </span>
           ) : (
-            <span className='text-title-s-22-2'>{title}</span>
+            <span className='text-title-s-22-2 text-gray-500'>{title}</span>
           )}
 
-          {subwayInfo && (
+          {variant === 'known' && subwayInfo && (
             <div className='flex items-center gap-x-1'>
               {Array.isArray(lines) && lines.length > 0 && lines[0] && (
                 <Badge
@@ -87,19 +94,19 @@ export default function BoastStudioCard({
               </p>
             </div>
           )}
-        </div>
 
-        <div className='mt-auto'>
-          {variant === 'known' ? (
-            <div className='text-base-m-14-1 text-gray-500'>
-              <span>{title}</span>
-            </div>
-          ) : (
-            <p className='text-base-m-14-1 break-keep text-gray-500'>
+          {variant === 'unknown' && (
+            <span className='text-base-m-14-1 break-keep text-gray-500'>
               {address}
-            </p>
+            </span>
           )}
         </div>
+
+        {variant === 'known' && (
+          <span className='text-base-m-14-1 break-keep text-gray-500'>
+            {title}
+          </span>
+        )}
       </div>
     </div>
   );

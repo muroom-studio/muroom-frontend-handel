@@ -2,24 +2,23 @@
 
 import { useEffect } from 'react';
 
-import { useRouter } from 'next/navigation';
-
-import { postMusicianLogout } from '@/lib/musician/(server)';
+import { useThrowError } from '@/hooks/common/useThrowError';
+import { postAuthMusicianLogout } from '@/lib/auth/musician/(server)';
 
 import Loading from '../loading';
 
 export default function LogoutPage() {
-  const router = useRouter();
+  const throwError = useThrowError();
 
   useEffect(() => {
-    const handleLogout = async () => {
-      await postMusicianLogout();
-
-      window.location.href = '/home';
-    };
-
-    handleLogout();
-  }, [router]);
+    postAuthMusicianLogout()
+      .then(() => {
+        window.location.href = '/home';
+      })
+      .catch((e) => {
+        throwError(e);
+      });
+  }, [throwError]);
 
   return <Loading />;
 }

@@ -43,7 +43,7 @@ export function LoginLink({ children, onClick, ...props }: LoginLinkProps) {
         if (onClick) onClick(e);
       }}
     >
-      {children}
+      <div className='pointer-events-none contents'>{children}</div>
     </Link>
   );
 }

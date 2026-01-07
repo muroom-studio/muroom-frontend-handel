@@ -6,7 +6,8 @@ import { useRouter } from 'next/navigation';
 
 import { toast } from 'sonner';
 
-import { useReportReasonQuery } from '@/hooks/api/report/useQueries';
+import { useReportReasonsQuery } from '@/hooks/api/report/useQueries';
+import { useStudioBoastsCommentsReportMutation } from '@/hooks/api/studio-boasts/comments/useMutations';
 import { useStudioBoastsReportMutation } from '@/hooks/api/studio-boasts/useMutations';
 
 import DesktopReportAlert from './desktop';
@@ -19,6 +20,8 @@ interface Props {
   studioBoastId: string;
   instrumentDescription: string;
   nickname: string;
+  isComment?: boolean;
+  commentId?: string;
 }
 
 export default function ReportAlert({
@@ -28,13 +31,23 @@ export default function ReportAlert({
   studioBoastId,
   instrumentDescription,
   nickname,
+  isComment = false,
+  commentId,
 }: Props) {
   const router = useRouter();
   const [selectedReason, setSelectedReason] = useState({ id: '', name: '' });
   const [description, setDescription] = useState('');
 
-  const { data: reportReasonData } = useReportReasonQuery();
-  const { mutate: studioBoastsReportMutate } = useStudioBoastsReportMutation();
+  const { data: reportReasonData } = useReportReasonsQuery();
+
+  const {
+    mutate: studioBoastsReportMutate,
+    isPending: isStudioBoastsReportPending,
+  } = useStudioBoastsReportMutation();
+  const {
+    mutate: studioBoastsCommentsReportMutate,
+    isPending: isStudioBoastsCommentsReportPending,
+  } = useStudioBoastsCommentsReportMutation();
 
   const handleResetAndClose = () => {
     setSelectedReason({ id: '', name: '' });
@@ -43,6 +56,27 @@ export default function ReportAlert({
   };
 
   const handleFinalSubmit = () => {
+    if (isComment && commentId) {
+      studioBoastsCommentsReportMutate(
+        {
+          studioBoastId,
+          commentId,
+          reportReasonId: selectedReason.id,
+          description,
+        },
+        {
+          onSuccess: () => {
+            toast.success('해당 댓글이 신고처리되었습니다.');
+            handleResetAndClose();
+          },
+          onError: () => {
+            handleResetAndClose();
+          },
+        },
+      );
+      return;
+    }
+
     studioBoastsReportMutate(
       {
         studioBoastId,
@@ -59,7 +93,6 @@ export default function ReportAlert({
           }
         },
         onError: () => {
-          toast.error('신고처리가 실패했습니다.');
           handleResetAndClose();
         },
       },
@@ -67,7 +100,10 @@ export default function ReportAlert({
   };
 
   const isValid =
-    studioBoastId !== '' && selectedReason.id !== '' && description !== '';
+    studioBoastId !== '' &&
+    selectedReason.id !== '' &&
+    description !== '' &&
+    (!isComment || (isComment && !!commentId));
 
   const commonProps = {
     isOpen,
@@ -75,6 +111,7 @@ export default function ReportAlert({
     onFinalSubmit: handleFinalSubmit,
     isValid,
     formProps: {
+      isMobile,
       instrumentDescription,
       nickname,
       reasonData: reportReasonData,
@@ -84,10 +121,10 @@ export default function ReportAlert({
         setSelectedReason({ id, name }),
       onDescriptionChange: setDescription,
     },
+    isLoading:
+      isStudioBoastsCommentsReportPending || isStudioBoastsReportPending,
   };
-  console.log(selectedReason.name);
 
-  // 6. 렌더링 분기
   if (isMobile) {
     return <MobileReportAlert {...commonProps} />;
   }

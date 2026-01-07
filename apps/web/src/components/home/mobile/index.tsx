@@ -1,14 +1,20 @@
 'use client';
 
+import { useEffect } from 'react';
+
+import { notFound } from 'next/navigation';
+
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
 
 import { BottomSheet } from '@muroom/components';
 
 import Loading from '@/app/loading';
+import NotFound from '@/app/not-found';
 import CommonDetailStudio from '@/components/common/detail-studio';
 import CommonMap from '@/components/common/map';
 import { MapState } from '@/hooks/nuqs/home/useMapState';
 import { useSort } from '@/hooks/nuqs/home/useSort';
+import { useEventModal } from '@/hooks/useEventModal.tsx';
 import { StudioDetailResponseProps } from '@/types/studio';
 import { StudiosMapListItem, StudiosMapSearchItem } from '@/types/studios';
 
@@ -23,6 +29,7 @@ interface Props {
   studios: StudiosMapListItem[];
   totalElements: number;
   detailStudio?: StudioDetailResponseProps;
+  isDetailLoading?: boolean;
   markersData: StudiosMapSearchItem[];
   isLoading: boolean;
 
@@ -49,19 +56,27 @@ export default function MobileHomePage({
   studios,
   totalElements,
   detailStudio,
+  isDetailLoading,
   markersData,
   isLoading,
   infiniteScroll,
 }: Props) {
   const sheetY = useMotionValue(0);
 
+  const { EventModal } = useEventModal();
+
   if (isLoading) {
     return <Loading />;
+  }
+
+  if (mapValue.studioId && !isDetailLoading && !detailStudio) {
+    return <NotFound />;
   }
 
   return (
     <div className='relative flex h-screen flex-1 flex-col overflow-hidden'>
       <div className='h-full w-full'>
+        {EventModal}
         <CommonMap
           mapValue={mapValue}
           setMapValue={setMapValue}

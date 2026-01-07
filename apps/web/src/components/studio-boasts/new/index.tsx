@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 
 import { updateObjectProperty } from '@muroom/util';
 
+import { TOAST_MOBILE_STUDIO_BOASTS } from '@/config/toastOptions';
 import {
   usePostStudioBoastsMutation,
   useStudioBoastsPresignedUrlMutation,
@@ -52,11 +53,11 @@ export default function StudioBoastsNewPage({ isMobile = false }: Props) {
 
   const mutationOptions = {
     onSuccess: () => {
-      toast.success('매물 자랑 등록이 성공적으로 완료되었습니다.');
+      toast.success(
+        '매물 자랑 등록이 완료되었습니다.',
+        isMobile ? TOAST_MOBILE_STUDIO_BOASTS : undefined,
+      );
       router.replace('/studio-boasts');
-    },
-    onError: () => {
-      toast.error('매물 자랑 등록이 실패했습니다.');
     },
   };
 

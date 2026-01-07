@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 
-import { MusicianRegisterRequestProps } from '@/types/musician';
+import { MusiciansRegisterRequestProps } from '@/types/musicians';
 
 interface MusicianStoreProps {
-  dto: MusicianRegisterRequestProps;
-  setRegisterDTO: (dto: Partial<MusicianRegisterRequestProps>) => void;
+  dto: MusiciansRegisterRequestProps;
+  setRegisterDTO: (dto: Partial<MusiciansRegisterRequestProps>) => void;
   resetRegisterDTO: () => void;
 }
 

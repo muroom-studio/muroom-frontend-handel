@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Alert } from '@muroom/components';
 
@@ -11,6 +11,7 @@ interface DesktopProps {
   isOpen: boolean;
   onClose: () => void;
   onFinalSubmit: () => void;
+  isLoading: boolean;
   isValid: boolean;
   formProps: any;
 }
@@ -19,22 +20,30 @@ export default function DesktopReportAlert({
   isOpen,
   onClose,
   onFinalSubmit,
+  isLoading,
   isValid,
   formProps,
 }: DesktopProps) {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isAgreed, setIsAgreed] = useState(false);
 
+  // ✅ [수정 1] 부모 컴포넌트에서 창이 닫히면(isOpen === false),
+  // 내부 상태(2단계 모달 상태, 동의 여부)를 초기화합니다.
+  useEffect(() => {
+    if (!isOpen) {
+      setIsConfirmOpen(false);
+      setIsAgreed(false);
+    }
+  }, [isOpen]);
+
   return (
     <>
       {/* 1단계 Alert */}
       <Alert
-        // [핵심] 2단계가 열리면 1단계는 닫히도록 조건 추가
+        // 1단계는 '전체 열림 상태'이면서 '2단계가 아닐 때' 보여줌
         isOpen={isOpen && !isConfirmOpen}
         onClose={onClose}
         onConfirm={() => {
-          // 여기서 onClose()를 부르지 않습니다!
-          // 상태만 변경하면 위의 isOpen 조건에 의해 1단계 창이 자연스럽게 닫힙니다.
           setIsConfirmOpen(true);
         }}
         variant='negative'
@@ -46,12 +55,14 @@ export default function DesktopReportAlert({
 
       {/* 2단계 Alert */}
       <Alert
-        isOpen={isConfirmOpen}
+        // ✅ [수정 2] 부모(isOpen)가 닫히면 얘도 같이 닫혀야 함 (&& 조건 추가)
+        isOpen={isOpen && isConfirmOpen}
         onClose={() => {
           setIsConfirmOpen(false);
           setIsAgreed(false);
         }}
         onConfirm={onFinalSubmit}
+        isLoading={isLoading}
         variant='negative'
         title='신고하기'
         content={

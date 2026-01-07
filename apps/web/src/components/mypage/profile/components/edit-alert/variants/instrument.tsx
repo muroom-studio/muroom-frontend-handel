@@ -6,7 +6,7 @@ import { Alert, Button, ModalBottomSheet } from '@muroom/components';
 
 import OptionItem from '@/components/common/option-item';
 import { useInstrumentsQuery } from '@/hooks/api/instruments/useQueries';
-import { useMusicianMeDetailMutation } from '@/hooks/api/musician/useMutations';
+import { useMusiciansMeDetailMutation } from '@/hooks/api/musicians/useMutations';
 
 import ContentWrapper from '../components/content-wrapper';
 
@@ -25,18 +25,17 @@ export default function InstrumentEditAlert({
 
   const { data: INSTRUMENTS } = useInstrumentsQuery();
 
-  const { mutate: musicianMeDetailMutate } = useMusicianMeDetailMutation();
+  const { mutate: musicianMeDetailMutate } = useMusiciansMeDetailMutation();
 
   const handleConfirm = () => {
     musicianMeDetailMutate(
       { instrumentId },
       {
         onSuccess: () => {
-          toast.success('악기가 성공적으로 변경되었습니다.');
+          toast.success('악기가 변경되었습니다.');
           onClose();
         },
         onError: () => {
-          toast.error('악기 변경이 실패했습니다.');
           setInstrumentId(0);
         },
       },
@@ -47,7 +46,7 @@ export default function InstrumentEditAlert({
     return (
       <ContentWrapper
         isMobile
-        title='악기 변경'
+        title={isMobile ? '악기 변경' : ''}
         description='변경할 악기를 선택해주세요'
       >
         <div className='flex flex-wrap gap-2'>

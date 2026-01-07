@@ -31,8 +31,8 @@ export default function MobileStudioBoastsNewPage({
         isMobile
         isHeader={{ title: '글쓰기', onBackClick: () => router.back() }}
         contentClassName='pt-6'
-        bottomSlot={
-          <div className='grid grid-cols-2 gap-x-3 border-t border-t-gray-200 p-5'>
+        bottomFixedSlot={
+          <div className='grid grid-cols-2 gap-x-3'>
             <Button
               variant='outline'
               size='xl'

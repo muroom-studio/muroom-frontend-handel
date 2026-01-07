@@ -1,15 +1,17 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 
 import { cn } from '@muroom/lib';
-// import GoogleLogo from '@muroom/ui/assets/google-logo.svg';
+import GoogleLogo from '@muroom/ui/assets/google-logo.svg';
 import KakaoLogo from '@muroom/ui/assets/kakao-logo.svg';
 
+import CommonImage from '@/components/common/common-image';
 // import NaverLogo from '@muroom/ui/assets/naver-logo.svg';
 
 import {
+  GOOGLE_CLIENT_ID,
+  GOOGLE_REDIRECT_URI,
   KAKAO_CLIENT_ID,
   KAKAO_REDIRECT_URI,
   // NAVER_CLIENT_ID,
@@ -18,7 +20,7 @@ import {
 } from '@/config/constants';
 
 // export type SocialType = 'KAKAO' | 'NAVER' | 'GOOGLE';
-export type SocialType = 'KAKAO';
+export type SocialType = 'KAKAO' | 'GOOGLE';
 
 const SOCIAL_CONFIG = {
   KAKAO: {
@@ -31,11 +33,11 @@ const SOCIAL_CONFIG = {
   //   label: '네이버로 시작하기',
   //   url: `https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id=${NAVER_CLIENT_ID}&client_secret=${NAVER_SECRET_KEY}&redirect_uri=${NAVER_REDIRECT_URI}`,
   // },
-  // GOOGLE: {
-  //   Icon: GoogleLogo,
-  //   label: '구글로 시작하기',
-  //   url: `http://dev-api.muroom.kr/oauth2/authorization/google`,
-  // },
+  GOOGLE: {
+    Icon: GoogleLogo,
+    label: '구글로 시작하기',
+    url: `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${GOOGLE_REDIRECT_URI}&response_type=code&scope=openid%20email%20profile&access_type=offline&prompt=consent`,
+  },
 };
 
 const SocialBtn = ({ social }: { social: SocialType }) => {
@@ -50,12 +52,17 @@ const SocialBtn = ({ social }: { social: SocialType }) => {
           {
             'bg-[#FEE500] text-black': social === 'KAKAO',
             // 'bg-[#03CF5A] text-white': social === 'NAVER',
-            // 'border border-gray-300 bg-white text-black': social === 'GOOGLE',
+            'border border-gray-300 bg-white text-black': social === 'GOOGLE',
           },
         )}
       >
         <div className='flex items-center gap-x-2'>
-          <Image src={Icon} alt={`${social} logo`} width={20} height={20} />
+          <CommonImage
+            src={Icon}
+            alt={`${social} logo`}
+            width={20}
+            height={20}
+          />
           <span>{label}</span>
         </div>
       </button>

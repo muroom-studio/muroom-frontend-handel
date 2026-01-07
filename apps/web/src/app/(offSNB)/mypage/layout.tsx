@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { TabItem } from '@muroom/components';
 
 import PageWrapper from '@/components/common/page-wrapper';
+import { useAuthCheck } from '@/hooks/auth/useAuthCheck';
 import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
 
 interface Props {
@@ -17,6 +18,7 @@ const TABS: TabItem[] = [
 ];
 
 export default function Layout({ children }: Props) {
+  const { isLoggedIn } = useAuthCheck();
   const { isMobile } = useResponsiveLayout();
 
   const router = useRouter();
@@ -24,21 +26,18 @@ export default function Layout({ children }: Props) {
 
   const isFullPage = pathname.includes('/cs/inquiry/new');
 
-  // 데스크톱 Tab 표출용
+  const shouldSkipWrapper = isMobile || isFullPage || !isLoggedIn;
+
+  if (shouldSkipWrapper) {
+    return <>{children}</>;
+  }
+
   const activeTabId =
     TABS.find((tab) => pathname.startsWith(tab.id))?.id || TABS[0]?.id;
 
   const handleTabChange = (id: string) => {
     router.push(id);
   };
-
-  if (isMobile) {
-    return <>{children}</>;
-  }
-
-  if (isFullPage) {
-    return <>{children}</>;
-  }
 
   return (
     <PageWrapper

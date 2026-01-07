@@ -18,7 +18,7 @@ import {
 } from '@/components/mypage/profile/components/edit-alert/variants';
 import EditableField from '@/components/mypage/profile/components/editable-field';
 import QuitAlert from '@/components/mypage/profile/components/quit-alert';
-import { useMusicianMeDetailQuery } from '@/hooks/api/musician/useQueries';
+import { useMusiciansMeDetailQuery } from '@/hooks/api/musicians/useQueries';
 import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
 
 type AlertKey = 'NICKNAME' | 'INSTRUMENT' | 'PHONE' | 'STUDIO' | 'QUIT';
@@ -36,7 +36,7 @@ export default function Page() {
   const router = useRouter();
 
   const { data: detailData, isLoading: isDetailLoading } =
-    useMusicianMeDetailQuery();
+    useMusiciansMeDetailQuery();
 
   const [activeAlert, setActiveAlert] = useState<AlertKey | null>(null);
   const [isOpen, setIsOpen] = useState(false);

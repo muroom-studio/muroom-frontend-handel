@@ -11,8 +11,8 @@ import {
   TextField,
 } from '@muroom/components';
 
-import { useMusicianMeDetailMutation } from '@/hooks/api/musician/useMutations';
-import { useUserNicknameCheckQuery } from '@/hooks/api/user/useQueries';
+import { useMusiciansMeDetailMutation } from '@/hooks/api/musicians/useMutations';
+import { useMusiciansNicknameCheckQuery } from '@/hooks/api/musicians/useQueries';
 
 import ContentWrapper from '../components/content-wrapper';
 
@@ -37,7 +37,7 @@ export default function NicknameEditAlert({
   const {
     refetch: userNicknameCheckRefetch,
     isLoading: isUserNicknameCheckLoading,
-  } = useUserNicknameCheckQuery({
+  } = useMusiciansNicknameCheckQuery({
     nickname,
   });
 
@@ -95,18 +95,17 @@ export default function NicknameEditAlert({
 
   const helperInfo = getHelperMessageInfo();
 
-  const { mutate: musicianMeDetailMutate } = useMusicianMeDetailMutation();
+  const { mutate: musicianMeDetailMutate } = useMusiciansMeDetailMutation();
 
   const handleConfirm = () => {
     musicianMeDetailMutate(
       { nickname },
       {
         onSuccess: () => {
-          toast.success('닉네임이 성공적으로 변경되었습니다.');
+          toast.success('닉네임이 변경되었습니다.');
           onClose();
         },
         onError: () => {
-          toast.error('닉네임 변경이 실패했습니다.');
           setNickname('');
         },
       },
@@ -117,7 +116,7 @@ export default function NicknameEditAlert({
     return (
       <ContentWrapper
         isMobile
-        title='닉네임 변경'
+        title={isMobile ? '닉네임 변경' : ''}
         description='변경할 닉네임을 입력해주세요'
       >
         <div className='flex flex-col gap-y-2'>

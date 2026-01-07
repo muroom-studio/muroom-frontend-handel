@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { Alert, Button, ModalBottomSheet } from '@muroom/components';
 
 import VerifyPhone from '@/components/welcome/components/steps/components/verify-phone';
-import { useMusicianMeDetailMutation } from '@/hooks/api/musician/useMutations';
+import { useMusiciansMeDetailMutation } from '@/hooks/api/musicians/useMutations';
 
 import ContentWrapper from '../components/content-wrapper';
 
@@ -18,18 +18,17 @@ interface Props {
 export default function PhoneEditAlert({ isMobile, isOpen, onClose }: Props) {
   const [verifiedPhone, setVerifiedPhone] = useState('');
 
-  const { mutate: musicianMeDetailMutate } = useMusicianMeDetailMutation();
+  const { mutate: musicianMeDetailMutate } = useMusiciansMeDetailMutation();
 
   const handleConfirm = () => {
     musicianMeDetailMutate(
       { phone: verifiedPhone },
       {
         onSuccess: () => {
-          toast.success('전화번호가 성공적으로 변경되었습니다.');
+          toast.success('전화번호가 변경되었습니다.');
           onClose();
         },
         onError: () => {
-          toast.error('전화번호 변경이 실패했습니다.');
           setVerifiedPhone('');
         },
       },
@@ -40,7 +39,7 @@ export default function PhoneEditAlert({ isMobile, isOpen, onClose }: Props) {
     return (
       <ContentWrapper
         isMobile
-        title='휴대폰 번호 변경'
+        title={isMobile ? '휴대폰 번호 변경' : ''}
         description='휴대폰 번호를 인증해주세요'
       >
         <VerifyPhone

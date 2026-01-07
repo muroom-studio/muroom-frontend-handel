@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { Button } from '@muroom/components';
+import { Button, Spinner } from '@muroom/components';
 
 import PageWrapper from '@/components/common/page-wrapper';
 
@@ -26,8 +26,8 @@ export default function MobileStudioBoastsEditPage({
         isMobile
         isHeader={{ title: '수정하기', onBackClick: () => router.back() }}
         contentClassName='pt-6'
-        bottomSlot={
-          <div className='grid grid-cols-2 gap-x-3 border-t border-t-gray-200 p-5'>
+        bottomFixedSlot={
+          <div className='grid grid-cols-2 gap-x-3'>
             <Button
               variant='outline'
               size='xl'
@@ -41,7 +41,7 @@ export default function MobileStudioBoastsEditPage({
               size='xl'
               disabled={!isFormValid || isLoading}
             >
-              수정완료
+              {isLoading ? <Spinner variant='component' /> : '수정완료'}
             </Button>
           </div>
         }

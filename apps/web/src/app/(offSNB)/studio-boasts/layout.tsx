@@ -1,13 +1,12 @@
 'use client';
 
-import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { Button, TabItem } from '@muroom/components';
 import { PlusIcon } from '@muroom/icons';
-import BoastBanner from '@muroom/ui/assets/boast-banner.svg';
 
 import PageWrapper from '@/components/common/page-wrapper';
+import BoastEventBanner from '@/components/studio-boasts/components/boast-event-banner';
 import { useAuthCheck } from '@/hooks/auth/useAuthCheck';
 import { useSaveRedirectUrl } from '@/hooks/auth/useAuthRedirect';
 import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
@@ -31,7 +30,9 @@ export default function Layout({ children }: Props) {
   const { isLoggedIn } = useAuthCheck();
   const { saveCurrentUrl } = useSaveRedirectUrl();
 
-  const isFullPage = pathname.includes('/studio-boasts/new');
+  const isFullPage = ['/studio-boasts/new', '/studio-boasts/edit'].some(
+    (path) => pathname.includes(path),
+  );
 
   const isListPage = pathname === '/studio-boasts';
 
@@ -67,16 +68,7 @@ export default function Layout({ children }: Props) {
   return (
     <PageWrapper
       title='작업실 자랑하기'
-      thumbnail={
-        isListPage ? (
-          <Image
-            src={BoastBanner}
-            alt='매물자랑배너'
-            className='h-auto w-full object-cover'
-            priority
-          />
-        ) : undefined
-      }
+      thumbnail={isListPage ? <BoastEventBanner /> : undefined}
       tabs={isListPage ? TABS : undefined}
       initialActiveTabId={currentTabId}
       activeTabId={currentTabId}

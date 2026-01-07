@@ -15,6 +15,8 @@ interface ModalBottomSheetProps {
   onClose: () => void;
   children: React.ReactNode;
   className?: string;
+  bodyClassName?: string;
+  footerClassName?: string;
   isScroll?: boolean;
   topMargin?: number;
   footerBtns?: React.ReactNode;
@@ -25,6 +27,8 @@ const ModalBottomSheet = ({
   onClose,
   children,
   className,
+  bodyClassName,
+  footerClassName,
   isScroll = false,
   topMargin = 60,
   footerBtns,
@@ -94,9 +98,11 @@ const ModalBottomSheet = ({
               )}
               onPointerDown={(e) => e.stopPropagation()}
             >
-              <div className='p-5'>{children}</div>
+              <div className={cn('p-5', bodyClassName)}>{children}</div>
               {footerBtns && (
-                <div className='w-full px-2.5 py-3'>{footerBtns}</div>
+                <div className={cn('w-full px-5 py-3', footerClassName)}>
+                  {footerBtns}
+                </div>
               )}
               <div className='h-8.5' />
             </div>

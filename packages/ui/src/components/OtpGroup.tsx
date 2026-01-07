@@ -13,6 +13,8 @@ interface Props {
 }
 
 const OtpGroup = ({ length = 6, value, onChange, className }: Props) => {
+  console.log(value[2], 'value');
+
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
@@ -23,6 +25,23 @@ const OtpGroup = ({ length = 6, value, onChange, className }: Props) => {
 
   const handleChange = (index: number, val: string) => {
     if (!/^\d*$/.test(val)) return;
+
+    if (val.length > 1) {
+      const pastedData = val.split('').slice(0, length);
+      const newOtp = [...value];
+
+      pastedData.forEach((char, i) => {
+        if (index + i < length) {
+          newOtp[index + i] = char;
+        }
+      });
+
+      onChange(newOtp);
+
+      const nextFocusIndex = Math.min(index + pastedData.length, length - 1);
+      inputRefs.current[nextFocusIndex]?.focus();
+      return;
+    }
 
     const newOtp = [...value];
     newOtp[index] = val.slice(-1);
@@ -60,9 +79,9 @@ const OtpGroup = ({ length = 6, value, onChange, className }: Props) => {
           onKeyDown={(e) => handleKeyDown(index, e)}
           hideClearButton={true}
           className='min-w-0 flex-1'
-          inputClassName={cn('h-[48px] text-center p-0')}
+          inputWrapperClassName='p-0 text-center h-12 pl-3'
           inputMode='numeric'
-          maxLength={1}
+          maxLength={length}
           autoComplete='one-time-code'
         />
       ))}

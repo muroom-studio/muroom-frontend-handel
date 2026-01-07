@@ -50,8 +50,8 @@ export default function MobileMypageCsInquiryNewPage({
       isMobile
       isHeader={{ title: '1:1 문의하기', onBackClick: () => router.back() }}
       contentClassName='pt-6'
-      bottomSlot={
-        <div className='grid grid-cols-2 gap-x-3'>
+      bottomFixedSlot={
+        <div className='grid grid-cols-2 gap-x-3 pt-3'>
           <Button
             variant='outline'
             size='xl'

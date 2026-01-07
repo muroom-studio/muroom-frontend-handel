@@ -11,6 +11,7 @@ import { cn } from '../lib/utils';
 import HelperMessage from './HelperMessage';
 
 interface TextBoxProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+  topContent?: React.ReactNode;
   bottomContent?: React.ReactNode;
   helperMessage?: ComponentProps<typeof HelperMessage>;
   containerClassName?: string;
@@ -22,6 +23,7 @@ const TextBox = ({
   className,
   containerClassName,
   textareaClassName,
+  topContent,
   bottomContent,
   helperMessage,
   disabled,
@@ -33,7 +35,6 @@ const TextBox = ({
   ...props
 }: TextBoxProps) => {
   const [isFocused, setIsFocused] = useState(false);
-
   const [isMinLengthError, setIsMinLengthError] = useState(false);
 
   const isControlled = value !== undefined;
@@ -46,11 +47,18 @@ const TextBox = ({
   const currentLength = currentValue.length;
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    const newValue = e.target.value;
+    let newValue = e.target.value;
+
+    // ✅ [Fix] 한글 IME 입력 문제 해결: maxLength를 초과하면 강제로 잘라냄
+    if (maxLength && newValue.length > maxLength) {
+      newValue = newValue.slice(0, maxLength);
+      e.target.value = newValue; // DOM 요소의 값도 강제로 업데이트
+    }
 
     if (!isControlled) {
       setInternalValue(newValue);
     }
+
     onChange?.(e);
 
     if (isMinLengthError && minLength && newValue.length >= minLength) {
@@ -91,8 +99,13 @@ const TextBox = ({
           'border-gray-300',
           'hover:shadow-level-0',
           isFocused && 'border-gray-600',
+          'h-full',
         )}
       >
+        {topContent && (
+          <div className='w-full px-4 pb-1 pt-4'>{topContent}</div>
+        )}
+
         <textarea
           id={id}
           value={currentValue}
@@ -103,15 +116,17 @@ const TextBox = ({
           onFocus={handleFocus}
           onBlur={handleBlur}
           className={cn(
-            'w-full resize-none bg-transparent px-4 py-5',
+            'w-full resize-none bg-transparent px-4',
+            topContent ? 'pb-5 pt-0' : 'py-5',
             'min-h-44',
             'text-base-l-16-1 placeholder:text-gray-400 focus:outline-none',
+            'flex-1',
             textareaClassName,
           )}
           {...props}
         />
 
-        <div className='flex flex-col gap-y-2 px-4 pb-5 pt-2'>
+        <div className={cn('flex flex-col gap-y-2 px-4 pb-5 pt-2', 'shrink-0')}>
           <div className='text-base-s-12-1 flex justify-end text-gray-400'>
             <span
               className={cn(

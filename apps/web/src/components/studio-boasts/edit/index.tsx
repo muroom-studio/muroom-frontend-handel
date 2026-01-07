@@ -4,7 +4,10 @@ import { useRouter } from 'next/navigation';
 
 import { toast } from 'sonner';
 
+import Loading from '@/app/loading';
+import NotFound from '@/app/not-found';
 import { ImageItem } from '@/components/common/image-uploader';
+import { TOAST_MOBILE_STUDIO_BOASTS } from '@/config/toastOptions';
 import { usePutStudioBoastsMutation } from '@/hooks/api/studio-boasts/useMutations';
 import { useStudioBoastsDetailQuery } from '@/hooks/api/studio-boasts/useQueries';
 import { CreateStudioBoastsRequestProps } from '@/types/studio-boasts';
@@ -29,6 +32,14 @@ export default function StudioBoastsEditPage({
   });
   const { mutate: editMutate, isPending } = usePutStudioBoastsMutation();
 
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (studioBoastId && !isLoading && !boastData) {
+    return <NotFound />;
+  }
+
   const handleEditSubmit = (
     dto: Omit<CreateStudioBoastsRequestProps, 'imageFileKeys'>,
     imageFileKeys: string[],
@@ -45,15 +56,15 @@ export default function StudioBoastsEditPage({
       },
       {
         onSuccess: () => {
-          toast.success('매물 자랑 수정이 완료되었습니다.');
+          toast.success(
+            '매물 자랑 수정이 완료되었습니다.',
+            isMobile ? TOAST_MOBILE_STUDIO_BOASTS : undefined,
+          );
           if (isMobile) {
             router.replace('/studio-boasts');
           } else {
             router.replace(`/studio-boasts/${studioBoastId}`);
           }
-        },
-        onError: () => {
-          toast.error('매물 자랑 수정에 실패했습니다.');
         },
       },
     );
@@ -76,24 +87,33 @@ export default function StudioBoastsEditPage({
     });
   };
 
-  if (isLoading || !boastData) return null;
-
   return (
     <StudioBoastsEditorForm
       isMobile={isMobile}
       isPending={isPending}
       initialValues={{
-        content: boastData.content,
+        content: boastData?.content,
         studioName:
-          boastData.studioInfo?.name || boastData.unknownStudioInfo?.name || '',
-        roadNameAddress: boastData.unknownStudioInfo?.roadNameAddress || '',
-        lotNumberAddress: boastData.unknownStudioInfo?.lotNumberAddress || '',
-        detailedAddress: boastData.unknownStudioInfo?.detailedAddress || '',
-        studioId: boastData.studioInfo?.id || '',
-        instagramAccount: boastData.creatorUserInfo?.instagramAccount || '',
+          boastData?.studioInfo?.name ||
+          boastData?.unknownStudioInfo?.name ||
+          '',
+        roadNameAddress:
+          boastData?.studioInfo?.roadNameAddress ||
+          boastData?.unknownStudioInfo?.roadNameAddress ||
+          '',
+        lotNumberAddress:
+          boastData?.studioInfo?.lotNumberAddress ||
+          boastData?.unknownStudioInfo?.lotNumberAddress ||
+          '',
+        detailedAddress:
+          boastData?.studioInfo?.detailedAddress ||
+          boastData?.unknownStudioInfo?.detailedAddress ||
+          '',
+        studioId: boastData?.studioInfo?.id || '',
+        instagramAccount: boastData?.creatorUserInfo?.instagramAccount || '',
         agreedToEventTerms: true,
       }}
-      initialImages={convertUrlsToImageItems(boastData.imageFileUrls)}
+      initialImages={convertUrlsToImageItems(boastData?.imageFileUrls)}
       onSubmit={handleEditSubmit}
       MobileLayout={MobileStudioBoastsEditPage}
       DesktopLayout={DesktopStudioBoastsEditPage}

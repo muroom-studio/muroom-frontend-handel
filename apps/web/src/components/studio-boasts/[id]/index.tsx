@@ -3,16 +3,17 @@
 import { useState } from 'react';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 import { Button, UserBaseInfoLabel } from '@muroom/components';
 import { getFormattedDate } from '@muroom/util';
 
 import Loading from '@/app/loading';
+import NotFound from '@/app/not-found';
 import { useStudioBoastsDetailQuery } from '@/hooks/api/studio-boasts/useQueries';
 import { useAuthCheck } from '@/hooks/auth/useAuthCheck';
 import { LoginLink } from '@/hooks/auth/useAuthRedirect';
 
+import BoastCommentList from '../components/boast-comment-list';
 import BoastDetailImageCarousel from '../components/boast-image-carousel';
 import BoastSimpleCarousel from '../components/boast-simple-carousel';
 import BoastStudioCard from '../components/boast-studio-card';
@@ -29,8 +30,6 @@ interface Props {
 }
 
 export default function StudioBoastsDetailPage({ targetedId }: Props) {
-  const router = useRouter();
-
   const [openReportAlert, setOpenReportAlert] = useState(false);
 
   const {
@@ -38,12 +37,27 @@ export default function StudioBoastsDetailPage({ targetedId }: Props) {
     isLoading: isStudioBoastsDetailLoading,
   } = useStudioBoastsDetailQuery({ studioBoastId: targetedId });
 
+  if (isStudioBoastsDetailLoading) {
+    return <Loading />;
+  }
+
+  if (targetedId && !isStudioBoastsDetailLoading && !studioBoastsDetailData) {
+    return <NotFound />;
+  }
+
   const studioInfo = studioBoastsDetailData?.studioInfo;
   const unknownStudioInfo = studioBoastsDetailData?.unknownStudioInfo;
 
-  if (isStudioBoastsDetailLoading && !studioBoastsDetailData) {
-    return <Loading />;
-  }
+  const handleScrollToComments = () => {
+    const element = document.getElementById('BOAST_COMMENT_SECTION');
+
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      const textarea = document.getElementById('COMMENT_CONTENT');
+      textarea?.focus();
+    }
+  };
 
   return (
     <div className='gap-y-15 flex w-full flex-col'>
@@ -56,6 +70,7 @@ export default function StudioBoastsDetailPage({ targetedId }: Props) {
           />
           <StudioBoastsCommentButton
             commentCount={studioBoastsDetailData?.commentCount || 0}
+            onClick={handleScrollToComments}
           />
           <StudioBoastsShareButton />
           <StudioBoastsMoreButton
@@ -107,8 +122,6 @@ export default function StudioBoastsDetailPage({ targetedId }: Props) {
               maxPrice={studioInfo.maxPrice}
               thumbnailUrl={studioInfo.thumbnailImageFileUrl}
               subwayInfo={studioInfo.nearestSubwayStation}
-              wrapperClassName='cursor-pointer'
-              onClick={() => router.push(`/home?studioId=${studioInfo.id}`)}
             />
           ) : unknownStudioInfo ? (
             <BoastStudioCard
@@ -119,6 +132,9 @@ export default function StudioBoastsDetailPage({ targetedId }: Props) {
               address={`${unknownStudioInfo.roadNameAddress || unknownStudioInfo.lotNumberAddress || ''} ${unknownStudioInfo.detailedAddress || ''}`}
             />
           ) : null}
+        </div>
+        <div id='BOAST_COMMENT_SECTION'>
+          <BoastCommentList studioBoastId={studioBoastsDetailData?.id || ''} />
         </div>
       </div>
 

@@ -1,9 +1,8 @@
 'use client';
 
-import Image from 'next/image';
-
 import { DownArrowIcon } from '@muroom/icons';
 
+import CommonImage from '@/components/common/common-image';
 // 위에서 만든 공통 컴포넌트 임포트 (경로를 맞춰주세요)
 import DraggableCarousel from '@/components/common/draggable-carousel';
 
@@ -33,7 +32,7 @@ export default function RoomImageGroup({ roomImgs, controller }: Props) {
             className='relative h-[109px] w-[109px] flex-none cursor-pointer transition-opacity hover:opacity-90'
             onClick={() => controller.openSingle('room', index)}
           >
-            <Image
+            <CommonImage
               src={room}
               alt={`${room}이미지`}
               fill

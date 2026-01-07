@@ -1,14 +1,13 @@
 'use client';
 
-import React from 'react';
-
-import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
 
 import { ExpandedParagraph, UserBaseInfoLabel } from '@muroom/components';
 import { getFormattedDate } from '@muroom/util';
 
 import { StudioBoastsItemProps } from '@/types/studio-boasts';
 
+import BoastCommentList from '../components/boast-comment-list';
 import BoastDetailImageCarousel from '../components/boast-image-carousel';
 import BoastSimpleCarousel from '../components/boast-simple-carousel';
 import BoastStudioCard from '../components/boast-studio-card';
@@ -23,7 +22,10 @@ interface Props {
 }
 
 export default function DetailBoastList({ items }: Props) {
-  const router = useRouter();
+  const [openCommenstModalAndId, setOpenCommentsModalAndId] = useState({
+    targetedId: '',
+    isOpen: false,
+  });
 
   return (
     <div className='flex flex-col gap-y-10'>
@@ -60,12 +62,7 @@ export default function DetailBoastList({ items }: Props) {
                   title={item.studioInfo.name}
                   minPrice={item.studioInfo.minPrice}
                   maxPrice={item.studioInfo.maxPrice}
-                  thumbnailUrl={item.studioInfo.thumbnailImageFileUrl}
                   subwayInfo={item.studioInfo.nearestSubwayStation}
-                  wrapperClassName='cursor-pointer'
-                  onClick={() =>
-                    router.push(`/home?studioId=${item?.studioInfo?.id}`)
-                  }
                 />
               ) : item.unknownStudioInfo ? (
                 <BoastStudioCard
@@ -92,11 +89,17 @@ export default function DetailBoastList({ items }: Props) {
               <StudioBoastsCommentButton
                 isMobile
                 commentCount={item?.commentCount || 0}
+                onClick={() =>
+                  setOpenCommentsModalAndId({
+                    targetedId: item.id,
+                    isOpen: true,
+                  })
+                }
               />
             </div>
           </div>
 
-          {index === 1 && (
+          {index === 0 && (
             <BoastSimpleCarousel
               isMobile
               sort='likes,desc'
@@ -105,6 +108,20 @@ export default function DetailBoastList({ items }: Props) {
           )}
         </React.Fragment>
       ))}
+
+      {openCommenstModalAndId.targetedId && (
+        <BoastCommentList
+          isMobile
+          studioBoastId={openCommenstModalAndId.targetedId}
+          isOpen={openCommenstModalAndId.isOpen}
+          onClose={() =>
+            setOpenCommentsModalAndId(() => ({
+              targetedId: '',
+              isOpen: false,
+            }))
+          }
+        />
+      )}
     </div>
   );
 }

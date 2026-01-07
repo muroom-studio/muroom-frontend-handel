@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import { Button, ModalBottomSheet } from '@muroom/components';
+import { Button, ModalBottomSheet, Spinner } from '@muroom/components';
 
 import PageWrapper from '@/components/common/page-wrapper';
 
@@ -13,6 +13,7 @@ interface MobileProps {
   isOpen: boolean;
   onClose: () => void;
   onFinalSubmit: () => void;
+  isLoading: boolean;
   isValid: boolean;
   formProps: any;
 }
@@ -21,6 +22,7 @@ export default function MobileReportAlert({
   isOpen,
   onClose,
   onFinalSubmit,
+  isLoading,
   isValid,
   formProps,
 }: MobileProps) {
@@ -34,16 +36,21 @@ export default function MobileReportAlert({
     }
   }, [isOpen]);
 
+  const handleBackToStepOne = () => {
+    setIsConfirmOpen(false);
+    setIsAgreed(false);
+  };
+
   if (!isOpen) return null;
 
   return (
     <>
-      {/* 1단계: 입력 페이지 */}
+      {/* 1단계: 입력 폼 (2단계가 열려있지 않을 때만 보임) */}
       {!isConfirmOpen && (
         <PageWrapper
           isMobile
           isHeader={{ title: '신고하기', onBackClick: onClose }}
-          className='fixed inset-0 z-[9999] bg-white'
+          className='fixed inset-0 z-[50] bg-white'
           isModal
           bottomSlot={
             <div className='grid grid-cols-2 gap-x-3'>
@@ -68,19 +75,19 @@ export default function MobileReportAlert({
       {/* 2단계: 확인 바텀시트 */}
       <ModalBottomSheet
         isOpen={isConfirmOpen}
-        onClose={onClose}
+        onClose={handleBackToStepOne}
         footerBtns={
           <div className='grid grid-cols-2 gap-x-3'>
-            <Button variant='outline' size='xl' onClick={onClose}>
+            <Button variant='outline' size='xl' onClick={handleBackToStepOne}>
               취소하기
             </Button>
             <Button
               variant='danger'
               size='xl'
-              disabled={!isAgreed}
+              disabled={!isAgreed || isLoading}
               onClick={onFinalSubmit}
             >
-              신고하기
+              {isLoading ? <Spinner variant='component' /> : '신고하기'}
             </Button>
           </div>
         }
@@ -88,7 +95,6 @@ export default function MobileReportAlert({
         <div className='flex flex-col gap-y-5'>
           <p className='text-base-exl-18-2 text-red-600'>신고하기</p>
           <CheckContent
-            isMobile
             isAgreed={isAgreed}
             onToggleAgree={() => setIsAgreed(!isAgreed)}
           />

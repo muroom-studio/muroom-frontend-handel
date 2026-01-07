@@ -1,11 +1,12 @@
 import {
-  QueryClient,
   UseMutationResult,
   useMutation,
+  useQueryClient,
 } from '@tanstack/react-query';
 
 import { postInquiries, postInquiriesPresignedUrl } from '@/lib/inquiries';
 import {
+  ApiRequestError,
   CommonImageUploadRequestProps,
   CommonImageUploadResponseProps,
 } from '@/types/api';
@@ -13,7 +14,7 @@ import { InquiriesRequestProps } from '@/types/inquiries';
 
 const useInquiriesPresignedUrlMutation = (): UseMutationResult<
   CommonImageUploadResponseProps,
-  Error,
+  ApiRequestError,
   CommonImageUploadRequestProps
 > => {
   return useMutation({
@@ -23,16 +24,16 @@ const useInquiriesPresignedUrlMutation = (): UseMutationResult<
 
 const useInquiriesMutation = (): UseMutationResult<
   any,
-  Error,
+  ApiRequestError,
   InquiriesRequestProps
 > => {
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: postInquiries,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['inquiries', 'my'],
+        queryKey: ['inquiries'],
       });
     },
   });

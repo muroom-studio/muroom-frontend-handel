@@ -14,8 +14,6 @@ export default function DesktopJoinPage({
   stepContent,
   onBackClick,
 }: JoinCommonProps) {
-  console.log(step, 'step');
-
   return (
     <>
       <WelcomeHeader backClickHandler={onBackClick} />

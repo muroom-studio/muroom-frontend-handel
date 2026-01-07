@@ -2,8 +2,6 @@
 
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 
-import Image from 'next/image';
-
 import { toast } from 'sonner';
 
 import { Spinner } from '@muroom/components';
@@ -11,6 +9,8 @@ import { CloseIcon, PlusIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
 
 import { CommonImageUploadResponseProps } from '@/types/api';
+
+import CommonImage from '../common-image';
 
 export interface ImageItem {
   id: string;
@@ -160,7 +160,6 @@ export default function ImageUploader({
         </div>
       )}
 
-      {/* 이미지 리스트 영역 */}
       {images.length === 0 ? (
         <div
           onClick={triggerInput}
@@ -194,10 +193,12 @@ export default function ImageUploader({
                 key={img.id}
                 className={cn(
                   'relative',
-                  isMobile ? 'aspect-square w-full' : 'size-32.5',
+                  isMobile
+                    ? 'aspect-square w-full'
+                    : 'h-[130px] w-[130px] shrink-0',
                 )}
               >
-                <Image
+                <CommonImage
                   src={img.url || ''}
                   alt='preview'
                   fill
@@ -230,7 +231,7 @@ export default function ImageUploader({
                 onClick={triggerInput}
                 className={cn(
                   'flex-center-col rounded-4 flex cursor-pointer border border-dashed border-gray-300 bg-white hover:bg-gray-50',
-                  isMobile ? 'w-full' : 'size-32.5',
+                  isMobile ? 'w-full' : 'h-[130px] w-[130px] shrink-0',
                   isMobile && images.length === 2
                     ? 'aspect-2/1 col-span-2'
                     : isMobile

@@ -33,6 +33,8 @@ const Button = ({
   const baseStyle =
     'inline-flex items-center justify-center gap-1 cursor-pointer shrink-0 border-1 whitespace-nowrap rounded-4 transition-all disabled:cursor-default';
 
+  const defaultFontStyle = 'text-base-l-16-2';
+
   const styles: Record<
     ButtonVariant,
     Partial<Record<ButtonSize | 'base', string>>
@@ -97,10 +99,10 @@ const Button = ({
     },
     danger: {
       base: `
-        bg-red-400 text-base-l-16-2 !text-white px-4 py-[18px]
+        bg-red-400 px-4 py-[18px] !text-white text-base-l-16-2
         hover:bg-red-500
         active:bg-red-600
-        disabled:bg-gray-200 text-gray-400
+        disabled:bg-gray-200 
       `,
     },
   };
@@ -108,7 +110,15 @@ const Button = ({
   const variantStyle = styles[variant]?.base || '';
   const sizeStyle = styles[variant]?.[size] || '';
 
-  const finalClassName = cn(baseStyle, variantStyle, sizeStyle, propsClassName);
+  const hasCustomFont = sizeStyle.includes('text-base-');
+
+  const finalClassName = cn(
+    baseStyle,
+    variantStyle,
+    hasCustomFont ? '' : defaultFontStyle,
+    sizeStyle,
+    propsClassName,
+  );
 
   return (
     <button className={finalClassName.trim()} {...props}>

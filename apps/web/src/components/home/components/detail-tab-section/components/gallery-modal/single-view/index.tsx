@@ -2,12 +2,12 @@
 
 import { useCallback, useEffect, useState } from 'react';
 
-import Image from 'next/image';
-
 import useEmblaCarousel from 'embla-carousel-react';
 
 import { RightArrowIcon } from '@muroom/icons';
 import { cn } from '@muroom/lib';
+
+import CommonImage from '@/components/common/common-image';
 
 interface Props {
   images: string[];
@@ -114,7 +114,7 @@ export default function SingleImageSection({
                     : 'h-[698px] w-[698px] flex-[0_0_698px]',
                 )}
               >
-                <Image
+                <CommonImage
                   src={src}
                   alt={`detail-view-${index}`}
                   fill
