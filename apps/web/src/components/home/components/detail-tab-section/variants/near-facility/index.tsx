@@ -75,8 +75,7 @@ export default function NearFacilitySection({
                 name={place.name}
                 distance={place.distance}
                 className={cn(
-                  'border-y border-y-gray-200 py-4',
-                  'first:border-t-0 first:pt-0',
+                  'border-b border-b-gray-200 py-4',
                   'last:border-none last:pb-0',
                 )}
               />

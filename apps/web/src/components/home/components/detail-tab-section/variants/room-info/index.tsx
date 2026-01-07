@@ -46,6 +46,8 @@ export default function RoomInfoSection({
     setUnit((prev) => (prev === 'cm' ? 'mm' : 'cm'));
   };
 
+  const availableRooms = roomData.rooms.filter((room) => room.isAvailable);
+
   return (
     <SectionWrapper title={title}>
       <>
@@ -54,10 +56,11 @@ export default function RoomInfoSection({
           sub1={
             <div className='flex items-center gap-x-1.5'>
               <span>{(roomData.rooms || []).length}개</span>
-              <Tag variant='blue'>
-                {roomData.rooms.filter((room) => room.isAvailable).length}개
-                남음
-              </Tag>
+              {roomData.rooms.filter((room) => room.isAvailable).length > 0 ? (
+                <Tag variant='blue'>{availableRooms.length}개 남음</Tag>
+              ) : (
+                <Tag>방 없음</Tag>
+              )}
             </div>
           }
         />

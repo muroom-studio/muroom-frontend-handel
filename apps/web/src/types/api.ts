@@ -6,7 +6,7 @@ export interface ApiErrorData {
 
 type SuccessResponse<T> = {
   status: HttpSuccessStatusCode;
-  data: T;
+  data?: T;
   message: string;
 };
 

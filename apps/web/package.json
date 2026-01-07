@@ -47,5 +47,12 @@
     "postcss": "^8.5.3",
     "tailwindcss": "^4.1.5",
     "typescript": "5.9.2"
-  }
+  },
+  "browserslist": [
+    "defaults",
+    "> 0.5%",
+    "not dead",
+    "last 2 versions",
+    "iOS >= 14"
+  ]
 }

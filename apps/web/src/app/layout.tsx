@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import Script from 'next/script';
@@ -5,6 +7,7 @@ import Script from 'next/script';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { NuqsAdapter } from 'nuqs/adapters/next';
 
+import JoinTriggerProvider from '@/components/providers/join-trigger-provider';
 import MapProvider from '@/components/providers/map-provider';
 import RQProvider from '@/components/providers/rq-provider';
 import SonnerProvider from '@/components/providers/sonner-provider';
@@ -69,6 +72,10 @@ export default function RootLayout({
           <NuqsAdapter>
             <MapProvider>
               <BaseLayout>
+                <Suspense fallback={null}>
+                  <JoinTriggerProvider />
+                </Suspense>
+
                 {children}
                 {modal}
                 <SonnerProvider />

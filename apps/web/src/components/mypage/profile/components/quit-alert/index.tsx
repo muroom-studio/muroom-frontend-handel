@@ -213,7 +213,7 @@ export default function QuitAlert({ isMobile, isOpen, onClose }: Props) {
         isHeader={{ title: '서비스 탈퇴', onBackClick: onClose }}
         className='fixed inset-0 z-50 bg-white'
         isModal
-        bottomSlot={
+        bottomFixedSlot={
           <div className='grid grid-cols-2 gap-x-3'>
             <Button variant='outline' size='xl' onClick={onClose}>
               취소하기

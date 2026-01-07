@@ -81,22 +81,18 @@ export default function VerifyPhone({
     setErrorMessage('');
 
     try {
-      const { data, error } = await checkPhoneDuplicate();
-      console.log(data, 'data');
+      const available = await checkPhoneDuplicate();
 
-      console.log(error, 'error');
+      if (available) {
+        await authMutateAsync({ phone: phoneNumber });
 
-      // if (error) {
-      //   setErrorMessage('이미 가입된 전화번호입니다.');
-      //   return;
-      // }
-
-      await authMutateAsync({ phone: phoneNumber });
-
-      setIsSent(true);
-      setIsVerified(false);
-      setTimeLeft(180);
-      setOtp(Array(6).fill(''));
+        setIsSent(true);
+        setIsVerified(false);
+        setTimeLeft(180);
+        setOtp(Array(6).fill(''));
+      } else {
+        setErrorMessage('인증 번호 전송에 실패했습니다.');
+      }
     } catch (error) {
       console.error(error);
       if (!errorMessage) {
