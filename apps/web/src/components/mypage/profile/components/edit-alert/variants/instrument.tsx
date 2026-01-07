@@ -6,7 +6,7 @@ import { Alert, Button, ModalBottomSheet } from '@muroom/components';
 
 import OptionItem from '@/components/common/option-item';
 import { useInstrumentsQuery } from '@/hooks/api/instruments/useQueries';
-import { useMusicianMeDetailMutation } from '@/hooks/api/musician/useMutations';
+import { useMusiciansMeDetailMutation } from '@/hooks/api/musicians/useMutations';
 
 import ContentWrapper from '../components/content-wrapper';
 
@@ -25,7 +25,7 @@ export default function InstrumentEditAlert({
 
   const { data: INSTRUMENTS } = useInstrumentsQuery();
 
-  const { mutate: musicianMeDetailMutate } = useMusicianMeDetailMutation();
+  const { mutate: musicianMeDetailMutate } = useMusiciansMeDetailMutation();
 
   const handleConfirm = () => {
     musicianMeDetailMutate(

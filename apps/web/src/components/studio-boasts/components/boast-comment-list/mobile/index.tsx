@@ -192,7 +192,7 @@ export default function MobileBoastCommentList({
         title: `댓글 ${pagination?.totalElements ?? 0}`,
         onBackClick: onClose,
       }}
-      className='fixed inset-0 z-[9999] bg-white'
+      className='fixed inset-0 z-50 bg-white'
       contentClassName='py-6 px-5'
       isModal
       bottomFixedSlotClassName='p-0'

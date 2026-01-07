@@ -10,7 +10,7 @@ import {
   TextField,
 } from '@muroom/components';
 
-import { useUserNicknameCheckQuery } from '@/hooks/api/user/useQueries';
+import { useMusiciansNicknameCheckQuery } from '@/hooks/api/musicians/useQueries';
 
 interface Props {
   value: string;
@@ -24,7 +24,7 @@ export default function VerifyNickname({ value, setValue }: Props) {
 
   const [checkStatus, setCheckStatus] = useState<CheckStatus>('idle');
 
-  const { refetch, isLoading } = useUserNicknameCheckQuery({
+  const { refetch, isLoading } = useMusiciansNicknameCheckQuery({
     nickname: localValue,
   });
 

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import { toast } from 'sonner';
 
-import { useReportReasonQuery } from '@/hooks/api/report/useQueries';
+import { useReportReasonsQuery } from '@/hooks/api/report/useQueries';
 import { useStudioBoastsCommentsReportMutation } from '@/hooks/api/studio-boasts/comments/useMutations';
 import { useStudioBoastsReportMutation } from '@/hooks/api/studio-boasts/useMutations';
 
@@ -38,7 +38,7 @@ export default function ReportAlert({
   const [selectedReason, setSelectedReason] = useState({ id: '', name: '' });
   const [description, setDescription] = useState('');
 
-  const { data: reportReasonData } = useReportReasonQuery();
+  const { data: reportReasonData } = useReportReasonsQuery();
 
   const {
     mutate: studioBoastsReportMutate,

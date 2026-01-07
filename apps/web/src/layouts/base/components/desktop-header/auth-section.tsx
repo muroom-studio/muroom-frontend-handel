@@ -6,14 +6,14 @@ import Link from 'next/link';
 
 import { Button, Popover, UserBaseInfoLabel } from '@muroom/components';
 
-import { useMusicianMeQuery } from '@/hooks/api/musician/useQueries';
+import { useMusiciansMeQuery } from '@/hooks/api/musicians/useQueries';
 import { useAuthCheck } from '@/hooks/auth/useAuthCheck';
 import { LoginLink } from '@/hooks/auth/useAuthRedirect';
 
 export default function AuthSection() {
   const { isLoggedIn } = useAuthCheck();
 
-  const { data: musicianBaseData } = useMusicianMeQuery();
+  const { data: musicianBaseData } = useMusiciansMeQuery();
 
   const [isOpen, setIsOpen] = useState(false);
 

@@ -1,5 +1,5 @@
 import { BE_BASE_URL } from '@/config/constants';
-import { postUserRefresh } from '@/lib/user/(server)';
+import { postAuthMusicianRefresh } from '@/lib/auth/musician/(server)';
 import { ApiRequestError, type ApiResponse } from '@/types/api';
 import { HttpSuccessStatusCode } from '@/types/http';
 
@@ -53,13 +53,11 @@ export const customFetch = async <T>(
     if (isSuccessResponse(responseData)) {
       return responseData.data;
     } else {
-      // ⭐️ [401 인터셉터 로직 추가]
-      // 401 에러이고 + 아직 재시도 안 했고 + 리프레시 토큰이 있다면
       if (responseData.status === 401 && !options._retry && refreshToken) {
         console.log('🔄 401 detected. Attempting to refresh token...');
 
         // 1. Server Action 호출 (토큰 갱신 + 쿠키 설정)
-        const newTokens = await postUserRefresh();
+        const newTokens = await postAuthMusicianRefresh();
 
         if (newTokens?.accessToken) {
           console.log('✅ Token refreshed. Retrying original request...');
@@ -75,8 +73,6 @@ export const customFetch = async <T>(
             },
           });
         }
-
-        // 갱신 실패 시 아래 에러 throw 로직으로 넘어감
       }
 
       throw new ApiRequestError(responseData);

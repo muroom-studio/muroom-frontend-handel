@@ -12,10 +12,11 @@ import {
 } from '@muroom/components';
 import { cn } from '@muroom/lib';
 
+import { useMusiciansPhoneCheckQuery } from '@/hooks/api/musicians/useQueries';
 import {
-  useUserSmsAuthMutation,
-  useUserSmsVerifyMutation,
-} from '@/hooks/api/user/useMutation';
+  useSmsSendVerificationMutation,
+  useSmsVerifyMutation,
+} from '@/hooks/api/sms/useMutation';
 
 interface Props {
   id?: string;
@@ -38,9 +39,12 @@ export default function VerifyPhone({
   const [errorMessage, setErrorMessage] = useState('');
 
   const { mutateAsync: authMutateAsync, isPending: isAuthPending } =
-    useUserSmsAuthMutation();
+    useSmsSendVerificationMutation();
   const { mutateAsync: verifyMutateAsync, isPending: isVerifyPending } =
-    useUserSmsVerifyMutation();
+    useSmsVerifyMutation();
+
+  const { refetch: checkPhoneDuplicate, isFetching: isCheckingPending } =
+    useMusiciansPhoneCheckQuery({ phone: phoneNumber });
 
   const [otp, setOtp] = useState<string[]>(Array(6).fill(''));
 
@@ -74,16 +78,30 @@ export default function VerifyPhone({
   const handleSend = async () => {
     if (!phoneNumber) return;
 
+    setErrorMessage('');
+
     try {
+      const { data, error } = await checkPhoneDuplicate();
+      console.log(data, 'data');
+
+      console.log(error, 'error');
+
+      // if (error) {
+      //   setErrorMessage('이미 가입된 전화번호입니다.');
+      //   return;
+      // }
+
       await authMutateAsync({ phone: phoneNumber });
 
       setIsSent(true);
       setIsVerified(false);
       setTimeLeft(180);
       setOtp(Array(6).fill(''));
-      setErrorMessage(''); // 재전송 시 에러 메시지 초기화
     } catch (error) {
       console.error(error);
+      if (!errorMessage) {
+        setErrorMessage('인증 번호 전송에 실패했습니다.');
+      }
     }
   };
 
@@ -121,6 +139,13 @@ export default function VerifyPhone({
       formattedValue = `${rawValue.slice(0, 3)}-${rawValue.slice(3, 7)}-${rawValue.slice(7, 11)}`;
 
     setPhoneNumber(formattedValue);
+
+    if (isSent) {
+      setIsSent(false);
+      setIsVerified(false);
+      setErrorMessage('');
+      if (timerRef.current) clearInterval(timerRef.current);
+    }
   };
 
   return (
@@ -143,9 +168,11 @@ export default function VerifyPhone({
             variant='outline'
             size='l'
             onClick={handleSend}
-            disabled={!phoneNumber || isVerified}
+            disabled={
+              !phoneNumber || isVerified || isAuthPending || isCheckingPending
+            }
           >
-            {isAuthPending ? (
+            {isAuthPending || isCheckingPending ? (
               <Spinner variant='component' />
             ) : isSent ? (
               '재전송'
@@ -155,6 +182,11 @@ export default function VerifyPhone({
           </Button>
         </div>
       </div>
+
+      {/* 에러 메시지가 있고, 아직 인증번호가 전송되지 않은 상태라면(즉, 중복체크 에러라면) 여기에 표시 */}
+      {!isSent && errorMessage && (
+        <HelperMessage variant='error'>{errorMessage}</HelperMessage>
+      )}
 
       {isSent && (
         <div className='flex flex-col gap-y-2'>

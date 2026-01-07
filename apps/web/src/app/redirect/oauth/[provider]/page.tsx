@@ -9,7 +9,7 @@ import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 
 import Loading from '@/app/loading';
-import { useMusicianLoginMutation } from '@/hooks/api/musician/useMutations';
+import { useAuthMusicianLoginMutation } from '@/hooks/api/auth/musician/useMutations';
 import { useThrowError } from '@/hooks/common/useThrowError';
 import { useAuthRedirectStore } from '@/store/useAuthRedirectStore';
 import { useMusicianStore } from '@/store/useMusicianStore';
@@ -22,7 +22,7 @@ export default function Page() {
 
   const throwError = useThrowError();
 
-  const { mutateAsync: loginMutateAsync } = useMusicianLoginMutation();
+  const { mutateAsync: loginMutateAsync } = useAuthMusicianLoginMutation();
 
   const isProcessing = useRef(false);
 

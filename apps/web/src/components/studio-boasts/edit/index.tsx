@@ -1,8 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
-
-import { notFound, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 import { toast } from 'sonner';
 
