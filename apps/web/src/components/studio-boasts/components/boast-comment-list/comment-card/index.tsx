@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { toast } from 'sonner';
 
@@ -53,6 +53,22 @@ export default function BoastCommentCard({
 
   const { mutate: updateComment, isPending: isUpdating } =
     useEditStudioBoastsCommentsMutation();
+
+  const editFormRef = useRef<HTMLDivElement>(null); // 수정폼 자동 포커싱을 위한 ref 선언
+
+  useEffect(() => {
+    if (isEditing && !isMobile) {
+      setTimeout(() => {
+        const textarea = editFormRef.current?.querySelector('textarea');
+        if (textarea) {
+          textarea.focus();
+
+          const length = textarea.value.length;
+          textarea.setSelectionRange(length, length);
+        }
+      }, 50);
+    }
+  }, [isEditing, isMobile]);
 
   const handleStartEdit = () => {
     if (isMobile) {
@@ -109,17 +125,19 @@ export default function BoastCommentCard({
 
     if (isEditing && !isMobile) {
       return (
-        <CommentTextBox
-          isMobile={isMobile}
-          content={editContent}
-          onContentChange={setEditContent}
-          isSecret={editIsSecret}
-          onSecretChange={setEditIsSecret}
-          onSubmit={handleUpdateSubmit}
-          isPending={isUpdating}
-          submitLabel='수정완료'
-          onCancel={() => setIsEditing(false)}
-        />
+        <div ref={editFormRef}>
+          <CommentTextBox
+            isMobile={isMobile}
+            content={editContent}
+            onContentChange={setEditContent}
+            isSecret={editIsSecret}
+            onSecretChange={setEditIsSecret}
+            onSubmit={handleUpdateSubmit}
+            isPending={isUpdating}
+            submitLabel='수정완료'
+            onCancel={() => setIsEditing(false)}
+          />
+        </div>
       );
     }
 
