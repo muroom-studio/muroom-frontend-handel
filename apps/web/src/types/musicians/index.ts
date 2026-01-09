@@ -3,11 +3,6 @@ export interface MusiciansNicknameCheckRequestProps {
   nickname: string;
 }
 
-// 회원가입 -> 닉네임 중복확인 응답 dto
-export interface MusiciansNicknameCheckResponseProps {
-  available: boolean;
-}
-
 export type MusicianInstrument = {
   code: string;
   description: string;
@@ -30,7 +25,7 @@ export interface MusiciansMeResponseProps {
 // 요청 dto
 export interface MusiciansRegisterRequestProps {
   name: string;
-  phoneNumber: string;
+  smsVerifyToken: string;
   detailJuso?: string;
   juso?: string;
   studioName?: string;
@@ -72,7 +67,7 @@ export interface MusiciansMeDetailResponseProps {
 export interface MusiciansMeDetailRequestProps {
   nickname?: string;
   instrumentId?: number;
-  phone?: string;
+  smsVerifyToken?: string;
   studioName?: string;
   roadAddress?: string;
   detailAddress?: string;

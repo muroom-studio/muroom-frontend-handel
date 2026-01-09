@@ -11,7 +11,11 @@ import JoinTriggerProvider from '@/components/providers/join-trigger-provider';
 import MapProvider from '@/components/providers/map-provider';
 import RQProvider from '@/components/providers/rq-provider';
 import SonnerProvider from '@/components/providers/sonner-provider';
-import { NCP_CLIENT_ID } from '@/config/constants';
+import {
+  GOOGLE_ANALYTICS_ID,
+  GOOGLE_TAG_MANAGER_ID,
+  NCP_CLIENT_ID,
+} from '@/config/constants';
 import BaseLayout from '@/layouts/base';
 
 import './globals.css';
@@ -50,9 +54,6 @@ export const metadata: Metadata = {
   },
 };
 
-const GA_ID = 'G-WX0PPKWV5W';
-const GTM_ID = 'GTM-KVRX6Z7G';
-
 export default function RootLayout({
   children,
   modal,
@@ -63,8 +64,8 @@ export default function RootLayout({
   return (
     <html lang='ko'>
       <body className={pretendard.className}>
-        <GoogleTagManager gtmId={GTM_ID} />
-        <GoogleAnalytics gaId={GA_ID} />
+        <GoogleTagManager gtmId={GOOGLE_TAG_MANAGER_ID!} />
+        <GoogleAnalytics gaId={GOOGLE_ANALYTICS_ID!} />
         <Script
           strategy='afterInteractive'
           src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${NCP_CLIENT_ID}`}

@@ -17,10 +17,10 @@ export default function JoinSecondStep({ onValidChange }: Props) {
 
   const [name, setName] = useState('');
 
-  const handleVerified = (phoneNumber: string) => {
+  const handleVerified = (token: string) => {
     setRegisterDTO({
       name: name,
-      phoneNumber: phoneNumber,
+      smsVerifyToken: token,
     });
     onValidChange(true);
   };

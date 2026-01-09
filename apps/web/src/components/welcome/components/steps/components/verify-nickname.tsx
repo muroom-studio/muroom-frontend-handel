@@ -46,16 +46,14 @@ export default function VerifyNickname({ value, setValue }: Props) {
   const handleVerifyClick = async () => {
     if (!localValue) return;
 
-    const result = await refetch();
+    const { data: isAvailable } = await refetch();
 
-    if (result.isSuccess && result.data) {
-      if (result.data.available) {
-        setCheckStatus('success');
-        setValue(localValue);
-      } else {
-        setCheckStatus('error');
-        setValue('');
-      }
+    if (isAvailable) {
+      setCheckStatus('success');
+      setValue(localValue);
+    } else {
+      setCheckStatus('error');
+      setValue('');
     }
   };
 

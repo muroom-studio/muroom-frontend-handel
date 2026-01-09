@@ -21,7 +21,7 @@ import {
 interface Props {
   id?: string;
   name?: string;
-  onVerified: (phoneNumber: string) => void;
+  onVerified: (token: string) => void;
   onMyPage?: boolean;
 }
 
@@ -81,9 +81,9 @@ export default function VerifyPhone({
     setErrorMessage('');
 
     try {
-      const available = await checkPhoneDuplicate();
+      const { data: isAvailable } = await checkPhoneDuplicate();
 
-      if (available) {
+      if (isAvailable) {
         await authMutateAsync({ phone: phoneNumber });
 
         setIsSent(true);
@@ -108,7 +108,7 @@ export default function VerifyPhone({
     if (code.length < 6) return;
 
     try {
-      await verifyMutateAsync({
+      const { smsVerifyToken } = await verifyMutateAsync({
         phone: phoneNumber,
         code: code,
       });
@@ -117,7 +117,7 @@ export default function VerifyPhone({
       setErrorMessage('');
       if (timerRef.current) clearInterval(timerRef.current);
 
-      onVerified(phoneNumber);
+      onVerified(smsVerifyToken);
     } catch (error) {
       console.error(error);
       setErrorMessage('인증번호가 일치하지 않습니다.');
@@ -179,7 +179,6 @@ export default function VerifyPhone({
         </div>
       </div>
 
-      {/* 에러 메시지가 있고, 아직 인증번호가 전송되지 않은 상태라면(즉, 중복체크 에러라면) 여기에 표시 */}
       {!isSent && errorMessage && (
         <HelperMessage variant='error'>{errorMessage}</HelperMessage>
       )}

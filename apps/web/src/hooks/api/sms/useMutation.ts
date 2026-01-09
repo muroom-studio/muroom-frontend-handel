@@ -5,6 +5,7 @@ import { ApiRequestError } from '@/types/api';
 import {
   SmsSendVerificationRequestProps,
   SmsVerifyRequestProps,
+  SmsVerifyResponseProps,
 } from '@/types/sms';
 
 const useSmsSendVerificationMutation = (): UseMutationResult<
@@ -18,7 +19,7 @@ const useSmsSendVerificationMutation = (): UseMutationResult<
 };
 
 const useSmsVerifyMutation = (): UseMutationResult<
-  any,
+  SmsVerifyResponseProps,
   ApiRequestError,
   SmsVerifyRequestProps
 > => {
