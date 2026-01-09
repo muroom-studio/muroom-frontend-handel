@@ -83,7 +83,7 @@ export default function Alert({
         <>
           <motion.div
             onClick={onClose}
-            className='fixed inset-0 z-50 bg-black/50'
+            className='z-1000 fixed inset-0 bg-black/50'
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -147,7 +147,7 @@ const AlertWrapper = ({
   return (
     <motion.div
       className={cn(
-        'rounded-4 z-9999 w-105 fixed left-1/2 top-1/2 bg-white shadow-xl',
+        'rounded-4 z-9998 w-105 fixed left-1/2 top-1/2 bg-white shadow-xl',
         className,
       )}
       initial={{

@@ -88,5 +88,5 @@ export const getMusiciansPhoneCheck = async (
     },
   );
 
-  return responseData;
+  return responseData ?? true;
 };

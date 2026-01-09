@@ -64,7 +64,7 @@ export default function DesktopBoastCommentList({ studioBoastId }: Props) {
       false,
     );
 
-  const { isLoggedIn } = useAuthCheck(); // 임시 로그인 감싸기 위함
+  const { isLoggedIn } = useAuthCheck();
 
   return (
     <div className='flex flex-col gap-y-10'>

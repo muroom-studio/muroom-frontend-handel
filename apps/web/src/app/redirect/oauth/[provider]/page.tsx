@@ -2,8 +2,6 @@
 
 import { useEffect, useRef } from 'react';
 
-// useState 제거됨
-
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 
 import { toast } from 'sonner';
@@ -19,17 +17,15 @@ export default function Page() {
   const params = useParams();
   const searchParams = useSearchParams();
   const router = useRouter();
-
   const throwError = useThrowError();
 
   const { mutateAsync: loginMutateAsync } = useAuthMusicianLoginMutation();
-
   const isProcessing = useRef(false);
 
   const provider = params.provider as string;
   const code = searchParams.get('code');
 
-  const { performRedirect } = useAuthRedirectStore();
+  const { performRedirect, clearRedirectUrl } = useAuthRedirectStore();
   const { setRegisterDTO } = useMusicianStore();
 
   useEffect(() => {
@@ -48,8 +44,8 @@ export default function Page() {
 
         if (type === 'LOGIN' && accessToken && refreshToken) {
           await setToken(accessToken, refreshToken);
-
           toast.success('로그인이 완료되었습니다.');
+
           performRedirect();
           return;
         } else if (type === 'SIGNUP_REQUIRED' && signupToken) {
@@ -57,11 +53,19 @@ export default function Page() {
             signupToken: result.signupToken,
           });
 
-          router.replace(`/welcome?join=true`);
+          const currentRedirectUrl =
+            useAuthRedirectStore.getState().redirectUrl;
+
+          const returnTarget = currentRedirectUrl || '/home';
+
+          const separator = returnTarget.includes('?') ? '&' : '?';
+
+          router.replace(`${returnTarget}${separator}trigger_join=true`);
           return;
         }
       } catch (error) {
         throwError(error);
+        isProcessing.current = false;
       }
     };
 
@@ -74,6 +78,7 @@ export default function Page() {
     performRedirect,
     setRegisterDTO,
     throwError,
+    clearRedirectUrl,
   ]);
 
   return <Loading />;

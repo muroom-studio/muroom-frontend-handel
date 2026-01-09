@@ -3,6 +3,8 @@
 import { Suspense, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
+import { useSearchParams } from 'next/navigation';
+
 import { cn } from '@muroom/lib';
 
 import HomePage from '@/components/home';
@@ -17,6 +19,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const { performRedirect } = useAuthRedirectStore();
 
   const [mounted, setMounted] = useState(false);
+
+  const isJoin = useSearchParams().get('join');
 
   useEffect(() => setMounted(true), []);
 
@@ -39,6 +43,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               isMobile && 'h-dvh bg-white pb-[env(safe-area-inset-bottom)]',
             )}
             onClick={() => {
+              if (isJoin) return;
               performRedirect();
             }}
           >

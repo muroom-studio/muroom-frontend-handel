@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { ReplyArrowIcon } from '@muroom/icons';
 
@@ -29,8 +29,20 @@ export default function BoastCommentsReplyForm({
   const [content, setContent] = useState('');
   const [isSecret, setIsSecret] = useState(false);
 
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const { mutate: createReply, isPending } =
     useCreateStudioBoastsCommentsMutation();
+
+  useEffect(() => {
+    if (!isMobile) {
+      setTimeout(() => {
+        const realTextarea = containerRef.current?.querySelector('textarea');
+
+        realTextarea?.focus();
+      }, 50); // 50ms 정도 여유를 줌
+    }
+  }, [isMobile]);
 
   const handleSubmit = () => {
     if (!content.trim()) return;
@@ -54,7 +66,7 @@ export default function BoastCommentsReplyForm({
   };
 
   return (
-    <div className='flex w-full items-start gap-x-1'>
+    <div ref={containerRef} className='flex w-full items-start gap-x-1'>
       <div className='shrink-0'>
         <ReplyArrowIcon className='size-6 text-gray-400' />
       </div>

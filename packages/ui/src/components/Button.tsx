@@ -112,8 +112,6 @@ const Button = ({
 
   const hasCustomFont = sizeStyle.includes('text-base-');
 
-  console.log(hasCustomFont);
-
   const finalClassName = cn(
     baseStyle,
     variantStyle,

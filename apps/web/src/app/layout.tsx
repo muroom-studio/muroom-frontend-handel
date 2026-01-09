@@ -1,10 +1,13 @@
+import { Suspense } from 'react';
+
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import Script from 'next/script';
 
-import { GoogleAnalytics } from '@next/third-parties/google';
+import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import { NuqsAdapter } from 'nuqs/adapters/next';
 
+import JoinTriggerProvider from '@/components/providers/join-trigger-provider';
 import MapProvider from '@/components/providers/map-provider';
 import RQProvider from '@/components/providers/rq-provider';
 import SonnerProvider from '@/components/providers/sonner-provider';
@@ -48,6 +51,7 @@ export const metadata: Metadata = {
 };
 
 const GA_ID = 'G-WX0PPKWV5W';
+const GTM_ID = 'GTM-KVRX6Z7G';
 
 export default function RootLayout({
   children,
@@ -59,6 +63,7 @@ export default function RootLayout({
   return (
     <html lang='ko'>
       <body className={pretendard.className}>
+        <GoogleTagManager gtmId={GTM_ID} />
         <GoogleAnalytics gaId={GA_ID} />
         <Script
           strategy='afterInteractive'
@@ -69,6 +74,10 @@ export default function RootLayout({
           <NuqsAdapter>
             <MapProvider>
               <BaseLayout>
+                <Suspense fallback={null}>
+                  <JoinTriggerProvider />
+                </Suspense>
+
                 {children}
                 {modal}
                 <SonnerProvider />
