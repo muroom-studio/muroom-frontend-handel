@@ -5,7 +5,6 @@ import {
   MusiciansMeDetailResponseProps,
   MusiciansMeResponseProps,
   MusiciansNicknameCheckRequestProps,
-  MusiciansNicknameCheckResponseProps,
   MusiciansPhoneCheckRequestProps,
   MusiciansRegisterRequestProps,
   MusiciansRegisterResponseProps,
@@ -65,7 +64,7 @@ export const getMusiciansNicknameCheck = async (
 ) => {
   const queryString = createQueryString(params);
 
-  const responseData = await customFetch<MusiciansNicknameCheckResponseProps>(
+  const responseData = await customFetch(
     `/musicians/nickname/check?${queryString}`,
     {
       method: 'GET',

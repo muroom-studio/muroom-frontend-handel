@@ -13,8 +13,6 @@ interface Props {
 }
 
 const OtpGroup = ({ length = 6, value, onChange, className }: Props) => {
-  console.log(value[2], 'value');
-
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
@@ -77,9 +75,9 @@ const OtpGroup = ({ length = 6, value, onChange, className }: Props) => {
           value={value[index] || ''}
           onChange={(e) => handleChange(index, e.target.value)}
           onKeyDown={(e) => handleKeyDown(index, e)}
-          hideClearButton={true}
-          className='min-w-0 flex-1'
-          inputWrapperClassName='p-0 text-center h-12 pl-3'
+          hideClearButton
+          inputClassName='py-0 size-full text-center'
+          inputWrapperClassName='p-0 text-center h-12 pl-2'
           inputMode='numeric'
           maxLength={length}
           autoComplete='one-time-code'

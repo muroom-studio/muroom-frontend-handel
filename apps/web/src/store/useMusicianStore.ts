@@ -10,7 +10,7 @@ interface MusicianStoreProps {
 
 const initialMusicianState = {
   name: '',
-  phoneNumber: '',
+  smsVerifyToken: '',
   detailJuso: '',
   juso: '',
   studioName: '',

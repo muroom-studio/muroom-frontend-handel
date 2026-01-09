@@ -50,7 +50,7 @@ export const customFetch = async <T>(
     const responseData: ApiResponse<T> = await response.json();
 
     if (isSuccessResponse(responseData)) {
-      return responseData.data as T;
+      return (responseData.data ?? true) as T;
     } else {
       if (responseData.status === 401 && !options._retry && refreshToken) {
         console.log('🔄 401 detected. Attempting to refresh token...');

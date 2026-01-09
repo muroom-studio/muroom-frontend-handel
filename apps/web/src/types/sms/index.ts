@@ -8,3 +8,7 @@ export interface SmsVerifyRequestProps {
   phone: string;
   code: string;
 }
+
+export interface SmsVerifyResponseProps {
+  smsVerifyToken: string;
+}

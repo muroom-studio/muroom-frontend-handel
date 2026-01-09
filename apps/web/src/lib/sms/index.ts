@@ -1,6 +1,7 @@
 import {
   SmsSendVerificationRequestProps,
   SmsVerifyRequestProps,
+  SmsVerifyResponseProps,
 } from '@/types/sms';
 import { customFetch } from '@/utils/customFetch';
 
@@ -18,10 +19,13 @@ export const postSmsSendVerification = async (
 
 // 회원가입 -> 인증번호 검증
 export const postSmsVerify = async (dto: SmsVerifyRequestProps) => {
-  const responseData = await customFetch('/sms/verify', {
-    method: 'POST',
-    body: JSON.stringify(dto),
-  });
+  const responseData = await customFetch<SmsVerifyResponseProps>(
+    '/sms/verify',
+    {
+      method: 'POST',
+      body: JSON.stringify(dto),
+    },
+  );
 
   return responseData;
 };

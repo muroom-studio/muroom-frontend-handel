@@ -16,20 +16,20 @@ interface Props {
 }
 
 export default function PhoneEditAlert({ isMobile, isOpen, onClose }: Props) {
-  const [verifiedPhone, setVerifiedPhone] = useState('');
+  const [smsVerifyToken, setSmsVerifyToken] = useState('');
 
   const { mutate: musicianMeDetailMutate } = useMusiciansMeDetailMutation();
 
   const handleConfirm = () => {
     musicianMeDetailMutate(
-      { phone: verifiedPhone },
+      { smsVerifyToken },
       {
         onSuccess: () => {
           toast.success('전화번호가 변경되었습니다.');
           onClose();
         },
         onError: () => {
-          setVerifiedPhone('');
+          setSmsVerifyToken('');
         },
       },
     );
@@ -45,7 +45,7 @@ export default function PhoneEditAlert({ isMobile, isOpen, onClose }: Props) {
         <VerifyPhone
           id='phoneNumber'
           name='phoneNumber'
-          onVerified={setVerifiedPhone}
+          onVerified={setSmsVerifyToken}
           onMyPage
         />
       </ContentWrapper>
@@ -66,7 +66,7 @@ export default function PhoneEditAlert({ isMobile, isOpen, onClose }: Props) {
               onClick={handleConfirm}
               variant='primary'
               size='xl'
-              disabled={!verifiedPhone}
+              disabled={!smsVerifyToken}
             >
               변경하기
             </Button>
@@ -86,7 +86,7 @@ export default function PhoneEditAlert({ isMobile, isOpen, onClose }: Props) {
       title='휴대폰 번호 변경'
       content={AlertContent()}
       confirmLabel='변경하기'
-      confirmDisabled={!verifiedPhone}
+      confirmDisabled={!smsVerifyToken}
     />
   );
 }

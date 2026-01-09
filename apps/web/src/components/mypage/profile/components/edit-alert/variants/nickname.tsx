@@ -59,18 +59,16 @@ export default function NicknameEditAlert({
   const handleVerifyClick = async () => {
     if (!nickname) return;
 
-    const result = await userNicknameCheckRefetch();
+    const { data: isAvailable } = await userNicknameCheckRefetch();
 
-    if (result.isSuccess && result.data) {
-      if (result.data.available) {
-        setCheckStatus('success');
-        setNickname(nickname);
-        setConfirmDisabled(false);
-      } else {
-        setCheckStatus('error');
-        setNickname('');
-        setConfirmDisabled(true);
-      }
+    if (isAvailable) {
+      setCheckStatus('success');
+      setNickname(nickname);
+      setConfirmDisabled(false);
+    } else {
+      setCheckStatus('error');
+      setNickname('');
+      setConfirmDisabled(true);
     }
   };
 
