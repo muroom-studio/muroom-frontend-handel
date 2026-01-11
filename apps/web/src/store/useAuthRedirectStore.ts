@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
+import { AUTH_REDIRCT_STORE } from '@/config/storage-key';
+
 interface AuthRedirectState {
   redirectUrl: string | null;
   setRedirectUrl: (url: string) => void;
@@ -25,7 +27,7 @@ export const useAuthRedirectStore = create<AuthRedirectState>()(
       },
     }),
     {
-      name: 'auth-redirect-store',
+      name: AUTH_REDIRCT_STORE,
       storage: createJSONStorage(() => localStorage),
     },
   ),
