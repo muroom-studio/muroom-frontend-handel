@@ -7,16 +7,16 @@ import Link from 'next/link';
 import { Button, Modal, ModalBottomSheet } from '@muroom/components';
 import EventLogo from '@muroom/ui/assets/event-logo.png';
 
-import { useResponsiveLayout } from '../common/useResponsiveLayout';
+import { HIDE_EVENT_MODAL_UNTIL } from '@/config/storage-key';
 
-const STORAGE_KEY = 'HIDE_EVENT_MODAL_UNTIL';
+import { useResponsiveLayout } from '../common/useResponsiveLayout';
 
 export const useEventModal = () => {
   const { isMobile } = useResponsiveLayout();
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    const hideUntil = localStorage.getItem(STORAGE_KEY);
+    const hideUntil = localStorage.getItem(HIDE_EVENT_MODAL_UNTIL);
 
     if (!hideUntil || new Date() > new Date(hideUntil)) {
       setIsOpen(true);
@@ -29,7 +29,7 @@ export const useEventModal = () => {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    localStorage.setItem(STORAGE_KEY, tomorrow.toISOString());
+    localStorage.setItem(HIDE_EVENT_MODAL_UNTIL, tomorrow.toISOString());
     setIsOpen(false);
   }, []);
 

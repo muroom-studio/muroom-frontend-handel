@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+import { RECENT_KEYWORD_STORE } from '@/config/storage-key';
+
 interface RecentSearchStoreProps {
   recentSearches: string[];
   addRecentSearch: (keyword: string) => void;
@@ -39,7 +41,7 @@ export const useRecentSearchStore = create<RecentSearchStoreProps>()(
       clearRecentSearches: () => set({ recentSearches: [] }),
     }),
     {
-      name: 'recent-keyword-store',
+      name: RECENT_KEYWORD_STORE,
     },
   ),
 );

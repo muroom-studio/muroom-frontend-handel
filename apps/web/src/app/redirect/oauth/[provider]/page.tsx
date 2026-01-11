@@ -7,6 +7,7 @@ import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 
 import Loading from '@/app/loading';
+import { LAST_LOGIN_PROVIDER } from '@/config/storage-key';
 import { useAuthMusicianLoginMutation } from '@/hooks/api/auth/musician/useMutations';
 import { useThrowError } from '@/hooks/common/useThrowError';
 import { useAuthRedirectStore } from '@/store/useAuthRedirectStore';
@@ -44,6 +45,11 @@ export default function Page() {
 
         if (type === 'LOGIN' && accessToken && refreshToken) {
           await setToken(accessToken, refreshToken);
+
+          if (provider) {
+            localStorage.setItem(LAST_LOGIN_PROVIDER, provider.toUpperCase());
+          }
+
           toast.success('로그인이 완료되었습니다.');
 
           performRedirect();
