@@ -6,18 +6,17 @@ import DesktopFaqList from './desktop';
 import MobileFaqList from './mobile';
 
 interface Props {
+  isKeyword: boolean;
   isMobile?: boolean;
   items: FaqItem[];
   isLoading: boolean;
 
-  // Desktop Props
   pagination?: {
     currentPage: number;
     totalPages: number;
     onPageChange: (page: number) => void;
   };
 
-  // Mobile Props
   infiniteScroll?: {
     observerRef: RefObject<HTMLDivElement | null>;
     isFetchingNextPage: boolean;
@@ -25,6 +24,7 @@ interface Props {
 }
 
 export default function FaqList({
+  isKeyword,
   isMobile,
   items,
   isLoading,
@@ -35,6 +35,7 @@ export default function FaqList({
     return (
       <MobileFaqList
         items={items}
+        isKeyword={isKeyword}
         isLoading={isLoading}
         infiniteScroll={infiniteScroll!}
       />
@@ -44,6 +45,7 @@ export default function FaqList({
   return (
     <DesktopFaqList
       items={items}
+      isKeyword={isKeyword}
       isLoading={isLoading}
       pagination={pagination!}
     />

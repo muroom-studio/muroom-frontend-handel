@@ -103,10 +103,10 @@ export default function FaqBoard({ isMobile = false }: Props) {
 
       {/* --- 리스트 분기 처리 --- */}
       <FaqList
+        isKeyword={!!keyword}
         isMobile={isMobile}
         items={faqList}
         isLoading={isFaqsLoading}
-        // Desktop 전용 Props
         pagination={
           !isMobile && pagination
             ? {
@@ -116,7 +116,6 @@ export default function FaqBoard({ isMobile = false }: Props) {
               }
             : undefined
         }
-        // Mobile 전용 Props
         infiniteScroll={
           isMobile
             ? {

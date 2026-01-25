@@ -1,12 +1,10 @@
 import { BE_BASE_URL } from '@/config/constants';
-import { postAuthMusicianRefresh } from '@/lib/auth/musician/(server)';
 import { ApiRequestError, type ApiResponse } from '@/types/api';
 import { HttpSuccessStatusCode } from '@/types/http';
 
-import { getToken } from './cookie';
-
 interface CustomRequestInit extends RequestInit {
-  _retry?: boolean;
+  // 세션 방식에서는 브라우저가 만료를 처리하므로 _retry가 불필요할 수 있으나,
+  // 필요에 따라 남겨둘 수 있습니다.
 }
 
 function isSuccessResponse<T>(
@@ -19,18 +17,13 @@ export const customFetch = async <T>(
   url: string,
   options: CustomRequestInit = {},
 ): Promise<T> => {
-  const { accessToken, refreshToken } = await getToken();
-
   const baseHeaders: Record<string, string> = {
     'Content-Type': 'application/json',
   };
 
-  if (accessToken) {
-    baseHeaders['Authorization'] = `Bearer ${accessToken}`;
-  }
-
   const mergedOptions: CustomRequestInit = {
     ...options,
+    credentials: options.credentials || 'include',
     headers: {
       ...baseHeaders,
       ...options.headers,
@@ -43,8 +36,14 @@ export const customFetch = async <T>(
   try {
     const response = await fetch(fullUrl, mergedOptions);
 
-    if (!response) {
-      throw new Error('No response from server');
+    if (!response.ok) {
+      try {
+        const errorData = await response.json();
+        throw new ApiRequestError(errorData);
+      } catch (e) {
+        if (e instanceof ApiRequestError) throw e;
+        throw new Error('서버 응답 파싱 실패');
+      }
     }
 
     const responseData: ApiResponse<T> = await response.json();
@@ -52,25 +51,6 @@ export const customFetch = async <T>(
     if (isSuccessResponse(responseData)) {
       return (responseData.data ?? true) as T;
     } else {
-      if (responseData.status === 401 && !options._retry && refreshToken) {
-        console.log('🔄 401 detected. Attempting to refresh token...');
-
-        const newTokens = await postAuthMusicianRefresh();
-
-        if (newTokens?.accessToken) {
-          console.log('✅ Token refreshed. Retrying original request...');
-
-          return await customFetch<T>(url, {
-            ...options,
-            _retry: true,
-            headers: {
-              ...options.headers,
-              Authorization: `Bearer ${newTokens.accessToken}`,
-            },
-          });
-        }
-      }
-
       throw new ApiRequestError(responseData);
     }
   } catch (error) {

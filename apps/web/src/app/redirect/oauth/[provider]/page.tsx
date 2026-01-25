@@ -12,7 +12,6 @@ import { useAuthMusicianLoginMutation } from '@/hooks/api/auth/musician/useMutat
 import { useThrowError } from '@/hooks/common/useThrowError';
 import { useAuthRedirectStore } from '@/store/useAuthRedirectStore';
 import { useMusicianStore } from '@/store/useMusicianStore';
-import { setToken } from '@/utils/cookie';
 
 export default function Page() {
   const params = useParams();
@@ -41,11 +40,9 @@ export default function Page() {
           providerId: code,
         });
 
-        const { type, accessToken, refreshToken, signupToken } = result;
+        const { type, signupToken } = result;
 
-        if (type === 'LOGIN' && accessToken && refreshToken) {
-          await setToken(accessToken, refreshToken);
-
+        if (type === 'LOGIN') {
           if (provider) {
             localStorage.setItem(LAST_LOGIN_PROVIDER, provider.toUpperCase());
           }

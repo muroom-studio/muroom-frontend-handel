@@ -8,7 +8,6 @@ import { useMusiciansRegisterMutation } from '@/hooks/api/musicians/useMutations
 import { useWelcomeMode } from '@/hooks/nuqs/welcome/useWelcomeMode';
 import { useAuthRedirectStore } from '@/store/useAuthRedirectStore';
 import { useMusicianStore } from '@/store/useMusicianStore';
-import { setToken } from '@/utils/cookie';
 
 import { JoinFirstStep, JoinSecondStep } from '../components/steps';
 import JoinThirdStep from '../components/steps/third-step';
@@ -43,19 +42,18 @@ export default function JoinPage({ isMobile }: Props) {
 
   const handleNextClick = async () => {
     if (step === 2) {
-      const result = await registerMutateAsync(dto);
-
-      const { accessToken, refreshToken } = result;
-
-      if (accessToken && refreshToken) {
-        await setToken(accessToken, refreshToken);
+      try {
+        await registerMutateAsync(dto);
 
         toast.success('회원가입이 완료되었습니다.');
         performRedirect();
+      } catch (error) {
+        console.error('회원가입 실패:', error);
       }
-
       return;
     }
+
+    // 다음 스텝으로 이동
     setStep((prev) => (prev + 1) as 0 | 1 | 2);
   };
 

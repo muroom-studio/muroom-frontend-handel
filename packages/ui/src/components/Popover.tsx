@@ -331,7 +331,7 @@ const PopoverContent = ({
 };
 
 const PopoverMenuContainer = ({ children }: { children: React.ReactNode }) => (
-  <div className='rounded-4 shadow-level-0 flex w-full flex-col overflow-hidden border border-gray-300 bg-white'>
+  <div className='rounded-4 shadow-level-0 flex w-full flex-col divide-y divide-gray-300 overflow-hidden border border-gray-300 bg-white'>
     {children}
   </div>
 );
@@ -353,7 +353,7 @@ const PopoverMenuItem = ({
   };
 
   const commonClasses =
-    'w-full text-base-m-14-1 px-3 py-[9px] border-b border-b-gray-300 last:border-b-none text-left transition-colors hover:bg-gray-50';
+    'w-full text-base-m-14-1 px-3 py-[9px] text-left transition-colors hover:bg-gray-50';
 
   return (
     <div

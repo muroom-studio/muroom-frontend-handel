@@ -37,8 +37,6 @@ export interface MusiciansRegisterRequestProps {
 
 // 응답 dto
 export interface MusiciansRegisterResponseProps {
-  accessToken: string;
-  refreshToken: string;
   musicianId: number;
 }
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import { getToken } from '@/utils/cookie';
+import { getSession } from '@/utils/cookie';
 
 export function useAuthCheck() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -11,9 +11,9 @@ export function useAuthCheck() {
   useEffect(() => {
     const checkLogin = async () => {
       try {
-        const tokenData = await getToken();
+        const session = await getSession();
 
-        setIsLoggedIn(!!tokenData?.accessToken);
+        setIsLoggedIn(!!session);
       } catch (err) {
         setIsLoggedIn(false);
       } finally {

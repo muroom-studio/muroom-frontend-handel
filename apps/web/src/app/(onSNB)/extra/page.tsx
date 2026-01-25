@@ -19,7 +19,7 @@ export default function Page() {
   const router = useRouter();
 
   const { data: musicianBaseData, isLoading: isMusicianBaseLoading } =
-    useMusiciansMeQuery();
+    useMusiciansMeQuery({ enabled: isLoggedIn });
 
   if (isMusicianBaseLoading) {
     return <Loading />;
