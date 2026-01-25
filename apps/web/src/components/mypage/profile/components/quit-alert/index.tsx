@@ -212,6 +212,7 @@ export default function QuitAlert({ isMobile, isOpen, onClose }: Props) {
         isMobile
         isHeader={{ title: '서비스 탈퇴', onBackClick: onClose }}
         className='fixed inset-0 z-50 bg-white'
+        contentClassName='py-6 px-5'
         isModal
         bottomFixedSlot={
           <div className='grid grid-cols-2 gap-x-3'>

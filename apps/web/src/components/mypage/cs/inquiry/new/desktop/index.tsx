@@ -55,7 +55,7 @@ export default function DesktopMypageCsInquiryNewPage({
           handleUploadImages={handleUploadImages}
         />
 
-        <div className='grid grid-cols-2 gap-x-3 border-t border-t-gray-200 p-5'>
+        <div className='grid grid-cols-2 gap-x-3 border-t border-t-gray-200 py-5'>
           <Button
             variant='outline'
             size='xl'
