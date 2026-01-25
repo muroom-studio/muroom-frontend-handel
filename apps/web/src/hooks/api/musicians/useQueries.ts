@@ -11,10 +11,11 @@ import {
   MusiciansPhoneCheckRequestProps,
 } from '@/types/musicians';
 
-const useMusiciansMeQuery = () => {
+const useMusiciansMeQuery = (options: { enabled: boolean }) => {
   return useQuery({
     queryKey: ['musicians', 'me'],
     queryFn: getMusiciansMe,
+    enabled: options.enabled,
   });
 };
 

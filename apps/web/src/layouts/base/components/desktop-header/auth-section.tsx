@@ -13,7 +13,9 @@ import { LoginLink } from '@/hooks/auth/useAuthRedirect';
 export default function AuthSection() {
   const { isLoggedIn } = useAuthCheck();
 
-  const { data: musicianBaseData } = useMusiciansMeQuery();
+  const { data: musicianBaseData } = useMusiciansMeQuery({
+    enabled: isLoggedIn,
+  });
 
   const [isOpen, setIsOpen] = useState(false);
 

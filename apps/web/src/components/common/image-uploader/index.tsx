@@ -63,12 +63,21 @@ export default function ImageUploader({
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    if (images.length + files.length > maxImages) {
+    const MAX_FILE_SIZE = 10 * 1024 * 1024;
+    const newFiles = Array.from(files);
+
+    if (images.length + newFiles.length > maxImages) {
       toast.info(`최대 ${maxImages}장까지만 등록 가능합니다.`);
+      if (fileInputRef.current) fileInputRef.current.value = '';
       return;
     }
 
-    const newFiles = Array.from(files);
+    const isOverSize = newFiles.some((file) => file.size > MAX_FILE_SIZE);
+    if (isOverSize) {
+      toast.error('파일 한 장당 최대 10MB까지만 업로드 가능합니다.');
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      return;
+    }
 
     const placeholders: ImageItem[] = newFiles.map((file) => ({
       id: Math.random().toString(36).substring(7),
@@ -218,9 +227,11 @@ export default function ImageUploader({
                   <button
                     type='button'
                     onClick={() => handleRemove(img.id)}
-                    className='flex-center rounded-1000 absolute -right-2 -top-2 z-10 size-4 cursor-pointer border border-gray-200 bg-white hover:bg-gray-100'
+                    className={`flex-center rounded-1000 absolute z-10 cursor-pointer bg-black/50 ${isMobile ? 'right-1 top-1 size-4 p-[2px]' : 'right-2 top-2 size-5 p-[2.5px]'}`}
                   >
-                    <CloseIcon className='size-2 text-black' />
+                    <CloseIcon
+                      className={`${isMobile ? 'size-3' : 'size-3.75'} text-gray-200`}
+                    />
                   </button>
                 )}
               </div>

@@ -11,8 +11,6 @@ export interface AuthMusicianLoginRequestProps {
 
 export interface AuthMusicianLoginResponseProps {
   type: LoginType;
-  accessToken?: string;
-  refreshToken?: string;
   signupToken?: string;
   userId?: number;
   provider: ProviderType;
