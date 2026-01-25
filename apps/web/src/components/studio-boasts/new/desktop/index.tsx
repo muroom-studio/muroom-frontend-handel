@@ -25,7 +25,7 @@ export default function DesktopStudioBoastsNewPage({
     <PageWrapper title='글쓰기'>
       <div className='flex flex-col gap-y-10'>
         {children}
-        <div className='grid grid-cols-2 gap-x-3 border-t border-t-gray-200 p-5'>
+        <div className='grid grid-cols-2 gap-x-3 border-t border-t-gray-200 py-5'>
           <Button
             variant='outline'
             size='xl'

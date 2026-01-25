@@ -33,10 +33,12 @@ const useMusiciansMeDetailMutation = (): UseMutationResult<
     mutationFn: (dto: MusiciansMeDetailRequestProps) =>
       patchMusiciansMeDetail(dto),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['musician', 'me', 'detail'] });
+      queryClient.invalidateQueries({
+        queryKey: ['musicians', 'me', 'detail'],
+      });
 
       if (variables.nickname || variables.instrumentId) {
-        queryClient.invalidateQueries({ queryKey: ['musician', 'me'] });
+        queryClient.invalidateQueries({ queryKey: ['musicians', 'me'] });
       }
     },
   });

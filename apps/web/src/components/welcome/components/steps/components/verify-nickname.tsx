@@ -90,10 +90,11 @@ export default function VerifyNickname({ value, setValue }: Props) {
         </div>
       </div>
       <div className='flex flex-col gap-y-2'>
-        <div className='relative grid grid-cols-[244px_1fr] gap-x-3'>
+        <div className='relative grid grid-cols-[1fr_auto] gap-x-3'>
           <TextField
             id='nickname'
             name='nickname'
+            className='min-w-0'
             value={localValue}
             onChange={handleChange}
             onClear={() => {

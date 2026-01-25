@@ -161,7 +161,7 @@ export default function Page() {
           title: '프로필',
           onBackClick: () => router.back(),
         }}
-        bottomSlot={
+        bottomFixedSlot={
           <div className='flex-between pt-6'>
             <Link href='/logout'>
               <Button variant='outline' size='xl'>
