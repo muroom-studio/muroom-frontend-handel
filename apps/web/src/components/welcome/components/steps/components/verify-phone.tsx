@@ -150,6 +150,7 @@ export default function VerifyPhone({
         {!onMyPage && <RequiredText htmlFor={id}>전화번호</RequiredText>}
         <div className={cn('grid w-full grid-cols-[1fr_auto] gap-x-3')}>
           <TextField
+            className='min-w-0'
             id={id}
             name={name}
             placeholder='번호를 입력해주세요'

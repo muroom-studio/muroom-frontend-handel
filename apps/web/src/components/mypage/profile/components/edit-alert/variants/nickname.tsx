@@ -120,6 +120,7 @@ export default function NicknameEditAlert({
         <div className='flex flex-col gap-y-2'>
           <div className='relative grid grid-cols-[1fr_auto] gap-x-3'>
             <TextField
+              className='min-w-0'
               value={nickname}
               onChange={handleChange}
               onClear={() => {
