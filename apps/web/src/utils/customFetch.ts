@@ -3,8 +3,7 @@ import { ApiRequestError, type ApiResponse } from '@/types/api';
 import { HttpSuccessStatusCode } from '@/types/http';
 
 interface CustomRequestInit extends RequestInit {
-  // 세션 방식에서는 브라우저가 만료를 처리하므로 _retry가 불필요할 수 있으나,
-  // 필요에 따라 남겨둘 수 있습니다.
+  timeout?: number;
 }
 
 function isSuccessResponse<T>(
@@ -17,17 +16,20 @@ export const customFetch = async <T>(
   url: string,
   options: CustomRequestInit = {},
 ): Promise<T> => {
+  const { timeout = 2000, ...restOptions } = options;
+
   const baseHeaders: Record<string, string> = {
     'Content-Type': 'application/json',
   };
 
   const mergedOptions: CustomRequestInit = {
-    ...options,
-    credentials: options.credentials || 'include',
+    ...restOptions,
+    credentials: restOptions.credentials || 'include',
     headers: {
       ...baseHeaders,
-      ...options.headers,
+      ...restOptions.headers,
     },
+    signal: restOptions.signal || AbortSignal.timeout(timeout),
   };
 
   const baseUrl = typeof window === 'undefined' ? BE_BASE_URL : '';
@@ -53,7 +55,12 @@ export const customFetch = async <T>(
     } else {
       throw new ApiRequestError(responseData);
     }
-  } catch (error) {
+  } catch (error: any) {
+    if (error.name === 'TimeoutError') {
+      console.error(`⏱️ [Timeout] ${timeout}ms 경과로 요청 중단: ${fullUrl}`);
+      throw new Error('요청 시간이 초과되었습니다. 잠시 후 다시 시도됩니다.');
+    }
+
     if (typeof window === 'undefined') {
       console.error(`❌ [Server Fetch Error] ${fullUrl}:`, error);
     }

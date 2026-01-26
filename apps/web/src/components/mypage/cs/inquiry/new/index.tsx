@@ -52,7 +52,9 @@ export default function MypageCsInquiryNewPage({ isMobile }: Props) {
       },
       {
         onSuccess: () => {
-          toast.success('문의 등록이 성공적으로 완료되었습니다.');
+          toast.success(
+            '문의를 완료했습니다. 처리 내용을 곧 알려드리겠습니다.',
+          );
           router.replace('/mypage/cs?inquiry=true');
         },
       },

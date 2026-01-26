@@ -25,9 +25,13 @@ function RQProvider({ children }: Props) {
           gcTime: 1000 * 60 * 5,
           refetchOnWindowFocus: false,
           refetchOnReconnect: false,
-          retry: false,
+          retry: 1,
+          retryDelay: 1000,
+
           retryOnMount: true,
           throwOnError: (error) => {
+            if (error.message?.includes('초과')) return false;
+
             if (error instanceof ApiRequestError) {
               return error.status >= 500;
             }
@@ -46,6 +50,11 @@ function RQProvider({ children }: Props) {
           }
         },
         onError: (error) => {
+          if (error.message?.includes('초과')) {
+            toast.error('연결이 지연되어 다시 시도 중입니다...');
+            return;
+          }
+
           if (error instanceof ApiRequestError) {
             toast.error(error.message);
           }
