@@ -4,13 +4,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { MotionValue, motion, useTransform } from 'framer-motion';
 
-import {
-  Button,
-  ModalBottomSheet,
-  TextField,
-  ToggleButton,
-} from '@muroom/components';
-import { FilterIcon, SearchIcon } from '@muroom/icons';
+import { Button, ModalBottomSheet, ToggleButton } from '@muroom/components';
+import { FilterIcon } from '@muroom/icons';
 
 import FilterItem, { Variant } from '@/components/home/components/filter-item';
 import {
@@ -28,7 +23,6 @@ import { MAX_ZOOM, MIN_ZOOM, MapState } from '@/hooks/nuqs/home/useMapState';
 import { useRecentSearchStore } from '@/store/useRecentKeywordStore';
 import { StudiosMapSearchItem } from '@/types/studios';
 
-import CompareBtn from './ui/compare-btn';
 import CurrentLocationBtn from './ui/current-location-btn';
 import FaqButton from './ui/faq-btn';
 import LocationTag from './ui/location-tag';

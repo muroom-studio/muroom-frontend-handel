@@ -45,7 +45,12 @@ const SocialBtn = ({ social }: { social: SocialType }) => {
 
   return (
     <Link href={url} replace={true}>
-      <Tooltip delayDuration={Infinity} side='right' sideOffset={-80}>
+      <Tooltip
+        open={isRecent}
+        delayDuration={Infinity}
+        side='right'
+        sideOffset={-80}
+      >
         <TooltipTrigger asChild>
           <button
             type='button'

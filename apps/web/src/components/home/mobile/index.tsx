@@ -1,9 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
-
-import { notFound } from 'next/navigation';
-
 import { AnimatePresence, motion, useMotionValue } from 'framer-motion';
 
 import { BottomSheet } from '@muroom/components';
@@ -14,7 +10,6 @@ import CommonDetailStudio from '@/components/common/detail-studio';
 import CommonMap from '@/components/common/map';
 import { MapState } from '@/hooks/nuqs/home/useMapState';
 import { useSort } from '@/hooks/nuqs/home/useSort';
-import { useEventModal } from '@/hooks/useEventModal.tsx';
 import { StudioDetailResponseProps } from '@/types/studio';
 import { StudiosMapListItem, StudiosMapSearchItem } from '@/types/studios';
 
@@ -63,8 +58,6 @@ export default function MobileHomePage({
 }: Props) {
   const sheetY = useMotionValue(0);
 
-  const { EventModal } = useEventModal();
-
   if (isLoading) {
     return <Loading />;
   }
@@ -76,7 +69,6 @@ export default function MobileHomePage({
   return (
     <div className='relative flex h-screen flex-1 flex-col overflow-hidden'>
       <div className='h-full w-full'>
-        {EventModal}
         <CommonMap
           mapValue={mapValue}
           setMapValue={setMapValue}

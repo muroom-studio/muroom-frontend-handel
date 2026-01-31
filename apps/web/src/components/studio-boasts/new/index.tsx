@@ -6,8 +6,6 @@ import { useRouter } from 'next/navigation';
 
 import { toast } from 'sonner';
 
-import { updateObjectProperty } from '@muroom/util';
-
 import { TOAST_MOBILE_STUDIO_BOASTS } from '@/config/toastOptions';
 import {
   usePostStudioBoastsMutation,
@@ -40,8 +38,6 @@ export default function StudioBoastsNewPage({ isMobile = false }: Props) {
     detailedAddress: '',
     studioId: '',
     studioName: '',
-    instagramAccount: '',
-    agreedToEventTerms: false,
   });
 
   const { mutateAsync: getPresignedUrl } =
@@ -62,32 +58,24 @@ export default function StudioBoastsNewPage({ isMobile = false }: Props) {
   };
 
   const submitHandler = () => {
-    if (dto.instagramAccount && !dto.agreedToEventTerms) {
-      setShowConfirmCheckModal(true);
-      return;
-    }
-
     studioBoastsMutate(
       {
         ...dto,
         imageFileKeys,
         studioId: dto.studioId !== '' ? dto.studioId : undefined,
-        instagramAccount: dto.instagramAccount || undefined,
       },
       mutationOptions,
     );
   };
 
   const onRegister = () => {
-    setDto((prev) => updateObjectProperty(prev, 'agreedToEventTerms', true));
+    // setDto((prev) => updateObjectProperty(prev, 'agreedToEventTerms', true));
 
     studioBoastsMutate(
       {
         ...dto,
-        agreedToEventTerms: true,
         imageFileKeys,
         studioId: dto.studioId !== '' ? dto.studioId : undefined,
-        instagramAccount: dto.instagramAccount || undefined,
       },
       mutationOptions,
     );

@@ -48,6 +48,7 @@ type TooltipProps = {
   side?: Side;
   sideOffset?: number;
   delayDuration?: number;
+  open?: boolean; // 외부에서 툴팁 열림 상태를 제어하기 위한 prop
 } & React.ComponentPropsWithoutRef<'div'>;
 
 function Tooltip({
@@ -55,9 +56,15 @@ function Tooltip({
   side = 'top',
   sideOffset = 10,
   delayDuration = 300,
+  open: controlledOpen, // 외부에서 주입된 상태
   ...props
 }: TooltipProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  // 1. 내부적인 호버 상태 관리
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
+
+  // 2. 외부에서 open prop을 주면 그 값을 우선하고, 없으면 내부 호버 상태를 따름
+  const isOpen =
+    controlledOpen !== undefined ? controlledOpen : uncontrolledOpen;
 
   const triggerRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -129,19 +136,27 @@ function Tooltip({
   }, [isOpen, calculatePosition]);
 
   const handleMouseEnter = useCallback(() => {
+    // 제어 모드(open prop이 있을 때)일 때는 호버 이벤트를 무시하거나 추가 로직 처리
+    if (controlledOpen !== undefined) return;
+
     if (leaveTimerRef.current) clearTimeout(leaveTimerRef.current);
-    enterTimerRef.current = setTimeout(() => setIsOpen(true), delayDuration);
-  }, [delayDuration]);
+    enterTimerRef.current = setTimeout(
+      () => setUncontrolledOpen(true),
+      delayDuration,
+    );
+  }, [delayDuration, controlledOpen]);
 
   const handleMouseLeave = useCallback(() => {
+    if (controlledOpen !== undefined) return;
+
     if (enterTimerRef.current) clearTimeout(enterTimerRef.current);
-    leaveTimerRef.current = setTimeout(() => setIsOpen(false), 100);
-  }, []);
+    leaveTimerRef.current = setTimeout(() => setUncontrolledOpen(false), 100);
+  }, [controlledOpen]);
 
   const value = useMemo(
     () => ({
       isOpen,
-      setIsOpen,
+      setIsOpen: setUncontrolledOpen,
       triggerRef,
       contentRef,
       side,
