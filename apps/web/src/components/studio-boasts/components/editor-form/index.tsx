@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 
-import { updateObjectProperty } from '@muroom/util';
-
 import { ImageItem } from '@/components/common/image-uploader';
 import { useStudioBoastsPresignedUrlMutation } from '@/hooks/api/studio-boasts/useMutations';
 import { useImageUpload } from '@/hooks/common/useImageUpload';
@@ -25,7 +23,6 @@ interface Props {
   onSubmit: (
     data: Omit<CreateStudioBoastsRequestProps, 'imageFileKeys'>,
     imageFileKeys: string[],
-    agreedToEventTerms: boolean,
   ) => void;
   isPending: boolean;
   MobileLayout: React.ComponentType<StudioBoastsLayoutProps>;
@@ -58,8 +55,6 @@ export default function StudioBoastsEditorForm({
     detailedAddress: initialValues?.detailedAddress || '',
     studioId: initialValues?.studioId ?? '',
     studioName: initialValues?.studioName || '',
-    instagramAccount: initialValues?.instagramAccount || '',
-    agreedToEventTerms: initialValues?.agreedToEventTerms || false,
   });
 
   const { mutateAsync: getPresignedUrl } =
@@ -67,23 +62,16 @@ export default function StudioBoastsEditorForm({
   const { handleUploadImages } = useImageUpload(getPresignedUrl);
 
   const submitHandler = () => {
-    if (dto.instagramAccount && !dto.agreedToEventTerms) {
-      setShowConfirmCheckModal(true);
-      return;
-    }
     onSubmit(
       dto as Omit<CreateStudioBoastsRequestProps, 'imageFileKeys'>,
       imageFileKeys,
-      dto.agreedToEventTerms,
     );
   };
 
   const onRegister = () => {
-    setDto((prev) => updateObjectProperty(prev, 'agreedToEventTerms', true));
     onSubmit(
       dto as Omit<CreateStudioBoastsRequestProps, 'imageFileKeys'>,
       imageFileKeys,
-      true,
     );
   };
 

@@ -43,7 +43,6 @@ export default function StudioBoastsEditPage({
   const handleEditSubmit = (
     dto: Omit<CreateStudioBoastsRequestProps, 'imageFileKeys'>,
     imageFileKeys: string[],
-    agreedToEventTerms: boolean,
   ) => {
     editMutate(
       {
@@ -51,8 +50,6 @@ export default function StudioBoastsEditPage({
         ...dto,
         imageFileKeys,
         studioId: dto.studioId ? dto.studioId : undefined,
-        instagramAccount: dto.instagramAccount || undefined,
-        agreedToEventTerms,
       },
       {
         onSuccess: () => {
@@ -110,8 +107,6 @@ export default function StudioBoastsEditPage({
           boastData?.unknownStudioInfo?.detailedAddress ||
           '',
         studioId: boastData?.studioInfo?.id || '',
-        instagramAccount: boastData?.creatorUserInfo?.instagramAccount || '',
-        agreedToEventTerms: true,
       }}
       initialImages={convertUrlsToImageItems(boastData?.imageFileUrls)}
       onSubmit={handleEditSubmit}

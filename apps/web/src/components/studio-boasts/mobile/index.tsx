@@ -12,7 +12,6 @@ import { useStudioBoastsQuery } from '@/hooks/api/studio-boasts/useQueries';
 import { StudioBoastsItemProps } from '@/types/studio-boasts';
 import { extractInfiniteData } from '@/utils/query';
 
-import BoastEventBanner from '../components/boast-event-banner';
 import DetailBoastList from './detail-boast-list';
 import FloatingPostButton from './floating-post-button';
 import MobileStudioBoastsTabBar from './mobile-tabBar';
@@ -78,7 +77,7 @@ export default function MobileStudioBoastsPage() {
     >
       <div className='flex flex-col pb-20'>
         <MobileStudioBoastsTabBar />
-        <BoastEventBanner isMobile className='-translate-y-0.5' />
+        {/* <BoastEventBanner isMobile className='-translate-y-0.5' /> */}
         {studioBoastList.length === 0 ? (
           <div className='flex-center my-25'>
             <p className='text-base-l-16-1 whitespace-pre-wrap text-center text-gray-400'>{`현재 작성된 글이 없습니다. \n첫 글을 작성해볼까요?`}</p>

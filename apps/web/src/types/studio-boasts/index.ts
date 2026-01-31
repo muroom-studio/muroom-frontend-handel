@@ -103,8 +103,6 @@ export interface CreateStudioBoastsRequestProps {
   roadNameAddress: string;
   lotNumberAddress: string;
   detailedAddress: string;
-  instagramAccount?: string;
-  agreedToEventTerms: boolean;
   studioId?: string;
   imageFileKeys: string[];
 }

@@ -21,11 +21,9 @@ interface Props {
 }
 
 export default function HomePage({ isMobile }: Props) {
-  // [State] 페이지네이션 (Desktop용)
   const [page, setPage] = useState(1);
   const listRef = useRef<HTMLDivElement>(null);
 
-  // [NUQS] URL 상태 관리 훅
   const [keyword] = useSearch();
 
   const initCenter = { lat: 37.553993, lng: 126.9243517 };
@@ -37,13 +35,11 @@ export default function HomePage({ isMobile }: Props) {
   const { filters, setFilters, clearFilters } = useFilters();
   const { sort, setSort } = useSort();
 
-  // [Effect] 필터/검색어/정렬 변경 시 페이지 초기화 및 스크롤 상단 이동
   useEffect(() => {
     setPage(1);
     listRef.current?.scrollTo({ top: 0 });
   }, [filters, keyword, sort]);
 
-  // [Params] API 요청용 파라미터 생성
   const searchParams = mapValue.bounds
     ? {
         keyword: keyword ?? undefined,
@@ -71,11 +67,9 @@ export default function HomePage({ isMobile }: Props) {
       }
     : undefined;
 
-  // 1. 지도 마커 데이터 조회
   const { data: markersData, isLoading: isMarkersLoading } =
     useStudiosMapSearchQuery(searchParams);
 
-  // 2. 리스트 데이터 조회 (Infinite Query로 통합)
   const {
     data: listData,
     isLoading: isListLoading,
@@ -105,19 +99,16 @@ export default function HomePage({ isMobile }: Props) {
     sort,
     setSort,
 
-    // 데이터
-    studios, // 타입: StudiosMapListItem[]
+    studios,
     markersData: markersData ?? [],
     detailStudio,
     totalElements,
 
-    // Refs & Loading
     listRef,
-    isLoading: isMarkersLoading, // 전체 로딩(지도 기준)
-    isListLoading, // 리스트 로딩
-    isDetailLoading, // 상세 로딩
+    isLoading: isMarkersLoading,
+    isListLoading,
+    isDetailLoading,
 
-    // [Desktop] 페이지네이션 설정
     pagination: {
       currentPage: page,
       totalPages: pagination?.totalPages || 0,
@@ -127,7 +118,6 @@ export default function HomePage({ isMobile }: Props) {
       },
     },
 
-    // [Mobile] 무한 스크롤 설정
     infiniteScroll: {
       hasNextPage: !!hasNextPage,
       isFetchingNextPage: isFetchingNextPage,

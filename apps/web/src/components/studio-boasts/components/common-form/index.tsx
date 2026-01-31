@@ -1,6 +1,6 @@
 'use client';
 
-import { TextBox, TextField } from '@muroom/components';
+import { TextBox } from '@muroom/components';
 import { cn } from '@muroom/lib';
 import { updateObjectProperty } from '@muroom/util';
 
@@ -8,8 +8,6 @@ import ImageUploader, { ImageItem } from '@/components/common/image-uploader';
 import AddressForm from '@/components/welcome/components/steps/components/address-form';
 import { CommonImageUploadResponseProps } from '@/types/api';
 import { CreateStudioBoastsRequestProps } from '@/types/studio-boasts';
-
-import InstaAgreement from './insta-agreement';
 
 interface Props {
   isMobile?: boolean;
@@ -21,9 +19,6 @@ interface Props {
   setValue: React.Dispatch<
     React.SetStateAction<Omit<CreateStudioBoastsRequestProps, 'imageFileKeys'>>
   >;
-  showConfirmCheckModal: boolean;
-  setShowConfirmCheckModal: React.Dispatch<React.SetStateAction<boolean>>;
-  onRegister?: () => void;
   initialImages?: ImageItem[];
 }
 
@@ -33,9 +28,6 @@ export default function StudioBoastsNewCommonForm({
   setImageKeys,
   value,
   setValue,
-  showConfirmCheckModal,
-  setShowConfirmCheckModal,
-  onRegister,
   initialImages,
 }: Props) {
   return (
@@ -91,43 +83,6 @@ export default function StudioBoastsNewCommonForm({
           studioId: 'studioId',
         }}
       />
-
-      <div aria-description='인스타약관' className='flex flex-col gap-y-6'>
-        <TextField
-          className='flex flex-col gap-y-4'
-          customLabel={
-            <div className='flex flex-col gap-y-3'>
-              <span className='text-title-s-22-1'>이벤트 참여 확인</span>
-              <span className='text-base-l-16-1 text-gray-600'>
-                이벤트 참여를 위해 인스타그램 아이디를 입력해 주세요. 입력하신
-                아이디는 외부에 공개되거나 다른 목적으로 사용되지 않습니다.
-              </span>
-            </div>
-          }
-          placeholder='본인의 인스타그램 아이디를 입력해주세요'
-          value={value.instagramAccount}
-          onChange={(e) =>
-            setValue((prev) =>
-              updateObjectProperty(prev, 'instagramAccount', e.target.value),
-            )
-          }
-          onClear={() =>
-            setValue((prev) =>
-              updateObjectProperty(prev, 'instagramAccount', ''),
-            )
-          }
-        />
-        {value.instagramAccount && (
-          <InstaAgreement
-            isMobile={isMobile}
-            value={value as any}
-            setValue={setValue as any}
-            showConfirmCheckModal={showConfirmCheckModal}
-            setShowConfirmCheckModal={setShowConfirmCheckModal}
-            onRegister={onRegister}
-          />
-        )}
-      </div>
     </div>
   );
 }

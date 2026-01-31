@@ -6,7 +6,6 @@ import { Button, TabItem } from '@muroom/components';
 import { PlusIcon } from '@muroom/icons';
 
 import PageWrapper from '@/components/common/page-wrapper';
-import BoastEventBanner from '@/components/studio-boasts/components/boast-event-banner';
 import { useAuthCheck } from '@/hooks/auth/useAuthCheck';
 import { useSaveRedirectUrl } from '@/hooks/auth/useAuthRedirect';
 import { useResponsiveLayout } from '@/hooks/common/useResponsiveLayout';
@@ -68,7 +67,7 @@ export default function Layout({ children }: Props) {
   return (
     <PageWrapper
       title='작업실 자랑하기'
-      thumbnail={isListPage ? <BoastEventBanner /> : undefined}
+      // thumbnail={isListPage ? <BoastEventBanner /> : undefined}
       tabs={isListPage ? TABS : undefined}
       initialActiveTabId={currentTabId}
       activeTabId={currentTabId}
