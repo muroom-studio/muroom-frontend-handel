@@ -1,6 +1,8 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useCallback, useRef } from 'react';
+
+import dynamic from 'next/dynamic';
 
 import { Button, Spinner } from '@muroom/components';
 import { ResetIcon } from '@muroom/icons';
@@ -8,7 +10,6 @@ import { ResetIcon } from '@muroom/icons';
 import Loading from '@/app/loading';
 import NotFound from '@/app/not-found';
 import CommonDetailStudio from '@/components/common/detail-studio';
-import CommonMap from '@/components/common/map';
 import FilterItem, { Variant } from '@/components/home/components/filter-item';
 import { useFilters } from '@/hooks/nuqs/home/useFilters';
 import { MapState } from '@/hooks/nuqs/home/useMapState';
@@ -18,6 +19,11 @@ import { StudiosMapListItem, StudiosMapSearchItem } from '@/types/studios';
 
 import ListFilter from '../components/list-filter';
 import ListView from '../components/list-view';
+
+const CommonMap = dynamic(() => import('@/components/common/map'), {
+  ssr: false,
+  loading: () => <Loading />,
+});
 
 interface Props {
   mapValue: MapState;
@@ -35,7 +41,6 @@ interface Props {
   markersData: StudiosMapSearchItem[];
   isLoading: boolean;
   isListLoading: boolean;
-  // --- 추가된 Pagination & Infinite Scroll Props ---
   pagination: {
     currentPage: number;
     totalPages: number;
@@ -63,8 +68,6 @@ export default function DesktopHomePage({
   isListLoading,
   pagination,
 }: Props) {
-  const mapContainerRef = useRef<HTMLDivElement>(null);
-
   const gridTemplateColumns = mapValue.studioId
     ? '375px 375px 1fr'
     : '375px 1fr';
@@ -73,19 +76,21 @@ export default function DesktopHomePage({
     (value) => value !== null,
   );
 
-  useEffect(() => {
-    const container = mapContainerRef.current;
-    if (!container) return;
+  const observerRef = useRef<ResizeObserver | null>(null);
 
-    const observer = new ResizeObserver(() => {
-      window.dispatchEvent(new Event('resize'));
-    });
+  const mapContainerRef = useCallback((node: HTMLDivElement | null) => {
+    if (node !== null) {
+      const observer = new ResizeObserver(() => {
+        window.dispatchEvent(new Event('resize'));
+      });
 
-    observer.observe(container);
-
-    return () => {
-      observer.disconnect();
-    };
+      observer.observe(node);
+      observerRef.current = observer;
+    } else {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    }
   }, []);
 
   if (isLoading) {
