@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Graph</title>
+  </head>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/viz.js@2.1.2-pre.1/viz.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/viz.js@2.1.2-pre.1/full.render.js"></script>
+    <script>
+      const s = `
+digraph {
+	compound = "true"
+	newrank = "true"
+	subgraph "root" {
+		"[root] @muroom/eslint-config#build" -> "[root] ___ROOT___"
+		"[root] @muroom/tailwind-config#build" -> "[root] ___ROOT___"
+		"[root] @muroom/typescript-config#build" -> "[root] ___ROOT___"
+		"[root] @muroom/ui#build" -> "[root] @muroom/ui#build:components"
+		"[root] @muroom/ui#build" -> "[root] @muroom/ui#build:styles"
+		"[root] @muroom/ui#build:components" -> "[root] ___ROOT___"
+		"[root] @muroom/ui#build:styles" -> "[root] ___ROOT___"
+		"[root] @muroom/util#build" -> "[root] @muroom/eslint-config#build"
+		"[root] @muroom/util#build" -> "[root] @muroom/typescript-config#build"
+		"[root] docs#build" -> "[root] @muroom/eslint-config#build"
+		"[root] docs#build" -> "[root] @muroom/tailwind-config#build"
+		"[root] docs#build" -> "[root] @muroom/typescript-config#build"
+		"[root] docs#build" -> "[root] @muroom/ui#build"
+		"[root] web#build" -> "[root] @muroom/eslint-config#build"
+		"[root] web#build" -> "[root] @muroom/tailwind-config#build"
+		"[root] web#build" -> "[root] @muroom/typescript-config#build"
+		"[root] web#build" -> "[root] @muroom/ui#build"
+		"[root] web#build" -> "[root] @muroom/util#build"
+	}
+}
+
+`
+        .replace(/\_\_\_ROOT\_\_\_/g, 'Root')
+        .replace(/\[root\]/g, '');
+      new Viz()
+        .renderSVGElement(s)
+        .then((el) => document.body.appendChild(el))
+        .catch((e) => console.error(e));
+    </script>
+  </body>
+</html>

@@ -46,7 +46,6 @@ export default function CommonMap({
   const [keyword, setKeyword] = useSearch();
   const { isMobile } = useResponsiveLayout();
   const mapRef = useRef<HTMLDivElement | null>(null);
-
   const [windowHeight, setWindowHeight] = useState(0);
 
   useEffect(() => {
@@ -60,9 +59,7 @@ export default function CommonMap({
 
   const uiY = useTransform(sheetY || new MotionValue(0), (latestY) => {
     if (!windowHeight) return latestY;
-
     const middleY = windowHeight * (1 - middleRatio);
-
     return Math.max(latestY, middleY);
   });
 
@@ -82,71 +79,74 @@ export default function CommonMap({
     zoom: mapValue.zoom,
     minZoom: MIN_ZOOM,
     maxZoom: MAX_ZOOM,
-    setZoom: (newZoomUpdater) => {
-      setMapValue((prev) => {
-        const nextZoom =
-          typeof newZoomUpdater === 'function'
-            ? newZoomUpdater(prev.zoom)
-            : newZoomUpdater;
-        return {
-          ...prev,
-          zoom: Math.min(Math.max(nextZoom, MIN_ZOOM), MAX_ZOOM),
-        };
-      });
-    },
-    onCenterChange: (newCenter) => {
-      setMapValue((prev) => ({
-        ...prev,
-        center: newCenter,
-      }));
-    },
+    setZoom: () => {},
+    onCenterChange: () => {},
   });
 
   useEffect(() => {
     if (!mapInstance) return;
 
     const handleIdle = () => {
-      const bounds = mapInstance.getBounds() as any;
-      const sw = bounds.getSW();
-      const ne = bounds.getNE();
+      requestAnimationFrame(() => {
+        const center = mapInstance.getCenter();
+        const zoom = mapInstance.getZoom();
+        const bounds = mapInstance.getBounds();
+        const sw = bounds.getSW();
+        const ne = bounds.getNE();
 
-      const newBounds = {
-        minLat: sw.lat(),
-        minLng: sw.lng(),
-        maxLat: ne.lat(),
-        maxLng: ne.lng(),
-      };
-
-      setMapValue((prev) => {
-        const prevBounds = prev.bounds;
-
-        if (
-          prevBounds?.minLat === newBounds.minLat &&
-          prevBounds?.minLng === newBounds.minLng &&
-          prevBounds?.maxLat === newBounds.maxLat &&
-          prevBounds?.maxLng === newBounds.maxLng
-        ) {
-          return prev;
-        }
-
-        return {
-          ...prev,
-          bounds: newBounds,
+        const newCenter = { lat: center.lat(), lng: center.lng() };
+        const newBounds = {
+          minLat: sw.lat(),
+          minLng: sw.lng(),
+          maxLat: ne.lat(),
+          maxLng: ne.lng(),
         };
+
+        setMapValue((prev) => {
+          const isSame =
+            prev.zoom === zoom &&
+            Math.abs(prev.center.lat - newCenter.lat) < 0.000001 &&
+            Math.abs(prev.bounds?.minLat ?? 0 - newBounds.minLat) < 0.000001;
+
+          if (isSame) return prev;
+          return { ...prev, center: newCenter, zoom, bounds: newBounds };
+        });
       });
     };
+    // const handleIdle = () => {
+    //   // ❌ [BEFORE] rAF를 제거하여 브라우저의 레이아웃 계산을 강제로 유도합니다.
+    //   // requestAnimationFrame(() => { // 주석 처리 또는 삭제
+    //   const center = mapInstance.getCenter();
+    //   const zoom = mapInstance.getZoom();
+    //   const bounds = mapInstance.getBounds();
+    //   const sw = bounds.getSW();
+    //   const ne = bounds.getNE();
 
-    handleIdle();
+    //   const newCenter = { lat: center.lat(), lng: center.lng() };
+    //   const newBounds = {
+    //     minLat: sw.lat(),
+    //     minLng: sw.lng(),
+    //     maxLat: ne.lat(),
+    //     maxLng: ne.lng(),
+    //   };
+
+    //   setMapValue((prev) => {
+    //     const isSame =
+    //       prev.zoom === zoom &&
+    //       Math.abs(prev.center.lat - newCenter.lat) < 0.000001 &&
+    //       Math.abs(prev.bounds?.minLat ?? 0 - newBounds.minLat) < 0.000001;
+
+    //     if (isSame) return prev;
+    //     return { ...prev, center: newCenter, zoom, bounds: newBounds };
+    //   });
+    // };
 
     const listener = naver.maps.Event.addListener(
       mapInstance,
       'idle',
       handleIdle,
     );
-
-    return () => {
-      naver.maps.Event.removeListener(listener);
-    };
+    return () => naver.maps.Event.removeListener(listener);
   }, [mapInstance, setMapValue]);
 
   useMapOverlays({
@@ -156,22 +156,16 @@ export default function CommonMap({
     selectedId: mapValue.studioId,
   });
 
-  const handleZoomIn = useCallback(() => {
-    setMapValue((prev) => ({
-      ...prev,
-      zoom: Math.min(MAX_ZOOM, prev.zoom + 1),
-    }));
-  }, [setMapValue]);
-
-  const handleZoomOut = useCallback(() => {
-    setMapValue((prev) => ({
-      ...prev,
-      zoom: Math.max(MIN_ZOOM, prev.zoom - 1),
-    }));
-  }, [setMapValue]);
+  const handleZoomIn = useCallback(
+    () => mapInstance?.setZoom(mapInstance.getZoom() + 1),
+    [mapInstance],
+  );
+  const handleZoomOut = useCallback(
+    () => mapInstance?.setZoom(mapInstance.getZoom() - 1),
+    [mapInstance],
+  );
 
   const { pendingKeyword, setPendingKeyword } = useRecentSearchStore();
-
   useEffect(() => {
     if (pendingKeyword !== null) {
       setKeyword(pendingKeyword);
@@ -182,35 +176,14 @@ export default function CommonMap({
   const renderMapUI = () => {
     if (isMobile) {
       return (
-        <>
-          <div className='absolute top-2 flex w-full flex-col gap-y-3 px-4'>
-            {/* <Link href='/search' scroll={false}>
-              <TextField
-                id='keyword'
-                name='keyword'
-                value={keyword || ''}
-                onClear={() => setKeyword('')}
-                placeholder='지하철역 또는 작업실 검색하기'
-                leftIcon={<SearchIcon className='size-6' />}
-                inputClassName={
-                  'bg-white cursor-pointer focus:border-primary-400'
-                }
-              />
-            </Link> */}
-            <FilterBtns />
-          </div>
-
-          {/* Floating UI */}
+        <div className='absolute top-2 flex w-full flex-col gap-y-3 px-4'>
+          <FilterBtns />
           {sheetY && (
             <motion.div
               className='pointer-events-none absolute left-0 top-0 z-50 w-full px-4'
               style={{ y: uiY }}
             >
-              <div
-                className={
-                  'relative flex w-full -translate-y-full flex-col pb-4'
-                }
-              >
+              <div className='relative flex w-full -translate-y-full flex-col pb-4'>
                 <div className='relative flex w-full items-end justify-end'>
                   <div className='pointer-events-auto absolute bottom-0 left-1/2 -translate-x-1/2'>
                     <LocationTag
@@ -219,9 +192,7 @@ export default function CommonMap({
                       className='h-9'
                     />
                   </div>
-
                   <div className='pointer-events-auto flex flex-col gap-y-3'>
-                    {/* <CompareBtn isMobile={isMobile} /> */}
                     <CurrentLocationBtn
                       isMobile={isMobile}
                       mapValue={mapValue}
@@ -232,22 +203,19 @@ export default function CommonMap({
               </div>
             </motion.div>
           )}
-        </>
+        </div>
       );
     }
-
     return (
       <>
         <div className='absolute right-4 top-4 z-50 flex flex-col gap-y-4'>
           <CurrentLocationBtn mapValue={mapValue} setMapValue={setMapValue} />
           <ZoomControls onZoomIn={handleZoomIn} onZoomOut={handleZoomOut} />
         </div>
-
         <LocationTag
           mapCenter={mapValue.center}
           className='absolute bottom-10 left-1/2 z-50 -translate-x-1/2'
         />
-
         <FaqButton className='absolute bottom-12 right-10 z-50' />
       </>
     );
@@ -263,22 +231,12 @@ export default function CommonMap({
 
 const FilterBtns = () => {
   const { data } = useStudioFilterOptionsQuery();
-
   const { filters, setFilters } = useFilters();
-
   const [isExtraOpen, setIsExtraOpen] = useState(false);
-
   const visibleKeys = ['e1', 'e2'] as const;
-
-  const hasActiveFilter =
-    (filters.commonOptionCodes?.length ?? 0) > 0 ||
-    (filters.individualOptionCodes?.length ?? 0) > 0 ||
-    (filters.floorTypes?.length ?? 0) > 0 ||
-    (filters.restroomTypes?.length ?? 0) > 0 ||
-    filters.isParkingAvailable !== null ||
-    filters.isLodgingAvailable !== null ||
-    filters.hasFireInsurance !== null ||
-    (filters.forbiddenInstrumentCodes?.length ?? 0) > 0;
+  const hasActiveFilter = Object.values(filters).some((val) =>
+    Array.isArray(val) ? val.length > 0 : val !== null,
+  );
 
   return (
     <div className='flex items-center gap-x-3'>
@@ -297,20 +255,7 @@ const FilterBtns = () => {
             <Button
               variant='outline'
               size='xl'
-              onClick={() =>
-                setFilters({
-                  commonOptionCodes: null,
-                  individualOptionCodes: null,
-
-                  floorTypes: null,
-                  restroomTypes: null,
-                  isParkingAvailable: null,
-                  isLodgingAvailable: null,
-                  hasFireInsurance: null,
-
-                  forbiddenInstrumentCodes: null,
-                })
-              }
+              onClick={() => setFilters(null)}
             >
               초기화
             </Button>
@@ -349,7 +294,6 @@ const FilterBtns = () => {
           />
         </div>
       </ModalBottomSheet>
-
       {visibleKeys.map((key) => (
         <div aria-label='필터 박스' key={key}>
           <FilterItem
