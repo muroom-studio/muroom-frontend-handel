@@ -1,5 +1,10 @@
 <p align="center">
-  <img src="https://res.cloudinary.com/dpzexzf44/image/upload/v1771330572/KakaoTalk_Photo_2026-02-17-21-14-25_1_nkmulb.png" width="100%" alt="muroom-thumbnail" />
+  <a href="https://muroom.kr">
+    <img src="https://res.cloudinary.com/dpzexzf44/image/upload/c_fill,ar_21:9,w_1200,r_30/v1771330572/KakaoTalk_Photo_2026-02-17-21-14-25_1_nkmulb.png" 
+         width="100%" 
+         height="100%"
+         alt="muroom-thumbnail" />
+  </a>
 </p>
 
 <p align="center">
