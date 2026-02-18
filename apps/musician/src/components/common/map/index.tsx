@@ -113,33 +113,6 @@ export default function CommonMap({
         });
       });
     };
-    // const handleIdle = () => {
-    //   // ❌ [BEFORE] rAF를 제거하여 브라우저의 레이아웃 계산을 강제로 유도합니다.
-    //   // requestAnimationFrame(() => { // 주석 처리 또는 삭제
-    //   const center = mapInstance.getCenter();
-    //   const zoom = mapInstance.getZoom();
-    //   const bounds = mapInstance.getBounds();
-    //   const sw = bounds.getSW();
-    //   const ne = bounds.getNE();
-
-    //   const newCenter = { lat: center.lat(), lng: center.lng() };
-    //   const newBounds = {
-    //     minLat: sw.lat(),
-    //     minLng: sw.lng(),
-    //     maxLat: ne.lat(),
-    //     maxLng: ne.lng(),
-    //   };
-
-    //   setMapValue((prev) => {
-    //     const isSame =
-    //       prev.zoom === zoom &&
-    //       Math.abs(prev.center.lat - newCenter.lat) < 0.000001 &&
-    //       Math.abs(prev.bounds?.minLat ?? 0 - newBounds.minLat) < 0.000001;
-
-    //     if (isSame) return prev;
-    //     return { ...prev, center: newCenter, zoom, bounds: newBounds };
-    //   });
-    // };
 
     const listener = naver.maps.Event.addListener(
       mapInstance,
