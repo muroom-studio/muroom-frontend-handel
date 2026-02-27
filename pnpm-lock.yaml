@@ -238,6 +238,10 @@ importers:
         version: 8.50.1(eslint@9.39.2)(typescript@5.9.3)
 
   packages/tailwind-config:
+    dependencies:
+      next:
+        specifier: 15.5.7
+        version: 15.5.7(react-dom@19.2.3)(react@19.2.3)
     devDependencies:
       '@tailwindcss/typography':
         specifier: 0.5.19

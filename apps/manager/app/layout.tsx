@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
-import { Geist } from 'next/font/google';
+
+import { pretendard, roboto } from '@muroom/tailwind-config/fonts';
 
 import './globals.css';
-
-const geist = Geist({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Create Turborepo',
@@ -16,8 +15,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang='en'>
-      <body className={geist.className}>{children}</body>
+    <html lang='ko'>
+      <body className={`${pretendard.className} ${roboto.className}`}>
+        {children}
+        Hello World!
+      </body>
     </html>
   );
 }
