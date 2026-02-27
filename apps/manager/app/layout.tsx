@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 
 import { pretendard, roboto } from '@muroom/tailwind-config/fonts';
 
+import BaseLayout from './_components/layout/base-layout';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -17,8 +18,7 @@ export default function RootLayout({
   return (
     <html lang='ko'>
       <body className={`${pretendard.className} ${roboto.className}`}>
-        {children}
-        Hello World!
+        <BaseLayout>{children}</BaseLayout>
       </body>
     </html>
   );
