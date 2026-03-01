@@ -5,8 +5,8 @@ import BaseLogo from '@muroom/ui/assets/base-logo.svg';
 
 export default function DesktopHeader() {
   return (
-    <header className='border-b-[0.5px] border-b-gray-300 p-5'>
-      <Link href='/' className='flex items-center gap-2'>
+    <header className='h-[84px] border-b-[0.5px] border-b-gray-300'>
+      <Link href='/' className='flex h-full items-center gap-2 px-5'>
         <Image
           src={BaseLogo}
           alt='로고'

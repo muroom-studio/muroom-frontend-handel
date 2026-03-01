@@ -8,7 +8,9 @@ export default function AuthLayout({
   return (
     <div className='flex flex-1 flex-col'>
       <main className='flex flex-1 flex-col'>{children}</main>
-      <Footer />
+      <div className='hidden md:block'>
+        <Footer />
+      </div>
     </div>
   );
 }
