@@ -27,10 +27,18 @@ export default function HomePage({ isMobile }: Props) {
   const { filters, setFilters, clearFilters } = useFilters();
   const { sort, setSort } = useSort();
 
-  const initCenter = { lat: 37.553993, lng: 126.9243517 };
+  const initCenter = { lat: 37.5552688, lng: 126.9251027 };
+  const initBounds = {
+    minLat: 37.5495274,
+    maxLat: 37.5610098,
+    minLng: 126.9181933,
+    maxLng: 126.9320121,
+  };
+
   const [mapValue, setMapValue] = useMapState({
     center: initCenter,
     zoom: 16,
+    bounds: initBounds,
   });
 
   useEffect(() => {
@@ -115,6 +123,8 @@ export default function HomePage({ isMobile }: Props) {
       fetchNextPage: fetchNextPage,
     },
   };
+
+  console.log(searchParams);
 
   return (
     <main className='h-full'>
