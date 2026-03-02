@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect } from 'react';
+
 import {
   createParser,
   parseAsFloat,
@@ -67,8 +69,22 @@ export function useMapState(
     {
       shallow: true,
       clearOnDefault: false,
+      history: 'replace',
     },
   );
+
+  useEffect(() => {
+    setParams({
+      center: params.center,
+      zoom: params.zoom,
+      studioId: params.studioId,
+      minLatitude: params.minLatitude ?? initialState?.bounds?.minLat ?? null,
+      maxLatitude: params.maxLatitude ?? initialState?.bounds?.maxLat ?? null,
+      minLongitude: params.minLongitude ?? initialState?.bounds?.minLng ?? null,
+      maxLongitude: params.maxLongitude ?? initialState?.bounds?.maxLng ?? null,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const mapValue: MapState = {
     center: params.center,
