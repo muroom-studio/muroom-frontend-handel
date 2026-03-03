@@ -23,6 +23,7 @@ export { default as Alert } from './Alert';
 export { default as TextBox } from './TextBox';
 export { default as UserBaseInfoLabel } from './UserBaseInfoLabel';
 export { default as ExpandedParagraph } from './ExpandedParagraph';
+export { default as Footer } from './Footer';
 
 export {
   Dropdown,
