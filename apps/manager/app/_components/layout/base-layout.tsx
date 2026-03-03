@@ -9,17 +9,17 @@ export default function BaseLayout({
 }) {
   return (
     <div className='flex min-h-dvh flex-col'>
-      <div className='hidden md:block'>
+      <div className='desktop:block hidden'>
         <DesktopHeader />
       </div>
 
-      <div className='md:hidden'>
+      <div className='desktop:hidden'>
         <MobileHeader />
       </div>
 
       <main className='flex flex-1 flex-col'>{children}</main>
 
-      <div className='md:hidden'>
+      <div className='desktop:hidden'>
         <BottomNav />
       </div>
     </div>

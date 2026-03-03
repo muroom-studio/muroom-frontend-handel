@@ -1,2 +1,6 @@
 @import 'tailwindcss';
 @import '@muroom/tailwind-config';
+
+@theme {
+  --breakpoint-desktop: 1080px;
+}
