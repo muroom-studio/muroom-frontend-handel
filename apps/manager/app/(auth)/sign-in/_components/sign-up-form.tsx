@@ -9,7 +9,7 @@ import { Button, TextField } from '@muroom/ui/components';
 export default function SignUpForm() {
   return (
     <div className='desktop:items-center desktop:justify-center flex flex-1 flex-col'>
-      <div className='desktop:pt-15 desktop:shadow-level-0 desktop:max-w-[428px] desktop:flex-none desktop:rounded-sm desktop:border desktop:border-gray-300 desktop:px-10 desktop:pb-10 flex w-full flex-1 flex-col px-5 pb-10'>
+      <div className='desktop:pt-15 desktop:shadow-level-0 desktop:max-w-[420px] desktop:flex-none desktop:rounded-sm desktop:border desktop:border-gray-300 desktop:px-10 desktop:pb-10 flex w-full flex-1 flex-col px-5 pb-10'>
         {/* 로고 */}
         <div className='desktop:mb-10 desktop:flex-none flex flex-1 flex-col items-center justify-center gap-0.5'>
           <Image
