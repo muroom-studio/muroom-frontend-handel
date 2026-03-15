@@ -6,10 +6,10 @@ import Link from 'next/link';
 import BaseLogo from '@muroom/ui/assets/base-logo.svg';
 import { Button, TextField } from '@muroom/ui/components';
 
-export default function SignUpForm() {
+export default function SignInForm() {
   return (
     <div className='desktop:items-center desktop:justify-center flex flex-1 flex-col'>
-      <div className='desktop:pt-15 desktop:shadow-level-0 desktop:max-w-[420px] desktop:flex-none desktop:rounded-sm desktop:border desktop:border-gray-300 desktop:px-10 desktop:pb-10 flex w-full flex-1 flex-col px-5 pb-10'>
+      <div className='desktop:pt-15 desktop:shadow-level-0 desktop:max-w-105 desktop:flex-none desktop:rounded-sm desktop:border desktop:border-gray-300 desktop:px-10 desktop:pb-10 flex w-full flex-1 flex-col px-5 pb-10'>
         {/* 로고 */}
         <div className='desktop:mb-10 desktop:flex-none flex flex-1 flex-col items-center justify-center gap-0.5'>
           <Image
@@ -53,7 +53,7 @@ export default function SignUpForm() {
             비밀번호 찾기
           </Link>
           <div className='h-3 w-px bg-gray-300' />
-          <Link href='/auth/sign-up' className='text-base-m-14-1 text-gray-500'>
+          <Link href='/sign-up/info' className='text-base-m-14-1 text-gray-500'>
             회원가입
           </Link>
         </div>

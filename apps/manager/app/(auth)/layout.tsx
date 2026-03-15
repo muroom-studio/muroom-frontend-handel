@@ -1,5 +1,3 @@
-import { Footer } from '@muroom/ui/components';
-
 export default function AuthLayout({
   children,
 }: {
