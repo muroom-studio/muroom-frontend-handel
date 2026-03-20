@@ -1,21 +1,21 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation'
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 
-import { Button, TextField } from '@muroom/ui/components';
-import { LockOffIcon, LockOnIcon } from '@muroom/ui/icons';
+import { Button, TextField } from '@muroom/ui/components'
+import { VisibilityIcon, VisibilityOffIcon } from '@muroom/ui/icons'
 
-import { AuthFormContainer } from '../../_components';
-import { useSignUpStore } from '../_store/sign-up-store';
+import { AuthFormContainer } from '../../_components'
+import { useSignUpStore } from '../_store/sign-up-store'
 
 const PASSWORD_REGEX =
-  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
+  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/
 
 const schema = z
   .object({
@@ -31,25 +31,25 @@ const schema = z
         code: 'custom',
         message: '비밀번호는 8자리 이상, 영문, 숫자, 특수문자 포함해주세요',
         path: ['passwordConfirm'],
-      });
+      })
     } else if (password !== passwordConfirm) {
       ctx.addIssue({
         code: 'custom',
         message: '입력한 비밀번호가 일치하지 않습니다.',
         path: ['passwordConfirm'],
-      });
+      })
     }
-  });
+  })
 
-type FormValues = z.infer<typeof schema>;
+type FormValues = z.infer<typeof schema>
 
 export default function SignUpInfoForm() {
-  const router = useRouter();
-  const email = useSignUpStore((s) => s.email);
-  const password = useSignUpStore((s) => s.password);
-  const completeStep = useSignUpStore((s) => s.completeStep);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+  const router = useRouter()
+  const email = useSignUpStore((s) => s.email)
+  const password = useSignUpStore((s) => s.password)
+  const completeStep = useSignUpStore((s) => s.completeStep)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false)
 
   const {
     register,
@@ -57,21 +57,18 @@ export default function SignUpInfoForm() {
     formState: { errors, isValid },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
-    mode: 'onBlur',
+    mode: 'onChange',
     defaultValues: { email, password, passwordConfirm: password },
-  });
+  })
 
   const onSubmit = (data: FormValues) => {
-    completeStep('info', { email: data.email, password: data.password });
-    router.push('/sign-up/terms');
-  };
+    completeStep('info', { email: data.email, password: data.password })
+    router.push('/sign-up/terms')
+  }
 
   return (
     <AuthFormContainer>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className='flex flex-col gap-10 p-10'
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-10'>
         {/* 제목 */}
         <h1 className='text-[26px] font-semibold'>내 정보 입력</h1>
 
@@ -108,9 +105,9 @@ export default function SignUpInfoForm() {
                   className='flex items-center justify-center'
                 >
                   {showPassword ? (
-                    <LockOnIcon className='size-6' />
+                    <VisibilityIcon className='size-6' />
                   ) : (
-                    <LockOffIcon className='size-6' />
+                    <VisibilityOffIcon className='size-6' />
                   )}
                 </button>
               }
@@ -135,9 +132,9 @@ export default function SignUpInfoForm() {
                   className='flex items-center justify-center'
                 >
                   {showPasswordConfirm ? (
-                    <LockOnIcon className='size-6' />
+                    <VisibilityIcon className='size-6' />
                   ) : (
-                    <LockOffIcon className='size-6' />
+                    <VisibilityOffIcon className='size-6' />
                   )}
                 </button>
               }
@@ -157,5 +154,5 @@ export default function SignUpInfoForm() {
         </Button>
       </form>
     </AuthFormContainer>
-  );
+  )
 }

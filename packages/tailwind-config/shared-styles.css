@@ -53,6 +53,10 @@
   body {
     @apply font-pretendard text-gray-800;
   }
+
+  button {
+    cursor: pointer;
+  }
 }
 
 @layer utilities {

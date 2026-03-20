@@ -33,6 +33,8 @@ export { default as StarIcon } from './Star';
 export { default as TargetIcon } from './Target';
 export { default as ThumbsupOffIcon } from './ThumbsupOff';
 export { default as ThumbsupOnIcon } from './ThumbsupOn';
+export { default as VisibilityIcon } from './Visibility'
+export { default as VisibilityOffIcon } from './VisibilityOff'
 export { default as VisitListOutlineIcon } from './VisitListOutline';
 export { default as VisitListIcon } from './VisitList';
 export { default as WorkroomFillIcon } from './WorkroomFill';

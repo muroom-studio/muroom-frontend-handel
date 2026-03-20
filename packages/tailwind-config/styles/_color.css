@@ -61,4 +61,47 @@
   --color-primary-800: #4d179a;
   --color-primary-900: #2f0d68;
   --color-primary-950: #14082e;
+
+  --color-red-450: #fd4249;
+
+  /* text */
+  --color-text-1: #99a1af;
+  --color-text-2: #4a5565;
+  --color-text-3: #1e2939;
+  --color-text-primary: #7008e7;
+
+  /* icon */
+  --color-icon-disable: #99a1af;
+  --color-icon-1: #99a1af;
+  --color-icon-2: #364153;
+  --color-icon-primary: #7f22fe;
+
+  /* button */
+  --color-button-primary-1: #7f22fe;
+  --color-button-primary-2: #7008e7;
+  --color-button-primary-3: #5d0ec0;
+  --color-button-outline-1: #ffffff;
+  --color-button-outline-2: #f9fafb;
+  --color-button-outline-3: #f3f4f6;
+
+  /* stroke */
+  --color-stroke-contents: #e5e7eb;
+  --color-stroke-header: #d1d5dc;
+  --color-stroke-primary: #8e51ff;
+
+  /* bg */
+  --color-bg-1: #ffffff;
+  --color-bg-2: #f9fafb;
+
+  /* danger */
+  --color-danger-bg: #fef2f2;
+  --color-danger-fill: #fd4249;
+  --color-danger-text: #fb2c36;
+
+  /* success */
+  --color-success-bg: #eff6ff;
+  --color-success-fill-text: #2b7fff;
+
+  /* heart */
+  --color-heart: #ff2164;
 }
