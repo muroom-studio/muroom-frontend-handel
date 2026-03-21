@@ -3,8 +3,6 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
-import { useRouter } from 'next/navigation'
-
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 
@@ -44,10 +42,10 @@ const schema = z
 type FormValues = z.infer<typeof schema>
 
 export default function SignUpInfoForm() {
-  const router = useRouter()
   const email = useSignUpStore((s) => s.email)
   const password = useSignUpStore((s) => s.password)
   const completeStep = useSignUpStore((s) => s.completeStep)
+
   const [showPassword, setShowPassword] = useState(false)
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false)
 
@@ -63,7 +61,6 @@ export default function SignUpInfoForm() {
 
   const onSubmit = (data: FormValues) => {
     completeStep('info', { email: data.email, password: data.password })
-    router.push('/sign-up/terms')
   }
 
   return (

@@ -4,7 +4,7 @@ import { usePathname, useRouter } from 'next/navigation'
 
 import { CloseIcon, LeftarrowIcon } from '@muroom/ui/icons'
 
-const ENTRY_PATHS = ['/sign-in', '/sign-up/info', '/forgot-password']
+const ENTRY_PATHS = ['/sign-in', '/sign-up', '/forgot-password']
 const HOME_PATH = '/muroom/home'
 
 export function AuthNavHeader() {

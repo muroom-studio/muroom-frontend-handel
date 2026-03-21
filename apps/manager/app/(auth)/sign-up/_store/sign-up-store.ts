@@ -14,7 +14,7 @@ interface SignUpState {
   reset: () => void;
 }
 
-const STEP_ORDER: SignUpStep[] = ['info', 'terms', 'verify'];
+export const STEP_ORDER: SignUpStep[] = ['info', 'terms', 'verify'];
 
 const initialState = {
   completedSteps: [] as SignUpStep[],
@@ -36,7 +36,7 @@ export const useSignUpStore = create<SignUpState>((set, get) => ({
   isStepAccessible: (step) => {
     if (step === 'info') return true;
     const prevStep = STEP_ORDER[STEP_ORDER.indexOf(step) - 1];
-    return get().completedSteps.includes(prevStep);
+    return prevStep !== undefined && get().completedSteps.includes(prevStep);
   },
 
   reset: () => set(initialState),

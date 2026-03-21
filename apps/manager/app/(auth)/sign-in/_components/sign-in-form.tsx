@@ -53,7 +53,7 @@ export default function SignInForm() {
             비밀번호 찾기
           </Link>
           <div className='h-3 w-px bg-gray-300' />
-          <Link href='/sign-up/info' className='text-base-m-14-1 text-gray-500'>
+          <Link href='/sign-up' className='text-base-m-14-1 text-gray-500'>
             회원가입
           </Link>
         </div>
