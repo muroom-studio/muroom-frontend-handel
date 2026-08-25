@@ -1,9 +1,5 @@
-import { NextPage } from 'next';
+import ServiceClosedNotice from '@/components/service-closed';
 
-import ErrorTemplate from '@/components/common/error-template';
-
-const NotFound: NextPage = () => {
-  return <ErrorTemplate status={404} />;
-};
-
-export default NotFound;
+export default function NotFound() {
+  return <ServiceClosedNotice />;
+}

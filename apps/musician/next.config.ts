@@ -1,8 +1,6 @@
 // next.config.ts
 import type { NextConfig } from 'next';
 
-import { BE_BASE_URL } from '@/config/constants';
-
 const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
@@ -71,14 +69,6 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
-  },
-  async rewrites() {
-    return [
-      {
-        source: '/api/v1/:path*',
-        destination: `${BE_BASE_URL}/api/v1/:path*`,
-      },
-    ];
   },
 };
 

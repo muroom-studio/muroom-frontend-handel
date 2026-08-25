@@ -1,59 +1,27 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const GUEST_ONLY_PATHS = ['/welcome', '/login', '/join', '/redirect'];
-
-const PUBLIC_PATHS = [
-  '/home',
-  '/search',
-  '/terms',
-  '/',
-  '/studio-boasts',
-  '/extra',
-];
-
-const AUTH_REQUIRED_PATHS = [
-  '/logout',
-  '/mypage/profile',
-  '/mypage/cs/inquiry',
-  '/studio-boasts/new',
-  '/studio-boasts/edit',
-];
+// 서비스 종료: 모든 페이지 요청을 종료 안내 페이지(/closed)로 고정하고,
+// API 요청은 410 Gone 으로 차단합니다.
+const CLOSED_PATH = '/closed';
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname === '/') {
-    return NextResponse.redirect(new URL('/home', request.url));
+  if (pathname.startsWith('/api')) {
+    return NextResponse.json(
+      { message: '서비스가 종료되었습니다.' },
+      { status: 410 },
+    );
   }
 
-  const sessionId = request.cookies.get('JSESSIONID')?.value;
-
-  const isGuestOnlyPath = GUEST_ONLY_PATHS.some((path) =>
-    pathname.startsWith(path),
-  );
-
-  const isPublicPath = PUBLIC_PATHS.some((path) => pathname.startsWith(path));
-
-  const isAuthRequiredPath = AUTH_REQUIRED_PATHS.some((path) =>
-    pathname.startsWith(path),
-  );
-
-  if (sessionId && isGuestOnlyPath) {
-    return NextResponse.redirect(new URL('/home', request.url));
+  if (pathname === CLOSED_PATH) {
+    return NextResponse.next();
   }
 
-  if (!sessionId) {
-    if (isAuthRequiredPath || (!isGuestOnlyPath && !isPublicPath)) {
-      return NextResponse.redirect(new URL('/welcome', request.url));
-    }
-  }
-
-  return NextResponse.next();
+  return NextResponse.rewrite(new URL(CLOSED_PATH, request.url));
 }
 
 export const config = {
-  matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico|mockServiceWorker.js).*)',
-  ],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 };

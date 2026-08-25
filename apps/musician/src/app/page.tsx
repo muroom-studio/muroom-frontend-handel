@@ -1,3 +1,5 @@
+import ServiceClosedNotice from '@/components/service-closed';
+
 export default function Page() {
-  return <>홈페이지</>;
+  return <ServiceClosedNotice />;
 }

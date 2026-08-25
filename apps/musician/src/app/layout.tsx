@@ -1,22 +1,5 @@
-import { Suspense } from 'react';
-
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-import Script from 'next/script';
-
-import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
-import { NuqsAdapter } from 'nuqs/adapters/next';
-
-import JoinTriggerProvider from '@/components/providers/join-trigger-provider';
-import MapProvider from '@/components/providers/map-provider';
-import RQProvider from '@/components/providers/rq-provider';
-import SonnerProvider from '@/components/providers/sonner-provider';
-import {
-  GOOGLE_ANALYTICS_ID,
-  GOOGLE_TAG_MANAGER_ID,
-  NCP_CLIENT_ID,
-} from '@/config/constants';
-import BaseLayout from '@/layouts/base';
 
 import './globals.css';
 
@@ -28,24 +11,9 @@ const pretendard = localFont({
 });
 
 export const metadata: Metadata = {
-  title: '뮤룸 (Muroom) | 우리들의 음악 공간',
-  description: '뮤룸에서 쉽고 빠르게 뮤지션을 위한 음악 작업실을 올려보세요.',
-  openGraph: {
-    title: '뮤룸 (Muroom) | 우리들의 음악 공간',
-    description: '뮤룸에서 쉽고 빠르게 뮤지션을 위한 음악 작업실을 올려보세요.',
-    url: 'https://muroom.kr',
-    siteName: '뮤룸 (Muroom)',
-    images: [
-      {
-        url: 'https://muroom.kr/images/screenshot.png',
-        width: 1024,
-        height: 576,
-        alt: '뮤룸 로고',
-      },
-    ],
-    locale: 'ko_KR',
-    type: 'website',
-  },
+  title: '뮤룸 (Muroom) 서비스 종료 안내',
+  description: '뮤룸 서비스가 종료되었습니다.',
+  robots: { index: false, follow: false },
   formatDetection: {
     telephone: false,
     date: false,
@@ -56,37 +24,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  modal,
 }: {
   children: React.ReactNode;
-  modal: React.ReactNode;
 }) {
   return (
     <html lang='ko'>
-      <body className={pretendard.className}>
-        <GoogleTagManager gtmId={GOOGLE_TAG_MANAGER_ID!} />
-        <GoogleAnalytics gaId={GOOGLE_ANALYTICS_ID!} />
-        <Script
-          strategy='afterInteractive'
-          src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${NCP_CLIENT_ID}`}
-        />
-
-        <RQProvider>
-          <NuqsAdapter>
-            <MapProvider>
-              <BaseLayout>
-                <Suspense fallback={null}>
-                  <JoinTriggerProvider />
-                </Suspense>
-
-                {children}
-                {modal}
-                <SonnerProvider />
-              </BaseLayout>
-            </MapProvider>
-          </NuqsAdapter>
-        </RQProvider>
-      </body>
+      <body className={pretendard.className}>{children}</body>
     </html>
   );
 }
