@@ -25,7 +25,7 @@ export default function ServiceClosedNotice() {
             </h2>
             <p className='text-sm'>
               회원님의 개인정보를 포함한 모든 데이터는{' '}
-              <strong>2026년 8월 말</strong>에 즉시 파기될 예정입니다. 파기
+              <strong>2026년 8월 31일</strong>에 즉시 파기될 예정입니다. 파기
               이후에는 어떠한 데이터도 복구되지 않습니다.
             </p>
           </div>
